@@ -150,20 +150,20 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 3
 
-- [ ] T067 [P] [US3] Unit tests for the 30-day calculator: exact 30-day boundary, start-date exclusion, DST transitions, consecutive/overlapping sales, sale price changes, variations, stock, empty history, in `tests/unit/Pricing/LowestPrice30DayCalculatorTest.php`
-- [ ] T068 [P] [US3] Integration test for sale creation, classification, recomputation and persistence of window boundaries in `tests/integration/test-special-sales.php`
-- [ ] T069 [P] [US3] Playwright test for 30-day price display distinct from the anchor price in `tests/e2e/thirty-day.spec.js`
+- [x] T067 [P] [US3] Unit tests for the 30-day calculator: exact 30-day boundary, start-date exclusion, DST transitions, consecutive/overlapping sales, sale price changes, variations, stock, empty history, in `tests/unit/Pricing/LowestPrice30DayCalculatorTest.php`
+- [x] T068 [P] [US3] Integration test for sale creation, classification, recomputation and persistence of window boundaries in `tests/integration/test-special-sales.php`
+- [x] T069 [P] [US3] Playwright test for 30-day price display distinct from the anchor price in `tests/e2e/thirty-day.spec.js`
 
 ### Implementation for User Story 3
 
-- [ ] T070 [P] [US3] Implement `src/Pricing/LowestPrice30DayCalculator.php`: window = 30 calendar days immediately before the sale start date, start date excluded, day exactly 30 days before included, site time zone; returns price and window boundaries; pure and side-effect free
-- [ ] T071 [P] [US3] Implement `src/Database/SpecialSaleRepository.php` with CRUD and status transitions (`scheduled → active → ended`, `scheduled|active → cancelled`)
-- [ ] T072 [US3] Implement `src/Pricing/SpecialSaleService.php`: require a sale type, store type/name/start/end/promo price, compute and persist `lowest_30_day_price` with `window_start`/`window_end`, append a `lowest_30_day` history row, recompute when underlying history changes
-- [ ] T073 [US3] Implement `src/Admin/SpecialSaleMetaBox.php` on product/variation screens: classify sale, set dates and promotional price, display the computed lowest 30-day price and window
-- [ ] T074 [US3] Implement `src/Admin/SaleTypesSettings.php` with the default types (`akcija`, `sniženje`, `sezonsko sniženje`, `rasprodaja`, configurable other) and validation that unclassified promotions are never treated as special sales
-- [ ] T075 [US3] Implement 30-day display: `templates/thirty-day-price.php`, shortcode attribute `show_30_day`, and WooCommerce display integration with a distinct translatable label
-- [ ] T076 [US3] Wire special-sale data into exports (indicator, name, effective price) and REST `special_sale` payload
-- [ ] T077 [US3] Run US3 unit, integration and Playwright suites; validate quickstart V3; fix failures; commit
+- [x] T070 [P] [US3] Implement `src/Pricing/LowestPrice30DayCalculator.php`: window = 30 calendar days immediately before the sale start date, start date excluded, day exactly 30 days before included, site time zone; returns price and window boundaries; pure and side-effect free
+- [x] T071 [P] [US3] Implement `src/Database/SpecialSaleRepository.php` with CRUD and status transitions (`scheduled → active → ended`, `scheduled|active → cancelled`)
+- [x] T072 [US3] Implement `src/Pricing/SpecialSaleService.php`: require a sale type, store type/name/start/end/promo price, compute and persist `lowest_30_day_price` with `window_start`/`window_end`, append a `lowest_30_day` history row, recompute when underlying history changes
+- [x] T073 [US3] Implement `src/Admin/SpecialSaleMetaBox.php` on product/variation screens: classify sale, set dates and promotional price, display the computed lowest 30-day price and window
+- [x] T074 [US3] Implement `src/Admin/SaleTypesSettings.php` with the default types (`akcija`, `sniženje`, `sezonsko sniženje`, `rasprodaja`, configurable other) and validation that unclassified promotions are never treated as special sales
+- [x] T075 [US3] Implement 30-day display: `templates/thirty-day-price.php`, shortcode attribute `show_30_day`, and WooCommerce display integration with a distinct translatable label
+- [x] T076 [US3] Wire special-sale data into exports (indicator, name, effective price) and REST `special_sale` payload
+- [x] T077 [US3] Run US3 unit, integration and Playwright suites; validate quickstart V3; fix failures; commit
 
 **Checkpoint**: 30-day pricing works and never substitutes for the anchor price.
 
