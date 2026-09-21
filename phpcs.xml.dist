@@ -65,4 +65,9 @@
 	<rule ref="Generic.Files.OneObjectStructurePerFile">
 		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
+
+	<!-- XML element names are dictated by the published XML contract. -->
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<exclude-pattern>tests/unit/Export/XmlWriterTest.php</exclude-pattern>
+	</rule>
 </ruleset>
