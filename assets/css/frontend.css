@@ -1,0 +1,44 @@
+/**
+ * Sidrena cijena - frontend display styles.
+ */
+
+.sidrena-cijena {
+	display: block;
+	margin: 0.25em 0;
+	font-size: 0.95em;
+	line-height: 1.4;
+}
+
+.sidrena-cijena__anchor {
+	display: inline-block;
+}
+
+.sidrena-cijena__label {
+	margin-right: 0.35em;
+	color: #50575e;
+}
+
+.sidrena-cijena__anchor-value {
+	font-weight: 600;
+}
+
+.sidrena-cijena__current {
+	margin-right: 0.5em;
+}
+
+.sidrena-cijena__disclaimer {
+	display: block;
+	margin-top: 0.15em;
+	font-size: 0.85em;
+	color: #787c82;
+}
+
+.sidrena-cijena--archive {
+	font-size: 0.9em;
+}
+
+.woocommerce-price-suffix .sidrena-cijena,
+.price .sidrena-cijena {
+	display: inline-block;
+	margin-left: 0.5em;
+}

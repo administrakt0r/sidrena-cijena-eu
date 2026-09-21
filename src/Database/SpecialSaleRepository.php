@@ -51,7 +51,7 @@ class SpecialSaleRepository {
 	/**
 	 * Insert a sale.
 	 *
-	 * @param array $data Fields.
+	 * @param array<mixed> $data Fields.
 	 * @return int Inserted ID.
 	 * @throws \InvalidArgumentException When required fields are missing.
 	 */
@@ -68,8 +68,8 @@ class SpecialSaleRepository {
 	/**
 	 * Update a sale.
 	 *
-	 * @param int   $id   Sale ID.
-	 * @param array $data Fields.
+	 * @param int          $id   Sale ID.
+	 * @param array<mixed> $data Fields.
 	 * @return bool
 	 */
 	public function update( $id, array $data ) {
@@ -91,7 +91,7 @@ class SpecialSaleRepository {
 	/**
 	 * Set the status of a sale.
 	 *
-	 * @param int   $id     Sale ID.
+	 * @param int    $id     Sale ID.
 	 * @param string $status New status.
 	 * @return bool
 	 */
@@ -123,10 +123,10 @@ class SpecialSaleRepository {
 	/**
 	 * All sales for an item/variation, newest first.
 	 *
-	 * @param int   $product_id   Item ID.
-	 * @param int   $variation_id Variation ID (0 for none).
-	 * @param array $statuses     Optional status filter.
-	 * @return array[]
+	 * @param int          $product_id   Item ID.
+	 * @param int          $variation_id Variation ID (0 for none).
+	 * @param array<mixed> $statuses     Optional status filter.
+	 * @return array<mixed>[]
 	 */
 	public function for_item( $product_id, $variation_id = 0, array $statuses = array() ) {
 		global $wpdb;
@@ -182,7 +182,7 @@ class SpecialSaleRepository {
 	 * Active/scheduled sales for many items, keyed by `product:variation`.
 	 *
 	 * @param string $at Site-local datetime.
-	 * @return array<string,array>
+	 * @return array<string,array<mixed>>
 	 */
 	public function active_map( $at = '' ) {
 		global $wpdb;
@@ -206,8 +206,8 @@ class SpecialSaleRepository {
 		$map = array();
 
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$row  = $this->hydrate( $row );
-			$key  = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
+			$row         = $this->hydrate( $row );
+			$key         = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
 			$map[ $key ] = $row;
 		}
 
@@ -272,8 +272,8 @@ class SpecialSaleRepository {
 	/**
 	 * Normalize a row for persistence.
 	 *
-	 * @param array $data Input.
-	 * @return array
+	 * @param array<mixed> $data Input.
+	 * @return array<mixed>
 	 * @throws \InvalidArgumentException When required fields are missing.
 	 */
 	protected function normalize( array $data ) {
@@ -304,21 +304,21 @@ class SpecialSaleRepository {
 		$status = isset( $data['status'] ) && in_array( $data['status'], self::STATUSES, true ) ? $data['status'] : 'scheduled';
 
 		return array(
-			'product_id'         => $product_id,
-			'variation_id'       => ! empty( $data['variation_id'] ) ? (int) $data['variation_id'] : null,
-			'sale_type'          => $sale_type,
-			'sale_name'          => isset( $data['sale_name'] ) ? sanitize_text_field( (string) $data['sale_name'] ) : null,
-			'start_date'         => $start_date,
-			'end_date'           => $end_date,
-			'promo_price'        => isset( $data['promo_price'] ) && '' !== $data['promo_price'] ? (float) $data['promo_price'] : null,
+			'product_id'          => $product_id,
+			'variation_id'        => ! empty( $data['variation_id'] ) ? (int) $data['variation_id'] : null,
+			'sale_type'           => $sale_type,
+			'sale_name'           => isset( $data['sale_name'] ) ? sanitize_text_field( (string) $data['sale_name'] ) : null,
+			'start_date'          => $start_date,
+			'end_date'            => $end_date,
+			'promo_price'         => isset( $data['promo_price'] ) && '' !== $data['promo_price'] ? (float) $data['promo_price'] : null,
 			'lowest_30_day_price' => isset( $data['lowest_30_day_price'] ) && '' !== $data['lowest_30_day_price'] ? (float) $data['lowest_30_day_price'] : null,
-			'window_start'       => ! empty( $data['window_start'] ) ? (string) $data['window_start'] : null,
-			'window_end'         => ! empty( $data['window_end'] ) ? (string) $data['window_end'] : null,
-			'status'             => $status,
-			'created_at'         => isset( $data['created_at'] ) ? (string) $data['created_at'] : Dates::now_utc(),
-			'updated_at'         => Dates::now_utc(),
-			'created_by'         => isset( $data['created_by'] ) && null !== $data['created_by'] ? (int) $data['created_by'] : null,
-			'metadata'           => ! empty( $data['metadata'] ) ? ( is_array( $data['metadata'] ) ? wp_json_encode( $data['metadata'] ) : (string) $data['metadata'] ) : null,
+			'window_start'        => ! empty( $data['window_start'] ) ? (string) $data['window_start'] : null,
+			'window_end'          => ! empty( $data['window_end'] ) ? (string) $data['window_end'] : null,
+			'status'              => $status,
+			'created_at'          => isset( $data['created_at'] ) ? (string) $data['created_at'] : Dates::now_utc(),
+			'updated_at'          => Dates::now_utc(),
+			'created_by'          => ! empty( $data['created_by'] ) ? (int) $data['created_by'] : null,
+			'metadata'            => ! empty( $data['metadata'] ) ? ( is_array( $data['metadata'] ) ? wp_json_encode( $data['metadata'] ) : (string) $data['metadata'] ) : null,
 		);
 	}
 
@@ -334,14 +334,13 @@ class SpecialSaleRepository {
 	/**
 	 * Cast types.
 	 *
-	 * @param array $row Row.
-	 * @return array
-	 */
+	 * @param array<mixed> $row Row.
+	 * @return array<mixed>  */
 	protected function hydrate( array $row ) {
-		$row['id']            = (int) $row['id'];
-		$row['product_id']    = (int) $row['product_id'];
-		$row['variation_id']  = (int) $row['variation_id'];
-		$row['promo_price']   = null === $row['promo_price'] ? null : (float) $row['promo_price'];
+		$row['id']                  = (int) $row['id'];
+		$row['product_id']          = (int) $row['product_id'];
+		$row['variation_id']        = (int) $row['variation_id'];
+		$row['promo_price']         = null === $row['promo_price'] ? null : (float) $row['promo_price'];
 		$row['lowest_30_day_price'] = null === $row['lowest_30_day_price'] ? null : (float) $row['lowest_30_day_price'];
 
 		return $row;

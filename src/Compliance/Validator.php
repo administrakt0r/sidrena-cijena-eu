@@ -91,11 +91,11 @@ class Validator {
 	/**
 	 * Constructor.
 	 *
-	 * @param CatalogProvider|null          $catalog       Catalog provider.
-	 * @param PriceHistoryRepository|null   $history       History repository.
-	 * @param LocationRepository|null       $locations     Location repository.
-	 * @param PublicationRepository|null    $publications  Publication repository.
-	 * @param SpecialSaleRepository|null    $special_sales Special sale repository.
+	 * @param CatalogProvider|null        $catalog       Catalog provider.
+	 * @param PriceHistoryRepository|null $history       History repository.
+	 * @param LocationRepository|null     $locations     Location repository.
+	 * @param PublicationRepository|null  $publications  Publication repository.
+	 * @param SpecialSaleRepository|null  $special_sales Special sale repository.
 	 */
 	public function __construct( $catalog = null, $history = null, $locations = null, $publications = null, $special_sales = null ) {
 		$plugin = Plugin::instance();
@@ -164,7 +164,7 @@ class Validator {
 	/**
 	 * Run a compliance check.
 	 *
-	 * @param array $args `product_id`, `variation_id`, `location_id`, `severity`, `scope`, `max_items`, `per_page`.
+	 * @param array<mixed> $args `product_id`, `variation_id`, `location_id`, `severity`, `scope`, `max_items`, `per_page`.
 	 * @return array{findings:Finding[],counts:array<string,int>}
 	 */
 	public function validate( array $args = array() ) {
@@ -252,8 +252,7 @@ class Validator {
 	 *
 	 * @param CatalogItem[] $items Items.
 	 * @param array         $args  Arguments.
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	public function build_item_context( array $items, array $args = array() ) {
 		$product_ids = array();
 
@@ -284,9 +283,8 @@ class Validator {
 	/**
 	 * Build the context passed to global rules.
 	 *
-	 * @param array $args Arguments.
-	 * @return array
-	 */
+	 * @param array<mixed> $args Arguments.
+	 * @return array<mixed>  */
 	public function build_global_context( array $args = array() ) {
 		$locations = $this->locations->all( true );
 
@@ -301,8 +299,8 @@ class Validator {
 			);
 		}
 
-		$latest      = array();
-		$files       = array();
+		$latest = array();
+		$files  = array();
 
 		foreach ( $locations as $location ) {
 			foreach ( array( 'csv', 'xml' ) as $format ) {

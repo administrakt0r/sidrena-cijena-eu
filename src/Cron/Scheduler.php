@@ -108,8 +108,8 @@ final class Scheduler {
 	/**
 	 * Queue a service regeneration run.
 	 *
-	 * @param array $args  Arguments passed to the handler.
-	 * @param int   $delay Seconds to wait before running.
+	 * @param array<mixed> $args  Arguments passed to the handler.
+	 * @param int          $delay Seconds to wait before running.
 	 * @return void
 	 */
 	public static function queue_service_regeneration( array $args = array(), $delay = 300 ) {

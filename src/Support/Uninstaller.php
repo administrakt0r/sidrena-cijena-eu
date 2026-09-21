@@ -120,10 +120,10 @@ final class Uninstaller {
 
 		$posts = get_posts(
 			array(
-				'post_type'      => 'sidrena_item',
-				'post_status'    => 'any',
-				'numberposts'    => -1,
-				'fields'         => 'ids',
+				'post_type'        => 'sidrena_item',
+				'post_status'      => 'any',
+				'numberposts'      => -1,
+				'fields'           => 'ids',
 				'suppress_filters' => true,
 			)
 		);

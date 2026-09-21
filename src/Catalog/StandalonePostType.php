@@ -141,7 +141,7 @@ final class StandalonePostType {
 	/**
 	 * Meta box fields.
 	 *
-	 * @return array<string,array>
+	 * @return array<string,array<mixed>>
 	 */
 	public static function fields() {
 		return array(
@@ -273,6 +273,7 @@ final class StandalonePostType {
 			if ( 'checkbox' === $field['type'] ) {
 				$value = isset( $_POST[ $key ] ) ? 1 : 0;
 			} elseif ( isset( $_POST[ $key ] ) ) {
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per field type below.
 				$value = wp_unslash( $_POST[ $key ] );
 
 				if ( in_array( $field['type'], array( 'price', 'unit_price' ), true ) ) {
@@ -309,7 +310,7 @@ final class StandalonePostType {
 	/**
 	 * Append history rows for changed regular/sale prices.
 	 *
-	 * @param int         $post_id          Item ID.
+	 * @param int          $post_id          Item ID.
 	 * @param string|float $previous_regular Previous regular price.
 	 * @param string|float $previous_sale    Previous sale price.
 	 * @param string|float $regular          New regular price.

@@ -30,6 +30,9 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $id Item ID.
+	 * @return CatalogItem|null
 	 */
 	public function get_item( $id ) {
 		$post = get_post( (int) $id );
@@ -43,6 +46,10 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $parent_id    Parent ID.
+	 * @param int $variation_id Variation ID.
+	 * @return CatalogItem|null
 	 */
 	public function get_variation( $parent_id, $variation_id ) {
 		unset( $parent_id, $variation_id );
@@ -52,6 +59,9 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return CatalogItem[]
 	 */
 	public function get_items( array $args = array() ) {
 		$args = wp_parse_args(
@@ -109,6 +119,9 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return int
 	 */
 	public function count_items( array $args = array() ) {
 		$args = wp_parse_args(
@@ -155,6 +168,9 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return \Generator<CatalogItem>
 	 */
 	public function iterate( array $args = array() ) {
 		$args     = wp_parse_args( $args, array( 'per_page' => 200 ) );
@@ -162,14 +178,24 @@ class StandaloneCatalogProvider implements CatalogProvider {
 		$page     = 1;
 
 		do {
-			$items = $this->get_items( array_merge( $args, array( 'page' => $page, 'per_page' => $per_page ) ) );
+			$items = $this->get_items(
+				array_merge(
+					$args,
+					array(
+						'page'     => $page,
+						'per_page' => $per_page,
+					)
+				)
+			);
 
 			foreach ( $items as $item ) {
 				yield $item;
 			}
 
+			$found = count( $items );
+
 			++$page;
-		} while ( count( $items ) === $per_page );
+		} while ( $found === $per_page );
 	}
 
 	/**
@@ -202,6 +228,9 @@ class StandaloneCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $id Item ID.
+	 * @return string[]
 	 */
 	public function get_item_categories( $id ) {
 		$slugs = wp_get_post_terms( (int) $id, 'category', array( 'fields' => 'slugs' ) );
@@ -251,7 +280,7 @@ class StandaloneCatalogProvider implements CatalogProvider {
 				'sale_price'    => $sale,
 				'current_price' => null !== $sale ? $sale : $regular,
 				'tax_inclusive' => '' === $tax_meta ? true : (bool) $tax_meta,
-				'first_seen'    => $first_seen ?: null,
+				'first_seen'    => $first_seen ? $first_seen : null,
 				'categories'    => $this->get_item_categories( $post->ID ),
 				'source'        => 'standalone',
 			)
@@ -261,9 +290,8 @@ class StandaloneCatalogProvider implements CatalogProvider {
 	/**
 	 * Build a tax query from supported filters.
 	 *
-	 * @param array $args Query arguments.
-	 * @return array
-	 */
+	 * @param array<mixed> $args Query arguments.
+	 * @return array<mixed>  */
 	protected function build_tax_query( array $args ) {
 		$tax_query = array();
 

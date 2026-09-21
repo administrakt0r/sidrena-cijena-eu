@@ -12,6 +12,9 @@
 namespace SidrenaCijena;
 
 use SidrenaCijena\Admin\AdminMenu;
+use SidrenaCijena\Admin\AnchorMetaBox;
+use SidrenaCijena\Admin\SettingsPage;
+use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
 use SidrenaCijena\Catalog\StandalonePostType;
@@ -24,6 +27,8 @@ use SidrenaCijena\Database\PublicationRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
 use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use SidrenaCijena\WooCommerce\Display\VariationDisplay;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -157,8 +162,29 @@ final class Plugin {
 		add_action( 'admin_enqueue_scripts', array( AdminMenu::class, 'enqueue_assets' ) );
 		add_action( 'save_post_' . StandalonePostType::POST_TYPE, array( StandalonePostType::class, 'save' ) );
 		add_action( 'add_meta_boxes', array( StandalonePostType::class, 'register_meta_box' ) );
+		add_action( 'init', array( TemplateFunctions::class, 'register' ) );
+		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
+		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
+		add_action( 'admin_post_' . AnchorMetaBox::ACTION, array( AnchorMetaBox::class, 'handle_record' ) );
+		add_action( 'admin_notices', array( AnchorMetaBox::class, 'maybe_notice' ) );
+		add_action( 'sidrena_cijena_settings_changed', array( $this, 'flush_caches' ) );
+		add_action( 'sidrena_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
 
 		Scheduler::register();
+
+		if ( WooCommerceDetector::is_active() ) {
+			( new PriceDisplay( $this->anchors() ) )->register();
+			( new VariationDisplay( $this->anchors() ) )->register();
+		}
+	}
+
+	/**
+	 * Flush cached anchor data after settings or rule changes.
+	 *
+	 * @return void
+	 */
+	public function flush_caches() {
+		$this->anchor_cache()->flush();
 	}
 
 	/**

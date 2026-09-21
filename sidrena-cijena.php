@@ -25,6 +25,8 @@ define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
 define( 'SIDRENA_CIJENA_BASENAME', plugin_basename( __FILE__ ) );
 
 require_once SIDRENA_CIJENA_DIR . 'src/Support/Autoloader.php';
+require_once SIDRENA_CIJENA_DIR . 'src/Api/functions.php';
+require_once SIDRENA_CIJENA_DIR . 'src/Api/global-functions.php';
 \SidrenaCijena\Support\Autoloader::register();
 
 register_activation_hook( __FILE__, array( 'SidrenaCijena\Support\Install', 'activate' ) );

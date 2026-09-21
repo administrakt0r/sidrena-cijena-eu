@@ -62,7 +62,7 @@ class PriceHistoryRepository {
 	/**
 	 * Append a price history record.
 	 *
-	 * @param array $data Record fields.
+	 * @param array<mixed> $data Record fields.
 	 * @return int Inserted row ID.
 	 * @throws \InvalidArgumentException When required fields are invalid.
 	 */
@@ -79,7 +79,7 @@ class PriceHistoryRepository {
 	/**
 	 * Append a correction record referencing an existing row.
 	 *
-	 * @param array $data Record fields; `correction_of` and `correction_reason` are required.
+	 * @param array<mixed> $data Record fields; `correction_of` and `correction_reason` are required.
 	 * @return int Inserted row ID.
 	 * @throws \InvalidArgumentException When the correction is invalid.
 	 */
@@ -167,7 +167,7 @@ class PriceHistoryRepository {
 	 *
 	 * @param int[]  $product_ids Item IDs.
 	 * @param string $price_type  Price type.
-	 * @return array<string,array>
+	 * @return array<string,array<mixed>>
 	 */
 	public function latest_map( array $product_ids, $price_type ) {
 		global $wpdb;
@@ -205,8 +205,8 @@ class PriceHistoryRepository {
 	 * Supported args: `product_id`, `variation_id`, `price_type`, `source`,
 	 * `date_from`, `date_to`, `reference_date`, `limit`, `offset`, `orderby`, `order`.
 	 *
-	 * @param array $args Query arguments.
-	 * @return array[]
+	 * @param array<mixed> $args Query arguments.
+	 * @return array<mixed>[]
 	 */
 	public function query( array $args = array() ) {
 		global $wpdb;
@@ -219,7 +219,7 @@ class PriceHistoryRepository {
 		$limit  = isset( $args['limit'] ) ? max( 1, (int) $args['limit'] ) : 100;
 		$offset = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
 
-		$sql = "SELECT * FROM {$this->table} {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
+		$sql      = "SELECT * FROM {$this->table} {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
 		$params[] = $limit;
 		$params[] = $offset;
 
@@ -235,7 +235,7 @@ class PriceHistoryRepository {
 	/**
 	 * Count records matching a query.
 	 *
-	 * @param array $args Query arguments.
+	 * @param array<mixed> $args Query arguments.
 	 * @return int
 	 */
 	public function count( array $args = array() ) {
@@ -264,7 +264,7 @@ class PriceHistoryRepository {
 	 * @param int    $product_id   Item ID.
 	 * @param int    $variation_id Variation ID (0 for none).
 	 * @param string $until_date   Inclusive upper bound (`Y-m-d`).
-	 * @return array[]
+	 * @return array<mixed>[]
 	 */
 	public function timeline( $product_id, $variation_id, $until_date ) {
 		global $wpdb;
@@ -293,8 +293,8 @@ class PriceHistoryRepository {
 	/**
 	 * Validate and normalize a record for insertion.
 	 *
-	 * @param array $data Input fields.
-	 * @return array
+	 * @param array<mixed> $data Input fields.
+	 * @return array<mixed>
 	 * @throws \InvalidArgumentException When a required field is invalid.
 	 */
 	protected function normalize( array $data ) {
@@ -366,7 +366,7 @@ class PriceHistoryRepository {
 			'correction_reason' => ! empty( $data['correction_reason'] ) ? (string) $data['correction_reason'] : null,
 			'created_at'        => ! empty( $data['created_at'] ) ? (string) $data['created_at'] : Dates::now_utc(),
 			'updated_at'        => null,
-			'created_by'        => isset( $data['created_by'] ) && null !== $data['created_by'] ? (int) $data['created_by'] : null,
+			'created_by'        => ! empty( $data['created_by'] ) ? (int) $data['created_by'] : null,
 			'metadata'          => ! empty( $data['metadata'] ) ? wp_json_encode( $data['metadata'] ) : null,
 		);
 	}
@@ -374,7 +374,7 @@ class PriceHistoryRepository {
 	/**
 	 * Column formats for $wpdb.
 	 *
-	 * @param array $row Row.
+	 * @param array<mixed> $row Row.
 	 * @return string[]
 	 */
 	protected function formats( array $row ) {
@@ -396,7 +396,7 @@ class PriceHistoryRepository {
 	/**
 	 * Build a WHERE clause with prepared values.
 	 *
-	 * @param array $args Query arguments.
+	 * @param array<mixed> $args Query arguments.
 	 * @return array{0:string,1:array}
 	 */
 	protected function build_where( array $args ) {

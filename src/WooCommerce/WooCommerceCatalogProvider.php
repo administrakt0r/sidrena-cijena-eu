@@ -43,6 +43,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $id Item ID.
+	 * @return CatalogItem|null
 	 */
 	public function get_item( $id ) {
 		if ( ! $this->is_available() ) {
@@ -64,6 +67,10 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $parent_id    Parent ID.
+	 * @param int $variation_id Variation ID.
+	 * @return CatalogItem|null
 	 */
 	public function get_variation( $parent_id, $variation_id ) {
 		if ( ! $this->is_available() ) {
@@ -81,6 +88,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return CatalogItem[]
 	 */
 	public function get_items( array $args = array() ) {
 		if ( ! $this->is_available() ) {
@@ -104,13 +114,13 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		);
 
 		$query = array(
-			'limit'   => max( 1, (int) $args['per_page'] ),
-			'page'    => max( 1, (int) $args['page'] ),
-			'status'  => 'publish',
-			'orderby' => 'title' === $args['orderby'] ? 'title' : 'ID',
-			'order'   => 'DESC' === strtoupper( (string) $args['order'] ) ? 'DESC' : 'ASC',
+			'limit'    => max( 1, (int) $args['per_page'] ),
+			'page'     => max( 1, (int) $args['page'] ),
+			'status'   => 'publish',
+			'orderby'  => 'title' === $args['orderby'] ? 'title' : 'ID',
+			'order'    => 'DESC' === strtoupper( (string) $args['order'] ) ? 'DESC' : 'ASC',
 			'paginate' => false,
-			'return'  => 'objects',
+			'return'   => 'objects',
 		);
 
 		if ( ! empty( $args['parent'] ) ) {
@@ -149,6 +159,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return int
 	 */
 	public function count_items( array $args = array() ) {
 		if ( ! $this->is_available() ) {
@@ -211,6 +224,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return \Generator<CatalogItem>
 	 */
 	public function iterate( array $args = array() ) {
 		$args     = wp_parse_args( $args, array( 'per_page' => 200 ) );
@@ -218,14 +234,24 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$page     = 1;
 
 		do {
-			$items = $this->get_items( array_merge( $args, array( 'page' => $page, 'per_page' => $per_page ) ) );
+			$items = $this->get_items(
+				array_merge(
+					$args,
+					array(
+						'page'     => $page,
+						'per_page' => $per_page,
+					)
+				)
+			);
 
 			foreach ( $items as $item ) {
 				yield $item;
 			}
 
+			$found = count( $items );
+
 			++$page;
-		} while ( count( $items ) >= 1 && count( $items ) === $per_page );
+		} while ( $found > 0 && $found === $per_page );
 	}
 
 	/**
@@ -262,6 +288,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param int $id Item ID.
+	 * @return string[]
 	 */
 	public function get_item_categories( $id ) {
 		$slugs = wp_get_post_terms( (int) $id, 'product_cat', array( 'fields' => 'slugs' ) );
@@ -284,15 +313,15 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$sale    = $product->get_sale_price( 'edit' );
 		$current = $product->get_price( 'edit' );
 
-		$regular = '' === $regular || null === $regular ? null : (float) $regular;
-		$sale    = '' === $sale || null === $sale ? null : (float) $sale;
-		$current = '' === $current || null === $current ? null : (float) $current;
+		$regular = '' === $regular ? null : (float) $regular;
+		$sale    = '' === $sale ? null : (float) $sale;
+		$current = '' === $current ? null : (float) $current;
 
 		$name = $product->get_name();
 
 		$type = $this->get_item_type( $product );
 
-		$brand = '';
+		$brand       = '';
 		$brand_terms = get_the_terms( $is_variation ? $parent_id : $id, 'product_brand' );
 
 		if ( is_array( $brand_terms ) && ! empty( $brand_terms ) ) {
@@ -319,7 +348,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 				'sale_price'    => $sale,
 				'current_price' => $current,
 				'tax_inclusive' => function_exists( 'wc_prices_include_tax' ) ? (bool) wc_prices_include_tax() : true,
-				'first_seen'    => $first_seen ?: null,
+				'first_seen'    => $first_seen ? $first_seen : null,
 				'categories'    => $this->get_item_categories( $is_variation ? $parent_id : $id ),
 				'source'        => 'woocommerce',
 			)

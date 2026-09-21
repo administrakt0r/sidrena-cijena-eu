@@ -63,16 +63,16 @@ final class AdminMenu {
 	 */
 	public static function pages() {
 		return array(
-			self::PARENT                     => array( DashboardPage::class, __( 'Dashboard', 'sidrena-cijena' ) ),
-			'sidrena-cijena-publications'    => array( PublicationsPage::class, __( 'Price lists', 'sidrena-cijena' ) ),
-			'sidrena-cijena-anchors'         => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'sidrena-cijena' ) ),
-			'sidrena-cijena-import'          => array( ImportPage::class, __( 'Import', 'sidrena-cijena' ) ),
-			'sidrena-cijena-locations'       => array( LocationsPage::class, __( 'Sales locations', 'sidrena-cijena' ) ),
-			'sidrena-cijena-history'         => array( PriceHistoryPage::class, __( 'Price history', 'sidrena-cijena' ) ),
-			'sidrena-cijena-compliance'      => array( CompliancePage::class, __( 'Compliance check', 'sidrena-cijena' ) ),
-			'sidrena-cijena-settings'        => array( SettingsPage::class, __( 'Settings', 'sidrena-cijena' ) ),
-			'sidrena-cijena-logs'            => array( LogsPage::class, __( 'Logs', 'sidrena-cijena' ) ),
-			'sidrena-cijena-audit'           => array( AuditPage::class, __( 'Audit', 'sidrena-cijena' ) ),
+			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'sidrena-cijena' ) ),
+			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'sidrena-cijena' ) ),
+			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'sidrena-cijena' ) ),
+			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'sidrena-cijena' ) ),
+			'sidrena-cijena-locations'    => array( LocationsPage::class, __( 'Sales locations', 'sidrena-cijena' ) ),
+			'sidrena-cijena-history'      => array( PriceHistoryPage::class, __( 'Price history', 'sidrena-cijena' ) ),
+			'sidrena-cijena-compliance'   => array( CompliancePage::class, __( 'Compliance check', 'sidrena-cijena' ) ),
+			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'sidrena-cijena' ) ),
+			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'sidrena-cijena' ) ),
+			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'sidrena-cijena' ) ),
 		);
 	}
 

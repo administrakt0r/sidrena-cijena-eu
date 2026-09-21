@@ -74,8 +74,7 @@ final class Finding {
 	/**
 	 * Additional structured context.
 	 *
-	 * @var array
-	 */
+	 * @var array<mixed>     */
 	public $context;
 
 	/**
@@ -135,8 +134,7 @@ final class Finding {
 	/**
 	 * Array representation.
 	 *
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	public function to_array() {
 		return array(
 			'severity'       => $this->severity,

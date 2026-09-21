@@ -1,0 +1,160 @@
+<?php
+/**
+ * Frontend display settings tab.
+ *
+ * @package SidrenaCijena\Admin
+ */
+
+namespace SidrenaCijena\Admin;
+
+use SidrenaCijena\Support\Settings;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Display settings.
+ */
+final class DisplaySettingsPage {
+
+	/**
+	 * Settings page slug used by do_settings_sections().
+	 */
+	const PAGE = 'sidrena-cijena-settings-display';
+
+	/**
+	 * Register sections and fields.
+	 *
+	 * @return void
+	 */
+	public static function register_settings() {
+		add_settings_section(
+			'sidrena_cijena_display',
+			__( 'Anchor price display', 'sidrena-cijena' ),
+			array( __CLASS__, 'section_intro' ),
+			self::PAGE
+		);
+
+		$fields = array(
+			'display_enabled'       => array(
+				'label' => __( 'Enable frontend display', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'anchor_label'          => array(
+				'label' => __( 'Anchor price label', 'sidrena-cijena' ),
+				'type'  => 'text',
+			),
+			'currency_display'      => array(
+				'label' => __( 'Currency display', 'sidrena-cijena' ),
+				'type'  => 'select',
+			),
+			'display_location'      => array(
+				'label' => __( 'Display position', 'sidrena-cijena' ),
+				'type'  => 'select',
+			),
+			'display_priority'      => array(
+				'label' => __( 'Display priority', 'sidrena-cijena' ),
+				'type'  => 'number',
+			),
+			'display_product_pages' => array(
+				'label' => __( 'Product pages', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'display_archives'      => array(
+				'label' => __( 'Archives and lists', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'display_variations'    => array(
+				'label' => __( 'Variations', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'only_when_different'   => array(
+				'label' => __( 'Only when the anchor differs', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'disclaimer'            => array(
+				'label' => __( 'Administrative disclaimer', 'sidrena-cijena' ),
+				'type'  => 'textarea',
+			),
+		);
+
+		foreach ( $fields as $key => $field ) {
+			add_settings_field(
+				'sidrena_cijena_' . $key,
+				$field['label'],
+				array( __CLASS__, 'render_field' ),
+				self::PAGE,
+				'sidrena_cijena_display',
+				array(
+					'key'  => $key,
+					'type' => $field['type'],
+				)
+			);
+		}
+	}
+
+	/**
+	 * Section introduction.
+	 *
+	 * @return void
+	 */
+	public static function section_intro() {
+		echo '<p>' . esc_html__( 'Choose where and how the anchor price ("Sidrena cijena") is shown next to current prices.', 'sidrena-cijena' ) . '</p>';
+	}
+
+	/**
+	 * Render one field.
+	 *
+	 * @param array<mixed> $args Field arguments.
+	 * @return void
+	 */
+	public static function render_field( $args ) {
+		$key    = $args['key'];
+		$fields = new SettingsFields( Settings::OPTION );
+		$value  = Settings::get( $key );
+
+		switch ( $args['type'] ) {
+			case 'checkbox':
+				$fields->checkbox( $key, $value );
+				break;
+			case 'number':
+				$fields->number(
+					$key,
+					$value,
+					array(
+						'min' => 1,
+						'max' => 100,
+					)
+				);
+				break;
+			case 'select':
+				$choices = 'currency_display' === $key
+					? array(
+						'symbol' => __( 'Currency symbol (6,99 EUR)', 'sidrena-cijena' ),
+						'code'   => __( 'Currency code (6,99 EUR)', 'sidrena-cijena' ),
+						'none'   => __( 'Amount only (6,99)', 'sidrena-cijena' ),
+					)
+					: array(
+						'price_html' => __( 'Inline, next to the price', 'sidrena-cijena' ),
+						'summary'    => __( 'Separate block below the price', 'sidrena-cijena' ),
+					);
+
+				$fields->select( $key, $value, $choices );
+				break;
+			case 'textarea':
+				$fields->textarea( $key, $value );
+				break;
+			default:
+				$fields->text( $key, $value );
+				break;
+		}
+	}
+
+	/**
+	 * Render the tab fields.
+	 *
+	 * @return void
+	 */
+	public static function render_fields() {
+		do_settings_sections( self::PAGE );
+	}
+}

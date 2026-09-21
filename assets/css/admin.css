@@ -1,0 +1,60 @@
+/**
+ * Sidrena cijena - admin styles.
+ */
+
+.sidrena-cijena-status {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.sidrena-cijena-status--valid,
+.sidrena-cijena-status--published {
+	background: #edfaef;
+	color: #1e7e34;
+}
+
+.sidrena-cijena-status--missing,
+.sidrena-cijena-status--failed {
+	background: #fcf0f1;
+	color: #b32d2e;
+}
+
+.sidrena-cijena-status--needs_verification,
+.sidrena-cijena-status--pending,
+.sidrena-cijena-status--superseded {
+	background: #fef8ee;
+	color: #996800;
+}
+
+.sidrena-cijena-cards {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin: 16px 0;
+}
+
+.sidrena-cijena-card {
+	flex: 1 1 180px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 12px 16px;
+}
+
+.sidrena-cijena-card__value {
+	display: block;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.sidrena-cijena-card__label {
+	color: #50575e;
+}
+
+.sidrena-cijena-progress {
+	margin: 8px 0;
+}

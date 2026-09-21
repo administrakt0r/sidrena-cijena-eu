@@ -47,8 +47,7 @@ final class RuleConfig {
 	/**
 	 * Default rule configuration.
 	 *
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	public static function defaults() {
 		return array(
 			'general_reference_date' => self::DEFAULT_GENERAL_DATE,
@@ -63,8 +62,7 @@ final class RuleConfig {
 	/**
 	 * All rule configuration merged over defaults.
 	 *
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	public static function all() {
 		$stored = get_option( self::OPTION, array() );
 
@@ -97,6 +95,27 @@ final class RuleConfig {
 	 * @return array Updated configuration.
 	 */
 	public static function update( array $values, $user_id = null, $reason = '' ) {
+		return self::apply( $values, $user_id, $reason );
+	}
+
+	/**
+	 * Sanitize a configuration array submitted through the Settings API.
+	 *
+	 * @param mixed $input Raw input.
+	 * @return array<mixed>  */
+	public static function sanitize( $input ) {
+		return self::apply( (array) $input, null, '' );
+	}
+
+	/**
+	 * Validate, store and audit rule configuration values.
+	 *
+	 * @param array    $values  Key/value pairs.
+	 * @param int|null $user_id Acting user.
+	 * @param string   $reason  Optional reason for the change.
+	 * @return array Updated configuration.
+	 */
+	private static function apply( array $values, $user_id = null, $reason = '' ) {
 		$old = self::all();
 		$new = $old;
 
@@ -124,22 +143,32 @@ final class RuleConfig {
 			$new[ $key ] = $value;
 		}
 
-		update_option( self::OPTION, $new, false );
-
-		if ( null === $user_id ) {
-			$user_id = function_exists( 'get_current_user_id' ) ? get_current_user_id() : 0;
-		}
+		$changed = array();
 
 		foreach ( $new as $key => $value ) {
 			if ( $old[ $key ] === $value ) {
 				continue;
 			}
 
+			$changed[] = $key;
+		}
+
+		if ( empty( $changed ) ) {
+			return $new;
+		}
+
+		if ( null === $user_id ) {
+			$user_id = function_exists( 'get_current_user_id' ) ? get_current_user_id() : 0;
+		}
+
+		update_option( self::OPTION, $new, false );
+
+		foreach ( $changed as $key ) {
 			self::append_history(
 				array(
 					'key'       => $key,
 					'old'       => $old[ $key ],
-					'new'       => $value,
+					'new'       => $new[ $key ],
 					'user_id'   => (int) $user_id,
 					'reason'    => sanitize_text_field( $reason ),
 					'timestamp' => gmdate( 'c' ),
@@ -153,14 +182,15 @@ final class RuleConfig {
 			array(
 				'user_id' => (int) $user_id,
 				'reason'  => $reason,
+				'changed' => $changed,
 			)
 		);
 
 		/**
 		 * Fires after rule configuration changed.
 		 *
-		 * @param array $new Complete new configuration.
-		 * @param array $old Previous configuration.
+		 * @param array<mixed> $new Complete new configuration.
+		 * @param array<mixed> $old Previous configuration.
 		 */
 		do_action( 'sidrena_cijena_rule_config_changed', $new, $old );
 
@@ -170,7 +200,7 @@ final class RuleConfig {
 	/**
 	 * Append-only audit history.
 	 *
-	 * @return array[]
+	 * @return array<mixed>[]
 	 */
 	public static function history() {
 		$history = get_option( self::HISTORY_OPTION, array() );
@@ -181,7 +211,7 @@ final class RuleConfig {
 	/**
 	 * Append one audit entry.
 	 *
-	 * @param array $entry Entry.
+	 * @param array<mixed> $entry Entry.
 	 * @return void
 	 */
 	private static function append_history( array $entry ) {

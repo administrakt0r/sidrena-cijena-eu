@@ -52,7 +52,7 @@ class LocationRepository {
 	 * All locations.
 	 *
 	 * @param bool $active_only Only active locations.
-	 * @return array[]
+	 * @return array<mixed>[]
 	 */
 	public function all( $active_only = false ) {
 		global $wpdb;
@@ -108,7 +108,7 @@ class LocationRepository {
 	/**
 	 * Insert a location.
 	 *
-	 * @param array $data Location fields.
+	 * @param array<mixed> $data Location fields.
 	 * @return int Inserted ID.
 	 * @throws \InvalidArgumentException When required fields are missing.
 	 */
@@ -125,8 +125,8 @@ class LocationRepository {
 	/**
 	 * Update a location.
 	 *
-	 * @param int   $id   Location ID.
-	 * @param array $data Fields to update.
+	 * @param int          $id   Location ID.
+	 * @param array<mixed> $data Fields to update.
 	 * @return bool
 	 */
 	public function update( $id, array $data ) {
@@ -207,7 +207,7 @@ class LocationRepository {
 	 *
 	 * @param array      $data     Input.
 	 * @param array|null $existing Existing row when updating.
-	 * @return array
+	 * @return array<mixed>
 	 * @throws \InvalidArgumentException When required fields are missing.
 	 */
 	protected function normalize( array $data, $existing ) {
@@ -230,31 +230,30 @@ class LocationRepository {
 		}
 
 		return array(
-			'name'             => $name,
-			'type'             => $type,
-			'address'          => isset( $data['address'] ) ? sanitize_text_field( (string) $data['address'] ) : '',
-			'city'             => isset( $data['city'] ) ? sanitize_text_field( (string) $data['city'] ) : '',
-			'identifier'       => $identifier,
-			'active'           => empty( $data['active'] ) ? 0 : 1,
-			'applies_to'       => $this->encode_json( isset( $data['applies_to'] ) ? $data['applies_to'] : array() ),
+			'name'              => $name,
+			'type'              => $type,
+			'address'           => isset( $data['address'] ) ? sanitize_text_field( (string) $data['address'] ) : '',
+			'city'              => isset( $data['city'] ) ? sanitize_text_field( (string) $data['city'] ) : '',
+			'identifier'        => $identifier,
+			'active'            => empty( $data['active'] ) ? 0 : 1,
+			'applies_to'        => $this->encode_json( isset( $data['applies_to'] ) ? $data['applies_to'] : array() ),
 			'price_list_config' => $this->encode_json( isset( $data['price_list_config'] ) ? $data['price_list_config'] : array() ),
-			'sequence_no'      => $existing ? (int) $existing['sequence_no'] : ( isset( $data['sequence_no'] ) ? (int) $data['sequence_no'] : 0 ),
-			'created_at'       => $existing ? $existing['created_at'] : Dates::now_utc(),
-			'updated_at'       => Dates::now_utc(),
+			'sequence_no'       => $existing ? (int) $existing['sequence_no'] : ( isset( $data['sequence_no'] ) ? (int) $data['sequence_no'] : 0 ),
+			'created_at'        => $existing ? $existing['created_at'] : Dates::now_utc(),
+			'updated_at'        => Dates::now_utc(),
 		);
 	}
 
 	/**
 	 * Decode JSON columns.
 	 *
-	 * @param array $row Database row.
-	 * @return array
-	 */
+	 * @param array<mixed> $row Database row.
+	 * @return array<mixed>  */
 	protected function hydrate( array $row ) {
-		$row['id']               = (int) $row['id'];
-		$row['active']           = (bool) $row['active'];
-		$row['sequence_no']      = (int) $row['sequence_no'];
-		$row['applies_to']       = $this->decode_json( $row['applies_to'] );
+		$row['id']                = (int) $row['id'];
+		$row['active']            = (bool) $row['active'];
+		$row['sequence_no']       = (int) $row['sequence_no'];
+		$row['applies_to']        = $this->decode_json( $row['applies_to'] );
 		$row['price_list_config'] = $this->decode_json( $row['price_list_config'] );
 
 		return $row;
@@ -283,8 +282,7 @@ class LocationRepository {
 	 * Decode a JSON column.
 	 *
 	 * @param mixed $value Value.
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	protected function decode_json( $value ) {
 		if ( empty( $value ) ) {
 			return array();

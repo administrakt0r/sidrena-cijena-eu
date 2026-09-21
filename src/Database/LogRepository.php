@@ -89,7 +89,7 @@ class LogRepository {
 	/**
 	 * Query log entries.
 	 *
-	 * @param array $args `level`, `event`, `date_from`, `date_to`, `page`, `per_page`.
+	 * @param array<mixed> $args `level`, `event`, `date_from`, `date_to`, `page`, `per_page`.
 	 * @return array{items:array[],total:int}
 	 */
 	public function query( array $args = array() ) {

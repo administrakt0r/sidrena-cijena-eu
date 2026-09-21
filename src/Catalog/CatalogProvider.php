@@ -55,7 +55,7 @@ interface CatalogProvider {
 	 * `include` (IDs), `exclude` (IDs), `category` (slug), `search`,
 	 * `orderby`, `order`, `parent` (parent ID).
 	 *
-	 * @param array $args Query arguments.
+	 * @param array<mixed> $args Query arguments.
 	 * @return CatalogItem[]
 	 */
 	public function get_items( array $args = array() );
@@ -63,7 +63,7 @@ interface CatalogProvider {
 	/**
 	 * Total number of items matching a query.
 	 *
-	 * @param array $args Query arguments (without pagination).
+	 * @param array<mixed> $args Query arguments (without pagination).
 	 * @return int
 	 */
 	public function count_items( array $args = array() );
@@ -71,7 +71,7 @@ interface CatalogProvider {
 	/**
 	 * Stream items in batches.
 	 *
-	 * @param array $args Query arguments.
+	 * @param array<mixed> $args Query arguments.
 	 * @return \Generator<int,CatalogItem>
 	 */
 	public function iterate( array $args = array() );

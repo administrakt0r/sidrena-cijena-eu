@@ -150,7 +150,7 @@ final class CatalogItem {
 	/**
 	 * Hydrate from an array, casting known fields.
 	 *
-	 * @param array $data Field values.
+	 * @param array<mixed> $data Field values.
 	 */
 	public function __construct( array $data = array() ) {
 		$this->id            = isset( $data['id'] ) ? (int) $data['id'] : 0;
@@ -224,8 +224,7 @@ final class CatalogItem {
 	/**
 	 * Export-safe array representation.
 	 *
-	 * @return array
-	 */
+	 * @return array<mixed>  */
 	public function to_array() {
 		return array(
 			'id'            => $this->id,

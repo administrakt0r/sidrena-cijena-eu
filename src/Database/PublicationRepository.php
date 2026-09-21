@@ -61,7 +61,7 @@ class PublicationRepository {
 	/**
 	 * Insert a publication row.
 	 *
-	 * @param array $data Fields.
+	 * @param array<mixed> $data Fields.
 	 * @return int Inserted ID.
 	 */
 	public function insert( array $data ) {
@@ -77,8 +77,8 @@ class PublicationRepository {
 	/**
 	 * Update a publication row.
 	 *
-	 * @param int   $id   Row ID.
-	 * @param array $data Fields.
+	 * @param int          $id   Row ID.
+	 * @param array<mixed> $data Fields.
 	 * @return bool
 	 */
 	public function update( $id, array $data ) {
@@ -94,9 +94,9 @@ class PublicationRepository {
 	/**
 	 * Set the status of a publication.
 	 *
-	 * @param int   $id     Row ID.
+	 * @param int    $id     Row ID.
 	 * @param string $status New status.
-	 * @param array $extra  Additional fields (for example `published_at`, `validation_summary`).
+	 * @param array  $extra  Additional fields (for example `published_at`, `validation_summary`).
 	 * @return bool
 	 */
 	public function set_status( $id, $status, array $extra = array() ) {
@@ -167,9 +167,9 @@ class PublicationRepository {
 	/**
 	 * Mark all other retained publications for a location/format as superseded.
 	 *
-	 * @param int $location_id Location ID.
+	 * @param int    $location_id Location ID.
 	 * @param string $format   Format.
-	 * @param int  $except_id  Row to keep.
+	 * @param int    $except_id  Row to keep.
 	 * @return void
 	 */
 	public function supersede( $location_id, $format, $except_id ) {
@@ -189,7 +189,7 @@ class PublicationRepository {
 	/**
 	 * Paginated index of retained publications.
 	 *
-	 * @param array $args Query arguments: `location`, `format`, `page`, `per_page`, `include_expired`.
+	 * @param array<mixed> $args Query arguments: `location`, `format`, `page`, `per_page`, `include_expired`.
 	 * @return array{items:array[],total:int}
 	 */
 	public function index( array $args = array() ) {
@@ -251,7 +251,7 @@ class PublicationRepository {
 	 * Publications whose retention has elapsed and whose file is still present.
 	 *
 	 * @param string $now_utc Current UTC datetime.
-	 * @return array[]
+	 * @return array<mixed>[]
 	 */
 	public function expired_candidates( $now_utc ) {
 		global $wpdb;
@@ -339,7 +339,7 @@ class PublicationRepository {
 	 *
 	 * @param int $location_id Location ID.
 	 * @param int $limit       Maximum rows.
-	 * @return array[]
+	 * @return array<mixed>[]
 	 */
 	public function for_location( $location_id, $limit = 20 ) {
 		global $wpdb;
@@ -360,29 +360,28 @@ class PublicationRepository {
 	/**
 	 * Normalize a row for persistence.
 	 *
-	 * @param array $data Input.
-	 * @return array
-	 */
+	 * @param array<mixed> $data Input.
+	 * @return array<mixed>  */
 	protected function normalize( array $data ) {
 		return array(
-			'location_id'        => isset( $data['location_id'] ) ? (int) $data['location_id'] : 0,
-			'format'             => isset( $data['format'] ) && 'xml' === $data['format'] ? 'xml' : 'csv',
-			'filename'           => isset( $data['filename'] ) ? (string) $data['filename'] : '',
-			'path'               => isset( $data['path'] ) ? (string) $data['path'] : '',
-			'url'                => isset( $data['url'] ) ? (string) $data['url'] : '',
-			'checksum'           => isset( $data['checksum'] ) ? (string) $data['checksum'] : '',
+			'location_id'         => isset( $data['location_id'] ) ? (int) $data['location_id'] : 0,
+			'format'              => isset( $data['format'] ) && 'xml' === $data['format'] ? 'xml' : 'csv',
+			'filename'            => isset( $data['filename'] ) ? (string) $data['filename'] : '',
+			'path'                => isset( $data['path'] ) ? (string) $data['path'] : '',
+			'url'                 => isset( $data['url'] ) ? (string) $data['url'] : '',
+			'checksum'            => isset( $data['checksum'] ) ? (string) $data['checksum'] : '',
 			'content_fingerprint' => isset( $data['content_fingerprint'] ) ? (string) $data['content_fingerprint'] : '',
-			'file_size'          => isset( $data['file_size'] ) ? (int) $data['file_size'] : 0,
-			'rule_version'       => isset( $data['rule_version'] ) ? (string) $data['rule_version'] : '',
-			'status'             => isset( $data['status'] ) && in_array( $data['status'], self::STATUSES, true ) ? $data['status'] : 'pending',
-			'sequence_no'        => isset( $data['sequence_no'] ) ? (int) $data['sequence_no'] : 0,
-			'item_count'         => isset( $data['item_count'] ) ? (int) $data['item_count'] : 0,
-			'validation_summary' => isset( $data['validation_summary'] ) ? ( is_array( $data['validation_summary'] ) ? wp_json_encode( $data['validation_summary'] ) : (string) $data['validation_summary'] ) : null,
-			'created_at'         => isset( $data['created_at'] ) ? (string) $data['created_at'] : Dates::now_utc(),
-			'published_at'       => ! empty( $data['published_at'] ) ? (string) $data['published_at'] : null,
-			'expires_at'         => ! empty( $data['expires_at'] ) ? (string) $data['expires_at'] : null,
-			'expired_at'         => ! empty( $data['expired_at'] ) ? (string) $data['expired_at'] : null,
-			'created_by'         => isset( $data['created_by'] ) && null !== $data['created_by'] ? (int) $data['created_by'] : null,
+			'file_size'           => isset( $data['file_size'] ) ? (int) $data['file_size'] : 0,
+			'rule_version'        => isset( $data['rule_version'] ) ? (string) $data['rule_version'] : '',
+			'status'              => isset( $data['status'] ) && in_array( $data['status'], self::STATUSES, true ) ? $data['status'] : 'pending',
+			'sequence_no'         => isset( $data['sequence_no'] ) ? (int) $data['sequence_no'] : 0,
+			'item_count'          => isset( $data['item_count'] ) ? (int) $data['item_count'] : 0,
+			'validation_summary'  => isset( $data['validation_summary'] ) ? ( is_array( $data['validation_summary'] ) ? wp_json_encode( $data['validation_summary'] ) : (string) $data['validation_summary'] ) : null,
+			'created_at'          => isset( $data['created_at'] ) ? (string) $data['created_at'] : Dates::now_utc(),
+			'published_at'        => ! empty( $data['published_at'] ) ? (string) $data['published_at'] : null,
+			'expires_at'          => ! empty( $data['expires_at'] ) ? (string) $data['expires_at'] : null,
+			'expired_at'          => ! empty( $data['expired_at'] ) ? (string) $data['expired_at'] : null,
+			'created_by'          => ! empty( $data['created_by'] ) ? (int) $data['created_by'] : null,
 		);
 	}
 
@@ -398,9 +397,8 @@ class PublicationRepository {
 	/**
 	 * Cast types and decode JSON.
 	 *
-	 * @param array $row Row.
-	 * @return array
-	 */
+	 * @param array<mixed> $row Row.
+	 * @return array<mixed>  */
 	protected function hydrate( array $row ) {
 		$row['id']          = (int) $row['id'];
 		$row['location_id'] = (int) $row['location_id'];

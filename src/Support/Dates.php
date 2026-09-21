@@ -80,10 +80,10 @@ final class Dates {
 	/**
 	 * Convert a site-local datetime to a UTC MySQL datetime.
 	 *
-	 * @param \DateTimeInterface $datetime Site-local datetime.
+	 * @param \DateTimeImmutable $datetime Site-local datetime.
 	 * @return string
 	 */
-	public static function to_utc( \DateTimeInterface $datetime ) {
+	public static function to_utc( \DateTimeImmutable $datetime ) {
 		return $datetime->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
 	}
 
@@ -177,9 +177,9 @@ final class Dates {
 	 * @return int UTC timestamp.
 	 */
 	public static function next_occurrence( $time_hm, $working_days_only = false ) {
-		$parts = explode( ':', $time_hm );
-		$hour  = isset( $parts[0] ) ? (int) $parts[0] : 8;
-		$min   = isset( $parts[1] ) ? (int) $parts[1] : 0;
+		$parts = array_pad( explode( ':', $time_hm ), 2, '0' );
+		$hour  = (int) $parts[0];
+		$min   = (int) $parts[1];
 
 		$now   = self::now_site();
 		$today = $now->setTime( $hour, $min, 0 );
