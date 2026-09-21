@@ -27,3 +27,4 @@ Thumbs.db
 # Local overrides
 .env
 .env.*
+/.phpunit.result.cache

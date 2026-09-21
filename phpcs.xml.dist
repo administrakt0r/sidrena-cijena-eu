@@ -8,19 +8,25 @@
 	<exclude-pattern>/vendor/*</exclude-pattern>
 	<exclude-pattern>/specs/*</exclude-pattern>
 	<exclude-pattern>/.wp-env/*</exclude-pattern>
+	<exclude-pattern>*/index.php</exclude-pattern>
+	<exclude-pattern>/tools/*</exclude-pattern>
+	<exclude-pattern>/tests/unit/wp-stubs.php</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>
 	<arg value="sp"/>
 
 	<rule ref="WordPress">
-		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="sidrena-cijena"/>
+			<property name="text_domain" type="array">
+				<element value="sidrena-cijena"/>
+			</property>
 		</properties>
 	</rule>
 
@@ -28,8 +34,35 @@
 	<config name="testVersion" value="7.4-"/>
 	<config name="minimum_wp_version" value="6.8"/>
 
+	<!-- Repositories build dynamic SQL through $wpdb->prepare() with escaped
+	     identifiers; direct, prepared database access is their purpose. -->
 	<rule ref="WordPress.DB.DirectDatabaseQuery">
 		<exclude-pattern>src/Database/*</exclude-pattern>
 		<exclude-pattern>src/Support/Uninstaller.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.PreparedSQL">
+		<exclude-pattern>src/Database/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders">
+		<exclude-pattern>src/Database/*</exclude-pattern>
+	</rule>
+
+	<!-- Tests and the unit-test stubs intentionally use native file, JSON and
+	     string functions and keep helper classes next to their test cases. -->
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>tests/*</exclude-pattern>
+		<exclude-pattern>src/Support/Uninstaller.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.PHP.DiscouragedPHPFunctions">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.GlobalVariablesOverride">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
 </ruleset>

@@ -509,8 +509,8 @@ if ( ! function_exists( 'wp_date' ) ) {
 	/**
 	 * Date formatting stub.
 	 *
-	 * @param string          $format    Format.
-	 * @param int|null        $timestamp Timestamp.
+	 * @param string            $format    Format.
+	 * @param int|null          $timestamp Timestamp.
 	 * @param DateTimeZone|null $timezone Timezone.
 	 * @return string
 	 */
@@ -871,4 +871,202 @@ if ( ! class_exists( 'wpdb' ) ) {
 	}
 
 	$GLOBALS['wpdb'] = new wpdb();
+}
+
+if ( ! function_exists( 'wp_cache_get' ) ) {
+	/**
+	 * Object cache get stub.
+	 *
+	 * @param string $key   Key.
+	 * @param string $group Group.
+	 * @return mixed
+	 */
+	function wp_cache_get( $key, $group = '' ) {
+		unset( $key, $group );
+
+		return false;
+	}
+
+	/**
+	 * Object cache set stub.
+	 *
+	 * @return bool
+	 */
+	function wp_cache_set() {
+		return true;
+	}
+
+	/**
+	 * Object cache delete stub.
+	 *
+	 * @return bool
+	 */
+	function wp_cache_delete() {
+		return true;
+	}
+
+	/**
+	 * Current user ID stub.
+	 *
+	 * @return int
+	 */
+	function get_current_user_id() {
+		return 0;
+	}
+
+	/**
+	 * Ajax detection stub.
+	 *
+	 * @return bool
+	 */
+	function wp_doing_ajax() {
+		return false;
+	}
+
+	/**
+	 * Checked() helper.
+	 *
+	 * @param mixed $checked Value.
+	 * @param mixed $current Current.
+	 * @param bool  $echo    Whether to echo.
+	 * @return string
+	 */
+	function checked( $checked, $current = true, $echo = true ) {
+		$result = (string) $checked === (string) $current ? " checked='checked'" : '';
+
+		if ( $echo ) {
+			echo $result; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Selected() helper.
+	 *
+	 * @param mixed $selected Value.
+	 * @param mixed $current  Current.
+	 * @param bool  $echo     Whether to echo.
+	 * @return string
+	 */
+	function selected( $selected, $current = true, $echo = true ) {
+		$result = (string) $selected === (string) $current ? " selected='selected'" : '';
+
+		if ( $echo ) {
+			echo $result; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Shortcode attribute defaults.
+	 *
+	 * @param array  $pairs     Defaults.
+	 * @param array  $atts      Attributes.
+	 * @param string $shortcode Shortcode name.
+	 * @return array
+	 */
+	function shortcode_atts( $pairs, $atts, $shortcode = '' ) {
+		unset( $shortcode );
+
+		$atts = (array) $atts;
+		$out  = array();
+
+		foreach ( $pairs as $name => $default ) {
+			$out[ $name ] = array_key_exists( $name, $atts ) ? $atts[ $name ] : $default;
+		}
+
+		return $out;
+	}
+}
+
+if ( ! class_exists( 'WP_CLI' ) ) {
+	/**
+	 * Minimal WP-CLI facade stub used by static analysis and unit tests.
+	 */
+	class WP_CLI {
+
+		/**
+		 * Log a message.
+		 *
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function log( $message ) {}
+
+		/**
+		 * Log a success message.
+		 *
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function success( $message ) {}
+
+		/**
+		 * Log a warning.
+		 *
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function warning( $message ) {}
+
+		/**
+		 * Log an error.
+		 *
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function error( $message ) {}
+
+		/**
+		 * Print a line.
+		 *
+		 * @param string $message Message.
+		 * @return void
+		 */
+		public static function line( $message = '' ) {}
+
+		/**
+		 * Ask for confirmation.
+		 *
+		 * @param string $question    Question.
+		 * @param array  $assoc_args  Arguments.
+		 * @return bool
+		 */
+		public static function confirm( $question, $assoc_args = array() ) {
+			return true;
+		}
+
+		/**
+		 * Stop execution.
+		 *
+		 * @param string $message   Message.
+		 * @param int    $exit_code Exit code.
+		 * @return void
+		 */
+		public static function halt( $message, $exit_code = 0 ) {}
+
+		/**
+		 * Register a command.
+		 *
+		 * @param string   $name     Command name.
+		 * @param callable $callable Callback.
+		 * @return void
+		 */
+		public static function add_command( $name, $callable ) {}
+	}
+
+	/**
+	 * Base class for WP-CLI commands.
+	 */
+	class WP_CLI_Command {}
+}
+
+if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
+	define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__, 2 ) . '/' );
+}
+
+if ( ! defined( 'SIDRENA_CIJENA_URL' ) ) {
+	define( 'SIDRENA_CIJENA_URL', 'http://example.org/wp-content/plugins/sidrena-cijena/' );
 }

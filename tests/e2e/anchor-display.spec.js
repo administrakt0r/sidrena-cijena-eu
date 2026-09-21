@@ -1,0 +1,100 @@
+/**
+ * E2E: anchor price display on product pages, archives and shortcodes.
+ */
+const { test, expect } = require( '@playwright/test' );
+const { wpCli, wpEval } = require( './helpers' );
+
+const ANCHOR_PRICE = '25.00';
+const CURRENT_PRICE = '20.00';
+
+test.describe( 'Anchor price display', () => {
+	let productId;
+
+	test.beforeAll( () => {
+		wpCli( [ 'plugin', 'activate', 'sidrena-cijena' ] );
+
+		const created = wpEval(
+			'$p = new WC_Product_Simple();' +
+				"$p->set_name('E2E sidrena proizvod');" +
+				"$p->set_regular_price('" +
+				CURRENT_PRICE +
+				"');" +
+				"$p->set_sku('E2E-1');" +
+				'$id = $p->save(); echo $id;'
+		);
+
+		productId = parseInt( created.trim(), 10 );
+
+		wpEval(
+			"$item = \\SidrenaCijena\\Plugin::instance()->catalog()->get_item(" +
+				productId +
+				');' +
+				"\\SidrenaCijena\\Plugin::instance()->anchors()->record($item, '" +
+				ANCHOR_PRICE +
+				"', array('source' => 'manual'));"
+		);
+
+		wpEval(
+			"update_option('sidrena_cijena_settings', array_merge(SidrenaCijena\\Support\\Settings::defaults(), array('display_enabled' => true, 'display_location' => 'price_html')));"
+		);
+	} );
+
+	test.afterAll( () => {
+		if ( productId ) {
+			wpEval( 'wp_delete_post(' + productId + ', true);' );
+		}
+	} );
+
+	test( 'shows the anchor price on the single product page', async ( { page } ) => {
+		await page.goto( '/?p=' + productId );
+
+		const anchor = page.locator( '.sidrena-cijena .sidrena-cijena__anchor-value' );
+
+		await expect( anchor ).toHaveCount( 1 );
+		await expect( anchor ).toContainText( '25,00' );
+		await expect( page.locator( '.sidrena-cijena__label' ) ).toContainText( 'Sidrena cijena' );
+	} );
+
+	test( 'shows the anchor price in the product archive', async ( { page } ) => {
+		await page.goto( '/?post_type=product' );
+
+		await expect( page.locator( '.sidrena-cijena' ).first() ).toBeVisible();
+		await expect( page.locator( '.sidrena-cijena__anchor-value' ).first() ).toContainText( '25,00' );
+	} );
+
+	test( 'hides the anchor price when display is disabled', async ( { page } ) => {
+		wpEval(
+			"$s = SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = false; update_option('sidrena_cijena_settings', $s);"
+		);
+
+		await page.goto( '/?p=' + productId );
+
+		await expect( page.locator( '.sidrena-cijena' ) ).toHaveCount( 0 );
+
+		wpEval(
+			"$s = SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = true; update_option('sidrena_cijena_settings', $s);"
+		);
+	} );
+
+	test( 'renders through the shortcode', async ( { page } ) => {
+		const pageId = parseInt(
+			wpCli( [
+				'post',
+				'create',
+				'--post_type=page',
+				'--post_status=publish',
+				'--post_title=E2E sidrena shortcode',
+				'--post_content=[sidrena_cijena product_id=' + productId + ']',
+				'--porcelain',
+			] ).trim(),
+			10
+		);
+
+		await page.goto( '/?page_id=' + pageId );
+
+		await expect( page.locator( '.sidrena-cijena__anchor-value' ) ).toContainText( '25,00' );
+		await expect( page.locator( '.sidrena-cijena__current-value' ) ).toContainText( '20,00' );
+
+		wpEval( 'wp_delete_post(' + pageId + ', true);' );
+	} );
+} );

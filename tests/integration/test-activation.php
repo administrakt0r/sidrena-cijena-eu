@@ -64,11 +64,11 @@ class ActivationTest extends WP_UnitTestCase {
 		$history = new \SidrenaCijena\Database\PriceHistoryRepository();
 		$id      = $history->insert(
 			array(
-				'product_id'   => 123,
-				'price_type'   => 'anchor',
-				'price'        => 9.99,
+				'product_id'     => 123,
+				'price_type'     => 'anchor',
+				'price'          => 9.99,
 				'reference_date' => '2026-09-10',
-				'source'       => 'manual',
+				'source'         => 'manual',
 			)
 		);
 

@@ -112,7 +112,7 @@ class DatesTest extends TestCase {
 	}
 
 	/**
-	 * now_utc returns a MySQL datetime.
+	 * Verifies that now_utc returns a MySQL datetime.
 	 *
 	 * @return void
 	 */

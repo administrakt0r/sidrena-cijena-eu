@@ -29,6 +29,7 @@ if ( ! defined( 'SIDRENA_CIJENA_VERSION' ) ) {
 
 $sidrena_requested_suite = '';
 if ( isset( $_SERVER['argv'] ) && is_array( $_SERVER['argv'] ) ) {
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Test-runner CLI arguments compared as plain strings.
 	$sidrena_requested_suite = implode( ' ', array_map( 'strval', $_SERVER['argv'] ) );
 }
 

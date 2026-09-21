@@ -130,7 +130,7 @@ class MigratorTest extends TestCase {
 	}
 
 	/**
-	 * maybe_upgrade() only migrates when behind.
+	 * Verifies that maybe_upgrade() only migrates when behind.
 	 *
 	 * @return void
 	 */
@@ -146,7 +146,7 @@ class MigratorTest extends TestCase {
 	}
 
 	/**
-	 * installed_version() reflects the option.
+	 * Verifies that installed_version() reflects the option.
 	 *
 	 * @return void
 	 */
