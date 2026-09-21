@@ -248,7 +248,8 @@ class LocationRepository {
 	 * Decode JSON columns.
 	 *
 	 * @param array<mixed> $row Database row.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function hydrate( array $row ) {
 		$row['id']                = (int) $row['id'];
 		$row['active']            = (bool) $row['active'];
@@ -282,7 +283,8 @@ class LocationRepository {
 	 * Decode a JSON column.
 	 *
 	 * @param mixed $value Value.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function decode_json( $value ) {
 		if ( empty( $value ) ) {
 			return array();

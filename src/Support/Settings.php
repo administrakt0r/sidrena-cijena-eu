@@ -24,7 +24,8 @@ final class Settings {
 	/**
 	 * Default settings.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function defaults() {
 		return array(
 			'display_enabled'          => true,
@@ -52,7 +53,8 @@ final class Settings {
 	/**
 	 * All settings merged over defaults.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function all() {
 		$stored = get_option( self::OPTION, array() );
 
@@ -152,7 +154,8 @@ final class Settings {
 	 * Sanitize a settings array submitted through the Settings API.
 	 *
 	 * @param array<mixed> $input Raw input.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function sanitize( array $input ) {
 		$old    = self::all();
 		$output = $old;

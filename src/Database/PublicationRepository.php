@@ -361,7 +361,8 @@ class PublicationRepository {
 	 * Normalize a row for persistence.
 	 *
 	 * @param array<mixed> $data Input.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function normalize( array $data ) {
 		return array(
 			'location_id'         => isset( $data['location_id'] ) ? (int) $data['location_id'] : 0,
@@ -398,7 +399,8 @@ class PublicationRepository {
 	 * Cast types and decode JSON.
 	 *
 	 * @param array<mixed> $row Row.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function hydrate( array $row ) {
 		$row['id']          = (int) $row['id'];
 		$row['location_id'] = (int) $row['location_id'];

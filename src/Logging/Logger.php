@@ -116,7 +116,8 @@ final class Logger {
 	 *
 	 * @param array<mixed> $context Context.
 	 * @param int          $depth   Current recursion depth.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function sanitize_context( array $context, $depth = 0 ) {
 		if ( $depth > 5 ) {
 			return array();

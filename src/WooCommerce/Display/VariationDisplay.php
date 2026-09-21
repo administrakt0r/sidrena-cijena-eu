@@ -62,7 +62,8 @@ class VariationDisplay {
 	 * @param array                 $data      Variation data.
 	 * @param \WC_Product_Variable  $parent    Parent product.
 	 * @param \WC_Product_Variation $variation Variation.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public function filter_available_variation( $data, $parent, $variation ) {
 		unset( $parent );
 

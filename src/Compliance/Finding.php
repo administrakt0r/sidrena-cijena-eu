@@ -134,7 +134,8 @@ final class Finding {
 	/**
 	 * Array representation.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public function to_array() {
 		return array(
 			'severity'       => $this->severity,

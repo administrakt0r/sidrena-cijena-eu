@@ -335,7 +335,8 @@ class SpecialSaleRepository {
 	 * Cast types.
 	 *
 	 * @param array<mixed> $row Row.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function hydrate( array $row ) {
 		$row['id']                  = (int) $row['id'];
 		$row['product_id']          = (int) $row['product_id'];

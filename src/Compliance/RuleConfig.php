@@ -47,7 +47,8 @@ final class RuleConfig {
 	/**
 	 * Default rule configuration.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function defaults() {
 		return array(
 			'general_reference_date' => self::DEFAULT_GENERAL_DATE,
@@ -62,7 +63,8 @@ final class RuleConfig {
 	/**
 	 * All rule configuration merged over defaults.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function all() {
 		$stored = get_option( self::OPTION, array() );
 
@@ -102,7 +104,8 @@ final class RuleConfig {
 	 * Sanitize a configuration array submitted through the Settings API.
 	 *
 	 * @param mixed $input Raw input.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public static function sanitize( $input ) {
 		return self::apply( (array) $input, null, '' );
 	}

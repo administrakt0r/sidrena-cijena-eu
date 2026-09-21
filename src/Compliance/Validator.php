@@ -252,7 +252,8 @@ class Validator {
 	 *
 	 * @param CatalogItem[] $items Items.
 	 * @param array         $args  Arguments.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public function build_item_context( array $items, array $args = array() ) {
 		$product_ids = array();
 
@@ -284,7 +285,8 @@ class Validator {
 	 * Build the context passed to global rules.
 	 *
 	 * @param array<mixed> $args Arguments.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public function build_global_context( array $args = array() ) {
 		$locations = $this->locations->all( true );
 

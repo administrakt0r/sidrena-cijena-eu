@@ -224,7 +224,8 @@ final class CatalogItem {
 	/**
 	 * Export-safe array representation.
 	 *
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	public function to_array() {
 		return array(
 			'id'            => $this->id,

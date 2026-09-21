@@ -291,7 +291,8 @@ class StandaloneCatalogProvider implements CatalogProvider {
 	 * Build a tax query from supported filters.
 	 *
 	 * @param array<mixed> $args Query arguments.
-	 * @return array<mixed>  */
+	 * @return array<mixed>
+	 */
 	protected function build_tax_query( array $args ) {
 		$tax_query = array();
 
