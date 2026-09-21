@@ -13,7 +13,9 @@ namespace SidrenaCijena;
 
 use SidrenaCijena\Admin\AdminMenu;
 use SidrenaCijena\Admin\AnchorMetaBox;
+use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
+use SidrenaCijena\Api\PriceListController;
 use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
@@ -169,6 +171,11 @@ final class Plugin {
 		add_action( 'admin_notices', array( AnchorMetaBox::class, 'maybe_notice' ) );
 		add_action( 'sidrena_cijena_settings_changed', array( $this, 'flush_caches' ) );
 		add_action( 'sidrena_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
+		add_action( 'sidrena_cijena_price_changed', array( $this, 'flush_rest_cache' ) );
+		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
+		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
+		add_action( 'rest_api_init', array( PriceListController::class, 'register' ) );
+		add_action( 'admin_post_' . PublicationsPage::ACTION, array( PublicationsPage::class, 'handle_generate' ) );
 
 		Scheduler::register();
 
@@ -185,6 +192,16 @@ final class Plugin {
 	 */
 	public function flush_caches() {
 		$this->anchor_cache()->flush();
+		$this->rest_cache()->flush();
+	}
+
+	/**
+	 * Flush cached REST responses after price data changes.
+	 *
+	 * @return void
+	 */
+	public function flush_rest_cache() {
+		$this->rest_cache()->flush();
 	}
 
 	/**
