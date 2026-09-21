@@ -115,28 +115,28 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 2
 
-- [ ] T048 [P] [US2] Unit tests for `FilenameGenerator` (component order, diacritic transliteration, separator/case config, sequence, collision handling) in `tests/unit/Export/FilenameGeneratorTest.php`
-- [ ] T049 [P] [US2] Unit tests for CSV and XML writers (delimiter, comma decimals, quoting, escaping, stable order, byte-identical determinism) in `tests/unit/Export/CsvWriterTest.php` and `tests/unit/Export/XmlWriterTest.php`
-- [ ] T050 [P] [US2] Integration test for generation → validation → publication → archive → retention in `tests/integration/test-publication.php`
-- [ ] T051 [P] [US2] Integration test for REST `/prices`, `/prices.csv`, `/prices.xml`, `/publications` including pagination, caching headers and throttling in `tests/integration/test-rest.php`
-- [ ] T052 [P] [US2] Playwright test for manual generation, archive page, CSV/XML download URLs and REST endpoint in `tests/e2e/publication.spec.js`
+- [x] T048 [P] [US2] Unit tests for `FilenameGenerator` (component order, diacritic transliteration, separator/case config, sequence, collision handling) in `tests/unit/Export/FilenameGeneratorTest.php`
+- [x] T049 [P] [US2] Unit tests for CSV and XML writers (delimiter, comma decimals, quoting, escaping, stable order, byte-identical determinism) in `tests/unit/Export/CsvWriterTest.php` and `tests/unit/Export/XmlWriterTest.php`
+- [x] T050 [P] [US2] Integration test for generation → validation → publication → archive → retention in `tests/integration/test-publication.php`
+- [x] T051 [P] [US2] Integration test for REST `/prices`, `/prices.csv`, `/prices.xml`, `/publications` including pagination, caching headers and throttling in `tests/integration/test-rest.php`
+- [x] T052 [P] [US2] Playwright test for manual generation, archive page, CSV/XML download URLs and REST endpoint in `tests/e2e/publication.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T053 [P] [US2] Implement `src/Export/FilenameGenerator.php` exactly per `contracts/filename.md` (fixed components/order, configurable separator and case, validation before use)
-- [ ] T054 [P] [US2] Implement `src/Export/PriceListBuilder.php` building canonical rows per `contracts/csv-format.md` (products then services, ordering by `sifra`/`naziv`/ID, effective retail price, special-sale indicator/name, anchor price, availability)
-- [ ] T055 [P] [US2] Implement `src/Export/CsvWriter.php` (streaming, UTF-8 without BOM, `;` delimiter, comma decimals, RFC 4180 quoting, LF)
-- [ ] T056 [P] [US2] Implement `src/Export/XmlWriter.php` (streaming, versioned root with rule version and generation timestamp, escaped values, omitted empty elements)
-- [ ] T057 [US2] Implement `src/Export/Publisher.php`: write under `wp-content/uploads/sidrena-cijena/{location-slug}/` with an `index.html` guard, compute SHA-256 checksum and size, create the publication archive row, mark previous publications `superseded`, increment the location sequence, and suppress duplicates via content fingerprint
-- [ ] T058 [US2] Implement `src/Export/GenerationService.php`: batched, streamed generation per active location and format, validation gate before publishing, status transitions, structured logging, and per-location/per-format results
-- [ ] T059 [US2] Implement the default webshop location bootstrap (used until US6 adds full location management) and wire generation for the single-location case
-- [ ] T060 [US2] Implement `src/Cron/DailyGeneration.php`: daily event scheduled before the configured deadline (default 08:00 site time), queued single-event regeneration for service price changes, idempotent re-runs, and failure recording
-- [ ] T061 [US2] Implement `src/Admin/PublicationsPage.php`: human-readable archive list (filename, format, location, published/expires, checksum, item count, status, URL) with a "Generate now" action
-- [ ] T062 [US2] Implement `src/Api/PriceListController.php`: REST routes `/prices`, `/prices.csv`, `/prices.xml`, `/publications` with explicit `permission_callback`, pagination (`per_page` ≤ 500), `ETag`/`Last-Modified`, cache headers and per-IP throttling per `contracts/rest-api.md`
-- [ ] T063 [US2] Implement `src/Api/RestCache.php` with cache keys per filter set and invalidation on price/anchor/sale/settings changes
-- [ ] T064 [US2] Implement `src/Cron/CleanupJob.php`: delete publication files only at/after `expires_at`, retain archive rows, prune logs per retention
-- [ ] T065 [US2] Wire US2 services, cron events and REST routes in `src/Plugin.php`; log scheduled/manual/failed exports
-- [ ] T066 [US2] Run US2 unit, integration and Playwright suites; validate quickstart V4–V6; fix failures; commit
+- [x] T053 [P] [US2] Implement `src/Export/FilenameGenerator.php` exactly per `contracts/filename.md` (fixed components/order, configurable separator and case, validation before use)
+- [x] T054 [P] [US2] Implement `src/Export/PriceListBuilder.php` building canonical rows per `contracts/csv-format.md` (products then services, ordering by `sifra`/`naziv`/ID, effective retail price, special-sale indicator/name, anchor price, availability)
+- [x] T055 [P] [US2] Implement `src/Export/CsvWriter.php` (streaming, UTF-8 without BOM, `;` delimiter, comma decimals, RFC 4180 quoting, LF)
+- [x] T056 [P] [US2] Implement `src/Export/XmlWriter.php` (streaming, versioned root with rule version and generation timestamp, escaped values, omitted empty elements)
+- [x] T057 [US2] Implement `src/Export/Publisher.php`: write under `wp-content/uploads/sidrena-cijena/{location-slug}/` with an `index.html` guard, compute SHA-256 checksum and size, create the publication archive row, mark previous publications `superseded`, increment the location sequence, and suppress duplicates via content fingerprint
+- [x] T058 [US2] Implement `src/Export/GenerationService.php`: batched, streamed generation per active location and format, validation gate before publishing, status transitions, structured logging, and per-location/per-format results
+- [x] T059 [US2] Implement the default webshop location bootstrap (used until US6 adds full location management) and wire generation for the single-location case
+- [x] T060 [US2] Implement `src/Cron/DailyGeneration.php`: daily event scheduled before the configured deadline (default 08:00 site time), queued single-event regeneration for service price changes, idempotent re-runs, and failure recording
+- [x] T061 [US2] Implement `src/Admin/PublicationsPage.php`: human-readable archive list (filename, format, location, published/expires, checksum, item count, status, URL) with a "Generate now" action
+- [x] T062 [US2] Implement `src/Api/PriceListController.php`: REST routes `/prices`, `/prices.csv`, `/prices.xml`, `/publications` with explicit `permission_callback`, pagination (`per_page` ≤ 500), `ETag`/`Last-Modified`, cache headers and per-IP throttling per `contracts/rest-api.md`
+- [x] T063 [US2] Implement `src/Api/RestCache.php` with cache keys per filter set and invalidation on price/anchor/sale/settings changes
+- [x] T064 [US2] Implement `src/Cron/CleanupJob.php`: delete publication files only at/after `expires_at`, retain archive rows, prune logs per retention
+- [x] T065 [US2] Wire US2 services, cron events and REST routes in `src/Plugin.php`; log scheduled/manual/failed exports
+- [x] T066 [US2] Run US2 unit, integration and Playwright suites; validate quickstart V4–V6; fix failures; commit
 
 **Checkpoint**: Price lists are generated, published, archived and machine-retrievable.
 
