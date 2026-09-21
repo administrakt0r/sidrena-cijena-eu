@@ -209,8 +209,10 @@ final class Settings {
 		}
 
 		if ( isset( $input['sale_types'] ) ) {
-			$types = is_array( $input['sale_types'] ) ? $input['sale_types'] : explode( ',', (string) $input['sale_types'] );
-			$types = array_filter( array_map( 'sanitize_key', $types ) );
+			$types = is_array( $input['sale_types'] )
+				? $input['sale_types']
+				: preg_split( '/[\r\n,;]+/', (string) $input['sale_types'] );
+			$types = array_filter( array_map( 'sanitize_key', (array) $types ) );
 
 			if ( ! empty( $types ) ) {
 				$output['sale_types'] = array_values( array_unique( $types ) );

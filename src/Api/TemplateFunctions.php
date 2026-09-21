@@ -159,7 +159,11 @@ final class TemplateFunctions {
 			'display' => \SidrenaCijena\Support\Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 		);
 
-		$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
+
+		if ( ! $template ) {
+			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+		}
 
 		if ( ! is_readable( $template ) ) {
 			return '';

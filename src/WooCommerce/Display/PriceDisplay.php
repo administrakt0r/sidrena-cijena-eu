@@ -180,50 +180,49 @@ class PriceDisplay {
 		 */
 		$anchor_price = apply_filters( 'sidrena_cijena_anchor_price', $anchor_price, $item );
 
-		if ( null === $anchor_price ) {
-			return '';
-		}
-
 		$current_price = null !== $item->current_price ? (float) $item->current_price : null;
 
 		$only_when_different = array_key_exists( 'only_when_different', $args )
 			? (bool) $args['only_when_different']
 			: (bool) Settings::get( 'only_when_different' );
 
-		if ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) {
-			return '';
-		}
-
-		$label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena' ) );
-
-		/**
-		 * Filters the anchor-price label.
-		 *
-		 * @param string $label   Label.
-		 * @param string $context Rendering context.
-		 */
-		$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
-
 		$show_current = array_key_exists( 'show_current', $args ) ? (bool) $args['show_current'] : false;
 		$show_anchor  = array_key_exists( 'show_anchor', $args ) ? (bool) $args['show_anchor'] : true;
 
-		$template_args = array(
-			'item'            => $item,
-			'context'         => $context,
-			'label'           => $label,
-			'anchor_price'    => $anchor_price,
-			'anchor_display'  => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
-			'current_price'   => $current_price,
-			'current_display' => null === $current_price ? '' : Currency::format( $current_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
-			'show_current'    => $show_current,
-			'show_anchor'     => $show_anchor,
-			'reference_date'  => $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '',
-			'disclaimer'      => (string) Settings::get( 'disclaimer', '' ),
-			'product_id'      => (int) $item->id,
-			'variation_id'    => (int) $item->variation_id,
-		);
+		$html = '';
 
-		$html = $this->load_template( $template_args );
+		if ( null !== $anchor_price
+			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
+			$label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena' ) );
+
+			/**
+			 * Filters the anchor-price label.
+			 *
+			 * @param string $label   Label.
+			 * @param string $context Rendering context.
+			 */
+			$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
+
+			$template_args = array(
+				'item'            => $item,
+				'context'         => $context,
+				'label'           => $label,
+				'anchor_price'    => $anchor_price,
+				'anchor_display'  => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+				'current_price'   => $current_price,
+				'current_display' => null === $current_price ? '' : Currency::format( $current_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+				'show_current'    => $show_current,
+				'show_anchor'     => $show_anchor,
+				'reference_date'  => $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '',
+				'disclaimer'      => (string) Settings::get( 'disclaimer', '' ),
+				'product_id'      => (int) $item->id,
+				'variation_id'    => (int) $item->variation_id,
+			);
+
+			$html = $this->load_template( $template_args );
+		}
+
+		$html .= $this->render_thirty_day( $item, $context, $args );
 
 		/**
 		 * Filters the rendered anchor-price block.
@@ -233,6 +232,62 @@ class PriceDisplay {
 		 * @param string      $context Rendering context.
 		 */
 		return (string) apply_filters( 'sidrena_cijena_display_html', $html, $item, $context );
+	}
+
+	/**
+	 * Render the 30-day lowest price block for an item in a special sale.
+	 *
+	 * The 30-day price is rendered separately from the anchor price and never
+	 * substitutes for it (FR-021).
+	 *
+	 * @param CatalogItem  $item    Catalog item.
+	 * @param string       $context Rendering context.
+	 * @param array<mixed> $args    Rendering overrides.
+	 * @return string
+	 */
+	protected function render_thirty_day( CatalogItem $item, $context, array $args ) {
+		$show = array_key_exists( 'show_30_day', $args ) ? (bool) $args['show_30_day'] : true;
+
+		if ( ! $show ) {
+			return '';
+		}
+
+		$sales = Plugin::instance()->special_sales();
+		$sale  = $sales->active_for_item( (int) $item->id, (int) $item->variation_id );
+
+		if ( ( ! $sale || null === $sale['lowest_30_day_price'] ) && $item->is_variation() ) {
+			$sale = $sales->active_for_item( (int) $item->id, 0 );
+		}
+
+		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {
+			return '';
+		}
+
+		$price = (float) $sale['lowest_30_day_price'];
+
+		$template_args = array(
+			'item'    => $item,
+			'price'   => $price,
+			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena' ) ),
+			'display' => Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+		);
+
+		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
+
+		if ( ! $template ) {
+			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+		}
+
+		if ( ! is_readable( $template ) ) {
+			return '';
+		}
+
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		extract( $template_args, EXTR_SKIP );
+		include $template;
+
+		return (string) ob_get_clean();
 	}
 
 	/**

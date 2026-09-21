@@ -60,16 +60,16 @@ final class SettingsPage {
 	}
 
 	/**
-	 * Settings tabs: key => [class, label].
+	 * Settings tabs: key => [class, label, option group].
 	 *
-	 * @return array<string,array{0:string,1:string}>
+	 * @return array<string,array{0:string,1:string,2:string}>
 	 */
 	public static function tabs() {
 		$tabs = array(
-			'display'    => array( DisplaySettingsPage::class, __( 'Display', 'sidrena-cijena' ) ),
-			'legal'      => array( LegalSettingsPage::class, __( 'Legal rules', 'sidrena-cijena' ) ),
-			'sales'      => array( SaleTypesSettings::class, __( 'Special sales', 'sidrena-cijena' ) ),
-			'operations' => array( OperationsSettingsPage::class, __( 'Operations', 'sidrena-cijena' ) ),
+			'display'    => array( DisplaySettingsPage::class, __( 'Display', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
+			'legal'      => array( LegalSettingsPage::class, __( 'Legal rules', 'sidrena-cijena' ), self::GROUP_RULES ),
+			'sales'      => array( SaleTypesSettings::class, __( 'Special sales', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
+			'operations' => array( OperationsSettingsPage::class, __( 'Operations', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
 		);
 
 		/**
@@ -127,11 +127,7 @@ final class SettingsPage {
 				$definition = $tabs[ $tab ];
 				$class      = $definition[0];
 
-				if ( 'display' === $tab ) {
-					settings_fields( self::GROUP_SETTINGS );
-				} else {
-					settings_fields( self::GROUP_RULES );
-				}
+				settings_fields( $definition[2] );
 
 				$class::render_fields();
 

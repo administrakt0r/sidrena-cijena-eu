@@ -15,6 +15,7 @@ use SidrenaCijena\Admin\AdminMenu;
 use SidrenaCijena\Admin\AnchorMetaBox;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
+use SidrenaCijena\Admin\SpecialSaleMetaBox;
 use SidrenaCijena\Api\PriceListController;
 use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogProvider;
@@ -167,12 +168,16 @@ final class Plugin {
 		add_action( 'init', array( TemplateFunctions::class, 'register' ) );
 		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
 		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
+		add_action( 'add_meta_boxes', array( SpecialSaleMetaBox::class, 'register' ) );
 		add_action( 'admin_post_' . AnchorMetaBox::ACTION, array( AnchorMetaBox::class, 'handle_record' ) );
+		add_action( 'admin_post_' . SpecialSaleMetaBox::ACTION, array( SpecialSaleMetaBox::class, 'handle_save' ) );
 		add_action( 'admin_notices', array( AnchorMetaBox::class, 'maybe_notice' ) );
 		add_action( 'sidrena_cijena_settings_changed', array( $this, 'flush_caches' ) );
 		add_action( 'sidrena_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
 		add_action( 'sidrena_cijena_price_changed', array( $this, 'flush_rest_cache' ) );
+		add_action( 'sidrena_cijena_price_changed', array( $this, 'queue_service_regeneration' ), 10, 2 );
 		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
+		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
 		add_action( 'rest_api_init', array( PriceListController::class, 'register' ) );
 		add_action( 'admin_post_' . PublicationsPage::ACTION, array( PublicationsPage::class, 'handle_generate' ) );
@@ -202,6 +207,33 @@ final class Plugin {
 	 */
 	public function flush_rest_cache() {
 		$this->rest_cache()->flush();
+	}
+
+	/**
+	 * Queue a prompt price-list regeneration when a service price changed.
+	 *
+	 * Product changes are covered by the daily run; service changes must be
+	 * published no later than 08:00 on the day of the change (FR-041).
+	 *
+	 * @param int $product_id   Product ID.
+	 * @param int $variation_id Variation ID.
+	 * @return void
+	 */
+	public function queue_service_regeneration( $product_id, $variation_id = 0 ) {
+		$item = (int) $variation_id > 0
+			? $this->catalog()->get_variation( (int) $product_id, (int) $variation_id )
+			: $this->catalog()->get_item( (int) $product_id );
+
+		if ( ! $item || ! $item->is_service() ) {
+			return;
+		}
+
+		Scheduler::queue_service_regeneration(
+			array(
+				'product_id'   => (int) $product_id,
+				'variation_id' => (int) $variation_id,
+			)
+		);
 	}
 
 	/**
