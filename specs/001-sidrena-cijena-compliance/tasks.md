@@ -84,24 +84,24 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 1
 
-- [ ] T033 [P] [US1] Unit tests for reference-date resolution (general, legacy, mapped/unmapped categories, legacy disabled) in `tests/unit/Compliance/ReferenceDateResolverTest.php`
-- [ ] T034 [P] [US1] Unit tests for anchor resolution and correction semantics (no anchor → null + flag, manual record with reference date/source/reason, correction preserves original) in `tests/unit/Pricing/AnchorPriceServiceTest.php`
-- [ ] T035 [P] [US1] Integration test for anchor recording via admin and price-history append in `tests/integration/test-anchor-records.php`
-- [ ] T036 [P] [US1] Playwright test for anchor display on single product, archive and shortcode, including display disabled and variation switching, in `tests/e2e/anchor-display.spec.js`
+- [x] T033 [P] [US1] Unit tests for reference-date resolution (general, legacy, mapped/unmapped categories, legacy disabled) in `tests/unit/Compliance/ReferenceDateResolverTest.php`
+- [x] T034 [P] [US1] Unit tests for anchor resolution and correction semantics (no anchor → null + flag, manual record with reference date/source/reason, correction preserves original) in `tests/unit/Pricing/AnchorPriceServiceTest.php`
+- [x] T035 [P] [US1] Integration test for anchor recording via admin and price-history append in `tests/integration/test-anchor-records.php`
+- [x] T036 [P] [US1] Playwright test for anchor display on single product, archive and shortcode, including display disabled and variation switching, in `tests/e2e/anchor-display.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T037 [P] [US1] Implement `src/Compliance/ReferenceDateResolver.php` using `RuleConfig`: legacy mapping when enabled and mapped, otherwise the general date; auditable, no history rewrites
-- [ ] T038 [P] [US1] Implement `src/Pricing/AnchorPriceService.php`: resolve the latest valid anchor record per item/variation, record anchors with `reference_date`, `source`, `currency`, `tax_inclusive`, `created_by`, and flag items with no anchor or introduced after the reference date
-- [ ] T039 [US1] Implement `src/Admin/AnchorMetaBox.php`: read-only anchor summary (price, reference date, source, status) on WooCommerce product and standalone item edit screens, with a nonce-protected record/verify action and a link to the full price history
-- [ ] T040 [US1] Implement `src/Pricing/AnchorCache.php`: object-cache/transient lookups keyed by product/variation with invalidation on price change, anchor change and settings change
-- [ ] T041 [US1] Implement `src/WooCommerce/Display/PriceDisplay.php`: `woocommerce_get_price_html` filter plus `woocommerce_single_product_summary` and archive loop actions, honoring enable/label/location/priority/archives/variations/only-when-different settings, rendering via `templates/anchor-price.php`
-- [ ] T042 [US1] Implement `src/WooCommerce/Display/VariationDisplay.php`: extend `woocommerce_available_variation` with anchor data and update it on variation selection via `assets/js/frontend.js`
-- [ ] T043 [P] [US1] Create `templates/anchor-price.php` and `assets/css/frontend.css` with stable classes (`sidrena-cijena`, `sidrena-cijena__current`, `sidrena-cijena__anchor`) and accessible, non-misleading markup
-- [ ] T044 [P] [US1] Implement `src/Api/TemplateFunctions.php` (`sidrena_cijena_get_anchor_price`, `sidrena_cijena_get_lowest_30_day_price`, `sidrena_cijena_render_anchor_price`), documented global wrappers, and the `[sidrena_cijena]` shortcode
-- [ ] T045 [US1] Implement `src/Admin/DisplaySettingsPage.php` (frontend display enable, anchor label default "Sidrena cijena", currency display, location, priority, archives, product pages, variations, only-when-different, administrative disclaimer) and `src/Admin/LegalSettingsPage.php` (reference dates, legacy mapping, legacy enable, rule version) using the Settings API with capability checks and logging
-- [ ] T046 [US1] Wire US1 services and hooks in `src/Plugin.php` and add the WooCommerce Store API product extension for block templates where technically possible
-- [ ] T047 [US1] Run US1 unit, integration and Playwright suites; validate quickstart V2; fix failures; commit
+- [x] T037 [P] [US1] Implement `src/Compliance/ReferenceDateResolver.php` using `RuleConfig`: legacy mapping when enabled and mapped, otherwise the general date; auditable, no history rewrites
+- [x] T038 [P] [US1] Implement `src/Pricing/AnchorPriceService.php`: resolve the latest valid anchor record per item/variation, record anchors with `reference_date`, `source`, `currency`, `tax_inclusive`, `created_by`, and flag items with no anchor or introduced after the reference date
+- [x] T039 [US1] Implement `src/Admin/AnchorMetaBox.php`: read-only anchor summary (price, reference date, source, status) on WooCommerce product and standalone item edit screens, with a nonce-protected record/verify action and a link to the full price history
+- [x] T040 [US1] Implement `src/Pricing/AnchorCache.php`: object-cache/transient lookups keyed by product/variation with invalidation on price change, anchor change and settings change
+- [x] T041 [US1] Implement `src/WooCommerce/Display/PriceDisplay.php`: `woocommerce_get_price_html` filter plus `woocommerce_single_product_summary` and archive loop actions, honoring enable/label/location/priority/archives/variations/only-when-different settings, rendering via `templates/anchor-price.php`
+- [x] T042 [US1] Implement `src/WooCommerce/Display/VariationDisplay.php`: extend `woocommerce_available_variation` with anchor data and update it on variation selection via `assets/js/frontend.js`
+- [x] T043 [P] [US1] Create `templates/anchor-price.php` and `assets/css/frontend.css` with stable classes (`sidrena-cijena`, `sidrena-cijena__current`, `sidrena-cijena__anchor`) and accessible, non-misleading markup
+- [x] T044 [P] [US1] Implement `src/Api/TemplateFunctions.php` (`sidrena_cijena_get_anchor_price`, `sidrena_cijena_get_lowest_30_day_price`, `sidrena_cijena_render_anchor_price`), documented global wrappers, and the `[sidrena_cijena]` shortcode
+- [x] T045 [US1] Implement `src/Admin/DisplaySettingsPage.php` (frontend display enable, anchor label default "Sidrena cijena", currency display, location, priority, archives, product pages, variations, only-when-different, administrative disclaimer) and `src/Admin/LegalSettingsPage.php` (reference dates, legacy mapping, legacy enable, rule version) using the Settings API with capability checks and logging
+- [x] T046 [US1] Wire US1 services and hooks in `src/Plugin.php` and add the WooCommerce Store API product extension for block templates where technically possible
+- [x] T047 [US1] Run US1 unit, integration and Playwright suites; validate quickstart V2; fix failures; commit
 
 **Checkpoint**: Anchor prices are recorded and displayed; US1 is independently shippable.
 
