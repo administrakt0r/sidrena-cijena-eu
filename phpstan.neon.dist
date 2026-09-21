@@ -1,0 +1,19 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 6
+	paths:
+		- src
+		- sidrena-cijena.php
+		- uninstall.php
+	excludePaths:
+		- tests
+		- vendor
+	bootstrapFiles:
+		- tests/unit/wp-stubs.php
+	ignoreErrors:
+		-
+			message: '#Function (get_terms|wp_delete_term|wp_schedule_event|wp_clear_scheduled_hook|wp_next_scheduled|wp_upload_dir|wp_delete_file|get_posts|wp_delete_post|load_plugin_textdomain|register_activation_hook|register_deactivation_hook|plugin_dir_path|plugin_dir_url|plugin_basename|wp_schedule_single_event|wp_doing_cron|as_next_scheduled_action|as_enqueue_async_action|as_schedule_single_action|as_unschedule_all_actions|wc_get_product|wc_get_products|wc_get_product_category_list|wc_get_price_decimals|wc_prices_include_tax|wc_get_page_id|wc_get_cart_url|is_woocommerce|WC|WP_CLI|WP_List_Table) not found#'
+		-
+			message: '#Constant (WC_VERSION|WP_CLI|WP_ENV) not found#'

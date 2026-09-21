@@ -1,0 +1,29 @@
+# Development dependencies
+/node_modules/
+/vendor/
+/.opencode/node_modules/
+
+# WordPress development environment
+/.wp-env/
+/wp-content/
+
+# Generated artifacts and exports
+/sidrena-cijena-export-*
+*.log
+coverage/
+test-results/
+playwright-report/
+/tests/e2e/.auth/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.tmp
+*.swp
+*.swo
+
+# Local overrides
+.env
+.env.*

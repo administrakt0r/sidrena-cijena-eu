@@ -1,0 +1,19 @@
+{
+	"name": "sidrena-cijena",
+	"version": "1.0.0",
+	"description": "Development tooling for the Sidrena cijena WordPress plugin.",
+	"private": true,
+	"license": "GPL-2.0-or-later",
+	"devDependencies": {
+		"@playwright/test": "^1.50.0",
+		"@wordpress/env": "^10.0.0",
+		"@wordpress/scripts": "^30.0.0"
+	},
+	"scripts": {
+		"wp-env": "wp-env",
+		"wp-env:test": "wp-env --config .wp-env.test.json",
+		"test:e2e": "playwright test",
+		"lint:js": "wp-scripts lint-js assets/js",
+		"format:js": "wp-scripts format assets/js"
+	}
+}

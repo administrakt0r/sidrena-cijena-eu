@@ -1,0 +1,14 @@
+# English (United States) translation for Sidrena cijena.
+# Source strings are English; this catalogue exists for completeness.
+msgid ""
+msgstr ""
+"Project-Id-Version: Sidrena cijena 1.0.0\n"
+"Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\n"
+"POT-Creation-Date: 2026-09-21T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-09-21T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_US\n"
+"X-Generator: tools/i18n/make-pot.php\n"
+"X-Domain: sidrena-cijena\n"

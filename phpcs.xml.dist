@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="Sidrena Cijena">
+	<description>WordPress Coding Standards for the Sidrena cijena plugin.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/specs/*</exclude-pattern>
+	<exclude-pattern>/.wp-env/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="sidrena-cijena"/>
+		</properties>
+	</rule>
+
+	<rule ref="PHPCompatibilityWP"/>
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="6.8"/>
+
+	<rule ref="WordPress.DB.DirectDatabaseQuery">
+		<exclude-pattern>src/Database/*</exclude-pattern>
+		<exclude-pattern>src/Support/Uninstaller.php</exclude-pattern>
+	</rule>
+</ruleset>
