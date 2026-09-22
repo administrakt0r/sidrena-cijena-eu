@@ -234,10 +234,10 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Implementation for User Story 6
 
-- [ ] T100 [US6] Implement `src/Admin/LocationsPage.php`: list and add/edit screens for name, type, address, city, identifier (required, unique), active status, applicable products and price-list configuration (format selection, separator/case), with capability checks and nonces
-- [ ] T101 [US6] Implement per-location generation wiring in `src/Export/GenerationService.php`: applicability filter, per-location filename configuration and independent sequence counters
-- [ ] T102 [US6] Implement location deletion guard (deactivate instead of delete when retained publications exist) and the REST location filter in `src/Api/PriceListController.php`
-- [ ] T103 [US6] Run US6 integration and Playwright suites; validate quickstart V9; fix failures; commit
+- [x] T100 [US6] Implement `src/Admin/LocationsPage.php`: list and add/edit screens for name, type, address, city, identifier (required, unique), active status, applicable products and price-list configuration (format selection, separator/case), with capability checks and nonces
+- [x] T101 [US6] Implement per-location generation wiring in `src/Export/GenerationService.php`: applicability filter, per-location filename configuration and independent sequence counters
+- [x] T102 [US6] Implement location deletion guard (deactivate instead of delete when retained publications exist) and the REST location filter in `src/Api/PriceListController.php`
+- [x] T103 [US6] Run US6 integration and Playwright suites; validate quickstart V9; fix failures; commit
 
 **Checkpoint**: Multi-location merchants produce compliant per-location files without data duplication.
 
@@ -300,13 +300,13 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 **Purpose**: Documentation, hardening, performance, full regression and final acceptance
 
-- [ ] T125 [P] Write `docs/legal-rules.md` covering the anchor price, reference dates, legacy 2025 categories, the 2026 expansion, the 30-day lowest-price distinction, online cjenik requirements, retention, machine-readable access, primary-source citations and documented uncertainties, plus the not-legal-advice disclaimer
-- [ ] T126 [P] Write `docs/development.md` (Docker, Node LTS, clone, `npm install`, `npm run wp-env start`, http://localhost:8888, development-only credentials, test environment, stop/clean/destroy)
-- [ ] T127 [P] Write `docs/price-history.md` (record types, append-only semantics, corrections, sources, audit)
-- [ ] T128 [P] Write `docs/price-list-format.md` (CSV columns, XML schema, filename structure, decimal conventions, examples)
-- [ ] T129 [P] Write `docs/woocommerce.md` (supported product types, hooks used, template functions/shortcode, brand/unit/barcode sources, blocks limitations)
-- [ ] T130 [P] Write `docs/testing.md` (unit/integration/E2E commands, fixtures, test-product scenarios)
-- [ ] T131 [P] Write `docs/troubleshooting.md` (missing anchors, stale price lists, cron issues, permissions, common findings)
+- [x] T125 [P] Write `docs/legal-rules.md` covering the anchor price, reference dates, legacy 2025 categories, the 2026 expansion, the 30-day lowest-price distinction, online cjenik requirements, retention, machine-readable access, primary-source citations and documented uncertainties, plus the not-legal-advice disclaimer
+- [x] T126 [P] Write `docs/development.md` (Docker, Node LTS, clone, `npm install`, `npm run wp-env start`, http://localhost:8888, development-only credentials, test environment, stop/clean/destroy)
+- [x] T127 [P] Write `docs/price-history.md` (record types, append-only semantics, corrections, sources, audit)
+- [x] T128 [P] Write `docs/price-list-format.md` (CSV columns, XML schema, filename structure, decimal conventions, examples)
+- [x] T129 [P] Write `docs/woocommerce.md` (supported product types, hooks used, template functions/shortcode, brand/unit/barcode sources, blocks limitations)
+- [x] T130 [P] Write `docs/testing.md` (unit/integration/E2E commands, fixtures, test-product scenarios)
+- [x] T131 [P] Write `docs/troubleshooting.md` (missing anchors, stale price lists, cron issues, permissions, common findings)
 - [x] T132 [P] Create `tests/fixtures/example-price-list.csv` and `tests/fixtures/example-price-list.xml` matching the format contracts and verify they validate
 - [x] T133 [P] Generate and commit `languages/sidrena-cijena.pot`, complete `hr_HR.po`/`.mo` and `en_US.po`; verify no untranslated user-visible strings
 - [x] T134 Performance pass: verify indexes are used, anchor lookups are cached, archive pages issue no catalog-wide queries, and 10,000-item export streams within the batch window
