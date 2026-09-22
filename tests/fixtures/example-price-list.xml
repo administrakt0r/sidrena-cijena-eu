@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cjenik verzija="1.0" pravilo="2026-10-01" generirano="2026-10-01T07:50:00+02:00">
+  <prodajnoMjesto oznaka="P1" naziv="Webshop" oblik="webshop" adresa="Vlaška 68" grad="Zagreb">
+    <stavka vrsta="proizvod">
+      <naziv>Kava mljevena 250 g</naziv>
+      <sifra>KAV-250</sifra>
+      <marka>Franck</marka>
+      <jedinicaMjere>kg</jedinicaMjere>
+      <cijenaZaJedinicuMjere>28.00</cijenaZaJedinicuMjere>
+      <maloprodajnaCijena>6.99</maloprodajnaCijena>
+      <posebanOblikProdaje>true</posebanOblikProdaje>
+      <nazivPosebnogOblikaProdaje>akcija</nazivPosebnogOblikaProdaje>
+      <sidrenaCijena>7.49</sidrenaCijena>
+      <barkod>3851234567890</barkod>
+      <dostupnost>dostupno</dostupnost>
+    </stavka>
+    <stavka vrsta="proizvod">
+      <naziv>Šećer kristal 1 kg</naziv>
+      <sifra>SEC-1000</sifra>
+      <marka>Viro</marka>
+      <jedinicaMjere>kg</jedinicaMjere>
+      <cijenaZaJedinicuMjere>1.49</cijenaZaJedinicuMjere>
+      <maloprodajnaCijena>1.49</maloprodajnaCijena>
+      <posebanOblikProdaje>false</posebanOblikProdaje>
+      <sidrenaCijena>1.79</sidrenaCijena>
+      <dostupnost>dostupno</dostupnost>
+    </stavka>
+    <stavka vrsta="usluga">
+      <naziv>Šišanje &amp; brijanje</naziv>
+      <sifra>SIS-MB</sifra>
+      <cijenaZaJedinicuMjere>35.00</cijenaZaJedinicuMjere>
+      <maloprodajnaCijena>35.00</maloprodajnaCijena>
+      <posebanOblikProdaje>false</posebanOblikProdaje>
+      <sidrenaCijena>39.00</sidrenaCijena>
+      <dostupnost>dostupno</dostupnost>
+    </stavka>
+  </prodajnoMjesto>
+</cjenik>

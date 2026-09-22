@@ -56,7 +56,7 @@ $pot .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
 $pot .= "\"X-Generator: tools/i18n/make-pot.php\\n\"\n";
 $pot .= "\"X-Domain: sidrena-cijena\\n\"\n\n";
 
-foreach ( $strings as $string ) {
+foreach ( $strings as $string => $unused ) {
 	$pot .= 'msgid "' . sidrena_po_escape( $string ) . "\"\n";
 	$pot .= "msgstr \"\"\n\n";
 }
@@ -93,7 +93,7 @@ if ( '' !== $locale ) {
 	$translated = 0;
 	$missing    = 0;
 
-	foreach ( $strings as $string ) {
+	foreach ( $strings as $string => $unused ) {
 		$po .= 'msgid "' . sidrena_po_escape( $string ) . "\"\n";
 
 		if ( isset( $translations[ $string ] ) && '' !== $translations[ $string ] ) {
@@ -148,8 +148,17 @@ function sidrena_collect_php_files( $directory ) {
 function sidrena_extract_strings( $contents, &$strings ) {
 	$pattern = '/(?:__|_e|esc_html__|esc_attr__|esc_html_e|esc_attr_e)\s*\(\s*([\'"])((?:\\\\.|(?!\1).)*)\1\s*,\s*[\'"]sidrena-cijena[\'"]/s';
 
-	if ( preg_match_all( $pattern, $contents, $matches ) ) {
-		foreach ( $matches[2] as $string ) {
+	if ( preg_match_all( $pattern, $contents, $matches, PREG_SET_ORDER ) ) {
+		foreach ( $matches as $match ) {
+			$quote  = $match[1];
+			$string = $match[2];
+
+			if ( "'" === $quote ) {
+				$string = str_replace( array( '\\\\', "\\'" ), array( '\\', "'" ), $string );
+			} else {
+				$string = stripcslashes( $string );
+			}
+
 			$strings[ $string ] = true;
 		}
 	}

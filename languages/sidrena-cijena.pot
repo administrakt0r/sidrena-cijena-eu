@@ -4,11 +4,1219 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.0\n"
 "Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\n"
-"POT-Creation-Date: 2026-09-21T00:00:00+00:00\n"
+"POT-Creation-Date: 2026-09-22T10:33:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: tools/i18n/make-pot.php\n"
 "X-Domain: sidrena-cijena\n"
+
+msgid "%1$d rows: %2$d valid, %3$d invalid, %4$d duplicate, %5$d would overwrite, %6$d unchanged."
+msgstr ""
+
+msgid "%d further findings are not shown. Export the report to see all of them."
+msgstr ""
+
+msgid "%d further findings are not shown; run the compliance check for the full report."
+msgstr ""
+
+msgid "%d item(s) have no anchor price yet."
+msgstr ""
+
+msgid "%d row(s) would overwrite existing anchor records. Confirm overwriting to continue."
+msgstr ""
+
+msgid "%s - Sidrena cijena"
+msgstr ""
+
+msgid "- select -"
+msgstr ""
+
+msgid "30 days"
+msgstr ""
+
+msgid "30-day price warnings"
+msgstr ""
+
+msgid "Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted."
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "A database table that appears to store price history."
+msgstr ""
+
+msgid "Add catalog item"
+msgstr ""
+
+msgid "Add location"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Administrative disclaimer"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "All events"
+msgstr ""
+
+msgid "All except the selected categories"
+msgstr ""
+
+msgid "All levels"
+msgstr ""
+
+msgid "All locations share one price catalog. Per-location settings only control which products are listed and how the file is named."
+msgstr ""
+
+msgid "All products and services"
+msgstr ""
+
+msgid "All sources"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "A location parameter is required when several sales locations are active."
+msgstr ""
+
+msgid "Amount only (6,99)"
+msgstr ""
+
+msgid "Anchor and price records already stored by this plugin."
+msgstr ""
+
+msgid "Anchor price"
+msgstr ""
+
+msgid "Anchor price display"
+msgstr ""
+
+msgid "Anchor price label"
+msgstr ""
+
+msgid "Anchor prices"
+msgstr ""
+
+msgid "Anchors missing"
+msgstr ""
+
+msgid "Anchors needing verification"
+msgstr ""
+
+msgid "Anchors valid"
+msgstr ""
+
+msgid "An identical anchor record already exists; the row will be skipped."
+msgstr ""
+
+msgid "Another location already uses this facility identifier."
+msgstr ""
+
+msgid "A plugin option indicates an existing price history source."
+msgstr ""
+
+msgid "Applicable products"
+msgstr ""
+
+msgid "Applicable reference date"
+msgstr ""
+
+msgid "A promotional price is set without a classified special form of sale. Classify the promotion (for example akcija or sniženje)."
+msgstr ""
+
+msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
+msgstr ""
+
+msgid "Archives and lists"
+msgstr ""
+
+msgid "A special form of sale must be classified with a sale type (FR-023)."
+msgstr ""
+
+msgid "Audit"
+msgstr ""
+
+msgid "A unique price-list filename could not be generated."
+msgstr ""
+
+msgid "Availability"
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
+msgid "A valid reference date is required for anchor prices."
+msgstr ""
+
+msgid "Barcode"
+msgstr ""
+
+msgid "Before you import"
+msgstr ""
+
+msgid "Both formats are published for every location unless the location restricts them."
+msgstr ""
+
+msgid "Branch office (poslovnica)"
+msgstr ""
+
+msgid "Brand"
+msgstr ""
+
+msgid "Brands"
+msgstr ""
+
+msgid "Cancel editing"
+msgstr ""
+
+msgid "Catalog item"
+msgstr ""
+
+msgid "category-slug, other-slug"
+msgstr ""
+
+msgid "Category slugs, comma separated. Leave empty to include everything."
+msgstr ""
+
+msgid "Changing an existing anchor price requires a correction reason."
+msgstr ""
+
+msgid "Changing these values never rewrites existing historical records; every change is recorded in the audit trail."
+msgstr ""
+
+msgid "Checksum"
+msgstr ""
+
+msgid "Choose a CSV file to import."
+msgstr ""
+
+msgid "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Commit import"
+msgstr ""
+
+msgid "Compliance check"
+msgstr ""
+
+msgid "Compliance check finished: %1$d errors and %2$d warnings."
+msgstr ""
+
+msgid "Control when daily price lists are generated, how long publications and logs are kept, and what happens to compliance data when the plugin is uninstalled. Deactivation never deletes data."
+msgstr ""
+
+msgid "correction of record #%d"
+msgstr ""
+
+msgid "Correction reason (required)"
+msgstr ""
+
+msgid "Correction recorded. The original value is preserved."
+msgstr ""
+
+msgid "CSV"
+msgstr ""
+
+msgid "Currency"
+msgstr ""
+
+msgid "Currency code (6,99 EUR)"
+msgstr ""
+
+msgid "Currency display"
+msgstr ""
+
+msgid "Currency symbol (6,99 EUR)"
+msgstr ""
+
+msgid "Current price"
+msgstr ""
+
+msgid "Current price above anchor"
+msgstr ""
+
+msgid "Current price below anchor"
+msgstr ""
+
+msgid "Current price equal to anchor"
+msgstr ""
+
+msgid "Daily publication deadline"
+msgstr ""
+
+msgid "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. Never touches WooCommerce or WordPress data."
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Deactivate"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Delete data on uninstall"
+msgstr ""
+
+msgid "Delete this location?"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Display position"
+msgstr ""
+
+msgid "Display priority"
+msgstr ""
+
+msgid "Do not delete the original data source until the imported anchors have been verified."
+msgstr ""
+
+msgid "Download error report (CSV)"
+msgstr ""
+
+msgid "Dry run (validate only, write nothing)"
+msgstr ""
+
+msgid "Dry run finished. %d row(s) would be imported; nothing was written."
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit catalog item"
+msgstr ""
+
+msgid "Edit location"
+msgstr ""
+
+msgid "Enable frontend display"
+msgstr ""
+
+msgid "Enable legacy treatment"
+msgstr ""
+
+msgid "End date (optional)"
+msgstr ""
+
+msgid "Entity"
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Every catalog item has an anchor price recorded."
+msgstr ""
+
+msgid "Every legal-rule change and every recorded correction is kept here with the user and the timestamp."
+msgstr ""
+
+msgid "Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason."
+msgstr ""
+
+msgid "Existing price history sources"
+msgstr ""
+
+msgid "Expires"
+msgstr ""
+
+msgid "Explanation"
+msgstr ""
+
+msgid "Export formats"
+msgstr ""
+
+msgid "Export report (CSV)"
+msgstr ""
+
+msgid "Export report (JSON)"
+msgstr ""
+
+msgid "Export status"
+msgstr ""
+
+msgid "Export the historical prices from the existing source (most plugins offer a CSV export)."
+msgstr ""
+
+msgid "Facility form"
+msgstr ""
+
+msgid "Facility identifier"
+msgstr ""
+
+msgid "Failed publications"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Filename letter case"
+msgstr ""
+
+msgid "Filename separator"
+msgstr ""
+
+msgid "Filenames follow the legally structured pattern:"
+msgstr ""
+
+msgid "Filenames follow the pattern:"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "First appearance date"
+msgstr ""
+
+msgid "Format"
+msgstr ""
+
+msgid "Formats"
+msgstr ""
+
+msgid "General reference date"
+msgstr ""
+
+msgid "Generate a price list for this location."
+msgstr ""
+
+msgid "Generate now"
+msgstr ""
+
+msgid "Generation finished: %1$d price lists generated, %2$d failed."
+msgstr ""
+
+msgid "I confirm replacing existing anchor records listed above."
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported overwrite (batch %s)."
+msgstr ""
+
+msgid "Import finished: %1$d inserted, %2$d overwritten, %3$d skipped."
+msgstr ""
+
+msgid "Inline, next to the price"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Items"
+msgstr ""
+
+msgid "Items introduced after the reference date receive no anchor price; they are reported for attention instead."
+msgstr ""
+
+msgid "Items with no price history"
+msgstr ""
+
+msgid "Item type"
+msgstr ""
+
+msgid "Item types"
+msgstr ""
+
+msgid "Last published"
+msgstr ""
+
+msgid "Last published: %1$s. Next scheduled generation: %2$s."
+msgstr ""
+
+msgid "Last successful publication"
+msgstr ""
+
+msgid "legacy"
+msgstr ""
+
+msgid "Legacy categories"
+msgstr ""
+
+msgid "Legacy reference date"
+msgstr ""
+
+msgid "Legal-rule version"
+msgstr ""
+
+msgid "Legal rule changes"
+msgstr ""
+
+msgid "Legal rule configuration changed."
+msgstr ""
+
+msgid "Legal rules"
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Location deleted."
+msgstr ""
+
+msgid "Locations"
+msgstr ""
+
+msgid "Location saved."
+msgstr ""
+
+msgid "Log retention (days)"
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "lowercase"
+msgstr ""
+
+msgid "Lowest price in the last 30 days"
+msgstr ""
+
+msgid "Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id."
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Migration path"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "More than one catalog record uses the SKU %s. Price history may be ambiguous."
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Needs verification"
+msgstr ""
+
+msgid "never"
+msgstr ""
+
+msgid "New price"
+msgstr ""
+
+msgid "New value"
+msgstr ""
+
+msgid "Next scheduled generation"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "No active sales location exists."
+msgstr ""
+
+msgid "No anchor price is recorded. The item first appeared after the reference date %s, so the historical price cannot be reconstructed automatically."
+msgstr ""
+
+msgid "No anchor price is recorded for this item (reference date %s)."
+msgstr ""
+
+msgid "No archived %1$s price list exists for %2$s."
+msgstr ""
+
+msgid "No barcode is recorded for this item; add one if a barcode is required for it."
+msgstr ""
+
+msgid "No catalog categories are available."
+msgstr ""
+
+msgid "No catalog item matches this SKU or product ID."
+msgstr ""
+
+msgid "No catalog items found."
+msgstr ""
+
+msgid "No findings for the scanned items."
+msgstr ""
+
+msgid "No findings for this filter."
+msgstr ""
+
+msgid "No legal-rule changes have been recorded."
+msgstr ""
+
+msgid "No log entries match the filter."
+msgstr ""
+
+msgid "No log entries match these filters."
+msgstr ""
+
+msgid "No price history records match the filter."
+msgstr ""
+
+msgid "No price list has been published yet."
+msgstr ""
+
+msgid "No price lists have been published yet."
+msgstr ""
+
+msgid "No report has been generated yet. Run the compliance check to validate the catalog and the published price lists."
+msgstr ""
+
+msgid "No report is available for this import."
+msgstr ""
+
+msgid "No sales locations have been configured."
+msgstr ""
+
+msgid "No special sale is recorded for this item."
+msgstr ""
+
+msgid "Not calculated"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Not recorded"
+msgstr ""
+
+msgid "not scheduled"
+msgstr ""
+
+msgid "Not scheduled."
+msgstr ""
+
+msgid "Old value"
+msgstr ""
+
+msgid "One type per line. Each type is used to classify a special sale and is published in the price list. Defaults: akcija, snizenje, sezonsko_snizenje, rasprodaja."
+msgstr ""
+
+msgid "Only the selected categories"
+msgstr ""
+
+msgid "Only when the anchor differs"
+msgstr ""
+
+msgid "Open the price lists screen"
+msgstr ""
+
+msgid "Operational events only. Secrets and customer personal data are never written to these logs."
+msgstr ""
+
+msgid "Operational log"
+msgstr ""
+
+msgid "Operational log entries older than this are pruned by the daily cleanup."
+msgstr ""
+
+msgid "Operations"
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Plugin activated."
+msgstr ""
+
+msgid "Plugin settings changed."
+msgstr ""
+
+msgid "Preview"
+msgstr ""
+
+msgid "Preview ready. Review the rows before committing."
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Price-list retention (days)"
+msgstr ""
+
+msgid "Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens."
+msgstr ""
+
+msgid "Price history"
+msgstr ""
+
+msgid "Price history is append-only. Corrections add a new record that references the original; nothing is overwritten or deleted."
+msgstr ""
+
+msgid "Price lists"
+msgstr ""
+
+msgid "Price lists stay publicly available at least 30 days; lower values are raised to 30."
+msgstr ""
+
+msgid "Price per unit of measure"
+msgstr ""
+
+msgid "Prices include tax"
+msgstr ""
+
+msgid "Price type"
+msgstr ""
+
+msgid "Product ID"
+msgstr ""
+
+msgid "Product meta that may contain historical prices."
+msgstr ""
+
+msgid "Product pages"
+msgstr ""
+
+msgid "Promotional price"
+msgstr ""
+
+msgid "Publication and lifecycle"
+msgstr ""
+
+msgid "Published"
+msgstr ""
+
+msgid "Reason"
+msgstr ""
+
+msgid "Recent publications"
+msgstr ""
+
+msgid "Recent rule changes"
+msgstr ""
+
+msgid "Record"
+msgstr ""
+
+msgid "Record a correction"
+msgstr ""
+
+msgid "Record anchor price"
+msgstr ""
+
+msgid "Record checked anchors"
+msgstr ""
+
+msgid "Record correction"
+msgstr ""
+
+msgid "Recorded %1$d anchor(s); %2$d row(s) failed."
+msgstr ""
+
+msgid "Recorded for"
+msgstr ""
+
+msgid "Records"
+msgstr ""
+
+msgid "Record special sale"
+msgstr ""
+
+msgid "Reference date"
+msgstr ""
+
+msgid "Reference dates and legal rules"
+msgstr ""
+
+msgid "Regular price"
+msgstr ""
+
+msgid "Report generated %1$s from %2$d of %3$d catalog items."
+msgstr ""
+
+msgid "Required, unique across locations and used in the filename."
+msgstr ""
+
+msgid "Required. Explain why the original value is being corrected."
+msgstr ""
+
+msgid "Required for anchor prices."
+msgstr ""
+
+msgid "Retail store (prodavaonica)"
+msgstr ""
+
+msgid "Row"
+msgstr ""
+
+msgid "Rule"
+msgstr ""
+
+msgid "Run compliance check"
+msgstr ""
+
+msgid "Sale name"
+msgstr ""
+
+msgid "Sale price"
+msgstr ""
+
+msgid "Sales locations"
+msgstr ""
+
+msgid "Sale type"
+msgstr ""
+
+msgid "Sale types"
+msgstr ""
+
+msgid "Save location"
+msgstr ""
+
+msgid "Search catalog items"
+msgstr ""
+
+msgid "Separate block below the price"
+msgstr ""
+
+msgid "Sequence"
+msgstr ""
+
+msgid "Service location (uslužno mjesto)"
+msgstr ""
+
+msgid "Setting"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Severity"
+msgstr ""
+
+msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
+msgstr ""
+
+msgid "Sidrena cijena"
+msgstr ""
+
+msgid "Sidrena cijena - anchor price"
+msgstr ""
+
+msgid "Sidrena cijena - item data"
+msgstr ""
+
+msgid "Sidrena cijena - settings"
+msgstr ""
+
+msgid "Sidrena cijena - special sale"
+msgstr ""
+
+msgid "Sidrena cijena: Anchor entry"
+msgstr ""
+
+msgid "Sidrena cijena: Audit trail"
+msgstr ""
+
+msgid "Sidrena cijena: Compliance check"
+msgstr ""
+
+msgid "Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale."
+msgstr ""
+
+msgid "Sidrena cijena: Import"
+msgstr ""
+
+msgid "Sidrena cijena: Logs"
+msgstr ""
+
+msgid "Sidrena cijena: Price history"
+msgstr ""
+
+msgid "Sidrena cijena: Price lists"
+msgstr ""
+
+msgid "Sidrena cijena: Sales locations"
+msgstr ""
+
+msgid "Sidrena cijena price history"
+msgstr ""
+
+msgid "SKU / code"
+msgstr ""
+
+msgid "Some rows would replace existing anchor records. Tick the confirmation box below to allow that; replacements are stored as corrections with a reason."
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Special forms of sale"
+msgstr ""
+
+msgid "Special sales"
+msgstr ""
+
+msgid "Standalone catalog"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Suggested anchor (unverified)"
+msgstr ""
+
+msgid "Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored."
+msgstr ""
+
+msgid "system"
+msgstr ""
+
+msgid "The %1$s price list was last published on %2$s. Publish the current list before the daily deadline."
+msgstr ""
+
+msgid "The anchor price could not be recorded."
+msgstr ""
+
+msgid "The anchor price has been recorded."
+msgstr ""
+
+msgid "The anchor price is missing or not a valid non-negative number."
+msgstr ""
+
+msgid "The anchor price must be a non-negative number."
+msgstr ""
+
+msgid "The anchor price was recorded for reference date %1$s but the applicable reference date is %2$s. Review whether the record is correct."
+msgstr ""
+
+msgid "The archived %1$s price list for %2$s is missing from storage."
+msgstr ""
+
+msgid "The availability value is not one of the supported values (available or unavailable)."
+msgstr ""
+
+msgid "The catalog item could not be loaded."
+msgstr ""
+
+msgid "The category in the file does not match the catalog item category."
+msgstr ""
+
+msgid "The correction could not be stored."
+msgstr ""
+
+msgid "The end date must be a valid date on or after the start date."
+msgstr ""
+
+msgid "The facility form is missing."
+msgstr ""
+
+msgid "The facility identifier is missing."
+msgstr ""
+
+msgid "The file contains more rows than the import limit."
+msgstr ""
+
+msgid "The file extension must be CSV or XML."
+msgstr ""
+
+msgid "The generated filename is not valid."
+msgstr ""
+
+msgid "The import failed and was rolled back."
+msgstr ""
+
+msgid "The import failed and was rolled back: %s"
+msgstr ""
+
+msgid "The import file could not be read."
+msgstr ""
+
+msgid "The import file has no header row."
+msgstr ""
+
+msgid "The import file is too large."
+msgstr ""
+
+msgid "The import file must contain an sku or product_id column."
+msgstr ""
+
+msgid "The import session expired. Upload the file again."
+msgstr ""
+
+msgid "The item could not be loaded."
+msgstr ""
+
+msgid "The item currency %1$s is not the expected currency %2$s."
+msgstr ""
+
+msgid "The item has no name, which the price list requires."
+msgstr ""
+
+msgid "The item has no SKU (product code), which the price list requires."
+msgstr ""
+
+msgid "The location could not be found."
+msgstr ""
+
+msgid "The location could not be saved."
+msgstr ""
+
+msgid "The location has published price lists, so it was deactivated instead of deleted."
+msgstr ""
+
+msgid "The lowest price of the 30 days before the start date is calculated and stored automatically."
+msgstr ""
+
+msgid "The name and the facility identifier are required."
+msgstr ""
+
+msgid "The original record stays in the history. A correction stores who recorded it, when and why."
+msgstr ""
+
+msgid "The price-list storage directory could not be created."
+msgstr ""
+
+msgid "The price is not a valid amount."
+msgstr ""
+
+msgid "The price list could not be written."
+msgstr ""
+
+msgid "The price list failed compliance validation and was not published."
+msgstr ""
+
+msgid "The price per unit of measure is not a valid non-negative amount."
+msgstr ""
+
+msgid "The product, price type, price and reason are required."
+msgstr ""
+
+msgid "The product could not be found."
+msgstr ""
+
+msgid "The publication archive row could not be stored."
+msgstr ""
+
+msgid "The published CSV file does not start with the required column header."
+msgstr ""
+
+msgid "The published file name %s does not follow the required pattern."
+msgstr ""
+
+msgid "The published XML file cannot be parsed as valid XML."
+msgstr ""
+
+msgid "The recorded anchor price has a missing or invalid reference date."
+msgstr ""
+
+msgid "The reference date is missing or not a valid date."
+msgstr ""
+
+msgid "The reference date is not a valid date (YYYY-MM-DD)."
+msgstr ""
+
+msgid "There is no record of this type to correct."
+msgstr ""
+
+msgid "The requested format is not supported."
+msgstr ""
+
+msgid "The retail price is missing or not a positive amount."
+msgstr ""
+
+msgid "The row has neither an SKU nor a product ID."
+msgstr ""
+
+msgid "The sales location %s has no identifier, so a legally named price-list file cannot be generated."
+msgstr ""
+
+msgid "The sales location could not be found."
+msgstr ""
+
+msgid "The sales location has no facility identifier."
+msgstr ""
+
+msgid "The same item appears more than once in this file."
+msgstr ""
+
+msgid "The selected file cannot be read by the plugin."
+msgstr ""
+
+msgid "The special form of sale has no calculated lowest price of the last 30 days. Recalculate the sale before publishing."
+msgstr ""
+
+msgid "The special sale could not be found."
+msgstr ""
+
+msgid "The special sale could not be stored."
+msgstr ""
+
+msgid "The special sale could not be updated."
+msgstr ""
+
+msgid "The special sale needs a valid start date."
+msgstr ""
+
+msgid "The special sale was recorded and the 30-day price was calculated."
+msgstr ""
+
+msgid "This item is not part of the active catalog."
+msgstr ""
+
+msgid "This item was introduced after the reference date. Record the first-appearance date instead of an anchor price."
+msgstr ""
+
+msgid "This location has published price lists. It will be deactivated instead of deleted. Continue?"
+msgstr ""
+
+msgid "This plugin is a technical compliance aid, not legal advice. Verify the configured rules with a legal or accounting professional."
+msgstr ""
+
+msgid "This row would replace an existing anchor record and requires explicit confirmation."
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Today's price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date."
+msgstr ""
+
+msgid "Too many requests. Please retry shortly."
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Unavailable"
+msgstr ""
+
+msgid "Unclassified promotions"
+msgstr ""
+
+msgid "Unit of measure"
+msgstr ""
+
+msgid "Upload and preview"
+msgstr ""
+
+msgid "Upload an import file"
+msgstr ""
+
+msgid "Upload the exported file here, review the preview and confirm the import."
+msgstr ""
+
+msgid "UPPERCASE"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Use the global setting"
+msgstr ""
+
+msgid "Valid"
+msgstr ""
+
+msgid "Validation errors"
+msgstr ""
+
+msgid "Validation findings"
+msgstr ""
+
+msgid "Validation warnings"
+msgstr ""
+
+msgid "variation"
+msgstr ""
+
+msgid "Variation ID"
+msgstr ""
+
+msgid "Variations"
+msgstr ""
+
+msgid "View price lists"
+msgstr ""
+
+msgid "View the full price history"
+msgstr ""
+
+msgid "Webshop"
+msgstr ""
+
+msgid "Web shop (webshop)"
+msgstr ""
+
+msgid "When"
+msgstr ""
+
+msgid "Working-day deadline in 24-hour site time (default 08:00)."
+msgstr ""
+
+msgid "XML"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Yes, delete all plugin data on uninstall"
+msgstr ""
+
+msgid "You are not allowed to manage these settings."
+msgstr ""
+
+msgid "You are not allowed to record anchor prices."
+msgstr ""
+
+msgid "You do not have permission to access this page."
+msgstr ""
+
+msgid "You do not have permission to download the report."
+msgstr ""
+
+msgid "You do not have permission to export the compliance report."
+msgstr ""
+
+msgid "You do not have permission to import anchor data."
+msgstr ""
+
+msgid "You do not have permission to manage special sales."
+msgstr ""
+
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+msgid "You do not have permission to record anchor prices."
+msgstr ""
+
+msgid "You do not have permission to run the compliance check."
+msgstr ""
+
