@@ -251,15 +251,15 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 7
 
-- [ ] T104 [P] [US7] Integration test for history listing, filters and corrections preserving originals in `tests/integration/test-price-history.php`
-- [ ] T105 [P] [US7] Playwright test for the product price-history screen and correction flow in `tests/e2e/price-history.spec.js`
+- [x] T104 [P] [US7] Integration test for history listing, filters and corrections preserving originals in `tests/integration/test-price-history.php`
+- [x] T105 [P] [US7] Playwright test for the product price-history screen and correction flow in `tests/e2e/price-history.spec.js`
 
 ### Implementation for User Story 7
 
-- [ ] T106 [US7] Implement `src/Admin/PriceHistoryPage.php`: per-product chronological table (date, type, price, source, user/system, correction info) with filters by type and date
-- [ ] T107 [US7] Implement the correction flow: never delete, create a correction record with `correction_of`, author, timestamp and required reason, and show both original and correction
-- [ ] T108 [US7] Implement audit views for rule-configuration changes and historical corrections in `src/Admin/AuditPage.php` (read-only)
-- [ ] T109 [US7] Run US7 integration and Playwright suites; validate the history part of quickstart V2; fix failures; commit
+- [x] T106 [US7] Implement `src/Admin/PriceHistoryPage.php`: per-product chronological table (date, type, price, source, user/system, correction info) with filters by type and date
+- [x] T107 [US7] Implement the correction flow: never delete, create a correction record with `correction_of`, author, timestamp and required reason, and show both original and correction
+- [x] T108 [US7] Implement audit views for rule-configuration changes and historical corrections in `src/Admin/AuditPage.php` (read-only)
+- [x] T109 [US7] Run US7 integration and Playwright suites; validate the history part of quickstart V2; fix failures; commit
 
 **Checkpoint**: Full auditability for inspections and disputes.
 
