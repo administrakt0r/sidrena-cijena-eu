@@ -177,18 +177,18 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 4
 
-- [ ] T078 [P] [US4] Unit tests for every validator rule and severity mapping in `tests/unit/Compliance/ValidatorTest.php`
-- [ ] T079 [P] [US4] Integration test for dashboard aggregates and full compliance report output in `tests/integration/test-dashboard.php`
-- [ ] T080 [P] [US4] Playwright test for the dashboard and "Run compliance check" report in `tests/e2e/dashboard.spec.js`
+- [x] T078 [P] [US4] Unit tests for every validator rule and severity mapping in `tests/unit/Compliance/ValidatorTest.php`
+- [x] T079 [P] [US4] Integration test for dashboard aggregates and full compliance report output in `tests/integration/test-dashboard.php`
+- [x] T080 [P] [US4] Playwright test for the dashboard and "Run compliance check" report in `tests/e2e/dashboard.spec.js`
 
 ### Implementation for User Story 4
 
-- [ ] T081 [US4] Implement all validator rules under `src/Compliance/Rules/`: missing anchor price, invalid anchor date, missing SKU, missing product name, missing barcode where required/available, invalid retail price, invalid unit price, invalid availability, missing sale type, missing 30-day price where required, malformed CSV, malformed XML, invalid filename, missing store identifier, stale price list, missing archived price list, invalid currency, duplicate product records
-- [ ] T082 [US4] Implement `src/Compliance/ComplianceReport.php`: severity counts, per-entity aggregation, plain-language messages (translatable) and export to CSV/JSON
-- [ ] T083 [US4] Implement `src/Admin/DashboardPage.php`: valid/missing/needs-verification anchors, current-vs-anchor comparison, missing historical data, 30-day warnings, export status, last successful scheduled export, next export, validation errors
-- [ ] T084 [US4] Implement the "Run compliance check" action with batched processing and progress feedback, nonce-protected and capability-gated
-- [ ] T085 [US4] Persist publication validation summaries and surface failed publications on the dashboard with links to details
-- [ ] T086 [US4] Run US4 unit, integration and Playwright suites; validate quickstart V7; fix failures; commit
+- [x] T081 [US4] Implement all validator rules under `src/Compliance/Rules/`: missing anchor price, invalid anchor date, missing SKU, missing product name, missing barcode where required/available, invalid retail price, invalid unit price, invalid availability, missing sale type, missing 30-day price where required, malformed CSV, malformed XML, invalid filename, missing store identifier, stale price list, missing archived price list, invalid currency, duplicate product records
+- [x] T082 [US4] Implement `src/Compliance/ComplianceReport.php`: severity counts, per-entity aggregation, plain-language messages (translatable) and export to CSV/JSON
+- [x] T083 [US4] Implement `src/Admin/DashboardPage.php`: valid/missing/needs-verification anchors, current-vs-anchor comparison, missing historical data, 30-day warnings, export status, last successful scheduled export, next export, validation errors
+- [x] T084 [US4] Implement the "Run compliance check" action with batched processing and progress feedback, nonce-protected and capability-gated
+- [x] T085 [US4] Persist publication validation summaries and surface failed publications on the dashboard with links to details
+- [x] T086 [US4] Run US4 unit, integration and Playwright suites; validate quickstart V7; fix failures; commit
 
 **Checkpoint**: Merchants can see and act on compliance findings.
 
