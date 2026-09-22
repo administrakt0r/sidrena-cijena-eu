@@ -170,7 +170,7 @@ final class CsvParser {
 		}
 
 		foreach ( $roots as $root ) {
-			if ( $root && 0 === strpos( $real, $root ) ) {
+			if ( $root && ( $real === $root || 0 === strpos( $real, $root . DIRECTORY_SEPARATOR ) ) ) {
 				return true;
 			}
 		}
