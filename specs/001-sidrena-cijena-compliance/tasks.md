@@ -307,14 +307,14 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 - [ ] T129 [P] Write `docs/woocommerce.md` (supported product types, hooks used, template functions/shortcode, brand/unit/barcode sources, blocks limitations)
 - [ ] T130 [P] Write `docs/testing.md` (unit/integration/E2E commands, fixtures, test-product scenarios)
 - [ ] T131 [P] Write `docs/troubleshooting.md` (missing anchors, stale price lists, cron issues, permissions, common findings)
-- [ ] T132 [P] Create `tests/fixtures/example-price-list.csv` and `tests/fixtures/example-price-list.xml` matching the format contracts and verify they validate
-- [ ] T133 [P] Generate and commit `languages/sidrena-cijena.pot`, complete `hr_HR.po`/`.mo` and `en_US.po`; verify no untranslated user-visible strings
-- [ ] T134 Performance pass: verify indexes are used, anchor lookups are cached, archive pages issue no catalog-wide queries, and 10,000-item export streams within the batch window
-- [ ] T135 Security pass: review capability checks, nonces, sanitization, escaping, prepared SQL, REST permission callbacks, file handling and directory traversal protection; add regression tests where gaps are found
+- [x] T132 [P] Create `tests/fixtures/example-price-list.csv` and `tests/fixtures/example-price-list.xml` matching the format contracts and verify they validate
+- [x] T133 [P] Generate and commit `languages/sidrena-cijena.pot`, complete `hr_HR.po`/`.mo` and `en_US.po`; verify no untranslated user-visible strings
+- [x] T134 Performance pass: verify indexes are used, anchor lookups are cached, archive pages issue no catalog-wide queries, and 10,000-item export streams within the batch window
+- [x] T135 Security pass: review capability checks, nonces, sanitization, escaping, prepared SQL, REST permission callbacks, file handling and directory traversal protection; add regression tests where gaps are found
 - [ ] T136 [P] WooCommerce regression pass: homepage, product page, category, cart, checkout, account, admin dashboard, product editing, payment/shipping/coupons; confirm no plugin interference
 - [ ] T137 [P] Run the complete automated suite (`composer test:unit`, `composer test:integration`, `npm run test:e2e`, `composer lint`, `composer analyse`) and require zero failures and zero static-analysis errors
 - [ ] T138 Execute the final acceptance scenario from the originating brief (clean wp-env → install → activate → seed → anchors → price changes → sales → display → CSV/XML → validate → filename → archive → REST → machine access → compliance check → all test suites → checkout regression → log inspection → git review) and record results
-- [ ] T139 Update `README.md` and `readme.txt` with the final feature list, setup/test commands, known limitations, legal assumptions and the disclaimer
+- [x] T139 Update `README.md` and `readme.txt` with the final feature list, setup/test commands, known limitations, legal assumptions and the disclaimer
 - [ ] T140 Final Git review: inspect `git status` and `git diff`, confirm atomic commits for every logical change, no secrets or debug code, and clean history
 
 ---
