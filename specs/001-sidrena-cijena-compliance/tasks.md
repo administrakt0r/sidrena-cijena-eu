@@ -202,20 +202,20 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 5
 
-- [ ] T087 [P] [US5] Unit tests for import row validation, duplicate detection and overwrite detection in `tests/unit/Import/RowValidatorTest.php`
-- [ ] T088 [P] [US5] Integration test for import preview, dry run, atomic commit, rollback on failure and error report in `tests/integration/test-import.php`
-- [ ] T089 [P] [US5] Playwright test for the import screen, preview table and error report in `tests/e2e/import.spec.js`
+- [x] T087 [P] [US5] Unit tests for import row validation, duplicate detection and overwrite detection in `tests/unit/Import/RowValidatorTest.php`
+- [x] T088 [P] [US5] Integration test for import preview, dry run, atomic commit, rollback on failure and error report in `tests/integration/test-import.php`
+- [x] T089 [P] [US5] Playwright test for the import screen, preview table and error report in `tests/e2e/import.spec.js`
 
 ### Implementation for User Story 5
 
-- [ ] T090 [P] [US5] Implement `src/Import/CsvParser.php` accepting SKU or product ID, reference date, anchor price, category, optional variation ID, with encoding/delimiter handling and safe file reading (no traversal)
-- [ ] T091 [P] [US5] Implement `src/Import/RowValidator.php`: required fields, date and price validation, unknown product, duplicate rows, and detection of rows that would overwrite existing anchor records
-- [ ] T092 [US5] Implement `src/Import/ImportService.php`: preview, dry run, transactional commit with rollback, batch ID, per-row error report, audit logging and the `sidrena_cijena_import_completed` action
-- [ ] T093 [US5] Implement `src/Admin/ImportPage.php`: upload, validated preview table, explicit overwrite confirmation, commit action, and downloadable error report
-- [ ] T094 [US5] Implement `src/Admin/BulkAnchorEntryPage.php`: manual bulk entry with current-price suggestions clearly marked as unverified and never committed silently
-- [ ] T095 [US5] Implement `src/Import/MigrationDetector.php`: detect existing price-history data sources/plugins, offer a migration path and avoid duplicating existing functionality
-- [ ] T096 [US5] Implement onboarding guidance and missing-history warnings in plain language, plus the fixture `tests/fixtures/anchor-import.csv`
-- [ ] T097 [US5] Run US5 unit, integration and Playwright suites; validate quickstart V2/V8; fix failures; commit
+- [x] T090 [P] [US5] Implement `src/Import/CsvParser.php` accepting SKU or product ID, reference date, anchor price, category, optional variation ID, with encoding/delimiter handling and safe file reading (no traversal)
+- [x] T091 [P] [US5] Implement `src/Import/RowValidator.php`: required fields, date and price validation, unknown product, duplicate rows, and detection of rows that would overwrite existing anchor records
+- [x] T092 [US5] Implement `src/Import/ImportService.php`: preview, dry run, transactional commit with rollback, batch ID, per-row error report, audit logging and the `sidrena_cijena_import_completed` action
+- [x] T093 [US5] Implement `src/Admin/ImportPage.php`: upload, validated preview table, explicit overwrite confirmation, commit action, and downloadable error report
+- [x] T094 [US5] Implement `src/Admin/BulkAnchorEntryPage.php`: manual bulk entry with current-price suggestions clearly marked as unverified and never committed silently
+- [x] T095 [US5] Implement `src/Import/MigrationDetector.php`: detect existing price-history data sources/plugins, offer a migration path and avoid duplicating existing functionality
+- [x] T096 [US5] Implement onboarding guidance and missing-history warnings in plain language, plus the fixture `tests/fixtures/anchor-import.csv`
+- [x] T097 [US5] Run US5 unit, integration and Playwright suites; validate quickstart V2/V8; fix failures; commit
 
 **Checkpoint**: Historical data can be established safely and reversibly.
 
