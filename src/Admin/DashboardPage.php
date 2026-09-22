@@ -71,13 +71,13 @@ class DashboardPage {
 	 * @return array<mixed>
 	 */
 	public static function aggregate( $limit = self::SCAN_LIMIT ) {
-		$plugin     = Plugin::instance();
-		$catalog    = $plugin->catalog();
-		$history    = $plugin->history();
-		$sales      = $plugin->special_sales();
-		$validator  = $plugin->validator();
-		$limit      = max( 1, (int) $limit );
-		$total      = (int) $catalog->count_items();
+		$plugin    = Plugin::instance();
+		$catalog   = $plugin->catalog();
+		$history   = $plugin->history();
+		$sales     = $plugin->special_sales();
+		$validator = $plugin->validator();
+		$limit     = max( 1, (int) $limit );
+		$total     = (int) $catalog->count_items();
 
 		$items = array();
 
@@ -95,9 +95,9 @@ class DashboardPage {
 			$ids[] = (int) $item->id;
 		}
 
-		$anchors    = $ids ? $history->latest_map( $ids, 'anchor' ) : array();
-		$regular    = $ids ? $history->latest_map( $ids, 'regular' ) : array();
-		$sales_map  = $sales->active_map();
+		$anchors   = $ids ? $history->latest_map( $ids, 'anchor' ) : array();
+		$regular   = $ids ? $history->latest_map( $ids, 'regular' ) : array();
+		$sales_map = $sales->active_map();
 
 		$anchor_states = array(
 			'valid'              => 0,
@@ -184,7 +184,7 @@ class DashboardPage {
 			'counts'                  => Validator::counts( $findings ),
 			'last_successful'         => $publications->last_successful(),
 			'next_run'                => $next_run,
-			'publications'            => isset( $index['items'] ) ? $index['items'] : array(),
+			'publications'            => $index['items'],
 			'failed_publications'     => isset( $failed['failed'] ) ? (int) $failed['failed'] : 0,
 		);
 	}
@@ -211,17 +211,17 @@ class DashboardPage {
 	 */
 	protected static function render_anchor_cards( array $data ) {
 		$cards = array(
-			__( 'Anchors valid', 'sidrena-cijena' )                  => $data['anchor_states']['valid'],
-			__( 'Anchors missing', 'sidrena-cijena' )                => $data['anchor_states']['missing'],
-			__( 'Anchors needing verification', 'sidrena-cijena' )   => $data['anchor_states']['needs_verification'],
-			__( 'Items with no price history', 'sidrena-cijena' )    => $data['missing_history'],
-			__( 'Current price below anchor', 'sidrena-cijena' )     => $data['comparison']['below'],
-			__( 'Current price equal to anchor', 'sidrena-cijena' )  => $data['comparison']['equal'],
-			__( 'Current price above anchor', 'sidrena-cijena' )     => $data['comparison']['above'],
-			__( '30-day price warnings', 'sidrena-cijena' )          => $data['thirty_day_warnings'],
-			__( 'Unclassified promotions', 'sidrena-cijena' )        => $data['unclassified_promotions'],
-			__( 'Validation errors', 'sidrena-cijena' )              => $data['counts'][ Finding::ERROR ],
-			__( 'Validation warnings', 'sidrena-cijena' )            => $data['counts'][ Finding::WARNING ],
+			__( 'Anchors valid', 'sidrena-cijena' )       => $data['anchor_states']['valid'],
+			__( 'Anchors missing', 'sidrena-cijena' )     => $data['anchor_states']['missing'],
+			__( 'Anchors needing verification', 'sidrena-cijena' ) => $data['anchor_states']['needs_verification'],
+			__( 'Items with no price history', 'sidrena-cijena' ) => $data['missing_history'],
+			__( 'Current price below anchor', 'sidrena-cijena' ) => $data['comparison']['below'],
+			__( 'Current price equal to anchor', 'sidrena-cijena' ) => $data['comparison']['equal'],
+			__( 'Current price above anchor', 'sidrena-cijena' ) => $data['comparison']['above'],
+			__( '30-day price warnings', 'sidrena-cijena' ) => $data['thirty_day_warnings'],
+			__( 'Unclassified promotions', 'sidrena-cijena' ) => $data['unclassified_promotions'],
+			__( 'Validation errors', 'sidrena-cijena' )   => $data['counts'][ Finding::ERROR ],
+			__( 'Validation warnings', 'sidrena-cijena' ) => $data['counts'][ Finding::WARNING ],
 		);
 
 		echo '<div class="sidrena-cijena-cards">';

@@ -198,7 +198,7 @@ class CatalogRules {
 				continue;
 			}
 
-			if ( is_numeric( $item->unit_price ) && (float) $item->unit_price >= 0 ) {
+			if ( $item->unit_price >= 0 ) {
 				continue;
 			}
 
@@ -261,8 +261,8 @@ class CatalogRules {
 	 * @return Finding[]
 	 */
 	public function invalid_currency( array $context ) {
-		$findings   = array();
-		$expected   = isset( $context['expected_currency'] ) ? (string) $context['expected_currency'] : Currency::DEFAULT_CURRENCY;
+		$findings = array();
+		$expected = isset( $context['expected_currency'] ) ? (string) $context['expected_currency'] : Currency::DEFAULT_CURRENCY;
 
 		foreach ( $context['items'] as $item ) {
 			if ( ! $item instanceof CatalogItem ) {

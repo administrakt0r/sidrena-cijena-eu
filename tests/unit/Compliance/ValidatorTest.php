@@ -29,7 +29,18 @@ class ValidatorTest extends TestCase {
 	 */
 	public function test_missing_anchor_rule() {
 		$rules    = $this->anchor_rules();
-		$findings = $rules->missing_anchor_price( $this->item_context( array( $this->item( array( 'id' => 7, 'sku' => 'KAV-250' ) ) ) ) );
+		$findings = $rules->missing_anchor_price(
+			$this->item_context(
+				array(
+					$this->item(
+						array(
+							'id'  => 7,
+							'sku' => 'KAV-250',
+						)
+					),
+				)
+			)
+		);
 
 		$this->assertCount( 1, $findings );
 		$this->assertSame( Finding::ERROR, $findings[0]->severity );
@@ -45,7 +56,16 @@ class ValidatorTest extends TestCase {
 	 */
 	public function test_missing_anchor_reports_introduced_after() {
 		$rules    = $this->anchor_rules();
-		$context  = $this->item_context( array( $this->item( array( 'id' => 8, 'first_seen' => '2026-10-01' ) ) ) );
+		$context  = $this->item_context(
+			array(
+				$this->item(
+					array(
+						'id'         => 8,
+						'first_seen' => '2026-10-01',
+					)
+				),
+			)
+		);
 		$findings = $rules->missing_anchor_price( $context );
 
 		$this->assertCount( 1, $findings );
@@ -58,9 +78,13 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_anchor_present_skips_missing_rule() {
-		$item    = $this->item( array( 'id' => 9 ) );
-		$context = $this->item_context( array( $item ) );
-		$context['anchors'][ $item->key() ] = array( 'id' => 3, 'price' => '7.49', 'reference_date' => '2026-09-10' );
+		$item                               = $this->item( array( 'id' => 9 ) );
+		$context                            = $this->item_context( array( $item ) );
+		$context['anchors'][ $item->key() ] = array(
+			'id'             => 3,
+			'price'          => '7.49',
+			'reference_date' => '2026-09-10',
+		);
 
 		$rules = $this->anchor_rules();
 
@@ -75,9 +99,13 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_invalid_anchor_date_rule() {
-		$item    = $this->item( array( 'id' => 10 ) );
-		$context = $this->item_context( array( $item ) );
-		$context['anchors'][ $item->key() ] = array( 'id' => 4, 'price' => '7.49', 'reference_date' => '10.09.2026.' );
+		$item                               = $this->item( array( 'id' => 10 ) );
+		$context                            = $this->item_context( array( $item ) );
+		$context['anchors'][ $item->key() ] = array(
+			'id'             => 4,
+			'price'          => '7.49',
+			'reference_date' => '10.09.2026.',
+		);
 
 		$findings = $this->anchor_rules()->invalid_anchor_date( $context );
 
@@ -91,9 +119,13 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_anchor_needs_verification_rule() {
-		$item    = $this->item( array( 'id' => 11 ) );
-		$context = $this->item_context( array( $item ) );
-		$context['anchors'][ $item->key() ] = array( 'id' => 5, 'price' => '7.49', 'reference_date' => '2025-05-02' );
+		$item                               = $this->item( array( 'id' => 11 ) );
+		$context                            = $this->item_context( array( $item ) );
+		$context['anchors'][ $item->key() ] = array(
+			'id'             => 5,
+			'price'          => '7.49',
+			'reference_date' => '2025-05-02',
+		);
 
 		$findings = $this->anchor_rules()->anchor_needs_verification( $context );
 
@@ -119,7 +151,19 @@ class ValidatorTest extends TestCase {
 		$findings = $rules->missing_barcode( $this->item_context( array( $this->item( array( 'barcode' => '' ) ) ) ) );
 		$this->assertSame( Finding::WARNING, $findings[0]->severity );
 
-		$findings = $rules->invalid_retail_price( $this->item_context( array( $this->item( array( 'regular_price' => null, 'sale_price' => null, 'current_price' => null ) ) ) ) );
+		$findings = $rules->invalid_retail_price(
+			$this->item_context(
+				array(
+					$this->item(
+						array(
+							'regular_price' => null,
+							'sale_price'    => null,
+							'current_price' => null,
+						)
+					),
+				)
+			)
+		);
 		$this->assertSame( 'invalid_retail_price', $findings[0]->code );
 
 		$findings = $rules->invalid_unit_price( $this->item_context( array( $this->item( array( 'unit_price' => -1.0 ) ) ) ) );
@@ -139,8 +183,18 @@ class ValidatorTest extends TestCase {
 	 */
 	public function test_duplicate_product_records_rule() {
 		$items = array(
-			$this->item( array( 'id' => 20, 'sku' => 'DUP-1' ) ),
-			$this->item( array( 'id' => 21, 'sku' => 'DUP-1' ) ),
+			$this->item(
+				array(
+					'id'  => 20,
+					'sku' => 'DUP-1',
+				)
+			),
+			$this->item(
+				array(
+					'id'  => 21,
+					'sku' => 'DUP-1',
+				)
+			),
 		);
 
 		$findings = $this->catalog_rules()->duplicate_product_records( $this->item_context( $items ) );
@@ -155,7 +209,13 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_missing_sale_type_rule() {
-		$item     = $this->item( array( 'id' => 30, 'regular_price' => 20.0, 'sale_price' => 15.0 ) );
+		$item     = $this->item(
+			array(
+				'id'            => 30,
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+			)
+		);
 		$findings = $this->sale_rules()->missing_sale_type( $this->item_context( array( $item ) ) );
 
 		$this->assertCount( 1, $findings );
@@ -169,9 +229,19 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_missing_30_day_price_rule() {
-		$item    = $this->item( array( 'id' => 31, 'regular_price' => 20.0, 'sale_price' => 15.0 ) );
-		$context = $this->item_context( array( $item ) );
-		$context['sales'][ $item->key() ] = array( 'id' => 9, 'sale_type' => 'akcija', 'lowest_30_day_price' => null );
+		$item                             = $this->item(
+			array(
+				'id'            => 31,
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+			)
+		);
+		$context                          = $this->item_context( array( $item ) );
+		$context['sales'][ $item->key() ] = array(
+			'id'                  => 9,
+			'sale_type'           => 'akcija',
+			'lowest_30_day_price' => null,
+		);
 
 		$findings = $this->sale_rules()->missing_30_day_price( $context );
 
@@ -232,9 +302,9 @@ class ValidatorTest extends TestCase {
 	 * @return void
 	 */
 	public function test_stale_price_list_rule() {
-		$rules   = $this->publication_rules();
-		$context = $this->global_context( array( $this->location() ) );
-		$context['today'] = '2026-10-02';
+		$rules                            = $this->publication_rules();
+		$context                          = $this->global_context( array( $this->location() ) );
+		$context['today']                 = '2026-10-02';
 		$context['publications']['1:csv'] = array(
 			'id'           => 2,
 			'format'       => 'csv',
@@ -265,9 +335,19 @@ class ValidatorTest extends TestCase {
 		file_put_contents( $csv, "wrong;header\n1;2\n" );
 		file_put_contents( $xml, '<cjenik><stavka></cjenik>' );
 
-		$context = $this->global_context( array( $this->location() ) );
-		$context['publications']['1:csv'] = array( 'id' => 3, 'format' => 'csv', 'filename' => 'BROKEN.CSV', 'location_id' => 1 );
-		$context['publications']['1:xml'] = array( 'id' => 4, 'format' => 'xml', 'filename' => 'BROKEN.XML', 'location_id' => 1 );
+		$context                               = $this->global_context( array( $this->location() ) );
+		$context['publications']['1:csv']      = array(
+			'id'          => 3,
+			'format'      => 'csv',
+			'filename'    => 'BROKEN.CSV',
+			'location_id' => 1,
+		);
+		$context['publications']['1:xml']      = array(
+			'id'          => 4,
+			'format'      => 'xml',
+			'filename'    => 'BROKEN.XML',
+			'location_id' => 1,
+		);
 		$context['publication_files']['1:csv'] = $csv;
 		$context['publication_files']['1:xml'] = $xml;
 

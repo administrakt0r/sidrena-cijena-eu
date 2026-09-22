@@ -164,7 +164,7 @@ final class CatalogItem {
 		$this->unit          = isset( $data['unit'] ) ? (string) $data['unit'] : '';
 		$this->unit_price    = self::to_float( isset( $data['unit_price'] ) ? $data['unit_price'] : null );
 		$this->currency      = isset( $data['currency'] ) && $data['currency'] ? strtoupper( (string) $data['currency'] ) : 'EUR';
-		$this->availability  = isset( $data['availability'] ) && 'unavailable' === $data['availability'] ? 'unavailable' : 'available';
+		$this->availability  = isset( $data['availability'] ) && '' !== (string) $data['availability'] ? (string) $data['availability'] : 'available';
 		$this->regular_price = self::to_float( isset( $data['regular_price'] ) ? $data['regular_price'] : null );
 		$this->sale_price    = self::to_float( isset( $data['sale_price'] ) ? $data['sale_price'] : null );
 		$this->current_price = self::to_float( isset( $data['current_price'] ) ? $data['current_price'] : null );

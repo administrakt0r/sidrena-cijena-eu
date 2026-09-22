@@ -179,7 +179,7 @@ class AnchorRules {
 					'entity_id'      => $item->id,
 					'rule_reference' => 'FR-090',
 					'context'        => array(
-						'sku'                   => $item->sku,
+						'sku'                     => $item->sku,
 						'recorded_reference_date' => $date,
 						'expected_reference_date' => $wanted,
 					),

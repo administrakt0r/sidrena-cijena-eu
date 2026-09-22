@@ -164,9 +164,9 @@ class PublicationRules {
 						'entity_id'      => (int) $location['id'],
 						'rule_reference' => 'FR-043',
 						'context'        => array(
-							'format'  => $format,
-							'name'    => (string) $location['name'],
-							'record'  => $exists,
+							'format' => $format,
+							'name'   => (string) $location['name'],
+							'record' => $exists,
 						),
 					)
 				);
@@ -212,10 +212,10 @@ class PublicationRules {
 					'entity_id'      => isset( $row['id'] ) ? (int) $row['id'] : 0,
 					'rule_reference' => 'FR-041',
 					'context'        => array(
-						'location_id'  => isset( $row['location_id'] ) ? (int) $row['location_id'] : 0,
-						'format'       => isset( $row['format'] ) ? (string) $row['format'] : '',
+						'location_id'    => isset( $row['location_id'] ) ? (int) $row['location_id'] : 0,
+						'format'         => isset( $row['format'] ) ? (string) $row['format'] : '',
 						'last_published' => $published,
-						'key'          => (string) $key,
+						'key'            => (string) $key,
 					),
 				)
 			);
@@ -247,8 +247,8 @@ class PublicationRules {
 				continue;
 			}
 
-			$line = fgets( $handle );
-			fclose( $handle );
+			$line = fgets( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fgets -- Read-only check of a plugin-owned file.
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Read-only check of a plugin-owned file.
 
 			$header = false === $line ? '' : rtrim( $line, "\r\n" );
 

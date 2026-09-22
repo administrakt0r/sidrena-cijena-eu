@@ -101,7 +101,12 @@ class CompliancePage {
 		$filtered = self::filter_findings( $findings, $severity );
 
 		echo '<p>';
-		foreach ( array( '' => __( 'All', 'sidrena-cijena' ), Finding::ERROR => Finding::ERROR, Finding::WARNING => Finding::WARNING, Finding::INFO => Finding::INFO ) as $value => $label ) {
+		foreach ( array(
+			''               => __( 'All', 'sidrena-cijena' ),
+			Finding::ERROR   => Finding::ERROR,
+			Finding::WARNING => Finding::WARNING,
+			Finding::INFO    => Finding::INFO,
+		) as $value => $label ) {
 			$url = AdminMenu::url( 'sidrena-cijena-compliance', '' === $value ? array() : array( 'severity' => $value ) );
 			printf(
 				'<a class="button %1$s" href="%2$s">%3$s</a> ',
@@ -188,11 +193,11 @@ class CompliancePage {
 
 		check_admin_referer( self::ACTION_RUN );
 
-		$plugin   = Plugin::instance();
-		$data     = DashboardPage::aggregate( self::REPORT_LIMIT );
-		$report   = new ComplianceReport( $data['findings'] );
-		$payload  = $report->to_array();
-		$payload  = array_merge(
+		$plugin  = Plugin::instance();
+		$data    = DashboardPage::aggregate( self::REPORT_LIMIT );
+		$report  = new ComplianceReport( $data['findings'] );
+		$payload = $report->to_array();
+		$payload = array_merge(
 			$payload,
 			array(
 				'scanned' => (int) $data['scanned'],
@@ -217,10 +222,10 @@ class CompliancePage {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'                => 'sidrena-cijena-compliance',
+					'page'                  => 'sidrena-cijena-compliance',
 					'sidrena_cijena_notice' => 'report',
-					'errors'              => (int) $payload['counts'][ Finding::ERROR ],
-					'warnings'            => (int) $payload['counts'][ Finding::WARNING ],
+					'errors'                => (int) $payload['counts'][ Finding::ERROR ],
+					'warnings'              => (int) $payload['counts'][ Finding::WARNING ],
 				),
 				admin_url( 'admin.php' )
 			)
@@ -310,7 +315,7 @@ class CompliancePage {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$severity = isset( $_GET['severity'] ) ? sanitize_key( wp_unslash( $_GET['severity'] ) ) : '';
 
-		return in_array( $severity, array( Finding::ERROR, Finding::WARNING, Finding::INFO ), true ) ? $severity : '';
+		return in_array( $severity, array( 'error', 'warning', 'info' ), true ) ? strtoupper( $severity ) : '';
 	}
 
 	/**

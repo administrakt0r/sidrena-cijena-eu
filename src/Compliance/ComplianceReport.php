@@ -37,14 +37,7 @@ final class ComplianceReport {
 	 * @param array<mixed> $meta     Metadata.
 	 */
 	public function __construct( array $findings, array $meta = array() ) {
-		$this->findings = array_values(
-			array_filter(
-				$findings,
-				function ( $finding ) {
-					return $finding instanceof Finding;
-				}
-			)
-		);
+		$this->findings = array_values( $findings );
 
 		$this->meta = wp_parse_args(
 			$meta,
@@ -146,13 +139,13 @@ final class ComplianceReport {
 	 */
 	public function to_array() {
 		return array(
-			'generated_at' => $this->meta['generated_at'],
-			'rule_version' => $this->meta['rule_version'],
-			'scanned'      => (int) $this->meta['scanned'],
-			'total'        => (int) $this->meta['total'],
-			'counts'       => $this->counts(),
+			'generated_at'   => $this->meta['generated_at'],
+			'rule_version'   => $this->meta['rule_version'],
+			'scanned'        => (int) $this->meta['scanned'],
+			'total'          => (int) $this->meta['total'],
+			'counts'         => $this->counts(),
 			'counts_by_code' => $this->counts_by_code(),
-			'findings'     => array_map(
+			'findings'       => array_map(
 				function ( Finding $finding ) {
 					return $finding->to_array();
 				},
@@ -204,6 +197,15 @@ final class ComplianceReport {
 	 */
 	public static function from_result( array $result, array $meta = array() ) {
 		$findings = isset( $result['findings'] ) && is_array( $result['findings'] ) ? $result['findings'] : array();
+
+		$meta = array_merge(
+			array(
+				'rule_version' => RuleConfig::get( 'rule_version' ),
+				'scanned'      => isset( $result['scanned'] ) ? (int) $result['scanned'] : count( $findings ),
+				'total'        => isset( $result['total'] ) ? (int) $result['total'] : count( $findings ),
+			),
+			$meta
+		);
 
 		return new self( $findings, $meta );
 	}
