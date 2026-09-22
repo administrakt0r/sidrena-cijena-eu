@@ -1,0 +1,173 @@
+<?php
+/**
+ * Integration tests for deactivation and uninstall lifecycle behaviour.
+ *
+ * @package SidrenaCijena\Tests\Integration
+ */
+
+use SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use SidrenaCijena\Catalog\StandalonePostType;
+use SidrenaCijena\Cron\Scheduler;
+use SidrenaCijena\Database\Migrator;
+use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Deactivator;
+use SidrenaCijena\Support\Install;
+use SidrenaCijena\Support\Uninstaller;
+
+/**
+ * Verifies data preservation on deactivation and opt-in deletion on uninstall.
+ */
+class Test_Lifecycle extends WP_UnitTestCase {
+
+	/**
+	 * Prepare the catalog.
+	 *
+	 * @return void
+	 */
+	public function set_up() {
+		parent::set_up();
+
+		StandalonePostType::register();
+		Plugin::instance()->set_catalog( new StandaloneCatalogProvider() );
+	}
+
+	/**
+	 * Plugin table names.
+	 *
+	 * @return string[]
+	 */
+	protected function tables() {
+		global $wpdb;
+
+		return array(
+			$wpdb->prefix . 'sidrena_price_history',
+			$wpdb->prefix . 'sidrena_special_sales',
+			$wpdb->prefix . 'sidrena_locations',
+			$wpdb->prefix . 'sidrena_publications',
+			$wpdb->prefix . 'sidrena_logs',
+		);
+	}
+
+	/**
+	 * Whether a table exists.
+	 *
+	 * @param string $table Table name.
+	 * @return bool
+	 */
+	protected function table_exists( $table ) {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Test-only schema assertion.
+		return (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+	}
+
+	/**
+	 * Activation creates schema and schedules; deactivation keeps all data.
+	 *
+	 * @return void
+	 */
+	public function test_deactivation_preserves_data() {
+		Install::activate();
+
+		$post_id = wp_insert_post(
+			array(
+				'post_type'   => StandalonePostType::POST_TYPE,
+				'post_title'  => 'Lifecycle item',
+				'post_status' => 'publish',
+			)
+		);
+
+		update_post_meta( $post_id, '_sidrena_sku', 'LIFE-1' );
+		update_post_meta( $post_id, '_sidrena_regular_price', '9.99' );
+		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
+
+		$item = Plugin::instance()->catalog()->get_item( $post_id );
+		Plugin::instance()->anchors()->record( $item, 9.99, array( 'source' => 'cli' ) );
+
+		$this->assertTrue( (bool) wp_next_scheduled( Scheduler::HOOK_DAILY ) );
+
+		Deactivator::deactivate();
+
+		$this->assertFalse( (bool) wp_next_scheduled( Scheduler::HOOK_DAILY ) );
+		$this->assertSame( 1, Plugin::instance()->history()->count( array( 'product_id' => $post_id ) ) );
+		$this->assertNotNull( get_post( $post_id ) );
+
+		foreach ( $this->tables() as $table ) {
+			$this->assertTrue( $this->table_exists( $table ), "Table $table should survive deactivation." );
+		}
+
+		Scheduler::schedule_all();
+	}
+
+	/**
+	 * Uninstall without opt-in deletes nothing.
+	 *
+	 * @return void
+	 */
+	public function test_uninstall_without_optin_preserves_everything() {
+		Install::activate();
+		delete_option( Uninstaller::DELETE_OPTION );
+
+		$summary = Uninstaller::run();
+
+		$this->assertFalse( $summary['deleted'] );
+
+		foreach ( $this->tables() as $table ) {
+			$this->assertTrue( $this->table_exists( $table ), "Table $table should survive uninstall without opt-in." );
+		}
+	}
+
+	/**
+	 * Uninstall with opt-in deletes plugin data but never foreign data.
+	 *
+	 * Note: DROP TABLE commits implicitly on MySQL, so this test rebuilds
+	 * the schema before finishing to leave a clean environment behind.
+	 *
+	 * @return void
+	 */
+	public function test_uninstall_with_optin_deletes_only_plugin_data() {
+		Install::activate();
+
+		$post_id = wp_insert_post(
+			array(
+				'post_type'   => StandalonePostType::POST_TYPE,
+				'post_title'  => 'Doomed item',
+				'post_status' => 'publish',
+			)
+		);
+
+		update_post_meta( $post_id, '_sidrena_sku', 'LIFE-DOOMED' );
+
+		$foreign_post = wp_insert_post(
+			array(
+				'post_type'   => 'post',
+				'post_title'  => 'Foreign post',
+				'post_status' => 'publish',
+			)
+		);
+
+		update_option( 'sidrena_lifecycle_foreign_option', 'keep me', false );
+		update_option( Uninstaller::DELETE_OPTION, true );
+
+		$summary = Uninstaller::run();
+
+		$this->assertTrue( $summary['deleted'] );
+
+		foreach ( $this->tables() as $table ) {
+			$this->assertFalse( $this->table_exists( $table ), "Table $table should be dropped." );
+		}
+
+		$this->assertNull( get_post( $post_id ) );
+		$this->assertFalse( get_option( Uninstaller::DELETE_OPTION, false ) );
+
+		// Foreign data must survive.
+		$this->assertNotNull( get_post( $foreign_post ) );
+		$this->assertSame( 'keep me', get_option( 'sidrena_lifecycle_foreign_option' ) );
+
+		// Leave a clean environment behind (DDL is not transactional on MySQL).
+		Migrator::migrate();
+		Install::activate();
+		delete_option( 'sidrena_lifecycle_foreign_option' );
+		wp_delete_post( $foreign_post, true );
+	}
+}
