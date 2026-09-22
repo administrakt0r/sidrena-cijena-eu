@@ -13,6 +13,7 @@ namespace SidrenaCijena;
 
 use SidrenaCijena\Admin\AdminMenu;
 use SidrenaCijena\Admin\AnchorMetaBox;
+use SidrenaCijena\Admin\CompliancePage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
@@ -181,6 +182,8 @@ final class Plugin {
 		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
 		add_action( 'rest_api_init', array( PriceListController::class, 'register' ) );
 		add_action( 'admin_post_' . PublicationsPage::ACTION, array( PublicationsPage::class, 'handle_generate' ) );
+		add_action( 'admin_post_' . CompliancePage::ACTION_RUN, array( CompliancePage::class, 'handle_run' ) );
+		add_action( 'admin_post_' . CompliancePage::ACTION_EXPORT, array( CompliancePage::class, 'handle_export' ) );
 
 		Scheduler::register();
 

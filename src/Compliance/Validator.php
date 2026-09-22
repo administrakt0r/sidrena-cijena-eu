@@ -188,15 +188,12 @@ class Validator {
 		$findings = array();
 
 		if ( in_array( $args['scope'], array( 'all', 'publications' ), true ) ) {
-			$context = $this->build_global_context( $args );
-
-			foreach ( $this->global_rules as $callback ) {
-				$findings = array_merge( $findings, (array) call_user_func( $callback, $context ) );
-			}
+			$findings = array_merge( $findings, $this->validate_global( $args ) );
 		}
 
 		if ( in_array( $args['scope'], array( 'all', 'catalog' ), true ) ) {
 			$count = 0;
+			$batch = array();
 
 			foreach ( $this->catalog->iterate( array( 'per_page' => max( 1, (int) $args['per_page'] ) ) ) as $item ) {
 				if ( ! empty( $args['product_id'] ) && (int) $item->id !== (int) $args['product_id'] ) {
@@ -207,13 +204,21 @@ class Validator {
 					continue;
 				}
 
-				$findings = array_merge( $findings, $this->validate_items( array( $item ), $args ) );
-
+				$batch[] = $item;
 				++$count;
+
+				if ( count( $batch ) >= max( 1, (int) $args['per_page'] ) ) {
+					$findings = array_merge( $findings, $this->validate_items( $batch, $args ) );
+					$batch    = array();
+				}
 
 				if ( ! empty( $args['max_items'] ) && $count >= (int) $args['max_items'] ) {
 					break;
 				}
+			}
+
+			if ( ! empty( $batch ) ) {
+				$findings = array_merge( $findings, $this->validate_items( $batch, $args ) );
 			}
 		}
 
@@ -223,6 +228,27 @@ class Validator {
 			'findings' => $findings,
 			'counts'   => self::counts( $findings ),
 		);
+	}
+
+	/**
+	 * Run only the global (location/publication) rules.
+	 *
+	 * @param array<mixed> $args Arguments.
+	 * @return Finding[]
+	 */
+	public function validate_global( array $args = array() ) {
+		if ( empty( $this->item_rules ) && empty( $this->global_rules ) ) {
+			$this->register_default_rules();
+		}
+
+		$context  = $this->build_global_context( $args );
+		$findings = array();
+
+		foreach ( $this->global_rules as $callback ) {
+			$findings = array_merge( $findings, (array) call_user_func( $callback, $context ) );
+		}
+
+		return $findings;
 	}
 
 	/**
