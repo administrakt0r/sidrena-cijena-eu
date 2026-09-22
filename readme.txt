@@ -50,6 +50,18 @@ legal or accounting professional for your specific situation.
 No. WooCommerce integration is enabled automatically when WooCommerce is
 active; otherwise the standalone catalog is used.
 
+= Which reference dates are used? =
+
+The general reference date is 10 September 2026. Legacy categories (food,
+beverages, cosmetics, cleaning products, toiletries, household products) use
+2 May 2025. Both are configurable under *Sidrena cijena → Postavke → Pravna
+pravila*, and every change is recorded in the audit trail.
+
+= Does the plugin invent historical prices? =
+
+Never. Items introduced after the reference date receive no anchor price and
+are reported for merchant attention instead.
+
 == Changelog ==
 
 = 1.0.0 =

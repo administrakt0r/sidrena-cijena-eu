@@ -82,6 +82,30 @@ npm run lint:js             # ESLint
 | [docs/woocommerce.md](docs/woocommerce.md) | WooCommerce integration and template API |
 | [docs/testing.md](docs/testing.md) | Test suites, fixtures and scenarios |
 | [docs/troubleshooting.md](docs/troubleshooting.md) | Common problems and resolutions |
+| [docs/operations.md](docs/operations.md) | Scheduling, WP-CLI reference, retention, uninstall |
+
+## Known limitations
+
+- Integration and E2E suites require Docker (`npm run wp-env start`); they
+  cannot run in environments without a Docker daemon.
+- The public REST endpoint exposes price data only - no customer or order data.
+- Block-theme product templates are covered through the standard
+  `woocommerce_get_price_html` filter; no dedicated block is shipped.
+- Barcode, brand and unit-of-measure values are read from common meta keys
+  and taxonomies; exotic providers may need the documented filters.
+- The plugin never invents historical prices: items introduced after the
+  reference date are reported for merchant attention instead.
+
+## Legal assumptions (see docs/legal-rules.md)
+
+- General anchor reference date: 10 September 2026; legacy categories:
+  2 May 2025. Both are configurable, and changes are audited - history is
+  never rewritten.
+- The 30-day lowest price is a separate concept from the anchor price and is
+  never substituted for it.
+- XML schema and CSV conventions follow the plugin contract where the
+  decisions leave the format unspecified; documented uncertainties are listed
+  in `docs/legal-rules.md` rather than silently decided.
 
 ## Architecture
 
