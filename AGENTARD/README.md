@@ -18,4 +18,14 @@ General rules for every prompt below:
 - Never invent historical prices; history tables are append-only.
 - Commit after each logical change with conventional messages
   (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
-- Stop and report if a test fails and the fix is not obvious.
+- After every edit batch: bump the version, rebuild the install zip,
+  and follow the release policy below.
+
+## Release policy (`tools/build-zip.sh`, `versions/README.md`)
+
+1. Bump the version in `sidrena-cijena.php` (header + constant),
+   `readme.txt` (Stable tag + changelog) and `package.json`.
+2. Commit everything, then run `tools/build-zip.sh <version>`
+   (produces `versions/<version>/sidrena-cijena.zip` + `SHA256SUMS.txt`).
+3. Patch `0.0.x` → stays local (gitignored), never pushed.
+   Minor `0.x.0` and major `x.0.0` → commit `versions/<version>/` and push.

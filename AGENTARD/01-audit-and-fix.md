@@ -29,6 +29,13 @@ Steps:
 5. Finish with a clean `composer test:unit && composer lint &&
    composer analyse` run and report: files changed, commits made,
    remaining risks.
+6. Packaging (mandatory after every edit batch): decide the bump -
+   fixes without behaviour change bump the patch number (0.0.x, stays
+   local); anything user-visible bumps minor. Update sidrena-cijena.php
+   (header + SIDRENA_CIJENA_VERSION), readme.txt (Stable tag +
+   changelog) and package.json, commit, then run
+   `tools/build-zip.sh <version>`. Commit versions/<version>/ only for
+   minor/major releases; patch zips stay local per .gitignore.
 
 Done when: unit suite passes (0 failures), lint exits 0, PHPStan reports
 no errors, translations are complete (0 untranslated), and git log shows

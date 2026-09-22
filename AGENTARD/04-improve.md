@@ -28,6 +28,9 @@ Pick items in priority order; stop after the batch below and report:
    sufficient contrast in assets/css (admin + frontend).
 
 Verify with `composer test:unit && composer lint && composer analyse`
-(zero failures/errors) and report: what improved, measured effect,
+(zero failures/errors), then package per AGENTARD/README.md release
+policy (improvements bump minor: update version strings, commit, run
+`tools/build-zip.sh <version>`, commit versions/<version>/ and push),
+and report: what improved, measured effect,
 commits, what you deliberately left alone.
 ```
