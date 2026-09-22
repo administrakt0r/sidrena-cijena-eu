@@ -13,7 +13,9 @@ namespace SidrenaCijena;
 
 use SidrenaCijena\Admin\AdminMenu;
 use SidrenaCijena\Admin\AnchorMetaBox;
+use SidrenaCijena\Admin\BulkAnchorEntryPage;
 use SidrenaCijena\Admin\CompliancePage;
+use SidrenaCijena\Admin\ImportPage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
@@ -133,6 +135,13 @@ final class Plugin {
 	private $rest_cache = null;
 
 	/**
+	 * Import service.
+	 *
+	 * @var \SidrenaCijena\Import\ImportService|null
+	 */
+	private $import_service = null;
+
+	/**
 	 * Singleton accessor.
 	 *
 	 * @return Plugin
@@ -184,6 +193,10 @@ final class Plugin {
 		add_action( 'admin_post_' . PublicationsPage::ACTION, array( PublicationsPage::class, 'handle_generate' ) );
 		add_action( 'admin_post_' . CompliancePage::ACTION_RUN, array( CompliancePage::class, 'handle_run' ) );
 		add_action( 'admin_post_' . CompliancePage::ACTION_EXPORT, array( CompliancePage::class, 'handle_export' ) );
+		add_action( 'admin_post_' . ImportPage::ACTION_PREVIEW, array( ImportPage::class, 'handle_preview' ) );
+		add_action( 'admin_post_' . ImportPage::ACTION_COMMIT, array( ImportPage::class, 'handle_commit' ) );
+		add_action( 'admin_post_' . ImportPage::ACTION_REPORT, array( ImportPage::class, 'handle_report' ) );
+		add_action( 'admin_post_' . BulkAnchorEntryPage::ACTION, array( BulkAnchorEntryPage::class, 'handle_save' ) );
 
 		Scheduler::register();
 
@@ -428,5 +441,21 @@ final class Plugin {
 		}
 
 		return $this->rest_cache;
+	}
+
+	/**
+	 * Import service.
+	 *
+	 * @return \SidrenaCijena\Import\ImportService
+	 */
+	public function import_service() {
+		if ( null === $this->import_service ) {
+			$parser    = new \SidrenaCijena\Import\CsvParser();
+			$validator = new \SidrenaCijena\Import\RowValidator( $this->catalog(), $this->history() );
+
+			$this->import_service = new \SidrenaCijena\Import\ImportService( $parser, $validator, $this->anchors() );
+		}
+
+		return $this->import_service;
 	}
 }
