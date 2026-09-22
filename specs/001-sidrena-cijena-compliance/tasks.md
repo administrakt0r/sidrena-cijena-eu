@@ -229,8 +229,8 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 6
 
-- [ ] T098 [P] [US6] Integration test for location CRUD, unique identifier validation, applicability filtering, inactive exclusion and per-location sequences in `tests/integration/test-locations.php`
-- [ ] T099 [P] [US6] Playwright test for the locations admin screen and per-location generation in `tests/e2e/locations.spec.js`
+- [x] T098 [P] [US6] Integration test for location CRUD, unique identifier validation, applicability filtering, inactive exclusion and per-location sequences in `tests/integration/test-locations.php`
+- [x] T099 [P] [US6] Playwright test for the locations admin screen and per-location generation in `tests/e2e/locations.spec.js`
 
 ### Implementation for User Story 6
 
