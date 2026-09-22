@@ -273,24 +273,24 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 
 ### Tests for User Story 8
 
-- [ ] T110 [P] [US8] Integration test for all CLI commands, options and exit codes in `tests/integration/test-cli.php`
-- [ ] T111 [P] [US8] Integration test for deactivation/uninstall behaviour and opt-in deletion in `tests/integration/test-lifecycle.php`
-- [ ] T112 [P] [US8] Playwright test for operations settings, log viewer filtering and capability denial in `tests/e2e/admin-ops.spec.js`
+- [x] T110 [P] [US8] Integration test for all CLI commands, options and exit codes in `tests/integration/test-cli.php`
+- [x] T111 [P] [US8] Integration test for deactivation/uninstall behaviour and opt-in deletion in `tests/integration/test-lifecycle.php`
+- [x] T112 [P] [US8] Playwright test for operations settings, log viewer filtering and capability denial in `tests/e2e/admin-ops.spec.js`
 
 ### Implementation for User Story 8
 
-- [ ] T113 [P] [US8] Implement `src/Cli/StatusCommand.php` (`wp sidrena-cijena status`, exit 0)
-- [ ] T114 [P] [US8] Implement `src/Cli/ValidateCommand.php` (`validate` with format/location/severity options, exit 0/1/2)
-- [ ] T115 [P] [US8] Implement `src/Cli/GenerateCommand.php` (`generate` with format/location/force/dry-run, exit 0/1/2)
-- [ ] T116 [P] [US8] Implement `src/Cli/HistoryCommand.php` (`history <product_id>` with variation/type/limit/format options, exit 0/1)
-- [ ] T117 [P] [US8] Implement `src/Cli/ImportCommand.php` (`import <file>` with dry-run/confirm-overwrite, exit 0/1/2/3)
-- [ ] T118 [P] [US8] Implement `src/Cli/CleanupCommand.php` (`cleanup` with dry-run, exit 0)
-- [ ] T119 [P] [US8] Implement `src/Cli/SeedTestDataCommand.php` creating the required scenarios: normal, sale, no SKU, barcode/no barcode, variable with multiple variations, legacy category, introduced after reference date, frequently re-priced, consecutive promotions, out-of-stock, unit pricing, missing anchor, price above/equal/below anchor
-- [ ] T120 [US8] Implement `src/Admin/OperationsSettingsPage.php`: deadline, retention (minimum 30 enforced), log retention, format selection, delete-on-uninstall with explicit confirmation
-- [ ] T121 [US8] Implement `src/Admin/LogsPage.php`: filter by level, event and date; no secrets or personal data displayed
-- [ ] T122 [US8] Finalize `uninstall.php` (opt-in deletion only, never WooCommerce or WordPress data) and deactivation behaviour; document exactly what is deleted
-- [ ] T123 [US8] Implement system-cron documentation and an admin notice when the next generation is overdue or cron is unhealthy
-- [ ] T124 [US8] Run US8 integration and Playwright suites; validate quickstart V1/V10/V12; fix failures; commit
+- [x] T113 [P] [US8] Implement `src/Cli/StatusCommand.php` (`wp sidrena-cijena status`, exit 0)
+- [x] T114 [P] [US8] Implement `src/Cli/ValidateCommand.php` (`validate` with format/location/severity options, exit 0/1/2)
+- [x] T115 [P] [US8] Implement `src/Cli/GenerateCommand.php` (`generate` with format/location/force/dry-run, exit 0/1/2)
+- [x] T116 [P] [US8] Implement `src/Cli/HistoryCommand.php` (`history <product_id>` with variation/type/limit/format options, exit 0/1)
+- [x] T117 [P] [US8] Implement `src/Cli/ImportCommand.php` (`import <file>` with dry-run/confirm-overwrite, exit 0/1/2/3)
+- [x] T118 [P] [US8] Implement `src/Cli/CleanupCommand.php` (`cleanup` with dry-run, exit 0)
+- [x] T119 [P] [US8] Implement `src/Cli/SeedTestDataCommand.php` creating the required scenarios: normal, sale, no SKU, barcode/no barcode, variable with multiple variations, legacy category, introduced after reference date, frequently re-priced, consecutive promotions, out-of-stock, unit pricing, missing anchor, price above/equal/below anchor
+- [x] T120 [US8] Implement `src/Admin/OperationsSettingsPage.php`: deadline, retention (minimum 30 enforced), log retention, format selection, delete-on-uninstall with explicit confirmation
+- [x] T121 [US8] Implement `src/Admin/LogsPage.php`: filter by level, event and date; no secrets or personal data displayed
+- [x] T122 [US8] Finalize `uninstall.php` (opt-in deletion only, never WooCommerce or WordPress data) and deactivation behaviour; document exactly what is deleted
+- [x] T123 [US8] Implement system-cron documentation and an admin notice when the next generation is overdue or cron is unhealthy
+- [x] T124 [US8] Run US8 integration and Playwright suites; validate quickstart V1/V10/V12; fix failures; commit
 
 **Checkpoint**: The plugin is operable in production by a non-developer with CLI automation available.
 
