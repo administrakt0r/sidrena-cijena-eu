@@ -16,6 +16,7 @@ use SidrenaCijena\Admin\AnchorMetaBox;
 use SidrenaCijena\Admin\BulkAnchorEntryPage;
 use SidrenaCijena\Admin\CompliancePage;
 use SidrenaCijena\Admin\ImportPage;
+use SidrenaCijena\Admin\LocationsPage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
@@ -197,6 +198,8 @@ final class Plugin {
 		add_action( 'admin_post_' . ImportPage::ACTION_COMMIT, array( ImportPage::class, 'handle_commit' ) );
 		add_action( 'admin_post_' . ImportPage::ACTION_REPORT, array( ImportPage::class, 'handle_report' ) );
 		add_action( 'admin_post_' . BulkAnchorEntryPage::ACTION, array( BulkAnchorEntryPage::class, 'handle_save' ) );
+		add_action( 'admin_post_' . LocationsPage::ACTION_SAVE, array( LocationsPage::class, 'handle_save' ) );
+		add_action( 'admin_post_' . LocationsPage::ACTION_DELETE, array( LocationsPage::class, 'handle_delete' ) );
 
 		Scheduler::register();
 

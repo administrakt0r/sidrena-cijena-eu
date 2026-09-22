@@ -89,7 +89,7 @@ class FilenameGenerator {
 			return new \WP_Error( 'invalid_filename', __( 'The facility identifier is missing.', 'sidrena-cijena' ) );
 		}
 
-		$separator = self::separator();
+		$separator = self::separator( $location );
 		$parts     = array( $form );
 
 		$address = self::address_token(
@@ -112,7 +112,7 @@ class FilenameGenerator {
 
 		$name = implode( $separator, $parts ) . '.' . self::EXTENSIONS[ $format ];
 
-		$name = 'lower' === self::case() ? strtolower( $name ) : strtoupper( $name );
+		$name = 'lower' === self::case( $location ) ? strtolower( $name ) : strtoupper( $name );
 
 		if ( ! self::validate( $name ) ) {
 			return new \WP_Error( 'invalid_filename', __( 'The generated filename is not valid.', 'sidrena-cijena' ) );
@@ -214,23 +214,27 @@ class FilenameGenerator {
 	}
 
 	/**
-	 * Configured separator.
+	 * Configured separator, with per-location override.
 	 *
+	 * @param array<mixed> $location Optional location row.
 	 * @return string
 	 */
-	public static function separator() {
-		$separator = (string) Settings::get( 'filename_separator', '_' );
+	public static function separator( array $location = array() ) {
+		$config    = isset( $location['price_list_config'] ) && is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
+		$separator = isset( $config['separator'] ) ? (string) $config['separator'] : (string) Settings::get( 'filename_separator', '_' );
 
 		return in_array( $separator, array( '_', '-' ), true ) ? $separator : '_';
 	}
 
 	/**
-	 * Configured letter case.
+	 * Configured letter case, with per-location override.
 	 *
+	 * @param array<mixed> $location Optional location row.
 	 * @return string
 	 */
-	public static function case() {
-		$case = (string) Settings::get( 'filename_case', 'upper' );
+	public static function case( array $location = array() ) {
+		$config = isset( $location['price_list_config'] ) && is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
+		$case   = isset( $config['case'] ) ? (string) $config['case'] : (string) Settings::get( 'filename_case', 'upper' );
 
 		return in_array( $case, array( 'upper', 'lower' ), true ) ? $case : 'upper';
 	}

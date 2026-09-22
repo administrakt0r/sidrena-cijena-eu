@@ -7,12 +7,51 @@
 
 namespace SidrenaCijena\Admin;
 
+use SidrenaCijena\Export\FilenameGenerator;
+use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Dates;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Manages sales locations and their price-list settings.
  */
 class LocationsPage {
+
+	/**
+	 * Page slug.
+	 *
+	 * @var string
+	 */
+	const SLUG = 'sidrena-cijena-locations';
+
+	/**
+	 * Save action.
+	 *
+	 * @var string
+	 */
+	const ACTION_SAVE = 'sidrena_cijena_save_location';
+
+	/**
+	 * Delete action.
+	 *
+	 * @var string
+	 */
+	const ACTION_DELETE = 'sidrena_cijena_delete_location';
+
+	/**
+	 * Location types offered in the form.
+	 *
+	 * @return array<string,string>
+	 */
+	protected static function types() {
+		return array(
+			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'sidrena-cijena' ),
+			'webshop'        => __( 'Web shop (webshop)', 'sidrena-cijena' ),
+			'poslovnica'     => __( 'Branch office (poslovnica)', 'sidrena-cijena' ),
+			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'sidrena-cijena' ),
+		);
+	}
 
 	/**
 	 * Render the screen.
@@ -24,8 +63,356 @@ class LocationsPage {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen selection.
+		$edit_id = isset( $_GET['location'] ) ? absint( wp_unslash( $_GET['location'] ) ) : 0;
+		$edit    = $edit_id > 0 ? Plugin::instance()->locations()->get( $edit_id ) : null;
+
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Sales locations', 'sidrena-cijena' ) . '</h1>';
+
+		self::notice();
+
+		echo '<p>' . esc_html__( 'All locations share one price catalog. Per-location settings only control which products are listed and how the file is named.', 'sidrena-cijena' ) . '</p>';
+		echo '<p>' . esc_html__( 'Filenames follow the pattern:', 'sidrena-cijena' ) . ' <code>' . esc_html( FilenameGenerator::pattern() ) . '</code></p>';
+
+		self::render_form( $edit );
+		self::render_list();
+
 		echo '</div>';
+	}
+
+	/**
+	 * Render the add/edit form.
+	 *
+	 * @param array<mixed>|null $location Location row when editing.
+	 * @return void
+	 */
+	protected static function render_form( $location ) {
+		$config  = $location && is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
+		$applies = $location && is_array( $location['applies_to'] ) ? $location['applies_to'] : array();
+		$formats = isset( $config['formats'] ) ? (array) $config['formats'] : array( 'csv', 'xml' );
+		$mode    = isset( $applies['mode'] ) ? (string) $applies['mode'] : 'all';
+		$cats    = isset( $applies['categories'] ) ? implode( ', ', array_map( 'strval', (array) $applies['categories'] ) ) : '';
+		$edit_id = $location ? (int) $location['id'] : 0;
+		$heading = $edit_id > 0 ? __( 'Edit location', 'sidrena-cijena' ) : __( 'Add location', 'sidrena-cijena' );
+		$sep     = isset( $config['separator'] ) ? (string) $config['separator'] : '';
+		$case    = isset( $config['case'] ) ? (string) $config['case'] : '';
+
+		echo '<h2>' . esc_html( $heading ) . '</h2>';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		wp_nonce_field( self::ACTION_SAVE );
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SAVE ) . '" />';
+		echo '<input type="hidden" name="location_id" value="' . esc_attr( (string) $edit_id ) . '" />';
+
+		echo '<table class="form-table" role="presentation"><tbody>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-name">' . esc_html__( 'Name', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $location ? (string) $location['name'] : '' ) . '" /></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-type">' . esc_html__( 'Facility form', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><select id="sidrena-location-type" name="type">';
+
+		$current_type = $location ? (string) $location['type'] : 'prodavaonica';
+
+		foreach ( self::types() as $value => $label ) {
+			echo '<option value="' . esc_attr( $value ) . '"' . selected( $current_type, $value, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+
+		echo '</select></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-address">' . esc_html__( 'Address', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $location ? (string) $location['address'] : '' ) . '" /></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-city">' . esc_html__( 'City', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $location ? (string) $location['city'] : '' ) . '" /></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-identifier">' . esc_html__( 'Facility identifier', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $location ? (string) $location['identifier'] : '' ) . '" />';
+		echo '<p class="description">' . esc_html__( 'Required, unique across locations and used in the filename.', 'sidrena-cijena' ) . '</p></td></tr>';
+
+		echo '<tr><th scope="row">' . esc_html__( 'Active', 'sidrena-cijena' ) . '</th>';
+		echo '<td><label><input type="checkbox" name="active" value="1"' . checked( $location ? (bool) $location['active'] : true, true, false ) . ' /> ' . esc_html__( 'Generate a price list for this location.', 'sidrena-cijena' ) . '</label></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-applies">' . esc_html__( 'Applicable products', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><select id="sidrena-location-applies" name="applies_mode">';
+
+		foreach ( array(
+			'all'     => __( 'All products and services', 'sidrena-cijena' ),
+			'include' => __( 'Only the selected categories', 'sidrena-cijena' ),
+			'exclude' => __( 'All except the selected categories', 'sidrena-cijena' ),
+		) as $value => $label ) {
+			echo '<option value="' . esc_attr( $value ) . '"' . selected( $mode, $value, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+
+		echo '</select>';
+		echo '<p><input type="text" class="regular-text" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" />';
+		echo '<p class="description">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</p></td></tr>';
+
+		echo '<tr><th scope="row">' . esc_html__( 'Formats', 'sidrena-cijena' ) . '</th><td>';
+		foreach ( array( 'csv', 'xml' ) as $format ) {
+			echo '<label style="margin-right:1em;"><input type="checkbox" name="formats[]" value="' . esc_attr( $format ) . '"' . checked( in_array( $format, $formats, true ), true, false ) . ' /> ' . esc_html( strtoupper( $format ) ) . '</label>';
+		}
+		echo '</td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-separator">' . esc_html__( 'Filename separator', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><select id="sidrena-location-separator" name="separator">';
+		foreach ( array(
+			''  => __( 'Use the global setting', 'sidrena-cijena' ),
+			'_' => '_',
+			'-' => '-',
+		) as $value => $label ) {
+			echo '<option value="' . esc_attr( $value ) . '"' . selected( $sep, $value, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		echo '</select></td></tr>';
+
+		echo '<tr><th scope="row"><label for="sidrena-location-case">' . esc_html__( 'Filename letter case', 'sidrena-cijena' ) . '</label></th>';
+		echo '<td><select id="sidrena-location-case" name="case">';
+		foreach ( array(
+			''      => __( 'Use the global setting', 'sidrena-cijena' ),
+			'upper' => __( 'UPPERCASE', 'sidrena-cijena' ),
+			'lower' => __( 'lowercase', 'sidrena-cijena' ),
+		) as $value => $label ) {
+			echo '<option value="' . esc_attr( $value ) . '"' . selected( $case, $value, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		echo '</select></td></tr>';
+
+		echo '</tbody></table>';
+
+		submit_button( $edit_id > 0 ? __( 'Save location', 'sidrena-cijena' ) : __( 'Add location', 'sidrena-cijena' ) );
+
+		if ( $edit_id > 0 ) {
+			echo '<p><a href="' . esc_url( self::url() ) . '">' . esc_html__( 'Cancel editing', 'sidrena-cijena' ) . '</a></p>';
+		}
+
+		echo '</form>';
+	}
+
+	/**
+	 * Render the location list.
+	 *
+	 * @return void
+	 */
+	protected static function render_list() {
+		$locations    = Plugin::instance()->locations()->all();
+		$publications = Plugin::instance()->publications();
+
+		echo '<h2>' . esc_html__( 'Locations', 'sidrena-cijena' ) . '</h2>';
+		echo '<table class="widefat striped">';
+		echo '<thead><tr>';
+		foreach ( array(
+			__( 'Name', 'sidrena-cijena' ),
+			__( 'Facility form', 'sidrena-cijena' ),
+			__( 'Address', 'sidrena-cijena' ),
+			__( 'Identifier', 'sidrena-cijena' ),
+			__( 'Sequence', 'sidrena-cijena' ),
+			__( 'Active', 'sidrena-cijena' ),
+			__( 'Formats', 'sidrena-cijena' ),
+			__( 'Last published', 'sidrena-cijena' ),
+			__( 'Actions', 'sidrena-cijena' ),
+		) as $heading ) {
+			echo '<th>' . esc_html( $heading ) . '</th>';
+		}
+		echo '</tr></thead><tbody>';
+
+		if ( empty( $locations ) ) {
+			echo '<tr><td colspan="9">' . esc_html__( 'No sales locations have been configured.', 'sidrena-cijena' ) . '</td></tr>';
+		}
+
+		foreach ( $locations as $location ) {
+			$id       = (int) $location['id'];
+			$config   = is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
+			$formats  = isset( $config['formats'] ) ? array_map( 'strval', (array) $config['formats'] ) : array( 'csv', 'xml' );
+			$last     = $publications->last_successful( $id );
+			$retained = $publications->for_location( $id, 1 );
+
+			echo '<tr>';
+			echo '<td><strong>' . esc_html( (string) $location['name'] ) . '</strong></td>';
+			echo '<td>' . esc_html( (string) $location['type'] ) . '</td>';
+			echo '<td>' . esc_html( trim( (string) $location['address'] . ' ' . (string) $location['city'] ) ) . '</td>';
+			echo '<td><code>' . esc_html( (string) $location['identifier'] ) . '</code></td>';
+			echo '<td>' . esc_html( (string) (int) $location['sequence_no'] ) . '</td>';
+			echo '<td>' . esc_html( $location['active'] ? __( 'Yes', 'sidrena-cijena' ) : __( 'No', 'sidrena-cijena' ) ) . '</td>';
+			echo '<td>' . esc_html( implode( ', ', array_map( 'strtoupper', $formats ) ) ) . '</td>';
+			echo '<td>' . esc_html( $last && ! empty( $last['published_at'] ) ? Dates::from_utc( (string) $last['published_at'] )->format( 'Y-m-d H:i' ) : '—' ) . '</td>';
+			echo '<td>';
+			echo '<a href="' . esc_url( self::url( array( 'location' => $id ) ) ) . '">' . esc_html__( 'Edit', 'sidrena-cijena' ) . '</a> | ';
+
+			if ( ! empty( $retained ) ) {
+				echo '<a href="' . esc_url( self::delete_url( $id ) ) . '" data-sidrena-confirm="' . esc_attr__( 'This location has published price lists. It will be deactivated instead of deleted. Continue?', 'sidrena-cijena' ) . '">' . esc_html__( 'Deactivate', 'sidrena-cijena' ) . '</a>';
+			} else {
+				echo '<a href="' . esc_url( self::delete_url( $id ) ) . '" data-sidrena-confirm="' . esc_attr__( 'Delete this location?', 'sidrena-cijena' ) . '">' . esc_html__( 'Delete', 'sidrena-cijena' ) . '</a>';
+			}
+
+			echo '</td></tr>';
+		}
+
+		echo '</tbody></table>';
+	}
+
+	/**
+	 * Save a location.
+	 *
+	 * @return void
+	 */
+	public static function handle_save() {
+		if ( ! Capabilities::current_user_can() ) {
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena' ) );
+		}
+
+		check_admin_referer( self::ACTION_SAVE );
+
+		$locations  = Plugin::instance()->locations();
+		$id         = isset( $_POST['location_id'] ) ? absint( wp_unslash( $_POST['location_id'] ) ) : 0;
+		$name       = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$identifier = isset( $_POST['identifier'] ) ? sanitize_text_field( wp_unslash( $_POST['identifier'] ) ) : '';
+
+		if ( '' === $name || '' === $identifier ) {
+			self::redirect( 'error', __( 'The name and the facility identifier are required.', 'sidrena-cijena' ) );
+		}
+
+		$existing = $locations->find_by_identifier( $identifier );
+
+		if ( $existing && (int) $existing['id'] !== $id ) {
+			self::redirect( 'error', __( 'Another location already uses this facility identifier.', 'sidrena-cijena' ) );
+		}
+
+		$applies_categories = isset( $_POST['applies_categories'] ) ? sanitize_text_field( wp_unslash( $_POST['applies_categories'] ) ) : '';
+		$categories         = array_values( array_filter( array_map( 'sanitize_title', preg_split( '/[\s,;]+/', $applies_categories ) ) ) );
+
+		$formats = isset( $_POST['formats'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['formats'] ) ) : array();
+		$formats = array_values( array_intersect( array( 'csv', 'xml' ), $formats ) );
+
+		$separator = isset( $_POST['separator'] ) ? sanitize_text_field( wp_unslash( $_POST['separator'] ) ) : '';
+		$case      = isset( $_POST['case'] ) ? sanitize_text_field( wp_unslash( $_POST['case'] ) ) : '';
+
+		$data = array(
+			'name'              => $name,
+			'type'              => isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'prodavaonica',
+			'address'           => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
+			'city'              => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+			'identifier'        => $identifier,
+			'active'            => ! empty( $_POST['active'] ) ? 1 : 0,
+			'applies_to'        => array(
+				'mode'       => isset( $_POST['applies_mode'] ) ? sanitize_key( wp_unslash( $_POST['applies_mode'] ) ) : 'all',
+				'categories' => $categories,
+			),
+			'price_list_config' => array(
+				'formats'   => $formats,
+				'separator' => $separator,
+				'case'      => $case,
+			),
+		);
+
+		$result = $id > 0 ? $locations->update( $id, $data ) : $locations->insert( $data );
+
+		if ( false === $result || 0 === $result ) {
+			self::redirect( 'error', __( 'The location could not be saved.', 'sidrena-cijena' ) );
+		}
+
+		self::redirect( 'success', __( 'Location saved.', 'sidrena-cijena' ) );
+	}
+
+	/**
+	 * Delete (or deactivate) a location.
+	 *
+	 * @return void
+	 */
+	public static function handle_delete() {
+		if ( ! Capabilities::current_user_can() ) {
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena' ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Required to build the per-location nonce checked below.
+		$id = isset( $_GET['location'] ) ? absint( wp_unslash( $_GET['location'] ) ) : 0;
+
+		check_admin_referer( self::ACTION_DELETE . '_' . $id );
+
+		$locations = Plugin::instance()->locations();
+		$location  = $locations->get( $id );
+
+		if ( ! $location ) {
+			self::redirect( 'error', __( 'The location could not be found.', 'sidrena-cijena' ) );
+		}
+
+		$retained = Plugin::instance()->publications()->for_location( $id, 1 );
+
+		if ( ! empty( $retained ) ) {
+			$locations->update( $id, array( 'active' => 0 ) );
+			self::redirect( 'success', __( 'The location has published price lists, so it was deactivated instead of deleted.', 'sidrena-cijena' ) );
+		}
+
+		$locations->delete( $id );
+
+		self::redirect( 'success', __( 'Location deleted.', 'sidrena-cijena' ) );
+	}
+
+	/**
+	 * Screen URL.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @return string
+	 */
+	protected static function url( array $args = array() ) {
+		return AdminMenu::url( self::SLUG, $args );
+	}
+
+	/**
+	 * Delete URL with nonce.
+	 *
+	 * @param int $id Location ID.
+	 * @return string
+	 */
+	protected static function delete_url( $id ) {
+		$url = add_query_arg(
+			array(
+				'action'   => self::ACTION_DELETE,
+				'location' => (int) $id,
+			),
+			admin_url( 'admin-post.php' )
+		);
+
+		return wp_nonce_url( $url, self::ACTION_DELETE . '_' . (int) $id );
+	}
+
+	/**
+	 * Redirect back with a notice.
+	 *
+	 * @param string $type    `success` or `error`.
+	 * @param string $message Notice text.
+	 * @return void
+	 */
+	protected static function redirect( $type, $message ) {
+		$url = add_query_arg(
+			array(
+				'page'                       => self::SLUG,
+				'sidrena_cijena_notice'      => $type,
+				'sidrena_cijena_notice_text' => rawurlencode( $message ),
+			),
+			admin_url( 'admin.php' )
+		);
+
+		wp_safe_redirect( $url );
+		exit;
+	}
+
+	/**
+	 * Render the notice.
+	 *
+	 * @return void
+	 */
+	protected static function notice() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice flags.
+		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
+
+		if ( '' === $type ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice text.
+		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
+
+		$class = 'error' === $type ? 'notice notice-error' : 'notice notice-success';
+
+		echo '<div class="' . esc_attr( $class ) . '"><p>' . esc_html( $text ) . '</p></div>';
 	}
 }
