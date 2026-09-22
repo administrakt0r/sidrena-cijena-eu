@@ -17,6 +17,7 @@ use SidrenaCijena\Admin\BulkAnchorEntryPage;
 use SidrenaCijena\Admin\CompliancePage;
 use SidrenaCijena\Admin\ImportPage;
 use SidrenaCijena\Admin\LocationsPage;
+use SidrenaCijena\Admin\PriceHistoryPage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
@@ -200,6 +201,7 @@ final class Plugin {
 		add_action( 'admin_post_' . BulkAnchorEntryPage::ACTION, array( BulkAnchorEntryPage::class, 'handle_save' ) );
 		add_action( 'admin_post_' . LocationsPage::ACTION_SAVE, array( LocationsPage::class, 'handle_save' ) );
 		add_action( 'admin_post_' . LocationsPage::ACTION_DELETE, array( LocationsPage::class, 'handle_delete' ) );
+		add_action( 'admin_post_' . PriceHistoryPage::ACTION, array( PriceHistoryPage::class, 'handle_correct' ) );
 
 		Scheduler::register();
 
