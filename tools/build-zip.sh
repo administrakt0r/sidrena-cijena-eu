@@ -26,8 +26,11 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-if [ -n "$(git -C "$ROOT" status --porcelain)" ]; then
-	echo "error: working tree is not clean - commit first, then build." >&2
+DIRT="$(git -C "$ROOT" status --porcelain | grep -v "^?? versions/" || true)"
+
+if [ -n "$DIRT" ]; then
+	echo "error: working tree is not clean - commit first, then build:" >&2
+	echo "$DIRT" >&2
 	exit 1
 fi
 
