@@ -315,7 +315,7 @@ Plugin root is the repository root (`sidrena-cijena/`). Source in `src/`, tests 
 - [ ] T137 [P] Run the complete automated suite (`composer test:unit`, `composer test:integration`, `npm run test:e2e`, `composer lint`, `composer analyse`) and require zero failures and zero static-analysis errors
 - [ ] T138 Execute the final acceptance scenario from the originating brief (clean wp-env → install → activate → seed → anchors → price changes → sales → display → CSV/XML → validate → filename → archive → REST → machine access → compliance check → all test suites → checkout regression → log inspection → git review) and record results
 - [x] T139 Update `README.md` and `readme.txt` with the final feature list, setup/test commands, known limitations, legal assumptions and the disclaimer
-- [ ] T140 Final Git review: inspect `git status` and `git diff`, confirm atomic commits for every logical change, no secrets or debug code, and clean history
+- [x] T140 Final Git review: inspect `git status` and `git diff`, confirm atomic commits for every logical change, no secrets or debug code, and clean history
 
 ---
 
