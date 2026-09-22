@@ -15,6 +15,11 @@ test-results/
 playwright-report/
 /tests/e2e/.auth/
 
+# Local-only patch releases (minor/major zips ARE committed)
+versions/0.0.*/
+# But keep the policy readme
+!versions/README.md
+
 # OS and editor files
 .DS_Store
 Thumbs.db
