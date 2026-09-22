@@ -4,12 +4,11 @@
 You are verifying the plugin in the current directory inside a real
 WordPress environment. Requires Docker, Node 18+, PHP + Composer.
 
-1. Setup:
-   npm install
-   composer install
-   npm run wp-env start
-   npx wp-env run cli wp plugin activate sidrena-cijena
+1. Setup: run `./local.sh` (starts wp-env, activates the plugin +
+   WooCommerce, sets EUR/Europe-Zagreb, seeds demo products with anchors
+   and a sale, seeds the 17 compliance scenarios, generates price lists).
    Site: http://localhost:8888 (admin/password, development only).
+   Stop afterwards with `./stoplocal.sh`.
 2. Run `composer test:integration` until green. Fix failures (tests first
    if the test contradicts the spec, otherwise fix src/). WooCommerce is
    provisioned by .wp-env.json - verify both with and without it

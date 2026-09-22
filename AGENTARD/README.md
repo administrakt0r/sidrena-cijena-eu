@@ -16,6 +16,11 @@ General rules for every prompt below:
 - Work in the plugin root (`sidrena-cijena.php` lives here).
 - Never modify WordPress core, theme or WooCommerce files.
 - Never invent historical prices; history tables are append-only.
+- For ANY live WordPress work (reproducing bugs, manual verification,
+  screenshots, wp-env runs): use `./local.sh` to start the demo webshop
+  and `./stoplocal.sh` to stop it. Do not hand-roll wp-env commands -
+  `local.sh` already handles install, activation, EUR/Europe-Zagreb,
+  demo products, anchors, a sale and price-list generation.
 - Commit after each logical change with conventional messages
   (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
 - After every edit batch: bump the version, rebuild the install zip,

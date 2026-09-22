@@ -1,5 +1,20 @@
 # Development
 
+## Instant demo: `./local.sh`
+
+```sh
+./local.sh     # start the demo webshop (WordPress + WooCommerce + demo data)
+./stoplocal.sh # stop it (data is kept; full reset: npx wp-env destroy)
+```
+
+`local.sh` installs dependencies, starts wp-env on http://localhost:8888
+(`admin` / `password` — **development only**), sets EUR + Europe/Zagreb,
+creates demo products with anchors and an `akcija` sale
+(`tools/local-seed.php`), seeds the 17 compliance scenarios, generates the
+price lists and prints the URLs that matter (shop, admin, REST, price-list
+files). AI agents working in this codebase must use `./local.sh` /
+`./stoplocal.sh` for any live WordPress work — see `AGENTARD/README.md`.
+
 ## Prerequisites
 
 * Docker (for `wp-env`)
