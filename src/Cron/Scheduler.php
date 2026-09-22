@@ -50,6 +50,7 @@ final class Scheduler {
 		add_action( self::HOOK_DAILY, array( DailyGeneration::class, 'run_scheduled' ) );
 		add_action( self::HOOK_SERVICE, array( DailyGeneration::class, 'run_service_regeneration' ) );
 		add_action( self::HOOK_CLEANUP, array( CleanupJob::class, 'run' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'maybe_notice' ) );
 	}
 
 	/**
@@ -138,6 +139,32 @@ final class Scheduler {
 	 */
 	public static function is_healthy() {
 		return (bool) wp_next_scheduled( self::HOOK_DAILY );
+	}
+
+	/**
+	 * Warn administrators when daily generation is not scheduled or overdue.
+	 *
+	 * @return void
+	 */
+	public static function maybe_notice() {
+		if ( ! is_admin() || ! \SidrenaCijena\Admin\Capabilities::current_user_can() ) {
+			return;
+		}
+
+		$next = self::next_run();
+
+		if ( $next && (int) $next >= time() ) {
+			return;
+		}
+
+		$url = admin_url( 'admin.php?page=' . \SidrenaCijena\Admin\PublicationsPage::SLUG );
+
+		printf(
+			'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
+			esc_html__( 'Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale.', 'sidrena-cijena' ),
+			esc_url( $url ),
+			esc_html__( 'Open the price lists screen', 'sidrena-cijena' )
+		);
 	}
 
 	/**

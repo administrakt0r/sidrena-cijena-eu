@@ -26,6 +26,7 @@ use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
 use SidrenaCijena\Catalog\StandalonePostType;
+use SidrenaCijena\Cli\Cli;
 use SidrenaCijena\Compliance\Validator;
 use SidrenaCijena\Cron\Scheduler;
 use SidrenaCijena\Database\LocationRepository;
@@ -144,6 +145,13 @@ final class Plugin {
 	private $import_service = null;
 
 	/**
+	 * Log repository.
+	 *
+	 * @var \SidrenaCijena\Database\LogRepository|null
+	 */
+	private $logs = null;
+
+	/**
 	 * Singleton accessor.
 	 *
 	 * @return Plugin
@@ -204,6 +212,8 @@ final class Plugin {
 		add_action( 'admin_post_' . PriceHistoryPage::ACTION, array( PriceHistoryPage::class, 'handle_correct' ) );
 
 		Scheduler::register();
+
+		add_action( 'cli_init', array( Cli::class, 'register' ) );
 
 		if ( WooCommerceDetector::is_active() ) {
 			( new PriceDisplay( $this->anchors() ) )->register();
@@ -462,5 +472,18 @@ final class Plugin {
 		}
 
 		return $this->import_service;
+	}
+
+	/**
+	 * Log repository.
+	 *
+	 * @return \SidrenaCijena\Database\LogRepository
+	 */
+	public function logs() {
+		if ( null === $this->logs ) {
+			$this->logs = new \SidrenaCijena\Database\LogRepository();
+		}
+
+		return $this->logs;
 	}
 }
