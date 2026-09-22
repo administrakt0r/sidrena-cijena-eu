@@ -57,7 +57,8 @@ git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena/ HEAD \
 	docs \
 	-o "$OUT/sidrena-cijena.zip"
 
-LEAKS="$(unzip -l "$OUT/sidrena-cijena.zip" | grep -E "sidrena-cijena/(tests|specs|tools|AGENTARD|\.opencode|\.specify|node_modules|vendor|versions)/" || true)"
+ENTRIES="$(unzip -l "$OUT/sidrena-cijena.zip" | awk 'NR>3' | head -n -2)"
+LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "sidrena-cijena/(tests|specs|tools|AGENTARD|\.opencode|\.specify|node_modules|vendor|versions)/" || true)"
 
 if [ -n "$LEAKS" ]; then
 	echo "error: dev-only files leaked into the zip:" >&2
