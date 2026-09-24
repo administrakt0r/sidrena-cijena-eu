@@ -64,7 +64,7 @@ final class Scheduler {
 	}
 
 	/**
-	 * Schedule the daily generation event before the configured deadline.
+	 * Schedule daily generation with a 15-minute buffer before the configured deadline.
 	 *
 	 * @return void
 	 */
@@ -74,8 +74,18 @@ final class Scheduler {
 		}
 
 		$deadline = (string) Settings::get( 'deadline', '08:00' );
+		$parsed   = \DateTimeImmutable::createFromFormat( '!H:i', $deadline, Dates::timezone() );
+		$run_time = $parsed ? $parsed->modify( '-15 minutes' )->format( 'H:i' ) : '07:45';
+		$now      = Dates::now_site();
+		$run_at   = $now->setTime( (int) substr( $run_time, 0, 2 ), (int) substr( $run_time, 3, 2 ) );
+		$due_by   = $now->setTime( (int) substr( $deadline, 0, 2 ), (int) substr( $deadline, 3, 2 ) );
 
-		wp_schedule_event( Dates::next_occurrence( $deadline, false ), 'daily', self::HOOK_DAILY );
+		// If activated/re-scheduled after the buffer but before the deadline, run promptly rather than missing today's list.
+		$timestamp = $now >= $run_at && $now < $due_by
+			? time() + 30
+			: Dates::next_occurrence( $run_time, false );
+
+		wp_schedule_event( $timestamp, 'daily', self::HOOK_DAILY );
 	}
 
 	/**
@@ -113,7 +123,7 @@ final class Scheduler {
 	 * @param int          $delay Seconds to wait before running.
 	 * @return void
 	 */
-	public static function queue_service_regeneration( array $args = array(), $delay = 300 ) {
+	public static function queue_service_regeneration( array $args = array(), $delay = 0 ) {
 		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'sidrena_cijena_use_action_scheduler', true ) ) {
 			as_schedule_single_action( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $args, self::AS_GROUP );
 

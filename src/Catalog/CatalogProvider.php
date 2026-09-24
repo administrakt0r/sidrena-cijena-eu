@@ -53,7 +53,7 @@ interface CatalogProvider {
 	 *
 	 * Supported args: `page`, `per_page`, `type` (`product|service|all`),
 	 * `include` (IDs), `exclude` (IDs), `category` (slug), `search`,
-	 * `orderby`, `order`, `parent` (parent ID).
+	 * `orderby`, `order`, `parent` (parent ID), `include_variations`.
 	 *
 	 * @param array<mixed> $args Query arguments.
 	 * @return CatalogItem[]

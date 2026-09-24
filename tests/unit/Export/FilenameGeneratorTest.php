@@ -153,30 +153,30 @@ class FilenameGeneratorTest extends TestCase {
 	}
 
 	/**
-	 * Webshop locations without an address still generate a valid name.
+	 * Webshop locations without an address are rejected.
 	 *
 	 * @return void
 	 */
-	public function test_webshop_without_address() {
+	public function test_webshop_without_address_is_rejected() {
 		$generator = new FilenameGenerator();
 
 		$when = new \DateTimeImmutable( '2026-10-01 07:50:00', new \DateTimeZone( 'Europe/Zagreb' ) );
 
-		$this->assertSame(
-			'WEBSHOP_P1_01_01102026_0750.CSV',
-			$generator->generate(
-				$this->location(
-					array(
-						'type'    => 'webshop',
-						'address' => '',
-						'city'    => '',
-					)
-				),
-				'csv',
-				1,
-				$when
-			)
+		$result = $generator->generate(
+			$this->location(
+				array(
+					'type'    => 'webshop',
+					'address' => '',
+					'city'    => '',
+				)
+			),
+			'csv',
+			1,
+			$when
 		);
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'missing_location_address', $result->get_error_code() );
 	}
 
 	/**
@@ -199,5 +199,7 @@ class FilenameGeneratorTest extends TestCase {
 		$this->assertFalse( FilenameGenerator::validate( 'PRODAVAONICA/ETC_PASSWD.CSV' ) );
 		$this->assertFalse( FilenameGenerator::validate( 'PRODAVAONICA_P1_01_01102026_0750.PDF' ) );
 		$this->assertFalse( FilenameGenerator::validate( 'PRODAVAONICA_P1_01102026.CSV' ) );
+		$this->assertFalse( FilenameGenerator::validate( 'PRODAVAONICA_P1_01_01102026_0750.CSV' ) );
+		$this->assertFalse( FilenameGenerator::validate( 'PRODAVAONICA_VLASKA68_ZAGREB_P1_01_32132026_0750.CSV' ) );
 	}
 }

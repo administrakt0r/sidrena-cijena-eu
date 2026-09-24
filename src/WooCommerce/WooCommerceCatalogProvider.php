@@ -100,16 +100,17 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'page'     => 1,
-				'per_page' => 100,
-				'type'     => 'all',
-				'include'  => array(),
-				'exclude'  => array(),
-				'category' => '',
-				'search'   => '',
-				'orderby'  => 'title',
-				'order'    => 'ASC',
-				'parent'   => 0,
+				'page'               => 1,
+				'per_page'           => 100,
+				'type'               => 'all',
+				'include'            => array(),
+				'exclude'            => array(),
+				'category'           => '',
+				'search'             => '',
+				'orderby'            => 'title',
+				'order'              => 'ASC',
+				'parent'             => 0,
+				'include_variations' => false,
 			)
 		);
 
@@ -149,9 +150,37 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$items = array();
 
 		foreach ( is_array( $products ) ? $products : array() as $product ) {
-			if ( $this->type_matches( $product, $args['type'] ) ) {
-				$items[] = $this->build_item( $product );
+			if ( ! $this->type_matches( $product, $args['type'] ) ) {
+				continue;
 			}
+
+			if ( ! empty( $args['include_variations'] ) && $product->is_type( 'variable' ) ) {
+				$variation_count = 0;
+
+				foreach ( $product->get_children() as $variation_id ) {
+					$variation = wc_get_product( (int) $variation_id );
+
+					if ( ! $variation || 'publish' !== $variation->get_status() ) {
+						continue;
+					}
+
+					// A variation without a retail price cannot be purchased and is not an offer to publish.
+					if ( '' === $variation->get_price( 'edit' ) && ! $variation->is_purchasable() ) {
+						continue;
+					}
+
+					$items[] = $this->build_item( $variation );
+					++$variation_count;
+				}
+
+				if ( 0 === $variation_count ) {
+					$items[] = $this->build_item( $product );
+				}
+
+				continue;
+			}
+
+			$items[] = $this->build_item( $product );
 		}
 
 		return $items;
@@ -251,7 +280,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$found = count( $items );
 
 			++$page;
-		} while ( $found > 0 && $found === $per_page );
+		} while ( $found >= $per_page );
 	}
 
 	/**
@@ -319,6 +348,20 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 		$name = $product->get_name();
 
+		if ( $is_variation && function_exists( 'wc_get_formatted_variation' ) ) {
+			$attributes = wc_get_formatted_variation( $product, true, false, true );
+
+			if ( '' !== (string) $attributes ) {
+				$name .= ' — ' . wp_strip_all_tags( (string) $attributes );
+			}
+		}
+
+		$sku = (string) $product->get_sku();
+
+		if ( '' === trim( $sku ) ) {
+			$sku = $is_variation ? sprintf( 'WC-%d-V%d', $parent_id, $id ) : sprintf( 'WC-%d', $id );
+		}
+
 		$type = $this->get_item_type( $product );
 
 		$brand       = '';
@@ -337,7 +380,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 				'parent_id'     => $is_variation ? $parent_id : 0,
 				'type'          => $type,
 				'name'          => (string) $name,
-				'sku'           => (string) $product->get_sku(),
+				'sku'           => $sku,
 				'brand'         => $brand,
 				'barcode'       => $this->get_barcode( $product ),
 				'unit'          => (string) $this->get_meta_first( $product, array( '_sidrena_unit', '_unit' ) ),

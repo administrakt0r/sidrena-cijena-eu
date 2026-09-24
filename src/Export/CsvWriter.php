@@ -40,6 +40,7 @@ class CsvWriter {
 		'poseban_oblik_prodaje',
 		'naziv_posebnog_oblika_prodaje',
 		'sidrena_cijena',
+		'datum_sidrene_cijene',
 		'barkod',
 		'dostupnost',
 	);
@@ -126,6 +127,7 @@ class CsvWriter {
 			! empty( $item['poseban_oblik_prodaje'] ) ? 'DA' : 'NE',
 			isset( $item['naziv_posebnog_oblika_prodaje'] ) ? (string) $item['naziv_posebnog_oblika_prodaje'] : '',
 			self::decimal_or_empty( isset( $item['sidrena_cijena'] ) ? $item['sidrena_cijena'] : null ),
+			isset( $item['sidrena_cijena'], $item['anchor_reference_date'] ) ? (string) $item['anchor_reference_date'] : '',
 			isset( $item['barkod'] ) ? (string) $item['barkod'] : '',
 			isset( $item['dostupnost'] ) ? (string) $item['dostupnost'] : '',
 		);

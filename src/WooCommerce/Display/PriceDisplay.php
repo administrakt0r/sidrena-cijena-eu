@@ -203,20 +203,27 @@ class PriceDisplay {
 			 */
 			$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
 
+			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+			$date_parts             = explode( '-', $reference_date );
+			$reference_date_display = 3 === count( $date_parts )
+				? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
+				: '';
+
 			$template_args = array(
-				'item'            => $item,
-				'context'         => $context,
-				'label'           => $label,
-				'anchor_price'    => $anchor_price,
-				'anchor_display'  => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
-				'current_price'   => $current_price,
-				'current_display' => null === $current_price ? '' : Currency::format( $current_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
-				'show_current'    => $show_current,
-				'show_anchor'     => $show_anchor,
-				'reference_date'  => $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '',
-				'disclaimer'      => (string) Settings::get( 'disclaimer', '' ),
-				'product_id'      => (int) $item->id,
-				'variation_id'    => (int) $item->variation_id,
+				'item'                   => $item,
+				'context'                => $context,
+				'label'                  => $label,
+				'anchor_price'           => $anchor_price,
+				'anchor_display'         => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+				'current_price'          => $current_price,
+				'current_display'        => null === $current_price ? '' : Currency::format( $current_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+				'show_current'           => $show_current,
+				'show_anchor'            => $show_anchor,
+				'reference_date'         => $reference_date,
+				'reference_date_display' => $reference_date_display,
+				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
+				'product_id'             => (int) $item->id,
+				'variation_id'           => (int) $item->variation_id,
 			);
 
 			$html = $this->load_template( $template_args );

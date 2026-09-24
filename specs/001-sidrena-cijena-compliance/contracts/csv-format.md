@@ -47,7 +47,7 @@ Product rows MUST leave service-only columns unused; service rows MUST leave pro
 ## Example
 
 ```csv
-vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost
+vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost
 proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;3851234567890;dostupno
 proizvod;Sok naranča 1 L;SOK-1L;Vindija;L;1,80;1,79;NE;;1,89;3851234567891;dostupno
 usluga;Šišanje kratke kose;USL-01;;;;15,00;NE;;20,00;;dostupno

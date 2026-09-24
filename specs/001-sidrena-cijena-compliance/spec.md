@@ -195,7 +195,7 @@ A site administrator configures the system (display options, reference dates, le
 - **FR-004**: The system MUST store anchor prices as historical records preserving at minimum: reference date, source of the reference price, original retail price, currency, tax-inclusive status where applicable, product ID/SKU, variation ID where applicable, capture timestamp, and the user or system that created the record.
 - **FR-005**: The system MUST never silently overwrite historical anchor records; any correction MUST create a new record that references the original and records the author, timestamp and reason.
 - **FR-006**: Changing a reference date or category mapping MUST NOT rewrite or delete existing historical records; it affects only future resolution and capture.
-- **FR-007**: The system MUST allow recording a first-appearance date for items introduced after the applicable reference date and MUST clearly flag such items instead of inventing an anchor price.
+- **FR-007**: The system MUST allow recording the merchant-verified price applied on first offer and its date for items first offered after the applicable fixed reference date; it MUST clearly flag missing evidence and block price-list publication until the anchor is recorded.
 - **FR-008**: The system MUST retain an audit trail of changes to reference dates, category mapping, legacy-treatment enablement and the legal-rule version identifier.
 - **FR-009**: The system MUST support a configurable legal-rule version identifier so that published data and findings can be traced to the rule set that produced them.
 - **FR-010**: The system MUST allow administrators to record an evidenced, non-discounted reference price for items that were on sale on the reference date.
@@ -317,7 +317,7 @@ A site administrator configures the system (display options, reference dates, le
 
 - **FR-091**: The system MUST support both WooCommerce-backed catalog items (when WooCommerce is available) and a standalone, manually managed or imported catalog of products and services (when WooCommerce is absent), applying the same anchor-price, history, validation and export rules to both sources.
 - **FR-092**: Sales locations MUST share a single price catalog; per-location differences are limited to applicable products and the location's own generated price-list file. Per-location price overrides are out of scope.
-- **FR-093**: For items introduced after the applicable reference date, the system MUST record the first-appearance date, MUST NOT assign an anchor price, and MUST flag the item in the compliance report for administrator attention.
+- **FR-093**: For items first offered after the applicable fixed reference date, the system MUST record the actual price applied on first offer and that first-offer date as the anchor. It MUST NOT infer the historical price from current catalog price or treat the creation date as proof; missing/unsupported records block publication.
 
 ### Key Entities *(include if data involved)*
 
@@ -361,7 +361,7 @@ A site administrator configures the system (display options, reference dates, le
 - The regulation does not prescribe a single XML schema; the system defines a documented, deterministic, versioned format, and this uncertainty is documented.
 - The regulation's applicability of the online price-list obligation to a specific merchant may be legally uncertain; the system therefore makes the obligation configurable and documents the uncertainty rather than hard-coding it.
 - The exact daily publication deadline is configurable with a default of 08:00 local time, per the published guidance.
-- Items introduced after the applicable reference date have no anchor price; the system records their first-appearance date and flags them for administrator attention rather than inventing a reference price.
+- Items first offered after the applicable fixed reference date use their verified first-offer price as the anchor, with the first-offer date clearly stated. The plugin must block publication until the merchant records this evidence; it must not infer the original price from the current catalog price.
 - The public price interface is unauthenticated by default because the regulation requires automated retrieval; only price data is exposed.
 - The plugin is a technical aid and not legal advice; merchants must obtain professional legal/accounting advice for their specific situation.
 - The development environment uses containerized WordPress tooling with documented commands; development-only credentials are never used in production.

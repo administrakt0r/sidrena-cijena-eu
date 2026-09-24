@@ -266,6 +266,19 @@ class ValidatorTest extends TestCase {
 		$findings = $rules->missing_store_identifier( $context );
 		$this->assertSame( 'missing_store_identifier', $findings[0]->code );
 
+		$context  = $this->global_context(
+			array(
+				$this->location(
+					array(
+						'address' => '',
+						'city'    => '',
+					)
+				),
+			)
+		);
+		$findings = $rules->missing_location_address( $context );
+		$this->assertSame( 'missing_location_address', $findings[0]->code );
+
 		$findings = $rules->missing_archived_price_list( $context );
 		$this->assertCount( 2, $findings );
 		$this->assertSame( 'missing_archived_price_list', $findings[0]->code );
@@ -358,7 +371,7 @@ class ValidatorTest extends TestCase {
 		$this->assertSame( 'malformed_xml', $xml_findings[0]->code );
 
 		$valid = $dir . '/VALID.CSV';
-		file_put_contents( $valid, "vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost\n" );
+		file_put_contents( $valid, "vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost\n" );
 		$context['publication_files']['1:csv'] = $valid;
 
 		$this->assertSame( array(), $rules->malformed_csv( $context ) );

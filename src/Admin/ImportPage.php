@@ -335,7 +335,7 @@ class ImportPage {
 		echo '<div class="notice notice-info"><p><strong>' . esc_html__( 'Before you import', 'sidrena-cijena' ) . '</strong></p>';
 		echo '<ul style="list-style:disc;margin-left:20px;">';
 		echo '<li>' . esc_html__( 'Today\'s price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date.', 'sidrena-cijena' ) . '</li>';
-		echo '<li>' . esc_html__( 'Items introduced after the reference date receive no anchor price; they are reported for attention instead.', 'sidrena-cijena' ) . '</li>';
+		echo '<li>' . esc_html__( 'For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records.', 'sidrena-cijena' ) . '</li>';
 		echo '<li>' . esc_html__( 'Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason.', 'sidrena-cijena' ) . '</li>';
 		echo '<li>' . esc_html__( 'Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted.', 'sidrena-cijena' ) . '</li>';
 		echo '</ul></div>';

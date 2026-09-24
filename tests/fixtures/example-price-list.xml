@@ -11,6 +11,7 @@
       <posebanOblikProdaje>true</posebanOblikProdaje>
       <nazivPosebnogOblikaProdaje>akcija</nazivPosebnogOblikaProdaje>
       <sidrenaCijena>7.49</sidrenaCijena>
+      <datumSidreneCijene>2026-09-10</datumSidreneCijene>
       <barkod>3851234567890</barkod>
       <dostupnost>dostupno</dostupnost>
     </stavka>
@@ -23,6 +24,7 @@
       <maloprodajnaCijena>1.49</maloprodajnaCijena>
       <posebanOblikProdaje>false</posebanOblikProdaje>
       <sidrenaCijena>1.79</sidrenaCijena>
+      <datumSidreneCijene>2026-09-10</datumSidreneCijene>
       <dostupnost>dostupno</dostupnost>
     </stavka>
     <stavka vrsta="usluga">
@@ -32,6 +34,7 @@
       <maloprodajnaCijena>35.00</maloprodajnaCijena>
       <posebanOblikProdaje>false</posebanOblikProdaje>
       <sidrenaCijena>39.00</sidrenaCijena>
+      <datumSidreneCijene>2026-09-10</datumSidreneCijene>
       <dostupnost>dostupno</dostupnost>
     </stavka>
   </prodajnoMjesto>

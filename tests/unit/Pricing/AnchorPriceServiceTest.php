@@ -163,6 +163,22 @@ class AnchorPriceServiceTest extends TestCase {
 	}
 
 	/**
+	 * A post-reference item uses its recorded first-offer date rather than the general fixed date.
+	 *
+	 * @return void
+	 */
+	public function test_first_offer_anchor_date_is_valid_for_new_items() {
+		$item = $this->item( array( 'first_seen' => '2026-09-11' ) );
+		$this->service->record( $item, '12.50', array( 'reference_date' => '2026-09-11' ) );
+
+		$status = $this->service->status( $item );
+
+		$this->assertSame( 'valid', $status['state'] );
+		$this->assertTrue( $status['introduced_after'] );
+		$this->assertSame( '2026-09-11', $status['reference_date'] );
+	}
+
+	/**
 	 * Recording stores an immutable anchor record with resolved defaults.
 	 *
 	 * @return void

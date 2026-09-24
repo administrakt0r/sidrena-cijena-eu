@@ -215,10 +215,21 @@ final class Plugin {
 
 		add_action( 'cli_init', array( Cli::class, 'register' ) );
 
-		if ( WooCommerceDetector::is_active() ) {
-			( new PriceDisplay( $this->anchors() ) )->register();
-			( new VariationDisplay( $this->anchors() ) )->register();
+		add_action( 'init', array( $this, 'register_woocommerce_display' ), 10 );
+	}
+
+	/**
+	 * Register WooCommerce display integration after translations can load.
+	 *
+	 * @return void
+	 */
+	public function register_woocommerce_display() {
+		if ( ! WooCommerceDetector::is_active() ) {
+			return;
 		}
+
+		( new PriceDisplay( $this->anchors() ) )->register();
+		( new VariationDisplay( $this->anchors() ) )->register();
 	}
 
 	/**

@@ -5,8 +5,10 @@
 * Dashboard → "missing" lists every catalog item without an anchor.
 * Bulk entry (`Sidrena cijena → Anchors`) records many at once; CSV
   import handles migrations (`Import` screen, preview first).
-* Items introduced after the reference date are flagged
-  `needs_verification` — confirm the price instead of inventing history.
+* For items first offered after the applicable fixed reference date, record
+  the actual first-offer price/date from sales evidence; the product creation
+  date is only a suggested value. The compliance validator blocks publication
+  until an anchor is recorded.
 
 ## Price list is stale or missing
 
@@ -17,10 +19,10 @@
   **Generate now**.
 * Low-traffic sites: configure a real system cron (see
   `docs/operations.md`); WP-Cron alone may miss the 08:00 deadline.
-* Filename rejections (`invalid_filename`) mean a missing location
-  identifier, illegal characters or a bad timestamp — fix the location
-  record, the generator never overwrites on collision (it increments the
-  sequence).
+* Filename rejections (`invalid_filename`) mean a missing facility/address/
+  identifier component, illegal characters or an invalid date/time — fix the
+  location record. The generator never overwrites on collision; it increments
+  the sequence.
 
 ## Cron issues
 
@@ -46,6 +48,7 @@
 | `missing_anchor` | No anchor recorded for the item |
 | `invalid_anchor_date` | Anchor reference date differs from the applicable legal date |
 | `missing_store_identifier` | Location has no identifier — blocks filename generation |
+| `missing_location_address` | Location needs street address and city for the required filename |
 | `missing_archived_price_list` | No retained publication for an expected format |
 | `stale_price_list` | Latest publication is older than the deadline allows |
 | `malformed_csv` / `malformed_xml` | A published file no longer parses |

@@ -46,6 +46,7 @@ class PublicationRules {
 	 */
 	public function register() {
 		$this->validator->register( 'missing_store_identifier', array( $this, 'missing_store_identifier' ), 'global' );
+		$this->validator->register( 'missing_location_address', array( $this, 'missing_location_address' ), 'global' );
 		$this->validator->register( 'invalid_filename', array( $this, 'invalid_filename' ), 'global' );
 		$this->validator->register( 'missing_archived_price_list', array( $this, 'missing_archived_price_list' ), 'global' );
 		$this->validator->register( 'stale_price_list', array( $this, 'stale_price_list' ), 'global' );
@@ -72,6 +73,39 @@ class PublicationRules {
 				sprintf(
 					/* translators: %s: location name. */
 					__( 'The sales location %s has no identifier, so a legally named price-list file cannot be generated.', 'sidrena-cijena' ),
+					(string) $location['name']
+				),
+				array(
+					'entity_type'    => 'location',
+					'entity_id'      => (int) $location['id'],
+					'rule_reference' => 'FR-040',
+					'context'        => array( 'name' => (string) $location['name'] ),
+				)
+			);
+		}
+
+		return $findings;
+	}
+
+	/**
+	 * Active locations without the address required in the filename.
+	 *
+	 * @param array<mixed> $context Validation context.
+	 * @return Finding[]
+	 */
+	public function missing_location_address( array $context ) {
+		$findings = array();
+
+		foreach ( $context['locations'] as $location ) {
+			if ( '' !== trim( (string) $location['address'] ) && '' !== trim( (string) $location['city'] ) ) {
+				continue;
+			}
+
+			$findings[] = Finding::error(
+				'missing_location_address',
+				sprintf(
+					/* translators: %s: location name. */
+					__( 'The sales location %s needs a street address and city for the required price-list filename.', 'sidrena-cijena' ),
 					(string) $location['name']
 				),
 				array(

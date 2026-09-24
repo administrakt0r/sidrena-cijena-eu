@@ -23,7 +23,12 @@ class DailyGeneration {
 	 * @return void
 	 */
 	public static function run_scheduled() {
-		$results = Plugin::instance()->generation()->generate_all( array( 'source' => 'scheduled' ) );
+		$results = Plugin::instance()->generation()->generate_all(
+			array(
+				'source' => 'scheduled',
+				'force'  => true,
+			)
+		);
 
 		Logger::info(
 			'export_scheduled',

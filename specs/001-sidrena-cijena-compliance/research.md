@@ -18,8 +18,8 @@ This document resolves the technical unknowns and records the decisions that sha
 
 **Documented uncertainties** (kept configurable, never invented):
 - The Odluke do not prescribe an XML schema; the plugin defines a documented, versioned schema (`contracts/xml-format.md`).
-- The 1213 obligation's applicability to a given merchant is legally debated (HOK notes a legal uncertainty); publication is configurable and can be disabled, with a documented warning.
-- Items introduced after the reference date: the spec's chosen policy is no anchor + first-appearance flag. An alternative interpretation (first listed price becomes the anchor with the first-appearance date) exists in the market; the plugin supports recording such an anchor manually with a correction reason, without changing the default policy.
+- The Ministry clarification (22 September 2026) confirms the cjenik duty applies to traders and service providers with established websites, including informational/presentation sites; social profiles alone are excluded. Each physical facility needs its own file, with an additional file for the webshop.
+- Products/services first offered after the applicable fixed baseline use their first-applied price as the anchor, with the first-offer date clearly shown. The merchant must evidence the historical price/date; current catalog data is not proof.
 - The exact CSV delimiter/decimal convention is not prescribed; the plugin fixes and documents a Croatian convention (semicolon + comma) and documents it.
 
 ## R2. Runtime stack and compatibility floor

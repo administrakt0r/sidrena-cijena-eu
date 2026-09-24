@@ -89,18 +89,19 @@ class FilenameGenerator {
 			return new \WP_Error( 'invalid_filename', __( 'The facility identifier is missing.', 'sidrena-cijena' ) );
 		}
 
-		$separator = self::separator( $location );
-		$parts     = array( $form );
-
 		$address = self::address_token(
 			isset( $location['address'] ) ? (string) $location['address'] : '',
 			isset( $location['city'] ) ? (string) $location['city'] : '',
-			$separator
+			self::separator( $location )
 		);
 
-		if ( '' !== $address ) {
-			$parts[] = $address;
+		if ( '' === $address ) {
+			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'sidrena-cijena' ) );
 		}
+
+		$separator = self::separator( $location );
+		$parts     = array( $form );
+		$parts[]   = $address;
 
 		$parts[] = $identifier;
 		$parts[] = str_pad( (string) max( 1, (int) $sequence ), 2, '0', STR_PAD_LEFT );
@@ -138,7 +139,37 @@ class FilenameGenerator {
 			return false;
 		}
 
-		if ( ! preg_match( '/_[0-9]{8}_[0-9]{4}\.[A-Za-z]+$/', $filename ) && ! preg_match( '/-[0-9]{8}-[0-9]{4}\.[A-Za-z]+$/', $filename ) ) {
+		$extension = strtolower( substr( $filename, -4 ) );
+		$stem      = substr( $filename, 0, -4 );
+		$separator = false !== strpos( $stem, '_' ) ? '_' : '-';
+
+		if ( false !== strpos( $stem, '_' ) && false !== strpos( $stem, '-' ) ) {
+			return false;
+		}
+
+		$parts = explode( $separator, $stem );
+		$count = count( $parts );
+
+		if ( $count < 6 ) {
+			return false;
+		}
+
+		$date       = $parts[ $count - 2 ];
+		$time       = $parts[ $count - 1 ];
+		$sequence   = $parts[ $count - 3 ];
+		$identifier = $parts[ $count - 4 ];
+
+		if ( ! ctype_alnum( implode( '', $parts ) ) || ! preg_match( '/^[0-9]{8}$/', $date ) || ! preg_match( '/^[0-9]{4}$/', $time ) || ! preg_match( '/^[0-9]{2,}$/', $sequence ) || ! preg_match( '/^[A-Za-z0-9]+$/', $identifier ) ) {
+			return false;
+		}
+
+		$day    = (int) substr( $date, 0, 2 );
+		$month  = (int) substr( $date, 2, 2 );
+		$year   = (int) substr( $date, 4, 4 );
+		$hour   = (int) substr( $time, 0, 2 );
+		$minute = (int) substr( $time, 2, 2 );
+
+		if ( ! checkdate( $month, $day, $year ) || $hour > 23 || $minute > 59 ) {
 			return false;
 		}
 

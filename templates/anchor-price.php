@@ -26,6 +26,9 @@ $sidrena_classes = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $con
 		<span class="sidrena-cijena__anchor">
 			<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
 			<span class="sidrena-cijena__anchor-value" data-sidrena-cijena-anchor><?php echo esc_html( $anchor_display ); ?></span>
+			<?php if ( $reference_date_display ) : ?>
+				<span class="sidrena-cijena__reference-date" data-sidrena-cijena-reference-date><?php /* translators: %s: date on which the anchor price applied. */ echo esc_html( sprintf( __( 'Cijena na dan %s', 'sidrena-cijena' ), $reference_date_display ) ); ?></span>
+			<?php endif; ?>
 		</span>
 	<?php endif; ?>
 

@@ -34,6 +34,7 @@ class CsvWriterTest extends TestCase {
 				'poseban_oblik_prodaje'         => true,
 				'naziv_posebnog_oblika_prodaje' => 'akcija',
 				'sidrena_cijena'                => 7.49,
+				'anchor_reference_date'         => '2026-09-10',
 				'barkod'                        => '3851234567890',
 				'dostupnost'                    => 'dostupno',
 			),
@@ -51,8 +52,8 @@ class CsvWriterTest extends TestCase {
 
 		$csv = $writer->to_string( array( $this->item() ) );
 
-		$expected = "vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost\n"
-			. "proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;3851234567890;dostupno\n";
+		$expected = "vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost\n"
+			. "proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;2026-09-10;3851234567890;dostupno\n";
 
 		$this->assertSame( $expected, $csv );
 		$this->assertSame( 'v', substr( $csv, 0, 1 ), 'The document must not contain a BOM.' );
@@ -102,6 +103,7 @@ class CsvWriterTest extends TestCase {
 
 		$this->assertSame( 'NE', $row[7] );
 		$this->assertSame( '', $row[9] );
+		$this->assertSame( '', $row[10] );
 		$this->assertSame( '', $row[5] );
 		$this->assertSame( '', $row[3] );
 	}

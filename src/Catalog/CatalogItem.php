@@ -127,7 +127,7 @@ final class CatalogItem {
 	public $tax_inclusive = true;
 
 	/**
-	 * First-appearance date (`Y-m-d`) for items introduced after a reference date.
+	 * Catalog first-seen date (`Y-m-d`); a suggestion only, not proof of first offer.
 	 *
 	 * @var string|null
 	 */

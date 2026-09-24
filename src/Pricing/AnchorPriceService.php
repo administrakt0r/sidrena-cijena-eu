@@ -209,12 +209,17 @@ class AnchorPriceService {
 			);
 		}
 
-		$state = (string) $anchor['reference_date'] === $resolved['date'] ? 'valid' : 'needs_verification';
+		$anchor_date   = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+		$new_item_date = $introduced_after
+			&& Dates::is_valid_date( $anchor_date )
+			&& $anchor_date >= $resolved['date']
+			&& $anchor_date <= Dates::today();
+		$state         = ( $anchor_date === $resolved['date'] || $new_item_date ) ? 'valid' : 'needs_verification';
 
 		return array(
 			'state'            => $state,
 			'anchor'           => $anchor,
-			'reference_date'   => $resolved['date'],
+			'reference_date'   => $new_item_date ? $anchor_date : $resolved['date'],
 			'rule'             => $resolved['rule'],
 			'introduced_after' => (bool) $introduced_after,
 		);

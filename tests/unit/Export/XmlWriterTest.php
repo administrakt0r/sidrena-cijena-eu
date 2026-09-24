@@ -34,6 +34,7 @@ class XmlWriterTest extends TestCase {
 				'poseban_oblik_prodaje'         => true,
 				'naziv_posebnog_oblika_prodaje' => 'akcija',
 				'sidrena_cijena'                => 7.49,
+				'anchor_reference_date'         => '2026-09-10',
 				'barkod'                        => '3851234567890',
 				'dostupnost'                    => 'dostupno',
 			),
@@ -98,6 +99,7 @@ class XmlWriterTest extends TestCase {
 		$this->assertSame( '6.99', (string) $item->maloprodajnaCijena );
 		$this->assertSame( 'true', (string) $item->posebanOblikProdaje );
 		$this->assertSame( '7.49', (string) $item->sidrenaCijena );
+		$this->assertSame( '2026-09-10', (string) $item->datumSidreneCijene );
 		$this->assertSame( '28.00', (string) $item->cijenaZaJedinicuMjere );
 	}
 
@@ -154,6 +156,7 @@ class XmlWriterTest extends TestCase {
 		$this->assertStringNotContainsString( '<marka>', $xml );
 		$this->assertStringNotContainsString( '<barkod>', $xml );
 		$this->assertStringNotContainsString( '<sidrenaCijena>', $xml );
+		$this->assertStringNotContainsString( '<datumSidreneCijene>', $xml );
 		$this->assertStringNotContainsString( '<nazivPosebnogOblikaProdaje>', $xml );
 	}
 

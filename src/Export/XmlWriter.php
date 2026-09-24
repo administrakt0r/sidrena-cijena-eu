@@ -135,6 +135,11 @@ class XmlWriter {
 			'sidrenaCijena',
 			isset( $item['sidrena_cijena'] ) ? Currency::format_decimal_xml( $item['sidrena_cijena'] ) : ''
 		);
+		$this->element(
+			$writer,
+			'datumSidreneCijene',
+			isset( $item['sidrena_cijena'], $item['anchor_reference_date'] ) ? $item['anchor_reference_date'] : ''
+		);
 		$this->element( $writer, 'barkod', isset( $item['barkod'] ) ? $item['barkod'] : '' );
 		$this->element( $writer, 'dostupnost', isset( $item['dostupnost'] ) ? $item['dostupnost'] : '' );
 

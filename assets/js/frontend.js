@@ -9,16 +9,20 @@
 
 	function update( data ) {
 		var nodes = document.querySelectorAll( '[data-sidrena-cijena-anchor]' );
-		var payload = window.sidrenaCijenaVariations;
+		var display = data && data.sidrena_cijena_anchor ? data.sidrena_cijena_anchor : '';
+		var date = data && data.sidrena_cijena_reference_date_display ? data.sidrena_cijena_reference_date_display : '';
 
-		if ( ! nodes.length || ! payload || ! payload.variations ) {
+		if ( ! nodes.length ) {
 			return;
 		}
 
-		var entry = data && data.variation_id ? payload.variations[ data.variation_id ] : null;
-
 		for ( var i = 0; i < nodes.length; i++ ) {
-			nodes[ i ].textContent = entry ? entry.display : '';
+			nodes[ i ].textContent = display;
+		}
+
+		var dateNodes = document.querySelectorAll( '[data-sidrena-cijena-reference-date]' );
+		for ( var j = 0; j < dateNodes.length; j++ ) {
+			dateNodes[ j ].textContent = date ? 'Cijena na dan ' + date : '';
 		}
 	}
 

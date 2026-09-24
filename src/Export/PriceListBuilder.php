@@ -68,7 +68,12 @@ class PriceListBuilder {
 
 		$items = array();
 
-		foreach ( $this->catalog->iterate( array( 'type' => $type ) ) as $item ) {
+		foreach ( $this->catalog->iterate(
+			array(
+				'type'               => $type,
+				'include_variations' => true,
+			)
+		) as $item ) {
 			if ( ! $this->applies( $item, $location ) ) {
 				continue;
 			}

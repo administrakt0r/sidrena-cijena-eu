@@ -72,7 +72,11 @@ final class AnchorMetaBox {
 			return;
 		}
 
-		$status = Plugin::instance()->anchors()->status( $item );
+		$status            = Plugin::instance()->anchors()->status( $item );
+		$anchor_date_value = $status['reference_date'];
+		if ( $status['introduced_after'] && ! $status['anchor'] && $item->first_seen ) {
+			$anchor_date_value = substr( (string) $item->first_seen, 0, 10 );
+		}
 
 		echo '<table class="widefat striped"><tbody>';
 
@@ -107,7 +111,7 @@ final class AnchorMetaBox {
 		echo '</tbody></table>';
 
 		if ( 'missing' === $status['state'] && $status['introduced_after'] ) {
-			echo '<p class="description">' . esc_html__( 'This item was introduced after the reference date. Record the first-appearance date instead of an anchor price.', 'sidrena-cijena' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records.', 'sidrena-cijena' ) . '</p>';
 		}
 
 		?>
@@ -124,7 +128,7 @@ final class AnchorMetaBox {
 
 			<p>
 				<label for="sidrena-anchor-date"><?php echo esc_html__( 'Reference date', 'sidrena-cijena' ); ?></label>
-				<input type="date" id="sidrena-anchor-date" name="reference_date" value="<?php echo esc_attr( $status['reference_date'] ); ?>" />
+				<input type="date" id="sidrena-anchor-date" name="reference_date" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
 			</p>
 
 			<?php if ( $status['anchor'] ) : ?>

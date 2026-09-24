@@ -27,15 +27,16 @@ filename timestamp and the XML generation timestamp).
 | 7 | `maloprodajna_cijena` | **Effective** retail price paid today (promotional price during a sale) |
 | 8 | `poseban_oblik_prodaje` | `DA`/`NE` — special sale active |
 | 9 | `naziv_posebnog_oblika_prodaje` | Sale type/name (required when 8 = `DA`) |
-| 10 | `sidrena_cijena` | Anchor price (empty only when no anchor is recorded) |
-| 11 | `barkod` | Barcode (empty when unknown) |
-| 12 | `dostupnost` | `dostupno` / `nedostupno` |
+| 10 | `sidrena_cijena` | Anchor price (required for publication) |
+| 11 | `datum_sidrene_cijene` | Date the anchor applies to; for a new item this is the verified first-offer date |
+| 12 | `barkod` | Barcode (empty when unknown) |
+| 13 | `dostupnost` | `dostupno` / `nedostupno` |
 
 Example:
 
 ```csv
-vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost
-proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;3851234567890;dostupno
+vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost
+proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;2026-09-10;3851234567890;dostupno
 ```
 
 ## XML

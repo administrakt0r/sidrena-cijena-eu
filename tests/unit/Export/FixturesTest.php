@@ -40,7 +40,7 @@ class FixturesTest extends TestCase {
 		$lines = preg_split( '/\r\n|\r|\n/', trim( $contents ) );
 
 		$this->assertSame(
-			'vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost',
+			'vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost',
 			$lines[0]
 		);
 		$this->assertCount( 4, $lines, 'Header plus three rows expected.' );

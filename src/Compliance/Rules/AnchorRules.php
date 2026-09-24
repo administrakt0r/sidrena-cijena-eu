@@ -68,7 +68,7 @@ class AnchorRules {
 			if ( $introduced_after ) {
 				$message = sprintf(
 					/* translators: %s: reference date. */
-					__( 'No anchor price is recorded. The item first appeared after the reference date %s, so the historical price cannot be reconstructed automatically.', 'sidrena-cijena' ),
+					__( 'No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied.', 'sidrena-cijena' ),
 					$reference_date
 				);
 			} else {
@@ -162,7 +162,15 @@ class AnchorRules {
 			$date   = $anchor && isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
 			$wanted = isset( $context['reference_dates'][ $item->key() ]['date'] ) ? (string) $context['reference_dates'][ $item->key() ]['date'] : '';
 
-			if ( ! $anchor || '' === $date || ! Dates::is_valid_date( $date ) || '' === $wanted || $date === $wanted ) {
+			if ( ! $anchor || '' === $date || ! Dates::is_valid_date( $date ) || '' === $wanted ) {
+				continue;
+			}
+
+			$is_first_offer_anchor = $this->introduced_after( $item, $wanted )
+				&& $date >= $wanted
+				&& $date <= Dates::today();
+
+			if ( $date === $wanted || $is_first_offer_anchor ) {
 				continue;
 			}
 

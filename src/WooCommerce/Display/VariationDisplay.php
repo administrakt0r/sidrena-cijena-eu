@@ -27,13 +27,6 @@ class VariationDisplay {
 	protected $anchors;
 
 	/**
-	 * Variation payload map for the frontend script.
-	 *
-	 * @var array<int,array>
-	 */
-	protected $payload = array();
-
-	/**
 	 * Constructor.
 	 *
 	 * @param AnchorPriceService $anchors Anchor service.
@@ -53,7 +46,6 @@ class VariationDisplay {
 		}
 
 		add_filter( 'woocommerce_available_variation', array( $this, 'filter_available_variation' ), 10, 3 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'localize_variations' ), 20 );
 	}
 
 	/**
@@ -84,36 +76,14 @@ class VariationDisplay {
 
 		$price = (float) $anchor['price'];
 
-		$data['sidrena_cijena_anchor']         = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
-		$data['sidrena_cijena_anchor_raw']     = $price;
-		$data['sidrena_cijena_reference_date'] = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-
-		$this->payload[ (int) $variation->get_id() ] = array(
-			'display'        => $data['sidrena_cijena_anchor'],
-			'raw'            => $price,
-			'reference_date' => $data['sidrena_cijena_reference_date'],
-		);
+		$data['sidrena_cijena_anchor']                 = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
+		$data['sidrena_cijena_anchor_raw']             = $price;
+		$data['sidrena_cijena_reference_date']         = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+		$date_parts                                    = explode( '-', $data['sidrena_cijena_reference_date'] );
+		$data['sidrena_cijena_reference_date_display'] = 3 === count( $date_parts )
+			? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
+			: '';
 
 		return $data;
-	}
-
-	/**
-	 * Localize variation anchor data for the frontend script.
-	 *
-	 * @return void
-	 */
-	public function localize_variations() {
-		if ( empty( $this->payload ) ) {
-			return;
-		}
-
-		wp_localize_script(
-			'sidrena-cijena-frontend',
-			'sidrenaCijenaVariations',
-			array(
-				'variations' => $this->payload,
-				'label'      => (string) apply_filters( 'sidrena_cijena_display_label', (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena' ) ), 'single' ),
-			)
-		);
 	}
 }

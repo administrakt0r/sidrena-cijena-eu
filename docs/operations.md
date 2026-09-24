@@ -1,34 +1,34 @@
 # Operations: scheduling, WP-CLI and retention
 
-This plugin publishes the price list once per working day before the
-configured deadline (default `08:00`, site time zone) and on every service
-price change. Three recurring events drive this:
+This plugin schedules daily list generation 15 minutes before the configured
+deadline (default `08:00`, site time zone) and queues regeneration after a
+service price change. WP-Cron is best-effort; the merchant/operator must
+monitor publication logs and URLs. Three recurring events drive this:
 
 | Hook | Schedule | Job |
 | ---- | -------- | --- |
-| `sidrena-cijena-daily-generation` | Daily at the deadline | `DailyGeneration::run_scheduled()` |
+| `sidrena_cijena_daily_generation` | Daily 15 minutes before the deadline | `DailyGeneration::run_scheduled()` |
 | `sidrena-cijena-service-regeneration` | Single events, queued on service price changes | `DailyGeneration::run_service_regeneration()` |
 | `sidrena-cijena-daily-cleanup` | Daily at 03:30 | `CleanupJob::run()` |
 
 ## WP-Cron and real system cron
 
 WP-Cron only runs when the site receives traffic. On low-traffic sites, or
-to guarantee the 08:00 deadline, disable WP-Cron page-load triggering and
-call it from the server scheduler instead:
+for reliable timely execution, disable WP-Cron page-load triggering and call
+it frequently from the server scheduler instead:
 
 1. In `wp-config.php`: `define( 'DISABLE_WP_CRON', true );`
-2. Add a server cron entry that runs every 5 minutes as the web user:
+2. Add a server cron entry that runs every minute as the web user:
 
 ```cron
-*/5 * * * * cd /path/to/wordpress && wp cron event run --due-now --quiet
+* * * * * cd /path/to/wordpress && wp cron event run --due-now --quiet
 ```
 
-To guarantee publication before the 08:00 deadline on working days, an
-additional entry that fires shortly before the deadline is recommended:
-
-```cron
-0 6 * * 1-5 cd /path/to/wordpress && wp cron event run --due-now --quiet
-```
+The plugin queues the recurring product-list event with a 15-minute buffer
+before the configured deadline (07:45 for the default 08:00). A frequent,
+healthy system scheduler, correct site timezone, and successful generated-file
+checks are still necessary; software cannot guarantee timing when the host is
+down or jobs are delayed.
 
 Times are server-local; align them with the site time zone.
 

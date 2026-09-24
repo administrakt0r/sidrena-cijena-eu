@@ -1,4 +1,4 @@
-vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;barkod;dostupnost
-proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;3851234567890;dostupno
-proizvod;Šećer kristal 1 kg;SEC-1000;Viro;kg;1,49;1,49;NE;;1,79;;dostupno
-usluga;Šišanje & brijanje;SIS-MB;;;35,00;35,00;NE;;39,00;;dostupno
+vrsta;naziv;sifra;marka;jedinica_mjere;cijena_za_jedinicu_mjere;maloprodajna_cijena;poseban_oblik_prodaje;naziv_posebnog_oblika_prodaje;sidrena_cijena;datum_sidrene_cijene;barkod;dostupnost
+proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;2026-09-10;3851234567890;dostupno
+proizvod;Šećer kristal 1 kg;SEC-1000;Viro;kg;1,49;1,49;NE;;1,79;2026-09-10;;dostupno
+usluga;Šišanje & brijanje;SIS-MB;;;35,00;35,00;NE;;39,00;2026-09-10;;dostupno

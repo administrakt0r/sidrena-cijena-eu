@@ -8,14 +8,9 @@
 
 ## Primary sources
 
-* **NN 101/2026-1212** — *Odluka o isticanju dodatne cijene* (Decision on
-  displaying the additional price). Defines the anchor ("sidrena") price,
-  the reference dates and the display duty on points of sale, in
-  advertising and online.
-* **NN 101/2026-1213** — *Odluka o objavi cjenika proizvoda i usluga*
-  (Decision on publishing the price list of products and services).
-  Defines the daily machine-readable price list (`.csv`/`.xml`), its
-  content, filename and 30-day availability.
+* **NN 101/2026-1212** — [*Odluka o isticanju dodatne cijene kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1212.html). Defines the anchor ("sidrena") price and duty to display it with the retail price at the point of sale/service and in advertising, including online advertising.
+* **NN 101/2026-1213** — [*Odluka o objavi cjenika proizvoda i usluga kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1213.html). Defines machine-readable `.csv`/`.xml` lists, content, filename, 30-day availability, and real-time automated retrieval.
+* [Ministry of Economy clarification (22 September 2026)](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440), including the linked explanatory letter, clarifies new listings, website scope and location-specific lists.
 * Consumer-protection rules on the **lowest price in the last 30 days**
   for special forms of sale (akcija, sniženje, sezonsko sniženje,
   rasprodaja and equivalents).
@@ -41,9 +36,7 @@ correction creates a new record linked to the original.
   (`Settings → Legal rules`). Every change is logged with who, when and
   the reason, and never rewrites history.
 
-The display label defaults to **"Sidrena cijena"** and is configurable.
-The plugin never renders "was / regular / original" wording unless the
-merchant configures it.
+For products/services first offered after the applicable fixed reference date, the anchor is the price applied when first offered; the first-applied date must be clearly stated. The plugin requires the merchant to enter and verify this evidence instead of inferring a historical price from a current catalog price. That date is rendered alongside the anchor and included in CSV/XML exports. The display label defaults to **"Sidrena cijena"** and is configurable. The plugin never renders "was / regular / original" wording unless the merchant configures it.
 
 ## The 30-day lowest price is a different concept
 
@@ -63,20 +56,20 @@ sale.
 * Products: column order `vrsta, naziv, sifra, marka, jedinica_mjere,
   cijena_za_jedinicu_mjere, maloprodajna_cijena,
   poseban_oblik_prodaje, naziv_posebnog_oblika_prodaje, sidrena_cijena,
-  barkod, dostupnost`. The published *maloprodajna cijena* is the
+  datum_sidrene_cijene, barkod, dostupnost`. The published *maloprodajna cijena* is the
   **effective** price the consumer pays today (promotional price during a
   sale), shown together with the sale indicator/name and the anchor.
 * Services: `naziv usluge, maloprodajna cijena`, sale status/name and the
   anchor price.
-* Regeneration: products once per working day by the deadline (default
-  `08:00`, configurable); service changes queue an immediate
-  regeneration published no later than 08:00 on the day of change; manual
-  **Generate now** is always available. Identical content is not
-  republished (content fingerprint), but the current list always stays
-  available.
+* Regeneration: products once per working day ahead of the configured
+  deadline (default `08:00`, with a 15-minute generation buffer); service
+  price changes queue regeneration immediately. Manual
+  **Generate now** is always available. The scheduled run creates a dated publication even when the list
+  contents have not changed; previous versions remain available in the archive.
 * Filename: `{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`
   (e.g. `PRODAVAONICA_VLASKA68_ZAGREB_P1_01_01102026_0750.CSV`). Only the
-  separator (`_`/`-`) and letter case are configurable.
+  separator (`_`/`-`) and letter case are configurable. Each active location
+  needs a street address and city; generation is blocked when either is absent.
 * Published versions stay available for at least 30 days; cleanup deletes
   files only after `expires_at` and keeps the archive rows.
 * Public machine-readable access: `/wp-json/sidrena-cijena/v1/prices`
@@ -87,12 +80,8 @@ sale.
 * The official XML schema is not prescribed; the plugin uses the
   deterministic schema in `docs/price-list-format.md` (versioned root
   element, rule version, generation timestamp).
-* The exact scope debate around decision 1213 (who must publish) is
-  resolved by configuration: generation can be limited per location and
-  format instead of hard-coding an interpretation.
+* Decision 1213 applies to all retailers and service providers with a website, including informational/presentation sites (not just e-shops); social profiles alone do not count. Merchants must configure every physical location and a separate webshop location/file where applicable. The plugin cannot infer the merchant's complete location inventory from WooCommerce.
 * The CSV decimal convention is not prescribed; the plugin uses `;`
   delimiters with comma decimals (Croatian convention), documented in
   `docs/price-list-format.md`.
-* New products introduced after the reference date have no historical
-  price; the plugin flags them (`introduced_after`) for merchant review
-  instead of inventing an anchor.
+* New items require the merchant to record the price applied on first offer and the first-offer date from business records. The catalog creation date is only a suggestion, not proof. The plugin blocks publication when an anchor is missing, and for post-reference items it accepts a verified first-offer date on or after the statutory baseline; the law does not permit publishing a blank anchor for these items.
