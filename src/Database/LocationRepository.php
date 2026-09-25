@@ -117,6 +117,10 @@ class LocationRepository {
 
 		$row = $this->normalize( $data, null );
 
+		if ( $this->find_by_identifier( $row['identifier'] ) ) {
+			return 0;
+		}
+
 		$wpdb->insert( $this->table, $row, array( '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%d', '%s', '%s' ) );
 
 		return (int) $wpdb->insert_id;

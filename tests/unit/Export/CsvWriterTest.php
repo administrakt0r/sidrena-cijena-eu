@@ -141,4 +141,34 @@ class CsvWriterTest extends TestCase {
 
 		$this->assertSame( $writer->to_string( $items ), $writer->to_string( $items ) );
 	}
+
+	/**
+	 * Values a spreadsheet would evaluate as a formula are neutralised.
+	 *
+	 * @return void
+	 */
+	public function test_formula_injection_is_neutralised() {
+		$writer = new CsvWriter();
+
+		$this->assertSame( '"\'=HYPERLINK(""http://evil"",""Kava"")"', $writer->encode( '=HYPERLINK("http://evil","Kava")' ) );
+		$this->assertSame( "'+1234", $writer->encode( '+1234' ) );
+		$this->assertSame( "'-50% popust", $writer->encode( '-50% popust' ) );
+		$this->assertSame( "'@SUM(A1)", $writer->encode( '@SUM(A1)' ) );
+		$this->assertSame( "'\t=1+1", $writer->encode( "\t=1+1" ) );
+		$this->assertSame( 'Cafe 100% arabica', $writer->encode( 'Cafe 100% arabica' ) );
+		$this->assertSame( '6,99', $writer->encode( '6,99' ) );
+	}
+
+	/**
+	 * A hostile product name is neutralised in the rendered document.
+	 *
+	 * @return void
+	 */
+	public function test_formula_injection_in_row() {
+		$writer = new CsvWriter();
+		$line   = $writer->to_string( array( $this->item( array( 'naziv' => '=cmd|calc' ) ) ) );
+
+		$this->assertStringContainsString( "'=cmd|calc", $line );
+		$this->assertStringNotContainsString( ';=', $line );
+	}
 }

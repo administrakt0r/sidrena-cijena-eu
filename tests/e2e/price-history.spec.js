@@ -55,7 +55,7 @@ test.describe('Price history and audit', () => {
     await page.fill('#sidrena-history-reason', 'E2E correction reason');
     await page.getByRole('button', { name: 'Record correction' }).click();
 
-    await expect(page.locator('.notice-success')).toContainText('Correction recorded');
+    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toContainText('Correction recorded');
     await expect(page.locator('table.widefat')).toContainText('correction of record');
   });
 
@@ -67,9 +67,13 @@ test.describe('Price history and audit', () => {
     await page.selectOption('#sidrena-history-type', 'anchor');
     await page.fill('#sidrena-history-price', '11.00');
     await page.fill('#sidrena-history-reference', '2026-09-10');
+
+    // The field is `required` for the browser, so the server-side guard only
+    // runs when that attribute is gone: a crafted request must be rejected too.
+    await page.locator('#sidrena-history-reason').evaluate((el) => el.removeAttribute('required'));
     await page.getByRole('button', { name: 'Record correction' }).click();
 
-    await expect(page.locator('.notice-error')).toContainText('reason');
+    await expect(page.locator('.sidrena-cijena-notice.notice-error')).toContainText('reason');
   });
 
   test('audit screen shows the legal rule changes', async ({ page }) => {

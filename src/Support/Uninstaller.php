@@ -20,6 +20,18 @@ final class Uninstaller {
 	const DELETE_OPTION = 'sidrena_cijena_delete_data_on_uninstall';
 
 	/**
+	 * Price-history types that are legal evidence and survive the deletion.
+	 *
+	 * The anchor price is the proof of the price applied on the reference date and the
+	 * 30-day lowest price is the proof of what the shop displayed before a promotion.
+	 * Both are kept when everything else is deleted, the way a merchant keeps the
+	 * printed price lists after closing the shop.
+	 *
+	 * @var string[]
+	 */
+	const EVIDENCE_TYPES = array( 'anchor', 'lowest_30_day' );
+
+	/**
 	 * Plugin options that belong to the plugin and nothing else.
 	 *
 	 * @var string[]
@@ -62,17 +74,48 @@ final class Uninstaller {
 			return $summary;
 		}
 
-		$summary['deleted'] = true;
-		$summary['tables']  = self::drop_tables();
-		$summary['options'] = self::delete_options();
-		$summary['posts']   = self::delete_standalone_items();
-		$summary['files']   = self::delete_publication_files();
+		$summary['deleted']   = true;
+		$summary['pruned']    = self::prune_price_history();
+		$summary['tables']    = self::drop_tables();
+		$summary['preserved'] = array( self::history_table() );
+		$summary['options']   = self::delete_options();
+		$summary['posts']     = self::delete_standalone_items();
+		$summary['files']     = self::delete_publication_files();
 
 		return $summary;
 	}
 
 	/**
-	 * Drop the plugin's custom tables.
+	 * Plugin table that holds the price history.
+	 *
+	 * @return string
+	 */
+	private static function history_table() {
+		global $wpdb;
+
+		return $wpdb->prefix . 'sidrena_price_history';
+	}
+
+	/**
+	 * Delete ordinary price history, keep the legal evidence.
+	 *
+	 * @return int Number of rows deleted.
+	 */
+	private static function prune_price_history() {
+		global $wpdb;
+
+		$table        = self::history_table();
+		$placeholders = implode( ', ', array_fill( 0, count( self::EVIDENCE_TYPES ), '%s' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared -- The table name is built from the trusted WordPress prefix and the placeholder list from EVIDENCE_TYPES.
+		$sql = $wpdb->prepare( "DELETE FROM `{$table}` WHERE price_type NOT IN ({$placeholders})", self::EVIDENCE_TYPES );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $wpdb->query( $sql );
+	}
+
+	/**
+	 * Drop the plugin's custom tables, except the price-history evidence.
 	 *
 	 * @return string[] Table names dropped.
 	 */
@@ -80,7 +123,6 @@ final class Uninstaller {
 		global $wpdb;
 
 		$tables = array(
-			$wpdb->prefix . 'sidrena_price_history',
 			$wpdb->prefix . 'sidrena_special_sales',
 			$wpdb->prefix . 'sidrena_locations',
 			$wpdb->prefix . 'sidrena_publications',
@@ -91,6 +133,7 @@ final class Uninstaller {
 		foreach ( $tables as $table ) {
 			// Table names are built from the trusted WordPress prefix.
 			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+
 			$dropped[] = $table;
 		}
 

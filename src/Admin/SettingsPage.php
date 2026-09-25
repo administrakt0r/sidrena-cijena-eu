@@ -113,6 +113,12 @@ final class SettingsPage {
 				<?php echo esc_html__( 'This plugin is a technical compliance aid, not legal advice. Verify the configured rules with a legal or accounting professional.', 'sidrena-cijena' ); ?>
 			</p>
 
+			<?php
+			// WordPress prints settings errors on its own options screen only, so
+			// without this call a saved setting is confirmed by nothing at all.
+			settings_errors();
+			?>
+
 			<nav class="nav-tab-wrapper">
 				<?php foreach ( $tabs as $key => $definition ) : ?>
 					<a class="nav-tab <?php echo $key === $tab ? 'nav-tab-active' : ''; ?>"

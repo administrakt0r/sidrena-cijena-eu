@@ -29,16 +29,17 @@ test.describe('Sales locations', () => {
     await page.fill('#sidrena-location-identifier', IDENTIFIER);
     await page.getByRole('button', { name: 'Add location' }).click();
 
-    await expect(page.locator('.notice-success')).toContainText('Location saved');
+    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toContainText('Location saved');
     await expect(page.locator('table.widefat')).toContainText(IDENTIFIER);
 
     await page.getByRole('link', { name: 'Edit', exact: true }).last().click();
     await expect(page.locator('#sidrena-location-name')).toHaveValue('E2E prodavaonica');
 
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-locations');
+    page.on('dialog', (dialog) => dialog.accept());
     await page.getByRole('link', { name: 'Delete', exact: true }).last().click();
 
-    await expect(page.locator('.notice-success')).toContainText('Location deleted');
+    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toContainText('Location deleted');
     await expect(page.locator('table.widefat')).not.toContainText(IDENTIFIER);
   });
 
@@ -50,13 +51,13 @@ test.describe('Sales locations', () => {
     await page.fill('#sidrena-location-identifier', IDENTIFIER);
     await page.getByRole('button', { name: 'Add location' }).click();
 
-    await expect(page.locator('.notice-success')).toContainText('Location saved');
+    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toContainText('Location saved');
 
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-locations');
     await page.fill('#sidrena-location-name', 'Duplikat 2');
     await page.fill('#sidrena-location-identifier', IDENTIFIER);
     await page.getByRole('button', { name: 'Add location' }).click();
 
-    await expect(page.locator('.notice-error')).toContainText('already uses this facility identifier');
+    await expect(page.locator('.sidrena-cijena-notice.notice-error')).toContainText('already uses this facility identifier');
   });
 });

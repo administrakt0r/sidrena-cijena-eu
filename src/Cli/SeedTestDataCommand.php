@@ -125,6 +125,13 @@ final class SeedTestDataCommand {
 	 * @return bool
 	 */
 	protected static function exists( $sku ) {
+		// WooCommerce products keep their SKU in WooCommerce, not in the
+		// standalone item meta, so both stores have to be consulted or a
+		// second run trips WooCommerce's duplicate-SKU check.
+		if ( function_exists( 'wc_get_product_id_by_sku' ) && wc_get_product_id_by_sku( $sku ) ) {
+			return true;
+		}
+
 		$posts = get_posts(
 			array(
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -336,8 +343,14 @@ final class SeedTestDataCommand {
 	 * @return bool
 	 */
 	protected static function seed_variable() {
-		if ( ! WooCommerceDetector::is_active() || ! class_exists( 'WC_Product_Variable' ) || self::exists( 'SEED-VARIABLE' ) ) {
+		if ( ! WooCommerceDetector::is_active() || ! class_exists( 'WC_Product_Variable' ) ) {
 			Cli::out( 'Scenario variable skipped (WooCommerce is not active).', 'warning' );
+
+			return false;
+		}
+
+		if ( self::exists( 'SEED-VARIABLE' ) ) {
+			Cli::out( 'Scenario variable skipped (already seeded).', 'warning' );
 
 			return false;
 		}

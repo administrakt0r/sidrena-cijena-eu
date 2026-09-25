@@ -61,7 +61,7 @@ test.describe('Compliance dashboard', () => {
 		await expect(page.locator('h1')).toContainText('Compliance check');
 
 		await page.getByRole('button', { name: 'Run compliance check' }).click();
-		await expect(page.locator('.notice')).toContainText('Compliance check finished');
+		await expect(page.locator('.sidrena-cijena-notice')).toContainText('Compliance check finished');
 
 		await expect(page.getByText('missing_anchor_price').first()).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Export report (CSV)' })).toBeVisible();

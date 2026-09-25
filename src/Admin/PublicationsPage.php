@@ -219,7 +219,7 @@ class PublicationsPage {
 		$generated = isset( $_GET['generated'] ) ? absint( wp_unslash( $_GET['generated'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$failed    = isset( $_GET['failed'] ) ? absint( wp_unslash( $_GET['failed'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$class = 'error' === $notice ? 'notice notice-error' : 'notice notice-success';
+		$class = 'error' === $notice ? 'notice notice-error sidrena-cijena-notice' : 'notice notice-success sidrena-cijena-notice';
 
 		printf(
 			'<div class="%1$s"><p>%2$s</p></div>',

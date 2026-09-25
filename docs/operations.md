@@ -69,7 +69,12 @@ environment variable/constant is set. Valid scenario names: `normal`,
 * Log entries are pruned after `log_retention_days` (default 180).
 * Deactivation preserves everything and only unschedules cron events.
 * Uninstall deletes plugin data **only** when the
-  `sidrena_cijena_delete_data_on_uninstall` option is enabled: the five
-  custom tables, the plugin options, standalone catalog items and the
-  publication files. WooCommerce, WordPress and any other data is never
-  touched.
+  `sidrena_cijena_delete_data_on_uninstall` option is enabled: four custom
+  tables (sales, locations, publications, logs), the plugin options, standalone
+  catalog items and the publication files. WooCommerce, WordPress and any other
+  data is never touched.
+* The anchor prices and the 30-day lowest prices in
+  `wp_sidrena_price_history` are the legal evidence of what the shop displayed,
+  so they are kept even then — the ordinary `regular`/`sale`/`historical` rows
+  are deleted and the table stays. Remove the table by hand if it really has to
+  go. Without the opt-in, uninstall keeps everything.

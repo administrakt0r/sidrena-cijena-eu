@@ -297,6 +297,6 @@ class Test_Import extends WP_UnitTestCase {
 		$result = $parser->parse_file( '/etc/passwd' );
 
 		$this->assertInstanceOf( WP_Error::class, $result );
-		$this->assertSame( 'import_invalid_path', $result->get_error_code() );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
 	}
 }

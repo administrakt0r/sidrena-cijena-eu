@@ -19,6 +19,42 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 
 $plugin = \SidrenaCijena\Plugin::instance();
 
+// Activation creates a default location without an address. The legal
+// filename cannot be built without a street and a city, so the demo shop
+// fills them in here; otherwise `wp sidrena-cijena generate` aborts.
+$sidrena_demo_address = 'Vlaška 68';
+$sidrena_demo_city    = 'Zagreb';
+
+foreach ( $plugin->locations()->all() as $sidrena_demo_location ) {
+	if ( '' !== (string) $sidrena_demo_location['address'] && '' !== (string) $sidrena_demo_location['city'] ) {
+		continue;
+	}
+
+	$plugin->locations()->update(
+		(int) $sidrena_demo_location['id'],
+		array(
+			'address' => $sidrena_demo_address,
+			'city'    => $sidrena_demo_city,
+		)
+	);
+	$sidrena_demo_filled = true;
+	echo "Location address set: {$sidrena_demo_address}, {$sidrena_demo_city}\n";
+}
+
+if ( ! $plugin->locations()->all() ) {
+	$plugin->locations()->insert(
+		array(
+			'name'       => 'Webshop',
+			'type'       => 'webshop',
+			'identifier' => 'P1',
+			'address'    => $sidrena_demo_address,
+			'city'       => $sidrena_demo_city,
+			'active'     => true,
+		)
+	);
+	echo "Location created: {$sidrena_demo_address}, {$sidrena_demo_city}\n";
+}
+
 /**
  * Create a product_cat term if missing.
  *
@@ -115,6 +151,57 @@ function sidrena_demo_anchor( $product_id, $variation_id, $price ) {
 	}
 }
 
+/**
+ * Seed the price history a shop would already have.
+ *
+ * The 30-day engine only counts prices that were valid before the promotion
+ * starts (FR-019), so a demo shop whose products are created seconds before the
+ * sale would have nothing to measure. `valid_from` is backdated for demo data
+ * only; the plugin itself never invents historical prices.
+ *
+ * @param int   $product_id   Product ID.
+ * @param int   $variation_id Variation ID (0 for none).
+ * @param float $price        Regular price charged before the demo promotion.
+ * @return void
+ */
+function sidrena_demo_history( $product_id, $variation_id, $price ) {
+	$plugin  = \SidrenaCijena\Plugin::instance();
+	$history = $plugin->history();
+	$today   = wp_date( 'Y-m-d' );
+	$last    = $history->latest( (int) $product_id, (int) $variation_id, 'regular' );
+
+	// Already backed by history written before today: leave it untouched.
+	if ( $last && substr( (string) $last['valid_from'], 0, 10 ) < $today ) {
+		return;
+	}
+
+	$item = $variation_id
+		? $plugin->catalog()->get_variation( $product_id, $variation_id )
+		: $plugin->catalog()->get_item( $product_id );
+
+	if ( ! $item ) {
+		return;
+	}
+
+	$history->insert(
+		array(
+			'product_id'    => (int) $product_id,
+			'variation_id'  => (int) $variation_id,
+			'item_type'     => 'product',
+			'sku'           => $item->sku,
+			'price_type'    => 'regular',
+			'price'         => (float) $price,
+			'currency'      => $item->currency,
+			'tax_inclusive' => $item->tax_inclusive,
+			'valid_from'    => wp_date( 'Y-m-d H:i:s', strtotime( '-60 days' ) ),
+			'source'        => 'cli',
+			'created_by'    => get_current_user_id(),
+		)
+	);
+
+	echo "History seeded: {$product_id}:{$variation_id} = {$price}\n";
+}
+
 $hrana    = get_term_by( 'slug', 'hrana', 'product_cat' );
 $ciscenje = get_term_by( 'slug', 'ciscenje', 'product_cat' );
 $odjeca   = get_term_by( 'slug', 'odjeca', 'product_cat' );
@@ -150,8 +237,9 @@ $deterdzent = sidrena_demo_product(
 );
 sidrena_demo_anchor( $deterdzent, 0, 9.99 );
 
-// Intentionally left WITHOUT an anchor so the dashboard shows a finding.
-sidrena_demo_product(
+// Every demo product records an anchor: without one the price list cannot be
+// published (FR-007), so the demo shop has to be fully evidenced.
+$majica = sidrena_demo_product(
 	array(
 		'name'    => 'Majica pamučna',
 		'sku'     => 'DEMO-MAJICA',
@@ -159,6 +247,7 @@ sidrena_demo_product(
 		'cats'    => $odjeca ? array( $odjeca->term_id ) : array(),
 	)
 );
+sidrena_demo_anchor( $majica, 0, 17.99 );
 
 // Variable product with per-variation anchors.
 $zrno_id = wc_get_product_id_by_sku( 'DEMO-ZRNO' );
@@ -197,6 +286,25 @@ if ( ! $zrno_id ) {
 	echo "Variable product exists, skipping: DEMO-ZRNO\n";
 }
 
+// The 30-day engine sees only prices valid before the promotion (FR-019), so
+// give the demo shop the history a real shop would already have.
+sidrena_demo_history( (int) $kava, 0, 7.49 );
+sidrena_demo_history( (int) $ulje, 0, 12.99 );
+sidrena_demo_history( (int) $deterdzent, 0, 9.99 );
+sidrena_demo_history( (int) $majica, 0, 19.99 );
+
+$zrno = wc_get_product( (int) $zrno_id );
+
+if ( $zrno ) {
+	foreach ( $zrno->get_children() as $child_id ) {
+		$child = wc_get_product( $child_id );
+
+		if ( $child ) {
+			sidrena_demo_history( (int) $zrno_id, (int) $child_id, (float) $child->get_regular_price() );
+		}
+	}
+}
+
 // One classified sale so the 30-day price shows on the demo shop.
 $ulje_item = $plugin->catalog()->get_item( $ulje );
 
@@ -222,6 +330,19 @@ if ( $ulje_item ) {
 		}
 	} else {
 		echo "Sale exists, skipping: product #{$ulje}\n";
+
+		// A classified sale without a 30-day price is an ERROR finding and
+		// blocks publication (FR-019), so heal rows stored before the
+		// calculation existed instead of leaving the demo unpublishable.
+		if ( empty( $existing_sale['lowest_30_day_price'] ) ) {
+			$recomputed = $plugin->special_sale_service()->recompute( $ulje_item, (int) $existing_sale['id'] );
+
+			if ( is_wp_error( $recomputed ) ) {
+				echo '30-day recompute failed: ' . $recomputed->get_error_message() . "\n";
+			} else {
+				echo '30-day price recomputed: ' . var_export( $recomputed, true ) . "\n";
+			}
+		}
 	}
 }
 

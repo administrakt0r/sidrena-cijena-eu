@@ -276,7 +276,7 @@ class BulkAnchorEntryPage {
 			return;
 		}
 
-		$class = 'success' === $type ? 'notice-success' : 'notice-error';
+		$class = 'success' === $type ? 'notice-success sidrena-cijena-notice' : 'notice-error sidrena-cijena-notice';
 
 		echo '<div class="notice ' . esc_attr( $class ) . ' is-dismissible"><p>' . esc_html( $text ) . '</p></div>';
 	}

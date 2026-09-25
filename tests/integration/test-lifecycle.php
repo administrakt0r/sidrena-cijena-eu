@@ -118,7 +118,8 @@ class Test_Lifecycle extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Uninstall with opt-in deletes plugin data but never foreign data.
+	 * Uninstall with opt-in deletes plugin data but never foreign data or the
+	 * anchor evidence.
 	 *
 	 * Note: DROP TABLE commits implicitly on MySQL, so this test rebuilds
 	 * the schema before finishing to leave a clean environment behind.
@@ -126,7 +127,48 @@ class Test_Lifecycle extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_uninstall_with_optin_deletes_only_plugin_data() {
+		// The WordPress test suite rewrites CREATE/DROP TABLE into their
+		// TEMPORARY variants (via the `query` filter) so that DDL stays inside
+		// the test transaction, and `SHOW TABLES` only ever lists base tables.
+		// Uninstall has to drop the real tables, so run this case with that
+		// rewriting disabled and without leftover shadows.
+		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
+		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+
+		$this->drop_all_tables();
+
 		Install::activate();
+
+		$history = Plugin::instance()->history();
+
+		$history->insert(
+			array(
+				'product_id'     => 1,
+				'variation_id'   => 0,
+				'item_type'      => 'product',
+				'sku'            => 'LIFE-ANCHOR',
+				'price_type'     => 'anchor',
+				'price'          => 9.99,
+				'currency'       => 'EUR',
+				'reference_date' => '2026-09-10',
+				'source'         => 'cli',
+				'created_by'     => 0,
+			)
+		);
+
+		$history->insert(
+			array(
+				'product_id'   => 1,
+				'variation_id' => 0,
+				'item_type'    => 'product',
+				'sku'          => 'LIFE-ANCHOR',
+				'price_type'   => 'regular',
+				'price'        => 9.99,
+				'currency'     => 'EUR',
+				'source'       => 'cli',
+				'created_by'   => 0,
+			)
+		);
 
 		$post_id = wp_insert_post(
 			array(
@@ -153,9 +195,24 @@ class Test_Lifecycle extends WP_UnitTestCase {
 
 		$this->assertTrue( $summary['deleted'] );
 
+		global $wpdb;
+
+		$history_table = $this->tables()[0];
+
 		foreach ( $this->tables() as $table ) {
+			if ( $table === $history_table ) {
+				$this->assertTrue( $this->table_exists( $table ), 'The price history table keeps the legal evidence.' );
+				continue;
+			}
+
 			$this->assertFalse( $this->table_exists( $table ), "Table $table should be dropped." );
 		}
+
+		// Ordinary price history is deleted; the anchor evidence stays.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- Table name comes from tables().
+		$remaining = $wpdb->get_col( "SELECT price_type FROM `{$history_table}` ORDER BY id" );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+		$this->assertSame( array( 'anchor' ), $remaining );
 
 		$this->assertNull( get_post( $post_id ) );
 		$this->assertFalse( get_option( Uninstaller::DELETE_OPTION, false ) );
@@ -169,5 +226,25 @@ class Test_Lifecycle extends WP_UnitTestCase {
 		Install::activate();
 		delete_option( 'sidrena_lifecycle_foreign_option' );
 		wp_delete_post( $foreign_post, true );
+
+		// Restore the test suite's DDL rewriting for the remaining test cases.
+		add_filter( 'query', array( $this, '_create_temporary_tables' ) );
+		add_filter( 'query', array( $this, '_drop_temporary_tables' ) );
+	}
+
+	/**
+	 * Drop every plugin table: a temporary shadow first, then the base table.
+	 *
+	 * @return void
+	 */
+	protected function drop_all_tables() {
+		global $wpdb;
+
+		foreach ( $this->tables() as $table ) {
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- Table names come from tables().
+			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" );
+			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" );
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+		}
 	}
 }

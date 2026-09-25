@@ -62,8 +62,10 @@ final class ImportCommand {
 				return 'overwrite_confirmation_required' === $result->get_error_code() ? 1 : 2;
 			}
 
-			$summary = isset( $result['summary'] ) && is_array( $result['summary'] ) ? $result['summary'] : array();
-			$invalid = isset( $summary['invalid'] ) ? (int) $summary['invalid'] : 0;
+			$summary    = isset( $result['summary'] ) && is_array( $result['summary'] ) ? $result['summary'] : array();
+			$invalid    = isset( $summary['invalid'] ) ? (int) $summary['invalid'] : 0;
+			$overwrites = isset( $result['overwritten'] ) ? (int) $result['overwritten'] : ( isset( $summary['overwrite'] ) ? (int) $summary['overwrite'] : 0 );
+			$inserted   = isset( $result['inserted'] ) ? (int) $result['inserted'] : 0;
 
 			if ( 'json' === $output ) {
 				Cli::out(
@@ -83,9 +85,9 @@ final class ImportCommand {
 						isset( $summary['valid'] ) ? (int) $summary['valid'] : 0,
 						$invalid,
 						isset( $summary['duplicate'] ) ? (int) $summary['duplicate'] : 0,
-						isset( $summary['overwrite'] ) ? (int) $summary['overwrite'] : 0,
+						$overwrites,
 						isset( $summary['unchanged'] ) ? (int) $summary['unchanged'] : 0,
-						isset( $summary['inserted'] ) ? (int) $summary['inserted'] : 0
+						$inserted
 					)
 				);
 			}

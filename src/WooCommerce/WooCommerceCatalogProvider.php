@@ -348,7 +348,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 
 		$name = $product->get_name();
 
-		if ( $is_variation && function_exists( 'wc_get_formatted_variation' ) ) {
+		if ( $product instanceof \WC_Product_Variation && function_exists( 'wc_get_formatted_variation' ) ) {
 			$attributes = wc_get_formatted_variation( $product, true, false, true );
 
 			if ( '' !== (string) $attributes ) {

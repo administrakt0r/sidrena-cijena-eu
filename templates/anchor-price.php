@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 $sidrena_classes = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context );
 ?>
 <div class="<?php echo esc_attr( $sidrena_classes ); ?>"
+	title="<?php echo esc_attr( $anchor_title ); ?>"
 	data-product-id="<?php echo esc_attr( (string) $product_id ); ?>"
 	data-variation-id="<?php echo esc_attr( (string) $variation_id ); ?>">
 	<?php if ( $show_current && $current_display ) : ?>

@@ -264,8 +264,12 @@ class ImportPage {
 			return null;
 		}
 
-		$preview = self::service()->preview( $stored['path'], $stored['args'] );
-
+		// Reuse the batch identifier from the URL: a fresh one would point at a
+		// transient that was never written, so the commit form would post a
+		// session the next request cannot find.
+		$args             = $stored['args'];
+		$args['batch_id'] = $batch_id;
+		$preview          = self::service()->preview( $stored['path'], $args );
 		if ( is_wp_error( $preview ) ) {
 			return null;
 		}
@@ -321,7 +325,7 @@ class ImportPage {
 			return;
 		}
 
-		$class = in_array( $type, array( 'success', 'dry-run', 'preview' ), true ) ? 'notice-success' : 'notice-error';
+		$class = in_array( $type, array( 'success', 'dry-run', 'preview' ), true ) ? 'notice-success sidrena-cijena-notice' : 'notice-error sidrena-cijena-notice';
 
 		echo '<div class="notice ' . esc_attr( $class ) . ' is-dismissible"><p>' . esc_html( $text ) . '</p></div>';
 	}

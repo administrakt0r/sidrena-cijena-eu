@@ -76,6 +76,6 @@ class ActivationTest extends WP_UnitTestCase {
 
 		$this->assertNotFalse( get_option( 'sidrena_cijena_settings' ) );
 		$this->assertNotNull( $history->get( $id ) );
-		$this->assertSame( 1, $history->count() );
+		$this->assertSame( 1, $history->count( array( 'product_id' => 123 ) ) );
 	}
 }

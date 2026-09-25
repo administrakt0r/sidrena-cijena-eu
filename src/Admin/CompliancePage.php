@@ -376,7 +376,7 @@ class CompliancePage {
 		$warnings = isset( $_GET['warnings'] ) ? absint( wp_unslash( $_GET['warnings'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		printf(
-			'<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+			'<div class="notice notice-%1$s sidrena-cijena-notice is-dismissible"><p>%2$s</p></div>',
 			$errors > 0 ? 'error' : 'success',
 			esc_html(
 				sprintf(

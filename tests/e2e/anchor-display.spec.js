@@ -48,11 +48,14 @@ test.describe( 'Anchor price display', () => {
 	test( 'shows the anchor price on the single product page', async ( { page } ) => {
 		await page.goto( '/?p=' + productId );
 
-		const anchor = page.locator( '.sidrena-cijena .sidrena-cijena__anchor-value' );
+		// The page may also show related products, so the anchor has to be the
+		// one that belongs to this product: a block context bug once attached
+		// one product's anchor to another product's price.
+		const block = page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' );
 
-		await expect( anchor ).toHaveCount( 1 );
-		await expect( anchor ).toContainText( '25,00' );
-		await expect( page.locator( '.sidrena-cijena__label' ) ).toContainText( 'Sidrena cijena' );
+		await expect( block.locator( '.sidrena-cijena__anchor-value' ) ).toContainText( '25,00' );
+		await expect( block.locator( '.sidrena-cijena__label' ) ).toContainText( 'Sidrena cijena' );
+		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 1 );
 	} );
 
 	test( 'shows the anchor price in the product archive', async ( { page } ) => {

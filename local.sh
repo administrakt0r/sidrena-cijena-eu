@@ -56,7 +56,17 @@ $CLI rewrite structure '/%postname%/' --hard >/dev/null
 $CLI option update timezone_string 'Europe/Zagreb' >/dev/null
 $CLI option update woocommerce_currency 'EUR' >/dev/null
 $CLI option update woocommerce_price_num_decimals 2 >/dev/null
+# WooCommerce ships in "coming soon" mode: logged-out visitors (and the
+# storefront tests) would never reach the products.
+$CLI option update woocommerce_coming_soon no >/dev/null
+$CLI option update woocommerce_store_pages_only no >/dev/null
 $CLI plugin activate sidrena-cijena woocommerce >/dev/null
+
+# The test suites can leave the shop without an active theme (WordPress then
+# renders a blank storefront), so make sure the demo always has one.
+if ! $CLI theme is-active >/dev/null 2>&1; then
+	$CLI theme activate twentytwentyfive >/dev/null 2>&1 || true
+fi
 
 echo "==> Seeding demo products, anchors and a sale..."
 $CLI eval-file /var/www/html/wp-content/plugins/sidrena-cijena/tools/local-seed.php
@@ -85,7 +95,9 @@ cat <<EOF
  - A product page shows the current price + "Sidrena cijena".
  - "Maslinovo ulje" is on akcija: sale price, anchor AND the
    30-day lowest price are shown with distinct labels.
- - "Majica" has no anchor: it appears in Dashboard findings.
+ - Compliance check lists every finding (e.g. items without a
+   barcode); an ERROR finding blocks a new price list until it
+   is resolved, so remove an anchor to see FR-007 in action.
  - Sidrena cijena → Compliance check lists every finding.
  - WP-CLI: $WPENV run cli wp sidrena-cijena status
 =============================================================

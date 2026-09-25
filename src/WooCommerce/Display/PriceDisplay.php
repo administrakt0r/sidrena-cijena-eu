@@ -43,9 +43,85 @@ class PriceDisplay {
 	 */
 	public function register() {
 		add_filter( 'woocommerce_get_price_html', array( $this, 'filter_price_html' ), 20, 2 );
+		add_filter( 'render_block', array( $this, 'filter_price_block' ), 20, 2 );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'render_single_summary' ), (int) Settings::get( 'display_priority', 20 ) );
 		add_action( 'woocommerce_after_shop_loop_item_title', array( $this, 'render_archive_item' ), (int) Settings::get( 'display_priority', 20 ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Append the anchor block to rendered price blocks.
+	 *
+	 * Block themes (and WooCommerce Blocks templates) build the product price
+	 * with `woocommerce/product-price`, which never passes through
+	 * `woocommerce_get_price_html`, so the anchor price would not be displayed
+	 * there at all (FR-011).
+	 *
+	 * @param string $content Rendered block content.
+	 * @param array  $block   Parsed block.
+	 * @return string
+	 */
+	public function filter_price_block( $content, $block ) {
+		if ( 'price_html' !== Settings::get( 'display_location' ) ) {
+			return $content;
+		}
+
+		$name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+
+		if ( ! in_array( $name, array( 'woocommerce/product-price', 'woocommerce/price', 'core/price' ), true ) ) {
+			return $content;
+		}
+
+		if ( false !== strpos( (string) $content, 'sidrena-cijena' ) ) {
+			return $content;
+		}
+
+		$product = $this->block_product( $block );
+
+		if ( ! $product ) {
+			return $content;
+		}
+
+		return $content . $this->render( $product, $this->context() );
+	}
+
+	/**
+	 * Product a price block belongs to.
+	 *
+	 * @param array $block Parsed block.
+	 * @return \WC_Product|null
+	 */
+	protected function block_product( array $block ) {
+		$block_context = isset( $block['context'] ) && is_array( $block['context'] ) ? $block['context'] : array();
+
+		foreach ( array( 'productId', 'postId', 'product_id' ) as $key ) {
+			if ( ! empty( $block_context[ $key ] ) && function_exists( 'wc_get_product' ) ) {
+				$product = wc_get_product( (int) $block_context[ $key ] );
+
+				if ( $product ) {
+					return $product;
+				}
+			}
+		}
+
+		// WooCommerce Blocks pass no context with the price block, so the block has
+		// to declare whose price it is. Only a price inside a single-product
+		// template belongs to the product being viewed: guessing there would put
+		// this product's anchor next to another product's price (upsells, related
+		// products, collection items), which is worse than showing nothing.
+		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+
+		if ( empty( $attrs['isDescendentOfSingleProductTemplate'] ) ) {
+			return null;
+		}
+
+		$queried = function_exists( 'get_queried_object' ) ? get_queried_object() : null;
+
+		if ( $queried instanceof \WP_Post && function_exists( 'wc_get_product' ) ) {
+			return wc_get_product( (int) $queried->ID );
+		}
+
+		return $this->current_product();
 	}
 
 	/**
@@ -182,6 +258,12 @@ class PriceDisplay {
 
 		$current_price = null !== $item->current_price ? (float) $item->current_price : null;
 
+		// WooCommerce stores prices excluding tax and adjusts them for display,
+		// so the anchor has to be shown on the same basis as the price next to
+		// it (FR-014).
+		$anchor_price  = $this->display_price( $anchor_price, $item );
+		$current_price = $this->display_price( $current_price, $item );
+
 		$only_when_different = array_key_exists( 'only_when_different', $args )
 			? (bool) $args['only_when_different']
 			: (bool) Settings::get( 'only_when_different' );
@@ -221,6 +303,7 @@ class PriceDisplay {
 				'show_anchor'            => $show_anchor,
 				'reference_date'         => $reference_date,
 				'reference_date_display' => $reference_date_display,
+				'anchor_title'           => '' !== $reference_date_display ? sprintf( '%s (%s)', $label, $reference_date_display ) : $label,
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
 				'product_id'             => (int) $item->id,
 				'variation_id'           => (int) $item->variation_id,
@@ -360,5 +443,30 @@ class PriceDisplay {
 		}
 
 		return 'archive';
+	}
+
+	/**
+	 * Convert a stored price to the basis WooCommerce shows to customers.
+	 *
+	 * Exported price lists keep the stored amounts; only the storefront
+	 * display is tax-adjusted so the anchor matches the adjacent price.
+	 *
+	 * @param float|null  $amount Stored amount.
+	 * @param CatalogItem $item   Catalog item.
+	 * @return float|null
+	 */
+	protected function display_price( $amount, CatalogItem $item ) {
+		if ( null === $amount || ! function_exists( 'wc_get_price_to_display' ) || ! function_exists( 'wc_get_product' ) ) {
+			return $amount;
+		}
+
+		$product_id = (int) $item->variation_id ? (int) $item->variation_id : (int) $item->id;
+		$product    = wc_get_product( $product_id );
+
+		if ( ! $product ) {
+			return $amount;
+		}
+
+		return (float) wc_get_price_to_display( $product, array( 'price' => $amount ) );
 	}
 }

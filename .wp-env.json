@@ -5,7 +5,7 @@
 	"port": 8888,
 	"plugins": [
 		".",
-		"https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip"
+		"https://downloads.wordpress.org/plugin/woocommerce.zip"
 	],
 	"config": {
 		"WP_DEBUG": true,

@@ -82,6 +82,10 @@ class Test_Publication extends WP_UnitTestCase {
 		update_post_meta( $post_id, '_sidrena_availability', 'available' );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 
+		// FR-007: publication is blocked until the anchor price is recorded.
+		$item = Plugin::instance()->catalog()->get_item( $post_id );
+		Plugin::instance()->anchors()->record( $item, $price, array( 'source' => 'test' ) );
+
 		return (int) $post_id;
 	}
 

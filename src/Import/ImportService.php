@@ -77,7 +77,7 @@ final class ImportService {
 			'headers'   => $parsed['headers'],
 			'delimiter' => $parsed['delimiter'],
 			'dry_run'   => ! empty( $args['dry_run'] ),
-			'batch_id'  => $this->batch_id( $path ),
+			'batch_id'  => isset( $args['batch_id'] ) && '' !== $args['batch_id'] ? (string) $args['batch_id'] : $this->batch_id( $path ),
 		);
 	}
 

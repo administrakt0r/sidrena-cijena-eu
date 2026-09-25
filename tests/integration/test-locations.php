@@ -71,6 +71,10 @@ class Test_Locations extends WP_UnitTestCase {
 			wp_set_object_terms( $post_id, $category, 'category' );
 		}
 
+		// FR-007: publication is blocked until the anchor price is recorded.
+		$item = Plugin::instance()->catalog()->get_item( $post_id );
+		Plugin::instance()->anchors()->record( $item, $price, array( 'source' => 'test' ) );
+
 		return $post_id;
 	}
 

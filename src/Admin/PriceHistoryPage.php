@@ -395,7 +395,7 @@ class PriceHistoryPage {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice text.
 		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
 
-		$class = 'error' === $type ? 'notice notice-error' : 'notice notice-success';
+		$class = 'error' === $type ? 'notice notice-error sidrena-cijena-notice' : 'notice notice-success sidrena-cijena-notice';
 
 		echo '<div class="' . esc_attr( $class ) . '"><p>' . esc_html( $text ) . '</p></div>';
 	}

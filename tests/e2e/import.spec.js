@@ -54,7 +54,7 @@ test.describe('Anchor import', () => {
     await page.setInputFiles('input[name="sidrena_import_file"]', filePath);
     await page.getByRole('button', { name: 'Upload and preview' }).click();
 
-    await expect(page.locator('.notice')).toContainText('Preview ready');
+    await expect(page.locator('.sidrena-cijena-notice')).toContainText('Preview ready');
     await expect(page.locator('table.sidrena-cijena-import-preview')).toBeVisible();
     await expect(page.locator('table.sidrena-cijena-import-preview')).toContainText('E2E-IMPORT-1');
     await expect(page.locator('table.sidrena-cijena-import-preview')).toContainText('No catalog item matches this SKU or product ID.');
@@ -70,8 +70,8 @@ test.describe('Anchor import', () => {
     await page.locator('input[name="dry_run"]').last().check();
     await page.getByRole('button', { name: 'Commit import' }).click();
 
-    await expect(page.locator('.notice')).toContainText('Dry run finished');
-    await expect(page.locator('.notice')).toContainText('nothing was written');
+    await expect(page.locator('.sidrena-cijena-notice')).toContainText('Dry run finished');
+    await expect(page.locator('.sidrena-cijena-notice')).toContainText('nothing was written');
   });
 
   test('commit stores valid rows and reports invalid ones', async ({ page }) => {
@@ -82,8 +82,8 @@ test.describe('Anchor import', () => {
     await page.getByRole('button', { name: 'Upload and preview' }).click();
     await page.getByRole('button', { name: 'Commit import' }).click();
 
-    await expect(page.locator('.notice')).toContainText('Import finished');
-    await expect(page.locator('.notice')).toContainText('1 inserted');
+    await expect(page.locator('.sidrena-cijena-notice')).toContainText('Import finished');
+    await expect(page.locator('.sidrena-cijena-notice')).toContainText('1 inserted');
 
     await expect(page.getByRole('link', { name: 'Download error report (CSV)' })).toBeVisible();
   });

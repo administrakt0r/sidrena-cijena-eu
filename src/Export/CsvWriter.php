@@ -96,14 +96,39 @@ class CsvWriter {
 	/**
 	 * RFC 4180-style quoting: only delimiter, quote and newline force quotes.
 	 *
+	 * Values that spreadsheet software would evaluate as a formula are
+	 * neutralised first, so a product name, SKU or brand coming from imported
+	 * data cannot execute when the price list is opened in Excel/LibreOffice.
+	 *
 	 * @param mixed $value Value.
 	 * @return string
 	 */
 	public function encode( $value ) {
-		$value = (string) $value;
+		$value = self::neutralise_formula( (string) $value );
 
 		if ( '' !== $value && preg_match( '/[";' . "\r\n" . ']/', $value ) ) {
 			return '"' . str_replace( '"', '""', $value ) . '"';
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Prefix values a spreadsheet would treat as a formula with a single quote.
+	 *
+	 * A leading whitespace or control character is considered too, because
+	 * spreadsheet applications skip it before evaluating the cell.
+	 *
+	 * @param string $value Raw value.
+	 * @return string
+	 */
+	public static function neutralise_formula( $value ) {
+		if ( '' === $value ) {
+			return $value;
+		}
+
+		if ( preg_match( '/^[\s\x00-\x1F]*[=+\-@]/', $value ) ) {
+			return "'" . $value;
 		}
 
 		return $value;

@@ -136,7 +136,18 @@ class Test_Dashboard extends WP_UnitTestCase {
 		$this->assertContains( 'missing_anchor_price', $codes );
 		$this->assertContains( 'anchor_needs_verification', $codes );
 		$this->assertGreaterThanOrEqual( 1, $data['counts']['total'] );
-		$this->assertSame( 1, $data['counts'][ \SidrenaCijena\Compliance\Finding::ERROR ] );
+
+		// Exactly one ERROR belongs to a catalog item; locations that have never
+		// published additionally report the global "no archived price list" finding.
+		$item_errors = 0;
+
+		foreach ( $data['findings'] as $finding ) {
+			if ( \SidrenaCijena\Compliance\Finding::ERROR === $finding->severity && 'catalog_item' === $finding->entity_type ) {
+				++$item_errors;
+			}
+		}
+
+		$this->assertSame( 1, $item_errors );
 	}
 
 	/**

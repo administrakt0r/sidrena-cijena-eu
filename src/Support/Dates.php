@@ -130,6 +130,23 @@ final class Dates {
 	}
 
 	/**
+	 * The `Y-m-d` portion of a date or datetime string.
+	 *
+	 * Values read back from `datetime` columns arrive as `Y-m-d H:i:s` and must
+	 * be reduced to their date part before they are compared or re-validated.
+	 *
+	 * @param mixed $value Candidate.
+	 * @return mixed The date part when the value is a datetime, otherwise the value unchanged.
+	 */
+	public static function date_only( $value ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return $value;
+		}
+
+		return strlen( $value ) > 10 ? substr( $value, 0, 10 ) : $value;
+	}
+
+	/**
 	 * Add calendar days to a `Y-m-d` date.
 	 *
 	 * @param string $date Date.

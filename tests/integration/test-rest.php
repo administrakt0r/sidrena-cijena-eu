@@ -43,6 +43,8 @@ class Test_Rest extends WP_UnitTestCase {
 			array(
 				'name'       => 'Webshop',
 				'type'       => 'webshop',
+				'address'    => 'Vlaška 68',
+				'city'       => 'Zagreb',
 				'identifier' => 'P1',
 				'active'     => true,
 			)

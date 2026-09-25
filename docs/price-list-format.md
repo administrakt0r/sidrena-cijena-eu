@@ -4,6 +4,45 @@ Both formats are always produced per active location. Output is
 deterministic: identical input yields byte-identical files (excluding the
 filename timestamp and the XML generation timestamp).
 
+## Public URL
+
+The current price list is served on a stable, human-readable address, next to
+the REST endpoints:
+
+* <http://example.com/sidrena-cijena.xml>
+* <http://example.com/sidrena-cijena.csv>
+
+The URL always serves the **webshop** location (the first active location if
+the shop has none). The response carries the generated filename in
+`Content-Disposition` and the file checksum in `X-Sidrena-Cijena-Checksum`, so
+a recipient can verify the download. If the published file is missing, the
+answer is `503 Service Unavailable` with `Retry-After: 900` and one background
+rebuild is queued (at most one per 15 minutes) — the visitor is told the list is
+being regenerated instead of receiving a stale or empty document. The rewrite
+rules are flushed on activation; after moving the site or changing permalinks,
+run `wp rewrite flush`.
+
+## Public pages
+
+Two public HTML pages expose the same data to a human reader. Both always
+describe the **webshop** location, the same one the machine-readable feed
+serves, and neither requires a login:
+
+* `/sidrena-cjenik/` — the current price list: one row per item with the
+  retail price, the anchor price and its reference date, the unit price, the
+  availability and the special form of sale. A search box (`?q=`) matches
+  name, SKU, brand and barcode, and `?type=proizvod|usluga` narrows the list
+  to products or services. The page links to the XML and CSV files.
+* `/arhiva-sidrene-cijene/` — the published price lists of the location
+  (published and superseded, newest first, up to 50): publication time,
+  filename, format, item count, size, a short checksum and a download link.
+
+Both pages are also available as shortcodes — `[sidrena-cjenik]` and
+`[sidrena-arhiva]` — for merchants who want them inside their own layout.
+The pages are rendered from the same builder and the same publication rows as
+the exported files, so a page can never show a different price than the file
+the ministry downloads.
+
 ## CSV
 
 * UTF-8, **no BOM**, LF line endings, `;` delimiter.

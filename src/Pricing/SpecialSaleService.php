@@ -233,7 +233,7 @@ class SpecialSaleService {
 			);
 		}
 
-		$start = isset( $args['start_date'] ) ? (string) $args['start_date'] : '';
+		$start = Dates::date_only( isset( $args['start_date'] ) ? (string) $args['start_date'] : '' );
 
 		if ( ! Dates::is_valid_date( $start ) ) {
 			return new WP_Error(
@@ -243,7 +243,7 @@ class SpecialSaleService {
 			);
 		}
 
-		$end = isset( $args['end_date'] ) && '' !== $args['end_date'] ? (string) $args['end_date'] : null;
+		$end = isset( $args['end_date'] ) && '' !== $args['end_date'] ? Dates::date_only( (string) $args['end_date'] ) : null;
 
 		if ( null !== $end && ( ! Dates::is_valid_date( $end ) || $end < $start ) ) {
 			return new WP_Error(
@@ -255,7 +255,12 @@ class SpecialSaleService {
 
 		$window = $this->calculator->window( $start );
 		$lowest = $this->calculator->calculate(
-			$this->history->timeline( (int) $item->id, (int) $item->variation_id, $start ),
+			$this->history->timeline(
+				(int) $item->id,
+				(int) $item->variation_id,
+				$start,
+				$window ? $window['window_start'] : ''
+			),
 			$start
 		);
 

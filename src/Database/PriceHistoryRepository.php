@@ -261,17 +261,23 @@ class PriceHistoryRepository {
 	 * Timeline used by the 30-day calculator: records that can cover a date
 	 * range, ordered chronologically.
 	 *
+	 * A row counts when it overlaps `[since_date, until_date]`, so a sale that
+	 * ended before the promotion still contributes its price to the window.
+	 *
 	 * @param int    $product_id   Item ID.
 	 * @param int    $variation_id Variation ID (0 for none).
 	 * @param string $until_date   Inclusive upper bound (`Y-m-d`).
+	 * @param string $since_date   Inclusive lower bound (`Y-m-d`), empty for no lower bound.
 	 * @return array<mixed>[]
 	 */
-	public function timeline( $product_id, $variation_id, $until_date ) {
+	public function timeline( $product_id, $variation_id, $until_date, $since_date = '' ) {
 		global $wpdb;
 
 		$variation_sql = (int) $variation_id > 0
 			? $wpdb->prepare( 'variation_id = %d', (int) $variation_id )
 			: 'variation_id IS NULL';
+
+		$lower_bound = '' !== (string) $since_date ? (string) $since_date : (string) $until_date;
 
 		$sql = "SELECT * FROM {$this->table}
 			WHERE product_id = %d
@@ -282,7 +288,7 @@ class PriceHistoryRepository {
 			ORDER BY COALESCE(valid_from, created_at) ASC, id ASC";
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$prepared = $wpdb->prepare( $sql, (int) $product_id, $until_date . ' 23:59:59', $until_date . ' 00:00:00' );
+		$prepared = $wpdb->prepare( $sql, (int) $product_id, $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
 		$rows = $wpdb->get_results( $prepared, ARRAY_A );

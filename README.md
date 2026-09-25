@@ -25,7 +25,12 @@ and the separate 30-day lowest-price rule for special forms of sale.
   location, with legally structured filenames, checksums, validation and a
   retention archive of at least 30 days.
 - **Public machine-readable access** - unauthenticated JSON, CSV and XML
-  endpoints under `/wp-json/sidrena-cijena/v1/`.
+  endpoints under `/wp-json/sidrena-cijena/v1/`, plus stable public URLs
+  `/sidrena-cijena.xml` and `/sidrena-cijena.csv`.
+- **Public price list and archive pages** - `/sidrena-cjenik/` (searchable
+  current list with the anchor price and its date) and
+  `/arhiva-sidrene-cijene/` (published files with checksums), also available
+  as the shortcodes `[sidrena-cjenik]` and `[sidrena-arhiva]`.
 - **Compliance dashboard and validator** - anchor coverage, missing data,
   30-day warnings, export status and severity-based findings.
 - **Safe onboarding** - CSV import with preview, validation, dry run,
@@ -65,7 +70,7 @@ npm run wp-env start
 ```bash
 composer test:unit          # pure domain unit tests
 composer test:integration   # WordPress/WooCommerce integration tests (inside wp-env)
-npm run test:e2e            # Playwright end-to-end tests
+npm run wp-env:test -- start && npm run test:e2e   # Playwright, against the test site (8889)
 composer lint               # PHPCS: WordPress standards + PHPCompatibilityWP
 composer analyse            # PHPStan
 npm run lint:js             # ESLint

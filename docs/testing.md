@@ -5,7 +5,7 @@
 ```sh
 composer test:unit          # PHPUnit unit suite — runs on the host, no WP needed
 composer test:integration   # PHPUnit integration suite — needs wp-env running
-npm run test:e2e            # Playwright E2E — needs wp-env running
+npm run test:e2e            # Playwright E2E — needs the test environment running
 composer lint               # PHPCS (must be clean)
 composer analyse            # PHPStan level 6 (must report no errors)
 ```
@@ -17,9 +17,24 @@ publication, REST, imports, locations, history, CLI exit codes and the
 uninstall lifecycle. E2E specs drive a real wp-env site (Croatian locale,
 `Europe/Zagreb`).
 
+### E2E runs against the test environment
+
+```sh
+npm run wp-env:test -- start   # test site on http://localhost:8889
+npm run test:e2e
+```
+
+The specs create and delete products, prices, pages and locations, so they run
+against the **test** environment (`tests-cli`, port 8889) and never against the
+demo shop on 8888. `tests/e2e/global-setup.js` gives the test site the same
+baseline `./local.sh` gives the demo shop (permalinks, timezone, currency,
+visible store) before the first spec runs. Override with `WP_BASE_URL` and
+`WP_ENV_CLI` if you deliberately want another target.
+
 Docker is required for integration and E2E suites. Without a Docker
 daemon they cannot run; unit tests, lint and static analysis still run on
-the host.
+the host. If your shell cannot reach the Docker socket, wrap the command in
+`sg docker -c '…'` (the Playwright specs shell out to `wp-env`).
 
 ## Fixtures
 

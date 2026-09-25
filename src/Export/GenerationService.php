@@ -260,10 +260,6 @@ class GenerationService {
 	protected function error_findings( $location_id ) {
 		$validator = Plugin::instance()->validator();
 
-		if ( empty( $validator->item_rule_codes() ) && empty( $validator->global_rule_codes() ) ) {
-			return array();
-		}
-
 		$report = $validator->validate(
 			array(
 				'scope'       => 'catalog',

@@ -45,6 +45,9 @@ final class Install {
 
 		Scheduler::schedule_all();
 
+		// The public feed lives on a rewrite rule, so it only resolves once the rules are rebuilt.
+		flush_rewrite_rules();
+
 		Logger::info(
 			'migration',
 			__( 'Plugin activated.', 'sidrena-cijena' ),

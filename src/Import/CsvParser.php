@@ -70,7 +70,74 @@ final class CsvParser {
 			return new \WP_Error( 'import_file_unreadable', __( 'The import file could not be read.', 'sidrena-cijena' ) );
 		}
 
-		return $this->parse_string( $contents );
+		return $this->parse_string( self::to_utf8( $contents ) );
+	}
+
+	/**
+	 * Convert a legacy-encoded file to UTF-8.
+	 *
+	 * Croatian ERP and accounting systems still export ISO-8859-2 or
+	 * Windows-1250 files. Valid UTF-8 is kept untouched; anything else is
+	 * converted with the encoding that the byte pattern suggests.
+	 *
+	 * @param string $contents Raw file contents.
+	 * @return string
+	 */
+	public static function to_utf8( $contents ) {
+		$contents = (string) $contents;
+
+		if ( '' === $contents || self::is_utf8( $contents ) ) {
+			return $contents;
+		}
+
+		// Windows-1250 uses 0x80-0x9F for letters (š, đ, č, ć, ž); ISO-8859-2
+		// only defines 0xA1-0xFF, so those bytes identify a CP1250 file.
+		$order = preg_match( '/[\x80-\x9F]/', $contents )
+			? array( 'Windows-1250', 'ISO-8859-2' )
+			: array( 'ISO-8859-2', 'Windows-1250' );
+
+		foreach ( $order as $encoding ) {
+			$converted = self::convert( $contents, $encoding );
+
+			if ( null !== $converted && self::is_utf8( $converted ) ) {
+				return $converted;
+			}
+		}
+
+		return $contents;
+	}
+
+	/**
+	 * Whether the string is valid UTF-8.
+	 *
+	 * @param string $contents Contents to test.
+	 * @return bool
+	 */
+	protected static function is_utf8( $contents ) {
+		return (bool) preg_match( '//u', $contents );
+	}
+
+	/**
+	 * Convert to UTF-8 with the first available extension.
+	 *
+	 * @param string $contents Raw contents.
+	 * @param string $encoding Source encoding.
+	 * @return string|null Converted contents, or null when conversion failed.
+	 */
+	protected static function convert( $contents, $encoding ) {
+		if ( function_exists( 'iconv' ) ) {
+			$converted = @iconv( $encoding, 'UTF-8', $contents ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Invalid input bytes are expected for non-UTF-8 files.
+
+			if ( false !== $converted ) {
+				return $converted;
+			}
+		}
+
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			return mb_convert_encoding( $contents, 'UTF-8', $encoding );
+		}
+
+		return null;
 	}
 
 	/**

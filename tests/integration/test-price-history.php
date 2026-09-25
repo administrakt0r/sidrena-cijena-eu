@@ -120,7 +120,7 @@ class Test_Price_History extends WP_UnitTestCase {
 		$this->assertSame( (int) $rows[0]['id'], (int) $rows[1]['correction_of'] );
 		$this->assertSame( 'Typo in the archived flyer.', $rows[1]['correction_reason'] );
 
-		$this->assertSame( $second, $this->history->latest( $post_id, 0, 'anchor' )['id'] );
+		$this->assertSame( (int) $second, (int) $this->history->latest( $post_id, 0, 'anchor' )['id'] );
 	}
 
 	/**

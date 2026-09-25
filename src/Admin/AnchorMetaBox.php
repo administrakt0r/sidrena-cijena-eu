@@ -225,13 +225,22 @@ final class AnchorMetaBox {
 			return;
 		}
 
+		// Our own screens render the notice themselves, with the type that
+		// belongs to their own action instead of a plain success/error.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( 0 === strpos( $page, 'sidrena-cijena' ) ) {
+			return;
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$type = 'success' === sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) ? 'success' : 'error';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? rawurldecode( sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) ) : '';
 
 		printf(
-			'<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>',
+			'<div class="notice notice-%1$s sidrena-cijena-notice is-dismissible"><p>%2$s</p></div>',
 			esc_attr( $type ),
 			esc_html( $text )
 		);

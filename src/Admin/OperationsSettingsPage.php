@@ -134,7 +134,7 @@ final class OperationsSettingsPage {
 					$value,
 					array(
 						'label'       => __( 'Yes, delete all plugin data on uninstall', 'sidrena-cijena' ),
-						'description' => __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. Never touches WooCommerce or WordPress data.', 'sidrena-cijena' ),
+						'description' => __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data.', 'sidrena-cijena' ),
 					)
 				);
 				break;

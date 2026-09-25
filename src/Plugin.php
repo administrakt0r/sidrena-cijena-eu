@@ -22,6 +22,8 @@ use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
 use SidrenaCijena\Api\PriceListController;
+use SidrenaCijena\Api\PublicFeed;
+use SidrenaCijena\Api\PublicPage;
 use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
@@ -34,8 +36,10 @@ use SidrenaCijena\Database\Migrator;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\PublicationRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\WooCommerce\PriceHistoryRecorder;
 use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use SidrenaCijena\WooCommerce\Display\BuilderCompat;
 use SidrenaCijena\WooCommerce\Display\PriceDisplay;
 use SidrenaCijena\WooCommerce\Display\VariationDisplay;
 
@@ -186,6 +190,8 @@ final class Plugin {
 		add_action( 'save_post_' . StandalonePostType::POST_TYPE, array( StandalonePostType::class, 'save' ) );
 		add_action( 'add_meta_boxes', array( StandalonePostType::class, 'register_meta_box' ) );
 		add_action( 'init', array( TemplateFunctions::class, 'register' ) );
+		add_action( 'init', array( $this, 'register_public_feed' ) );
+		add_action( 'init', array( $this, 'register_public_pages' ) );
 		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
 		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
 		add_action( 'add_meta_boxes', array( SpecialSaleMetaBox::class, 'register' ) );
@@ -215,21 +221,42 @@ final class Plugin {
 
 		add_action( 'cli_init', array( Cli::class, 'register' ) );
 
-		add_action( 'init', array( $this, 'register_woocommerce_display' ), 10 );
+		add_action( 'init', array( $this, 'register_woocommerce_integration' ), 10 );
 	}
 
 	/**
-	 * Register WooCommerce display integration after translations can load.
+	 * Serve the price list at its public, human-readable URL.
 	 *
 	 * @return void
 	 */
-	public function register_woocommerce_display() {
+	public function register_public_feed() {
+		( new PublicFeed() )->register();
+	}
+
+	/**
+	 * Serve the price list and its archive as public HTML pages.
+	 *
+	 * @return void
+	 */
+	public function register_public_pages() {
+		( new PublicPage() )->register();
+	}
+
+	/**
+	 * Register the WooCommerce integrations after translations can load.
+	 *
+	 * @return void
+	 */
+	public function register_woocommerce_integration() {
 		if ( ! WooCommerceDetector::is_active() ) {
 			return;
 		}
 
-		( new PriceDisplay( $this->anchors() ) )->register();
+		$display = new PriceDisplay( $this->anchors() );
+		$display->register();
 		( new VariationDisplay( $this->anchors() ) )->register();
+		( new BuilderCompat( $display ) )->register();
+		( new PriceHistoryRecorder() )->register();
 	}
 
 	/**

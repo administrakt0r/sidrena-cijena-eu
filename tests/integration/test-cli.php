@@ -34,6 +34,21 @@ class Test_Cli extends WP_UnitTestCase {
 		StandalonePostType::register();
 		Plugin::instance()->set_catalog( new StandaloneCatalogProvider() );
 		Plugin::instance()->locations()->ensure_default_webshop();
+
+		// A price-list filename needs a street address and a city (FR-040).
+		$locations = Plugin::instance()->locations();
+
+		foreach ( $locations->all() as $location ) {
+			if ( '' === $location['address'] || '' === $location['city'] ) {
+				$locations->update(
+					(int) $location['id'],
+					array(
+						'address' => 'Vlaška 68',
+						'city'    => 'Zagreb',
+					)
+				);
+			}
+		}
 	}
 
 	/**
@@ -216,7 +231,11 @@ class Test_Cli extends WP_UnitTestCase {
 		$this->assertSame( 0, ImportCommand::execute( array( $file ) ) );
 		$this->assertStringContainsString( '2 inserted', $this->output() );
 
-		$this->assertSame( 1, ImportCommand::execute( array( $file ) ) );
+		// Re-importing an unchanged file commits nothing and is not an error.
+		Cli::reset_buffer();
+		$this->assertSame( 0, ImportCommand::execute( array( $file ) ) );
+		$this->assertStringContainsString( '2 unchanged', $this->output() );
+
 		$this->assertSame( 0, ImportCommand::execute( array( $file ), array( 'confirm-overwrite' => true ) ) );
 		$this->assertSame( 3, ImportCommand::execute( array( '/no/such/file.csv' ) ) );
 

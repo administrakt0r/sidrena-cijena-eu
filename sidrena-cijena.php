@@ -45,4 +45,23 @@ function sidrena_cijena_load_textdomain() {
 }
 add_action( 'init', 'sidrena_cijena_load_textdomain' );
 
+/**
+ * Declare WooCommerce compatibility before WooCommerce loads its features.
+ *
+ * The plugin keeps its own tables and never reads or writes orders, so High
+ * Performance Order Storage changes nothing for it. Declaring it explicitly
+ * keeps WooCommerce from flagging the plugin as untested/incompatible.
+ *
+ * @return void
+ */
+function sidrena_cijena_declare_woocommerce_compatibility() {
+	if ( ! class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+		return;
+	}
+
+	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', SIDRENA_CIJENA_FILE, true );
+}
+
+add_action( 'before_woocommerce_init', 'sidrena_cijena_declare_woocommerce_compatibility' );
+
 add_action( 'plugins_loaded', array( 'SidrenaCijena\Plugin', 'boot' ), 20 );
