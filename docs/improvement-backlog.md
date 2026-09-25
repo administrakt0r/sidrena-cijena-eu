@@ -52,13 +52,14 @@ were defects in our own code, not competitor ideas.
 | ID | Item | Status and verification |
 |----|------|-------------------------|
 | REL-01 | Release readiness | `done` — 1.0.0 ZIP built from `7e98210`; 427/427 strings in both catalogs, corrected MO offsets and WordPress `hr` filename. All six gates green (unit 119/380, integration 70/329, E2E 27), local.sh exit 0. Destroyed/recreated isolated wp-env: ZIP installed/activated on fresh WP 7.1.2 without WooCommerce; schema and automatic Croatian translation passed. See release-readiness.md. |
-| REL-02 | Ministry filename example | `todo` — compare the documented contract and record the profile decision. |
+| REL-02 | Ministry filename example | `done` — retained the normalized contract, documented punctuation differences and that sequence is the storage number in filename-profile.md. No silent format change or legal-equivalence claim. Existing filename unit and publication integration/E2E gates pass; documentation-only decision. |
 | REL-03 | WordPress.org submission | `todo` — metadata, assets, licensing, privacy and review checklist. |
 | REL-04 | Unit coverage | `todo` — public feed/page, builder compatibility and price recorder. |
 | REL-05 | Public page performance | `todo` — measure before caching; publication/settings invalidation. |
 | REL-06 | Daily 08:00 deadline | `todo` — timezone, missed runs, catch-up and failure visibility. |
 | REL-07 | Pending specification deletions | `todo` — user approved committing the deletions on 25 September 2026; reserved for this item's focused commit. |
 | REL-08 | CI | `todo` — static gates and integration with MySQL. |
+| REL-09 | Requested feature acceptance | `in progress` — verify reference-date/category mapping, classified-sale minimum, daily files/archive, products/variations/services without a licence cap; implement observed first-offer recording without backfilling existing catalog gaps. |
 
 ## Preserved strengths
 

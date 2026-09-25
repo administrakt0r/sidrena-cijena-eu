@@ -49,6 +49,8 @@ and the separate 30-day lowest-price rule for special forms of sale.
 Release 1.0.0 includes complete Croatian and English source catalogs (427 strings).
 Release verification and packaging evidence are tracked in
 [`docs/release-readiness.md`](docs/release-readiness.md).
+The retained filename profile and ministry-example differences are explained in
+[`docs/filename-profile.md`](docs/filename-profile.md); legal format review remains necessary.
 
 - WordPress 6.8+ (tested through 7.1)
 - PHP 7.4+ (developed and tested on PHP 8.3)

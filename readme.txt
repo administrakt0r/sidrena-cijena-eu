@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,9 @@ Never. Items introduced after the reference date receive no anchor price and
 are reported for merchant attention instead.
 
 == Changelog ==
+
+= 1.0.1 =
+* Document the retained filename profile and differences from the ministry example.
 
 = 1.0.0 =
 * First public release: audited anchor records, classified-sale history, daily CSV/XML publication, public price-list and archive pages, imports and WooCommerce display compatibility.
