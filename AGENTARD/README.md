@@ -10,6 +10,7 @@ is self-contained and states its own done-criteria.
 | 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Spec/contract cross-check, fix deviations | No |
 | 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E + acceptance | **Yes** |
 | 4 | [04-improve.md](04-improve.md) | Improvement pass: perf, UX, docs | No |
+| 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish the plugin: remaining release queue and submission prep | No |
 
 General rules for every prompt below:
 
