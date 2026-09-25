@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.6 =
+* Hardened opt-in uninstaller options cleanup to purge REST cache generation, feed queue timestamps, and standalone terms flags.
+* Documented datumSidreneCijene XML element in legal price-list format specification.
+* Added comprehensive unit testing for Uninstaller lifecycle safeguards.
+* Rebuilt translation catalogs with 100% complete Croatian coverage.
 
 = 1.0.5 =
 * Default Croatian language: plugin interface is now 100% in Croatian by default across all screens and sites.

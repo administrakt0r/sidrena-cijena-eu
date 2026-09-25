@@ -15,6 +15,7 @@ use SidrenaCijena\Cli\ImportCommand;
 use SidrenaCijena\Cli\SeedTestDataCommand;
 use SidrenaCijena\Cli\StatusCommand;
 use SidrenaCijena\Cli\ValidateCommand;
+use SidrenaCijena\Database\Schema;
 use SidrenaCijena\Plugin;
 
 /**
@@ -29,6 +30,10 @@ class Test_Cli extends WP_UnitTestCase {
 	 */
 	public function set_up() {
 		parent::set_up();
+
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( 'TRUNCATE TABLE `' . Schema::table( 'publications' ) . '`' );
 
 		Cli::reset_buffer();
 		StandalonePostType::register();

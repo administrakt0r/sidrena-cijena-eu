@@ -1,7 +1,7 @@
 # Completion plan — Sidrena cijena
 
-Current version: **1.0.5** (header, constant, `package.json`, readme stable tag agree).
-Unit suite green (180/546). All quality gates verified.
+Current version: **1.0.6** (header, constant, `package.json`, readme stable tag agree).
+Unit suite green (184/571). All quality gates verified.
 
 ## 1. Commit the open working tree
 

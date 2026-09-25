@@ -90,7 +90,7 @@ proizvod;Kava mljevena 250 g;KAV-250;Franck;kg;28,00;6,99;DA;akcija;7,49;2026-09
 * One `<stavka vrsta="proizvod|usluga">` per row with children
   `naziv, sifra, marka, jedinicaMjere, cijenaZaJedinicuMjere,
   maloprodajnaCijena, posebanOblikProdaje (true/false),
-  nazivPosebnogOblikaProdaje, sidrenaCijena, barkod, dostupnost`.
+  nazivPosebnogOblikaProdaje, sidrenaCijena, datumSidreneCijene, barkod, dostupnost`.
   Element names are ASCII (transliterated); empty elements are omitted;
   all content is XML-escaped. Same row order as CSV.
 

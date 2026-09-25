@@ -15,6 +15,22 @@ use SidrenaCijena\Support\Install;
 class ActivationTest extends WP_UnitTestCase {
 
 	/**
+	 * Reset plugin tables before activation tests.
+	 *
+	 * @return void
+	 */
+	public function set_up() {
+		parent::set_up();
+
+		global $wpdb;
+
+		foreach ( Schema::tables() as $table ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( "TRUNCATE TABLE `{$table}`" );
+		}
+	}
+
+	/**
 	 * Activation creates the schema, options and default location.
 	 *
 	 * @return void

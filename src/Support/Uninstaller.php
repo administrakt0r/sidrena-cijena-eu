@@ -45,11 +45,23 @@ final class Uninstaller {
 		'sidrena_cijena_last_generation_failure',
 		'sidrena_cijena_dismiss_gen_failure',
 		'sidrena_cijena_cache_version',
+		'sidrena_cijena_rest_generation',
+		'sidrena_cijena_public_feed_last_queue',
+		'sidrena_cijena_terms_seeded',
 		'sidrena_cijena_activation_redirect',
 		'sidrena_cijena_welcome_dismissed',
 		'sidrena_cijena_setup_complete',
 		'sidrena_cijena_delete_data_on_uninstall',
 	);
+
+	/**
+	 * List of plugin-owned option names.
+	 *
+	 * @return string[]
+	 */
+	public static function options() {
+		return self::$options;
+	}
 
 	/**
 	 * Whether deletion is enabled.
