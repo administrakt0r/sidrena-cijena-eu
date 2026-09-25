@@ -94,7 +94,12 @@ Review retained records with your data-protection and legal advisers.
 == Changelog ==
 
 = 1.0.3 =
-* Performance: the public price-list page caches its rendered table and refreshes when prices, settings, sales or publications change.
+* First-run Setup Guide checklist covering locations, legal rules, anchor prices, price lists, and compliance check.
+* Welcome banner with onboarding link and author free projects.
+* Daily 08:00 deadline robustness: WordPress timezone update hooks, automatic realignment after daily runs preventing DST drift, working-day missed run detection, automatic catch-up generation throttled by transient lock, failure recording and dismissible admin notices.
+* Failure visibility across Price lists screen, Compliance dashboard, and WP-CLI status.
+* Performance: public price-list page caches rendered tables and refreshes when prices, settings, sales or publications change.
+* GitHub Actions CI workflow covering static gates and wp-env integration suite with MySQL.
 
 = 1.0.2 =
 * Capture witnessed first offers automatically, preserving product/variation identity and historical-import exclusions.

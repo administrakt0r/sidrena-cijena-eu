@@ -662,7 +662,7 @@ if ( ! function_exists( 'is_admin' ) ) {
 	 * @return bool
 	 */
 	function is_admin() {
-		return false;
+		return ! empty( $GLOBALS['sidrena_test_is_admin'] );
 	}
 }
 
@@ -1146,6 +1146,62 @@ if ( ! function_exists( 'home_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'admin_url' ) ) {
+	/**
+	 * Build an admin URL.
+	 *
+	 * @param string $path Path.
+	 * @return string
+	 */
+	function admin_url( $path = '' ) {
+		return 'https://shop.example/wp-admin/' . ltrim( $path, '/' );
+	}
+}
+
+if ( ! function_exists( 'wp_nonce_url' ) ) {
+	/**
+	 * Append a nonce to a URL.
+	 *
+	 * @param string     $actionurl URL.
+	 * @param int|string $action    Action.
+	 * @param string     $name      Query param.
+	 * @return string
+	 */
+	function wp_nonce_url( $actionurl, $action = -1, $name = '_wpnonce' ) {
+		unset( $action );
+		$sep = false === strpos( $actionurl, '?' ) ? '?' : '&';
+
+		return $actionurl . $sep . $name . '=test-nonce';
+	}
+}
+
+if ( ! function_exists( 'add_query_arg' ) ) {
+	/**
+	 * Append query arguments to a URL.
+	 *
+	 * @param mixed ...$args Arguments.
+	 * @return string
+	 */
+	function add_query_arg( ...$args ) {
+		if ( 1 === count( $args ) && is_array( $args[0] ) ) {
+			$qs  = http_build_query( $args[0] );
+			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		} elseif ( 2 === count( $args ) && is_array( $args[0] ) ) {
+			$qs  = http_build_query( $args[0] );
+			$url = (string) $args[1];
+		} elseif ( 3 === count( $args ) ) {
+			$qs  = http_build_query( array( (string) $args[0] => $args[1] ) );
+			$url = (string) $args[2];
+		} else {
+			return '';
+		}
+
+		$sep = false === strpos( $url, '?' ) ? '?' : '&';
+
+		return $url . $sep . $qs;
+	}
+}
+
 if ( ! function_exists( 'size_format' ) ) {
 	/**
 	 * Human-readable file size.
@@ -1176,9 +1232,9 @@ if ( ! function_exists( 'wp_schedule_single_event' ) ) {
 	/**
 	 * Record a single scheduled event.
 	 *
-	 * @param int      $timestamp Run time.
-	 * @param string   $hook      Hook name.
-	 * @param mixed[]  $args      Arguments.
+	 * @param int     $timestamp Run time.
+	 * @param string  $hook      Hook name.
+	 * @param mixed[] $args      Arguments.
 	 * @return bool
 	 */
 	function wp_schedule_single_event( $timestamp, $hook, $args = array() ) {
@@ -1189,6 +1245,82 @@ if ( ! function_exists( 'wp_schedule_single_event' ) ) {
 		);
 
 		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_schedule_event' ) ) {
+	/**
+	 * Record a recurring scheduled event.
+	 *
+	 * @param int     $timestamp  Run time.
+	 * @param string  $recurrence Recurrence name.
+	 * @param string  $hook       Hook name.
+	 * @param mixed[] $args       Arguments.
+	 * @return bool
+	 */
+	function wp_schedule_event( $timestamp, $recurrence, $hook, $args = array() ) {
+		$GLOBALS['sidrena_test_recurring'][ (string) $hook ] = (int) $timestamp;
+		$GLOBALS['sidrena_test_scheduled'][]                = array(
+			'timestamp' => (int) $timestamp,
+			'hook'      => (string) $hook,
+			'args'      => $args,
+		);
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_next_scheduled' ) ) {
+	/**
+	 * Read the next scheduled timestamp for a hook.
+	 *
+	 * @param string  $hook Hook name.
+	 * @param mixed[] $args Arguments.
+	 * @return int|false
+	 */
+	function wp_next_scheduled( $hook, $args = array() ) {
+		if ( isset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] ) ) {
+			return (int) $GLOBALS['sidrena_test_recurring'][ (string) $hook ];
+		}
+
+		if ( isset( $GLOBALS['sidrena_test_scheduled'] ) && is_array( $GLOBALS['sidrena_test_scheduled'] ) ) {
+			foreach ( array_reverse( $GLOBALS['sidrena_test_scheduled'] ) as $item ) {
+				if ( is_array( $item ) && isset( $item['hook'] ) && $item['hook'] === $hook ) {
+					return (int) $item['timestamp'];
+				}
+			}
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'wp_clear_scheduled_hook' ) ) {
+	/**
+	 * Clear a scheduled hook.
+	 *
+	 * @param string  $hook Hook name.
+	 * @param mixed[] $args Arguments.
+	 * @return int Number of cleared events.
+	 */
+	function wp_clear_scheduled_hook( $hook, $args = array() ) {
+		$cleared = 0;
+
+		if ( isset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] ) ) {
+			unset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] );
+			++$cleared;
+		}
+
+		if ( isset( $GLOBALS['sidrena_test_scheduled'] ) && is_array( $GLOBALS['sidrena_test_scheduled'] ) ) {
+			foreach ( $GLOBALS['sidrena_test_scheduled'] as $k => $item ) {
+				if ( is_array( $item ) && isset( $item['hook'] ) && $item['hook'] === $hook ) {
+					unset( $GLOBALS['sidrena_test_scheduled'][ $k ] );
+					++$cleared;
+				}
+			}
+		}
+
+		return $cleared;
 	}
 }
 

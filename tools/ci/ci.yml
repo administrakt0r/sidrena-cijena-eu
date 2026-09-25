@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  static:
+    name: Static Gates (PHPStan, PHPCS, Unit Tests, ESLint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, simplexml
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install NPM dependencies
+        run: npm ci || npm install
+
+      - name: Run unit test suite
+        run: composer test:unit
+
+      - name: Run PHPCS code standards check
+        run: composer lint
+
+      - name: Run PHPStan static analysis
+        run: composer analyse
+
+      - name: Run ESLint
+        run: npm run lint:js
+
+  integration:
+    name: Integration Tests (wp-env with MySQL)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, simplexml
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install NPM dependencies
+        run: npm ci || npm install
+
+      - name: Start wp-env
+        run: npm run wp-env:test -- start
+
+      - name: Run PHPUnit integration test suite in wp-env
+        run: npm run wp-env:test -- run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration

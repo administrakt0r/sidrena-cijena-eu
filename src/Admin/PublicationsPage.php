@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Admin;
 
+use SidrenaCijena\Cron\DailyGeneration;
 use SidrenaCijena\Cron\Scheduler;
 use SidrenaCijena\Export\FilenameGenerator;
 use SidrenaCijena\Plugin;
@@ -81,6 +82,23 @@ class PublicationsPage {
 			esc_html( $next ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $next ) ) : __( 'not scheduled', 'sidrena-cijena' ) )
 		);
 		echo '</p>';
+
+		$last_gen = get_option( DailyGeneration::RESULT_OPTION, null );
+
+		if ( $last_gen && is_array( $last_gen ) && ! empty( $last_gen['summary']['failed'] ) ) {
+			$gen_time = ! empty( $last_gen['timestamp'] ) ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $last_gen['timestamp'] ) ) : '';
+			$source   = isset( $last_gen['source'] ) ? (string) $last_gen['source'] : 'scheduled';
+
+			echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena' ) . '</strong> ';
+			printf(
+				/* translators: 1: generation time, 2: run source, 3: error details */
+				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena' ),
+				esc_html( $gen_time ),
+				esc_html( $source ),
+				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'sidrena-cijena' ) )
+			);
+			echo '</p></div>';
+		}
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		wp_nonce_field( self::ACTION );

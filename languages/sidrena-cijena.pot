@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.3\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-25T20:54:03+00:00\n"
+"POT-Creation-Date: 2026-09-25T21:20:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,6 +14,9 @@ msgstr ""
 msgid "%1$d rows: %2$d valid, %3$d invalid, %4$d duplicate, %5$d would overwrite, %6$d unchanged."
 msgstr ""
 
+msgid "%1$s (%2$s) — %3$s"
+msgstr ""
+
 msgid "%d further findings are not shown. Export the report to see all of them."
 msgstr ""
 
@@ -21,6 +24,9 @@ msgid "%d further findings are not shown; run the compliance check for the full 
 msgstr ""
 
 msgid "%d item(s) have no anchor price yet."
+msgstr ""
+
+msgid "%d price lists failed to publish."
 msgstr ""
 
 msgid "%d row(s) would overwrite existing anchor records. Confirm overwriting to continue."
@@ -45,6 +51,9 @@ msgid "(published)"
 msgstr ""
 
 msgid "- select -"
+msgstr ""
+
+msgid "1 price list failed to publish."
 msgstr ""
 
 msgid "1. Add sales locations"
@@ -431,6 +440,9 @@ msgstr ""
 msgid "Facility identifier"
 msgstr ""
 
+msgid "Failed"
+msgstr ""
+
 msgid "Failed publications"
 msgstr ""
 
@@ -531,6 +543,12 @@ msgid "Item type"
 msgstr ""
 
 msgid "Item types"
+msgstr ""
+
+msgid "Last generation failed:"
+msgstr ""
+
+msgid "Last generation status"
 msgstr ""
 
 msgid "Last published"
@@ -995,6 +1013,9 @@ msgstr ""
 msgid "Sidrena cijena: Compliance check"
 msgstr ""
 
+msgid "Sidrena cijena: daily price-list generation failed."
+msgstr ""
+
 msgid "Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale."
 msgstr ""
 
@@ -1014,6 +1035,9 @@ msgid "Sidrena cijena: Sales locations"
 msgstr ""
 
 msgid "Sidrena cijena: Setup Guide"
+msgstr ""
+
+msgid "Sidrena cijena: today's %s deadline passed without a successful price-list publication. Catch-up generation is pending."
 msgstr ""
 
 msgid "Sidrena cijena price history"
@@ -1050,6 +1074,9 @@ msgid "Start date"
 msgstr ""
 
 msgid "Status"
+msgstr ""
+
+msgid "Successful"
 msgstr ""
 
 msgid "Suggested anchor (unverified)"
@@ -1299,6 +1326,9 @@ msgid "Unit of measure"
 msgstr ""
 
 msgid "Unit price"
+msgstr ""
+
+msgid "unknown error"
 msgstr ""
 
 msgid "Upload and preview"

@@ -68,8 +68,10 @@ final class StatusCommand {
 				'legacy_date'    => isset( $rule['legacy_reference_date'] ) ? (string) $rule['legacy_reference_date'] : '',
 				'locations'      => $locations,
 				'cron'           => array(
-					'healthy'  => Scheduler::is_healthy(),
-					'next_run' => $next ? Dates::from_utc( gmdate( 'Y-m-d H:i:s', (int) $next ) )->format( 'c' ) : null,
+					'healthy'         => Scheduler::is_healthy(),
+					'next_run'        => $next ? Dates::from_utc( gmdate( 'Y-m-d H:i:s', (int) $next ) )->format( 'c' ) : null,
+					'last_generation' => get_option( \SidrenaCijena\Cron\DailyGeneration::RESULT_OPTION, null ),
+					'missed_today'    => count( Scheduler::missed_locations_today() ),
 				),
 			);
 
@@ -78,9 +80,24 @@ final class StatusCommand {
 			if ( 'json' === $format ) {
 				Cli::out( Cli::as_json( $data ), 'line' );
 			} else {
+				$last_gen = $data['cron']['last_generation'];
+				$missed   = Scheduler::missed_locations_today();
+
 				Cli::out( sprintf( 'Schema: %s | Rules: %s', $data['schema_version'], $data['rule_version'] ) );
 				Cli::out( sprintf( 'Reference dates: general %s, legacy %s', $data['general_date'], $data['legacy_date'] ) );
 				Cli::out( sprintf( 'Scheduler: %s%s', $data['cron']['healthy'] ? 'healthy' : 'NOT SCHEDULED', $data['cron']['next_run'] ? ', next run ' . $data['cron']['next_run'] : '' ) );
+
+				if ( $last_gen && is_array( $last_gen ) ) {
+					$gen_date = ! empty( $last_gen['timestamp'] ) ? Dates::from_utc( gmdate( 'Y-m-d H:i:s', (int) $last_gen['timestamp'] ) )->format( 'c' ) : 'unknown';
+					$summary  = isset( $last_gen['summary'] ) && is_array( $last_gen['summary'] ) ? $last_gen['summary'] : array();
+					$pub_cnt  = isset( $summary['published'] ) ? (int) $summary['published'] : 0;
+					$fail_cnt = isset( $summary['failed'] ) ? (int) $summary['failed'] : 0;
+					Cli::out( sprintf( 'Last generation: %s (%s, %d published, %d failed)', $gen_date, isset( $last_gen['source'] ) ? $last_gen['source'] : 'scheduled', $pub_cnt, $fail_cnt ) );
+				}
+
+				if ( ! empty( $missed ) ) {
+					Cli::out( sprintf( 'Missed runs today: %d active location(s) missing today\'s price list', count( $missed ) ), 'warning' );
+				}
 
 				foreach ( $locations as $location ) {
 					Cli::out( sprintf( 'Location #%d %s (%s): last published %s', $location['id'], $location['name'], $location['identifier'], $location['last_published'] ? $location['last_published'] : 'never' ) );

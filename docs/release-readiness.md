@@ -1,5 +1,19 @@
 # Release verification
 
+## 1.0.3
+
+Setup guide onboarding, public page caching, resilient 08:00 daily generation (REL-06), CI pipeline (REL-08), translations and failure visibility:
+- Unit: 173 tests, 517 assertions passed (`composer test:unit`).
+- Static analysis & linting: PHPStan 106/106 files clean (0 errors), PHPCS 133/133 files clean, ESLint clean (`npm run lint:js`).
+- Integration: 76 tests, 342 assertions passed on `wp-env` with MySQL (`composer test:integration`).
+- Local environment: `./local.sh` exited 0; seeded 17 compliance test scenarios, forced generation, verified status reporting `Scheduler: healthy`.
+- Deadline robustness: Re-anchored WP-Cron daily recurrence after runs to eliminate DST drift; timezone change listeners (`timezone_string`, `gmt_offset`); working-day missed run detection with catch-up generation throttled by transient lock on `init`; failure recording with dismissible admin notice, Publications/Dashboard status alerts, and WP-CLI `status` health diagnostics; covered by `SchedulerTest`.
+- CI automation: `tools/ci/ci.yml` pipeline (ready for `.github/workflows/`) executing static quality gates and `wp-env` integration tests.
+- First-run onboarding: `SetupGuidePage` (5-step progress checklist) and `WelcomeBanner` with author links and one-time activation redirect.
+- Caching: Rendered HTML public price list caching in `PublicPage` with invalidation through `RestCache`.
+- Translations: Full Croatian translation (474/474 strings translated, 0 untranslated in `hr_HR.po` / `sidrena-cijena-hr.mo`).
+- Release archive: Built via `tools/build-zip.sh 1.0.3`, checksum generated, `unzip -t` passed.
+
 ## 1.0.2
 
 Prospective first-offer capture and version archives: unit 119 tests/380 assertions,

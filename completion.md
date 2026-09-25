@@ -48,8 +48,8 @@ npm run test:e2e            # port 8889 test env only, never the 8888 demo shop
 
 | ID | Work | Notes |
 |----|------|-------|
-| REL-06 | Daily 08:00 deadline robustness | timezone, missed runs, catch-up, failure visibility — `todo` |
-| REL-08 | CI | static gates + integration with MySQL — `todo` |
+| REL-06 | Daily 08:00 deadline robustness | timezone, missed runs, catch-up, failure visibility — `done` |
+| REL-08 | CI | static gates + integration with MySQL — `done` |
 | REL-03 | WordPress.org submission | readme validation, `plugin-check`, actual submission — `in progress`, deliberately last |
 
 ## 5. Archive the release

@@ -11,6 +11,7 @@ use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Compliance\Finding;
 use SidrenaCijena\Compliance\ReferenceDateResolver;
 use SidrenaCijena\Compliance\Validator;
+use SidrenaCijena\Cron\DailyGeneration;
 use SidrenaCijena\Cron\Scheduler;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
@@ -271,6 +272,18 @@ class DashboardPage {
 			esc_html__( 'View price lists', 'sidrena-cijena' )
 		);
 		echo '</td></tr>';
+
+		$last_gen = get_option( DailyGeneration::RESULT_OPTION, null );
+		if ( $last_gen && is_array( $last_gen ) ) {
+			echo '<tr><td>' . esc_html__( 'Last generation status', 'sidrena-cijena' ) . '</td><td>';
+			if ( ! empty( $last_gen['summary']['failed'] ) ) {
+				echo '<span class="sidrena-cijena-status sidrena-cijena-status--error">' . esc_html__( 'Failed', 'sidrena-cijena' ) . '</span> ';
+				echo esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : '' );
+			} else {
+				echo '<span class="sidrena-cijena-status sidrena-cijena-status--valid">' . esc_html__( 'Successful', 'sidrena-cijena' ) . '</span>';
+			}
+			echo '</td></tr>';
+		}
 
 		echo '</tbody></table>';
 
