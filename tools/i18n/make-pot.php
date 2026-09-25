@@ -54,7 +54,7 @@ $pot .= "# This file is distributed under the GPL-2.0-or-later license.\n";
 $pot .= "msgid \"\"\n";
 $pot .= "msgstr \"\"\n";
 $pot .= "\"Project-Id-Version: Sidrena cijena " . $version . "\\n\"\n";
-$pot .= "\"Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\\n\"\n";
+$pot .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\\n\"\n";
 $pot .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 $pot .= "\"MIME-Version: 1.0\\n\"\n";
 $pot .= "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
@@ -86,7 +86,7 @@ if ( '' !== $locale ) {
 	$po .= "msgid \"\"\n";
 	$po .= "msgstr \"\"\n";
 	$po .= "\"Project-Id-Version: Sidrena cijena " . $version . "\\n\"\n";
-	$po .= "\"Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\\n\"\n";
+	$po .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\\n\"\n";
 	$po .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"PO-Revision-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"MIME-Version: 1.0\\n\"\n";

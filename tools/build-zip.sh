@@ -53,6 +53,7 @@ git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena/ HEAD \
 	uninstall.php \
 	readme.txt \
 	README.md \
+	LICENSE \
 	src \
 	assets \
 	templates \

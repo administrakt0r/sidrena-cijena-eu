@@ -8,7 +8,7 @@ Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Records, displays, validates and publishes the Croatian anchor price, the daily machine-readable price list and the 30-day lowest price for special forms of sale.
+Croatian anchor prices, 30-day sale-price history and daily CSV/XML price lists for WooCommerce or a standalone catalog.
 
 == Description ==
 
@@ -64,6 +64,32 @@ Never. Newly created offers witnessed at publication can receive their actual
 first-offer price and observed date automatically. Existing catalog gaps and
 imports require evidenced historical prices. See docs/feature-acceptance.md for
 the first-offer boundaries, sale classification and setup requirements.
+
+== External services ==
+
+The plugin sends no catalog data or telemetry to an external service. Price
+history, validation and file generation run on your WordPress installation.
+WordPress itself may contact WordPress.org for standard plugin updates.
+
+== Privacy ==
+
+The plugin stores catalog prices, historical evidence, shop addresses, publication
+records and operational logs in your WordPress database and uploads directory.
+Audit records include the acting WordPress user's ID and reasons supplied for
+corrections. Do not put customer details or unnecessary personal data in these
+fields. This plugin does not add tracking cookies or collect customer orders.
+
+Published catalog fields, sales-location addresses and generated price lists are
+public by design, including the REST feed and retained archive. Restrict catalog
+content to information intended for publication. Deactivation and ordinary
+uninstall retain data. Optional uninstall cleanup removes operational data and
+files but preserves anchor and 30-day evidence, including their audit attribution.
+Review retained records with your data-protection and legal advisers.
+
+== Screenshots ==
+
+1. Public price-list page with search, item types and downloads (local demo data).
+2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
 
