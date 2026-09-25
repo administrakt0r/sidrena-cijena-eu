@@ -21,6 +21,8 @@ class BulkAnchorEntryPage {
 
 	const ACTION = 'sidrena_cijena_bulk_anchors';
 
+	const ACTION_ALL_CURRENT = 'sidrena_cijena_set_all_anchors_current';
+
 	const PER_PAGE = 50;
 
 	/**
@@ -43,6 +45,20 @@ class BulkAnchorEntryPage {
 
 		self::render_notice();
 
+		echo '<div class="card sidrena-bulk-all-card" style="max-width:100%;margin-top:15px;margin-bottom:20px;padding:16px 20px;">';
+		echo '<h2>' . esc_html__( 'Set anchor prices for all products at once (from current price)', 'sidrena-cijena' ) . '</h2>';
+		echo '<p>' . esc_html__( 'This option automatically sets the anchor price for products and variations in your shop based on their current active price and prescribed legal reference date (2 May 2025 for legacy categories, 10 September 2026 for all others).', 'sidrena-cijena' ) . '</p>';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return confirm(\'' . esc_js( __( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena' ) ) . '\');">';
+		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_ALL_CURRENT ) . '" />';
+		wp_nonce_field( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
+		echo '<p>';
+		echo '<label style="margin-right:20px;"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena' ) . '</label>';
+		echo '<label><input type="radio" name="scope" value="all" /> ' . esc_html__( 'For all products in catalog (including overwriting existing)', 'sidrena-cijena' ) . '</label>';
+		echo '</p>';
+		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena' ) . '</button></p>';
+		echo '</form>';
+		echo '</div>';
+
 		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored.', 'sidrena-cijena' ) . '</p></div>';
 
 		if ( ! $rows ) {
@@ -60,12 +76,17 @@ class BulkAnchorEntryPage {
 		);
 		echo '</p>';
 
+		echo '<p class="sidrena-bulk-selection-actions" style="margin-bottom:12px;">';
+		echo '<button type="button" class="button button-secondary" id="sidrena-btn-select-all">' . esc_html__( 'Select all on this page', 'sidrena-cijena' ) . '</button> ';
+		echo '<button type="button" class="button button-secondary" id="sidrena-btn-deselect-all">' . esc_html__( 'Deselect all', 'sidrena-cijena' ) . '</button>';
+		echo '</p>';
+
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
 		wp_nonce_field( self::ACTION, 'sidrena_cijena_bulk_nonce' );
 
 		echo '<table class="widefat striped"><thead><tr>';
-		echo '<th>' . esc_html__( 'Record', 'sidrena-cijena' ) . '</th>';
+		echo '<th class="check-column"><input type="checkbox" id="sidrena-select-all" title="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" /></th>';
 		echo '<th>' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
 		echo '<th>SKU</th>';
 		echo '<th>' . esc_html__( 'Current price', 'sidrena-cijena' ) . '</th>';
@@ -79,7 +100,7 @@ class BulkAnchorEntryPage {
 			$field   = 'rows[' . (int) $item->id . '][' . (int) $item->variation_id . ']';
 
 			echo '<tr>';
-			echo '<td><input type="checkbox" name="' . esc_attr( $field ) . '[record]" value="1" /></td>';
+			echo '<td class="check-column"><input type="checkbox" class="sidrena-row-cb" name="' . esc_attr( $field ) . '[record]" value="1" /></td>';
 			echo '<td>' . esc_html( $item->name ) . ( $item->is_variation() ? ' (' . esc_html__( 'variation', 'sidrena-cijena' ) . ' #' . (int) $item->variation_id . ')' : '' ) . '</td>';
 			echo '<td>' . esc_html( (string) $item->sku ) . '</td>';
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
@@ -91,6 +112,40 @@ class BulkAnchorEntryPage {
 		echo '</tbody></table>';
 		submit_button( __( 'Record checked anchors', 'sidrena-cijena' ) );
 		echo '</form>';
+
+		echo '<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			var master = document.getElementById("sidrena-select-all");
+			var cbs = document.querySelectorAll(".sidrena-row-cb");
+			if (master) {
+				master.addEventListener("change", function() {
+					for (var i = 0; i < cbs.length; i++) {
+						cbs[i].checked = master.checked;
+					}
+				});
+			}
+			var btnAll = document.getElementById("sidrena-btn-select-all");
+			if (btnAll) {
+				btnAll.addEventListener("click", function(e) {
+					e.preventDefault();
+					for (var i = 0; i < cbs.length; i++) {
+						cbs[i].checked = true;
+					}
+					if (master) master.checked = true;
+				});
+			}
+			var btnNone = document.getElementById("sidrena-btn-deselect-all");
+			if (btnNone) {
+				btnNone.addEventListener("click", function(e) {
+					e.preventDefault();
+					for (var i = 0; i < cbs.length; i++) {
+						cbs[i].checked = false;
+					}
+					if (master) master.checked = false;
+				});
+			}
+		});
+		</script>';
 
 		if ( $pages > 1 ) {
 			echo '<div class="tablenav"><div class="tablenav-pages">';
@@ -108,6 +163,89 @@ class BulkAnchorEntryPage {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Handle setting anchor prices for all products at once from current prices.
+	 *
+	 * @return void
+	 */
+	public static function handle_set_all_current() {
+		if ( ! Capabilities::current_user_can() ) {
+			wp_die( esc_html__( 'You do not have permission to record anchor prices.', 'sidrena-cijena' ) );
+		}
+
+		check_admin_referer( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$scope = isset( $_POST['scope'] ) && 'all' === $_POST['scope'] ? 'all' : 'missing';
+
+		$plugin  = Plugin::instance();
+		$catalog = $plugin->catalog();
+		$history = $plugin->history();
+		$anchors = $plugin->anchors();
+
+		$recorded = 0;
+		$skipped  = 0;
+		$failed   = 0;
+
+		$items = $catalog->iterate(
+			array(
+				'per_page'           => 100,
+				'include_variations' => true,
+			)
+		);
+
+		foreach ( $items as $item ) {
+			if ( 'missing' === $scope && $history->latest( $item->id, $item->variation_id, 'anchor' ) ) {
+				++$skipped;
+				continue;
+			}
+
+			$price = $item->effective_price();
+			if ( null === $price || (float) $price <= 0.0 ) {
+				++$failed;
+				continue;
+			}
+
+			$resolved = \SidrenaCijena\Compliance\ReferenceDateResolver::resolve( $item );
+			$date     = $resolved['date'];
+
+			$result = $anchors->record(
+				$item,
+				$price,
+				array(
+					'source'            => 'bulk_current',
+					'reference_date'    => $date,
+					'correction_reason' => __( 'Bulk setup of anchor price from current catalog price', 'sidrena-cijena' ),
+				)
+			);
+
+			if ( is_wp_error( $result ) ) {
+				++$failed;
+				continue;
+			}
+
+			++$recorded;
+		}
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'                       => self::SLUG,
+					'sidrena_cijena_notice'      => $recorded > 0 ? 'success' : ( $failed > 0 ? 'error' : 'info' ),
+					'sidrena_cijena_notice_text' => sprintf(
+						/* translators: 1: count recorded, 2: count skipped, 3: count failed */
+						__( 'Successfully set %1$d anchor price(s) from current prices. %2$d item(s) already had an anchor. %3$d item(s) had no valid price.', 'sidrena-cijena' ),
+						$recorded,
+						$skipped,
+						$failed
+					),
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
 	}
 
 	/**

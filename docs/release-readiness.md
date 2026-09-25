@@ -74,3 +74,12 @@ Build from a clean checkout of the release commit with
 `tools/build-zip.sh 1.0.0`. An isolated checkout allows the developer's unrelated
 working-tree changes to remain untouched. The archive contains runtime sources,
 assets, templates, catalogs and documentation; development dependencies are excluded.
+
+## Release 1.0.5 (2026-09-26)
+
+- **Default Croatian Language**: Interface displays 100% in Croatian across all screens and sites by default.
+- **Bulk Anchor Entry Tools**: Added shop-wide batch setup card to set anchor prices from current catalog prices in one click; added "Select all on this page", "Deselect all", and master header checkbox for instant table selection.
+- **In-Dashboard Documentation**: Added rich Croatian reference screen (`sidrena-cijena-docs`) with direct links from Setup Guide, Welcome Banner, and Dashboard covering legal rules, 08:00 cron automation, CLI commands, developer hooks, and compliance gates.
+- **Packaging Hardening**: Excluded developer notes, internal documentation, AI prompt files (`PROMPT.md`, `AGENTARD/`), and temporary files from the distribution release archive.
+- **Quality Gates**: All static gates pass cleanly (PHPUnit 180 tests / 546 assertions, PHPStan 0 errors, PHPCS clean, ESLint clean).
+

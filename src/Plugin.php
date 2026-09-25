@@ -218,6 +218,7 @@ final class Plugin {
 		add_action( 'admin_post_' . ImportPage::ACTION_COMMIT, array( ImportPage::class, 'handle_commit' ) );
 		add_action( 'admin_post_' . ImportPage::ACTION_REPORT, array( ImportPage::class, 'handle_report' ) );
 		add_action( 'admin_post_' . BulkAnchorEntryPage::ACTION, array( BulkAnchorEntryPage::class, 'handle_save' ) );
+		add_action( 'admin_post_' . BulkAnchorEntryPage::ACTION_ALL_CURRENT, array( BulkAnchorEntryPage::class, 'handle_set_all_current' ) );
 		add_action( 'admin_post_' . LocationsPage::ACTION_SAVE, array( LocationsPage::class, 'handle_save' ) );
 		add_action( 'admin_post_' . LocationsPage::ACTION_DELETE, array( LocationsPage::class, 'handle_delete' ) );
 		add_action( 'admin_post_' . PriceHistoryPage::ACTION, array( PriceHistoryPage::class, 'handle_correct' ) );

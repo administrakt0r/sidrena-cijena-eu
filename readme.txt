@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,13 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.5 =
+* Default Croatian language: plugin interface is now 100% in Croatian by default across all screens and sites.
+* Bulk Anchor Setup: batch tool to set anchor prices for all products/variations in the shop from current catalog prices with a single click.
+* Quick page selection: Master checkbox, "Select all on this page", and "Deselect all" controls for bulk anchor table.
+* In-Dashboard Documentation: dedicated Croatian documentation screen (Dokumentacija) explaining legal rules, bulk tools, feeds, 08:00 cron automation, CLI commands, developer hooks, and compliance gates.
+* Release packaging security: internal developer documentation, prompts, and temporary files excluded from distribution archives.
 
 = 1.0.4 =
 * Setup Guide enhancements: dynamic status badges across all five checklist steps, showing recorded anchor counts and compliance scan health.

@@ -3,7 +3,7 @@
  * Plugin Name:       Sidrena cijena - Croatian Anchor Price Compliance
  * Plugin URI:        https://github.com/administrakt0r/sidrena-cijena
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), the daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
- * Version:           1.0.4
+ * Version:           1.0.5
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            administrakt0r
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIDRENA_CIJENA_VERSION', '1.0.4' );
+define( 'SIDRENA_CIJENA_VERSION', '1.0.5' );
 define( 'SIDRENA_CIJENA_FILE', __FILE__ );
 define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
@@ -35,15 +35,17 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
 /**
  * Load the plugin translations.
  *
- * WordPress loads plugin translations automatically since 4.6; the explicit
- * call keeps behaviour predictable when the plugin directory is symlinked.
+ * Always loads the Croatian translation catalogue by default so the plugin
+ * interface is 100% in Croatian on all sites, even if WordPress runs in English.
  *
  * @return void
  */
 function sidrena_cijena_load_textdomain() {
+	load_textdomain( 'sidrena-cijena', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-hr.mo' );
 	load_plugin_textdomain( 'sidrena-cijena', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
 }
-add_action( 'init', 'sidrena_cijena_load_textdomain' );
+add_action( 'plugins_loaded', 'sidrena_cijena_load_textdomain', 5 );
+add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );
 
 /**
  * Declare WooCommerce compatibility before WooCommerce loads its features.

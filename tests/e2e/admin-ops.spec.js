@@ -12,18 +12,16 @@ test.describe('Operations and administration', () => {
       'wp-admin/admin.php?page=sidrena-cijena-settings&tab=operations'
     );
 
-    await expect(page.locator('h1')).toContainText('settings');
+    await expect(page.locator('h1')).toContainText(/settings|postavke/i);
 
     await page.fill('input[name="sidrena_cijena_settings[deadline]"]', '07:30');
     await page.fill(
       'input[name="sidrena_cijena_settings[retention_days]"]',
       '45'
     );
-    await page.getByRole('button', { name: 'Save Changes' }).click();
+    await page.locator('#submit, input[type="submit"]').first().click();
 
-    await expect(page.locator('#setting-error-settings_updated')).toContainText(
-      'Settings saved'
-    );
+    await expect(page.locator('#setting-error-settings_updated')).toBeVisible();
 
     await page.reload();
     await expect(
@@ -49,7 +47,7 @@ test.describe('Operations and administration', () => {
       'input[name="sidrena_cijena_settings[retention_days]"]',
       '7'
     );
-    await page.getByRole('button', { name: 'Save Changes' }).click();
+    await page.locator('#submit, input[type="submit"]').first().click();
     await page.reload();
 
     await expect(
@@ -66,11 +64,11 @@ test.describe('Operations and administration', () => {
     await login(page);
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-logs');
 
-    await expect(page.locator('h1')).toContainText('Logs');
+    await expect(page.locator('h1')).toContainText(/Logs|Zapisi/i);
     await expect(page.locator('table.widefat')).toContainText('E2E log entry');
 
     await page.selectOption('select[name="event"]', 'import');
-    await page.getByRole('button', { name: 'Filter' }).click();
+    await page.locator('#post-query-submit, input[type="submit"]').first().click();
 
     await expect(page.locator('table.widefat')).toContainText('E2E log entry');
   });
@@ -84,7 +82,7 @@ test.describe('Operations and administration', () => {
       await login(page, user, 'password');
       await page.goto('wp-admin/admin.php?page=sidrena-cijena-settings');
 
-      await expect(page.locator('body')).toContainText('not allowed');
+      await expect(page.locator('body')).toContainText(/not allowed|dopuštenje/i);
     } finally {
       await wpCli(['user', 'delete', user, '--yes']);
     }

@@ -1,8 +1,7 @@
 # Completion plan — Sidrena cijena
 
-Current version: **1.0.4** (header, constant, `package.json`, readme stable tag agree).
-Unit suite green (175/525). Everything below is what remains before the plugin
-is fully finished.
+Current version: **1.0.5** (header, constant, `package.json`, readme stable tag agree).
+Unit suite green (180/546). All quality gates verified.
 
 ## 1. Commit the open working tree
 

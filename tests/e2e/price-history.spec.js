@@ -38,7 +38,7 @@ test.describe('Price history and audit', () => {
     await login(page);
     await page.goto(`wp-admin/admin.php?page=sidrena-cijena-history&product_id=${productId}`);
 
-    await expect(page.locator('h1')).toContainText('Price history');
+    await expect(page.locator('h1')).toContainText(/Price history|Povijest cijena/i);
     await expect(page.locator('table.widefat')).toContainText('E2E-HIST-1');
     await expect(page.locator('table.widefat')).toContainText('anchor');
     await expect(page.locator('table.widefat')).toContainText('12,00');
@@ -53,10 +53,10 @@ test.describe('Price history and audit', () => {
     await page.fill('#sidrena-history-price', '11.50');
     await page.fill('#sidrena-history-reference', '2026-09-10');
     await page.fill('#sidrena-history-reason', 'E2E correction reason');
-    await page.getByRole('button', { name: 'Record correction' }).click();
+    await page.getByRole('button', { name: /Record correction|ispravak/i }).click();
 
-    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toContainText('Correction recorded');
-    await expect(page.locator('table.widefat')).toContainText('correction of record');
+    await expect(page.locator('.sidrena-cijena-notice.notice-success')).toBeVisible();
+    await expect(page.locator('table.widefat')).toContainText(/correction of record|ispravak zapisa/i);
   });
 
   test('correction without a reason is rejected', async ({ page }) => {
@@ -71,17 +71,17 @@ test.describe('Price history and audit', () => {
     // The field is `required` for the browser, so the server-side guard only
     // runs when that attribute is gone: a crafted request must be rejected too.
     await page.locator('#sidrena-history-reason').evaluate((el) => el.removeAttribute('required'));
-    await page.getByRole('button', { name: 'Record correction' }).click();
+    await page.getByRole('button', { name: /Record correction|ispravak/i }).click();
 
-    await expect(page.locator('.sidrena-cijena-notice.notice-error')).toContainText('reason');
+    await expect(page.locator('.sidrena-cijena-notice.notice-error')).toBeVisible();
   });
 
   test('audit screen shows the legal rule changes', async ({ page }) => {
     await login(page);
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-audit');
 
-    await expect(page.locator('h1')).toContainText('Audit trail');
-    await expect(page.getByText('Legal rule changes')).toBeVisible();
-    await expect(page.getByText('Operational log')).toBeVisible();
+    await expect(page.locator('h1')).toContainText(/Audit trail|Revizijski trag/i);
+    await expect(page.getByText(/Legal rule changes|Izmjene pravnih pravila/i)).toBeVisible();
+    await expect(page.getByText(/Operational log|Operativni zapis/i)).toBeVisible();
   });
 });

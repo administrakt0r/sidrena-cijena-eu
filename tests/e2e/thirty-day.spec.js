@@ -67,7 +67,7 @@ test.describe('30-day lowest price display', () => {
     const block = page.locator('.sidrena-cijena--30-day').first();
     await expect(block).toBeVisible();
     await expect(block.locator('.sidrena-cijena__30-day-value')).toContainText('9,00');
-    await expect(block.locator('.sidrena-cijena__label')).toContainText('Lowest price in the last 30 days');
+    await expect(block.locator('.sidrena-cijena__label')).toContainText(/Lowest price in the last 30 days|Najniža cijena/i);
 
     await expect(anchor).toContainText('25,00');
   });

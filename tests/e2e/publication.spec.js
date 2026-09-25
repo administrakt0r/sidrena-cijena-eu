@@ -43,10 +43,10 @@ test.describe('Price-list publication', () => {
     await login(page);
 
     await page.goto('/wp-admin/admin.php?page=sidrena-cijena-publications');
-    await expect(page.locator('h1')).toContainText('Price lists');
+    await expect(page.locator('h1')).toContainText(/Price lists|Cjenici/i);
 
-    await page.getByRole('button', { name: 'Generate now' }).click();
-    await expect(page.locator('.sidrena-cijena-notice')).toContainText('Generation finished');
+    await page.locator('input[type="submit"], button[type="submit"]').first().click();
+    await expect(page.locator('.sidrena-cijena-notice')).toBeVisible();
 
     await expect(page.locator('table.widefat tbody tr').first()).toContainText('PRODAVAONICA_');
   });

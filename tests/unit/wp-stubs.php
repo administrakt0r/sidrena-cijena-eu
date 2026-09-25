@@ -163,6 +163,18 @@ if ( ! function_exists( 'esc_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'esc_js' ) ) {
+	/**
+	 * JavaScript escape stub.
+	 *
+	 * @param string $text Text.
+	 * @return string
+	 */
+	function esc_js( $text ) {
+		return addcslashes( (string) $text, "\\'\"&\n\r<>" );
+	}
+}
+
 if ( ! function_exists( 'wp_kses_post' ) ) {
 	/**
 	 * KSES stub.

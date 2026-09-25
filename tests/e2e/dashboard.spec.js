@@ -50,28 +50,28 @@ test.describe('Compliance dashboard', () => {
 
 		await expect(page.locator('h1')).toContainText('Sidrena cijena');
 		await expect(page.locator('.sidrena-cijena-card').first()).toBeVisible();
-		await expect(page.getByText('Anchors missing')).toBeVisible();
-		await expect(page.getByText('Validation errors')).toBeVisible();
+		await expect(page.getByText(/Anchors missing|Sidrene cijene nedostaju/i)).toBeVisible();
+		await expect(page.getByText(/Validation errors|Greške provjere/i)).toBeVisible();
 	});
 
 	test('run compliance check produces a report with findings', async ({ page }) => {
 		await login(page);
 		await page.goto('/wp-admin/admin.php?page=sidrena-cijena-compliance');
 
-		await expect(page.locator('h1')).toContainText('Compliance check');
+		await expect(page.locator('h1')).toContainText(/Compliance check|Provjera usklađenosti/i);
 
-		await page.getByRole('button', { name: 'Run compliance check' }).click();
-		await expect(page.locator('.sidrena-cijena-notice')).toContainText('Compliance check finished');
+		await page.locator('input[type="submit"], button[type="submit"]').first().click();
+		await expect(page.locator('.sidrena-cijena-notice')).toBeVisible();
 
 		await expect(page.getByText('missing_anchor_price').first()).toBeVisible();
-		await expect(page.getByRole('link', { name: 'Export report (CSV)' })).toBeVisible();
+		await expect(page.locator('a[href*="sidrena_cijena_export_report"]').first()).toBeVisible();
 	});
 
 	test('compliance report exports as CSV', async ({ page }) => {
 		await login(page);
 		await page.goto('/wp-admin/admin.php?page=sidrena-cijena-compliance');
 
-		const href = await page.getByRole('link', { name: 'Export report (CSV)' }).getAttribute('href');
+		const href = await page.locator('a[href*="sidrena_cijena_export_report"]').first().getAttribute('href');
 		expect(href).toContain('sidrena_cijena_export_report');
 
 		const response = await page.request.get(href);

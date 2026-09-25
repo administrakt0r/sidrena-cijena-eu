@@ -171,12 +171,16 @@ final class WelcomeBanner {
 		}
 
 		echo '</ul>';
+		$docs_url = AdminMenu::url( DocumentationPage::SLUG );
+
 		printf(
-			'<p><a class="button button-primary" href="%1$s">%2$s</a> <a class="button" href="%3$s">%4$s</a></p>',
+			'<p><a class="button button-primary" href="%1$s">%2$s</a> <a class="button" href="%3$s">%4$s</a> <a class="button button-secondary" href="%5$s">%6$s</a></p>',
 			esc_url( $setup_url ),
 			esc_html__( 'Open Setup Guide', 'sidrena-cijena' ),
 			esc_url( $dismiss_url ),
-			esc_html__( 'Dismiss', 'sidrena-cijena' )
+			esc_html__( 'Dismiss', 'sidrena-cijena' ),
+			esc_url( $docs_url ),
+			esc_html__( 'Documentation', 'sidrena-cijena' )
 		);
 		echo '</div>';
 	}

@@ -205,7 +205,7 @@ class Test_Public_Page extends WP_UnitTestCase {
 		$html = $this->page->render_archive();
 
 		$this->assertStringContainsString( $generated['filename'], $html );
-		$this->assertStringContainsString( 'Download', $html );
+		$this->assertStringContainsString( __( 'Download', 'sidrena-cijena' ), $html );
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Test_Public_Page extends WP_UnitTestCase {
 	public function test_empty_archive_is_stated() {
 		$html = $this->page->render_archive();
 
-		$this->assertStringContainsString( 'No price lists have been published yet.', $html );
+		$this->assertStringContainsString( __( 'No price lists have been published yet.', 'sidrena-cijena' ), $html );
 	}
 
 	/**

@@ -43,6 +43,7 @@ class DashboardPage {
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena', 'sidrena-cijena' ) . '</h1>';
+		echo '<p style="margin-bottom:15px;"><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book" style="vertical-align:middle;margin-right:4px;"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena' ) . '</a></p>';
 
 		if ( $data['total'] > $data['scanned'] ) {
 			printf(

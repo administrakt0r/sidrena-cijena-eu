@@ -74,6 +74,7 @@ final class AdminMenu {
 			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'sidrena-cijena' ) ),
 			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'sidrena-cijena' ) ),
 			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'sidrena-cijena' ) ),
+			DocumentationPage::SLUG       => array( DocumentationPage::class, __( 'Documentation', 'sidrena-cijena' ) ),
 		);
 	}
 
