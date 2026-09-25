@@ -7,6 +7,8 @@ The translation generator reads the plugin header. Both source catalogs contain
 427 translated strings and zero untranslated strings. The Croatian MO compiler
 now calculates offsets for its separate original/translation string blocks;
 every dictionary entry was round-tripped through WordPress's MO reader.
+The runtime catalog uses `sidrena-cijena-hr.mo`: WordPress's Croatian locale
+identifier is `hr`, although the development dictionary is named `hr_HR.php`.
 
 Verification so far:
 

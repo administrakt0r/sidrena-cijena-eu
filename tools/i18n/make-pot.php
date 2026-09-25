@@ -118,8 +118,8 @@ if ( '' !== $locale ) {
 
 	if ( 'hr_HR' === $locale ) {
 		$mo = sidrena_compile_mo( $translations );
-		file_put_contents( $root . '/languages/sidrena-cijena-hr_HR.mo', $mo );
-		echo "Wrote languages/sidrena-cijena-hr_HR.mo (" . strlen( $mo ) . " bytes).\n";
+		file_put_contents( $root . '/languages/sidrena-cijena-hr.mo', $mo );
+		echo "Wrote languages/sidrena-cijena-hr.mo (" . strlen( $mo ) . " bytes).\n";
 	}
 }
 
