@@ -44,6 +44,8 @@ final class Uninstaller {
 		'sidrena_cijena_last_generation',
 		'sidrena_cijena_cache_version',
 		'sidrena_cijena_activation_redirect',
+		'sidrena_cijena_welcome_dismissed',
+		'sidrena_cijena_setup_complete',
 		'sidrena_cijena_delete_data_on_uninstall',
 	);
 

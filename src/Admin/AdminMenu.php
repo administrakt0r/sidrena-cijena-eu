@@ -64,6 +64,7 @@ final class AdminMenu {
 	public static function pages() {
 		return array(
 			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'sidrena-cijena' ) ),
+			SetupGuidePage::SLUG          => array( SetupGuidePage::class, __( 'Setup Guide', 'sidrena-cijena' ) ),
 			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'sidrena-cijena' ) ),
 			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'sidrena-cijena' ) ),
 			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'sidrena-cijena' ) ),

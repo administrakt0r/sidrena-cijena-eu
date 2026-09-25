@@ -13,6 +13,7 @@ use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\Plugin;
 use SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
@@ -28,6 +29,13 @@ class PageCatalogFake implements CatalogProvider {
 	 * @var CatalogItem[]
 	 */
 	public $items = array();
+
+	/**
+	 * Number of iterate() calls (one per row build).
+	 *
+	 * @var int
+	 */
+	public $iterate_calls = 0;
 
 	/**
 	 * Provider source.
@@ -112,6 +120,8 @@ class PageCatalogFake implements CatalogProvider {
 	 */
 	public function iterate( array $args = array() ) {
 		unset( $args );
+
+		++$this->iterate_calls;
 
 		foreach ( $this->items as $item ) {
 			yield $item;
@@ -353,8 +363,9 @@ class PublicPageTest extends TestCase {
 		PluginSwap::swap( 'special_sales', null );
 		PublicPageProbe::reset_styles();
 
-		$GLOBALS['sidrena_test_options'] = array();
-		$_GET                            = array();
+		$GLOBALS['sidrena_test_options']    = array();
+		$GLOBALS['sidrena_test_transients'] = array();
+		$_GET                               = array();
 	}
 
 	/**
@@ -557,7 +568,7 @@ class PublicPageTest extends TestCase {
 	/**
 	 * Wire catalog fakes producing one product and one service.
 	 *
-	 * @return void
+	 * @return PageCatalogFake The catalog fake in use.
 	 */
 	private function wire_catalog() {
 		$catalog        = new PageCatalogFake();
@@ -607,6 +618,8 @@ class PublicPageTest extends TestCase {
 			),
 		);
 		PluginSwap::swap( 'locations', $locations );
+
+		return $catalog;
 	}
 
 	/**
@@ -676,5 +689,59 @@ class PublicPageTest extends TestCase {
 
 		$this->assertStringContainsString( 'sidrena-cijena-cjenik', $out );
 		$this->assertStringNotContainsString( 'Mlijeko 1L', $out );
+	}
+
+	/**
+	 * Repeat requests reuse the cached table instead of rebuilding it.
+	 *
+	 * @return void
+	 */
+	public function test_render_list_serves_cached_rows_on_repeat() {
+		$this->reset_state();
+		$catalog = $this->wire_catalog();
+
+		$probe  = new PublicPageProbe();
+		$first  = $probe->render_list( array() );
+		$second = $probe->render_list( array() );
+
+		$this->assertStringContainsString( 'Mlijeko 1L', $first );
+		$this->assertStringContainsString( 'Mlijeko 1L', $second );
+		$this->assertSame( 1, $catalog->iterate_calls );
+	}
+
+	/**
+	 * Flushing the shared cache rebuilds the table.
+	 *
+	 * @return void
+	 */
+	public function test_cache_flush_rebuilds_rows() {
+		$this->reset_state();
+		$catalog = $this->wire_catalog();
+
+		$probe = new PublicPageProbe();
+		$probe->render_list( array() );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$probe->render_list( array() );
+
+		$this->assertSame( 2, $catalog->iterate_calls );
+	}
+
+	/**
+	 * Different search or type arguments use different cache entries.
+	 *
+	 * @return void
+	 */
+	public function test_distinct_arguments_use_distinct_cache_entries() {
+		$this->reset_state();
+		$catalog = $this->wire_catalog();
+
+		$probe = new PublicPageProbe();
+		$probe->render_list( array() );
+		$probe->render_list( array( 'q' => 'klime' ) );
+		$probe->render_list( array( 'type' => 'usluga' ) );
+
+		$this->assertSame( 3, $catalog->iterate_calls );
 	}
 }

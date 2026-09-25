@@ -7,6 +7,8 @@
 
 namespace SidrenaCijena\Support;
 
+use SidrenaCijena\Admin\WelcomeBanner;
+
 use SidrenaCijena\Admin\Capabilities;
 use SidrenaCijena\Catalog\StandalonePostType;
 use SidrenaCijena\Compliance\RuleConfig;
@@ -44,6 +46,8 @@ final class Install {
 		$locations->ensure_default_webshop();
 
 		Scheduler::schedule_all();
+
+		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
 
 		// The public feed lives on a rewrite rule, so it only resolves once the rules are rebuilt.
 		flush_rewrite_rules();

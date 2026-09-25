@@ -434,6 +434,22 @@ if ( ! function_exists( 'delete_option' ) ) {
 	}
 }
 
+if ( ! function_exists( 'current_user_can' ) ) {
+	/**
+	 * Capability stub: tests run as an administrator unless overridden.
+	 *
+	 * @param string $capability Capability name.
+	 * @return bool
+	 */
+	function current_user_can( $capability ) {
+		if ( array_key_exists( 'sidrena_test_can', $GLOBALS ) && ! $GLOBALS['sidrena_test_can'] ) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
 if ( ! function_exists( 'get_transient' ) ) {
 	/**
 	 * Transient read stub.

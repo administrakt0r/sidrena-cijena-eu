@@ -10,7 +10,7 @@ namespace SidrenaCijena\Api;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Caches public REST responses and invalidates them when price data changes.
+ * Caches public REST and page responses and invalidates them when price data changes.
  *
  * A generation marker is part of every cache key, so flushing is a single
  * option update and never leaves stale entries behind.

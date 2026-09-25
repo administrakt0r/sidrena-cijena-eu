@@ -1,10 +1,10 @@
 === Sidrena cijena - Croatian Anchor Price Compliance ===
-Contributors: sidrenacijena
+Contributors: administrakt0r
 Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,9 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.3 =
+* Performance: the public price-list page caches its rendered table and refreshes when prices, settings, sales or publications change.
 
 = 1.0.2 =
 * Capture witnessed first offers automatically, preserving product/variation identity and historical-import exclusions.

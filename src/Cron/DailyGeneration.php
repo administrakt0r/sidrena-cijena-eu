@@ -9,6 +9,7 @@ namespace SidrenaCijena\Cron;
 
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,23 +19,93 @@ defined( 'ABSPATH' ) || exit;
 class DailyGeneration {
 
 	/**
+	 * Last generation result option.
+	 */
+	const RESULT_OPTION = 'sidrena_cijena_last_generation';
+
+	/**
+	 * Last generation failure option.
+	 */
+	const FAILURE_OPTION = 'sidrena_cijena_last_generation_failure';
+
+	/**
+	 * Dismiss failure option.
+	 */
+	const DISMISS_OPTION = 'sidrena_cijena_dismiss_gen_failure';
+
+	/**
 	 * Generate all due price lists.
 	 *
 	 * @return void
 	 */
 	public static function run_scheduled() {
+		self::execute_generation( 'scheduled' );
+		Scheduler::reschedule_daily();
+	}
+
+	/**
+	 * Catch-up generation for missed runs.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function run_catchup() {
+		return self::execute_generation( 'catchup' );
+	}
+
+	/**
+	 * Execute generation and record outcome.
+	 *
+	 * @param string $source Source ('scheduled', 'catchup', etc.).
+	 * @return array<mixed>
+	 */
+	public static function execute_generation( $source = 'scheduled' ) {
 		$results = Plugin::instance()->generation()->generate_all(
 			array(
-				'source' => 'scheduled',
+				'source' => $source,
 				'force'  => true,
 			)
 		);
 
-		Logger::info(
-			'export_scheduled',
-			'Daily price-list generation finished.',
-			array( 'summary' => self::summarize( $results ) )
+		$summary = self::summarize( $results );
+		$errors  = self::extract_errors( $results );
+
+		$record = array(
+			'timestamp' => time(),
+			'date'      => Dates::today(),
+			'source'    => $source,
+			'summary'   => $summary,
+			'errors'    => $errors,
 		);
+
+		update_option( self::RESULT_OPTION, $record, false );
+
+		if ( $summary['failed'] > 0 ) {
+			update_option( self::FAILURE_OPTION, $record, false );
+			delete_option( self::DISMISS_OPTION );
+
+			Logger::error(
+				'export_' . $source,
+				'Daily price-list generation failed.',
+				array(
+					'summary' => $summary,
+					'errors'  => $errors,
+					'source'  => $source,
+				)
+			);
+		} else {
+			delete_option( self::FAILURE_OPTION );
+
+			Logger::info(
+				'export_' . $source,
+				'scheduled' === $source ? 'Daily price-list generation finished.' : 'Catch-up price-list generation finished.',
+				array(
+					'summary' => $summary,
+					'source'  => $source,
+				)
+			);
+		}
+
+		return $results;
 	}
 
 	/**
@@ -68,7 +139,7 @@ class DailyGeneration {
 	 * @param array<mixed> $results Generation results.
 	 * @return array<string,int>
 	 */
-	protected static function summarize( array $results ) {
+	public static function summarize( array $results ) {
 		$summary = array(
 			'published' => 0,
 			'skipped'   => 0,
@@ -93,5 +164,30 @@ class DailyGeneration {
 		}
 
 		return $summary;
+	}
+
+	/**
+	 * Extract error messages from generation results.
+	 *
+	 * @param array<mixed> $results Generation results.
+	 * @return string[]
+	 */
+	public static function extract_errors( array $results ) {
+		$errors = array();
+
+		foreach ( $results as $location_id => $location_results ) {
+			if ( is_wp_error( $location_results ) ) {
+				$errors[] = sprintf( 'Location #%d: %s', (int) $location_id, $location_results->get_error_message() );
+				continue;
+			}
+
+			foreach ( (array) $location_results as $format => $result ) {
+				if ( is_wp_error( $result ) ) {
+					$errors[] = sprintf( 'Location #%d (%s): %s', (int) $location_id, strtoupper( (string) $format ), $result->get_error_message() );
+				}
+			}
+		}
+
+		return $errors;
 	}
 }

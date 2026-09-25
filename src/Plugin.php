@@ -20,7 +20,9 @@ use SidrenaCijena\Admin\LocationsPage;
 use SidrenaCijena\Admin\PriceHistoryPage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
+use SidrenaCijena\Admin\SetupGuidePage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
+use SidrenaCijena\Admin\WelcomeBanner;
 use SidrenaCijena\Api\PriceListController;
 use SidrenaCijena\Api\PublicFeed;
 use SidrenaCijena\Api\PublicPage;
@@ -188,6 +190,8 @@ final class Plugin {
 		add_action( 'admin_init', array( Migrator::class, 'maybe_upgrade' ) );
 		add_action( 'admin_menu', array( AdminMenu::class, 'register' ) );
 		add_action( 'admin_enqueue_scripts', array( AdminMenu::class, 'enqueue_assets' ) );
+		WelcomeBanner::register();
+		SetupGuidePage::register();
 		add_action( 'save_post_' . StandalonePostType::POST_TYPE, array( StandalonePostType::class, 'save' ) );
 		add_action( 'add_meta_boxes', array( StandalonePostType::class, 'register_meta_box' ) );
 		add_action( 'init', array( TemplateFunctions::class, 'register' ) );

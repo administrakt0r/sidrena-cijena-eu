@@ -169,9 +169,35 @@ class PublicPage {
 	 * @return string
 	 */
 	public function render_list( array $args = array() ) {
+		$query = isset( $args['q'] ) ? trim( (string) $args['q'] ) : '';
+		$type  = isset( $args['type'] ) ? (string) $args['type'] : '';
+
+		if ( ! in_array( $type, array( 'proizvod', 'usluga' ), true ) ) {
+			$type = '';
+		}
+
 		$location = PublicFeed::public_location();
-		$rows     = array();
-		$meta     = array();
+
+		// Building the rows walks the whole catalog on every request, so the
+		// rendered table is kept in the shared public-response cache and is
+		// invalidated whenever price data, settings or publications change.
+		$cache  = Plugin::instance()->rest_cache();
+		$key    = $cache->key(
+			array(
+				'page'     => 'cjenik',
+				'location' => $location ? (int) $location['id'] : 0,
+				'q'        => $query,
+				'type'     => $type,
+			)
+		);
+		$cached = $cache->get( $key );
+
+		if ( null !== $cached ) {
+			return $this->style() . (string) $cached;
+		}
+
+		$rows = array();
+		$meta = array();
 
 		if ( $location ) {
 			$builder = new PriceListBuilder(
@@ -183,13 +209,6 @@ class PublicPage {
 			$build = $builder->build( $location );
 			$rows  = $build['items'];
 			$meta  = $build['meta'];
-		}
-
-		$query = isset( $args['q'] ) ? trim( (string) $args['q'] ) : '';
-		$type  = isset( $args['type'] ) ? (string) $args['type'] : '';
-
-		if ( ! in_array( $type, array( 'proizvod', 'usluga' ), true ) ) {
-			$type = '';
 		}
 
 		$filtered = array();
@@ -206,7 +225,7 @@ class PublicPage {
 			$filtered[] = $this->display_row( $row );
 		}
 
-		return $this->style() . $this->partial(
+		$html = $this->partial(
 			'public-price-list.php',
 			array(
 				'rows'        => $filtered,
@@ -219,6 +238,10 @@ class PublicPage {
 				'archive_url' => home_url( '/' . self::STEM_ARCHIVE . '/' ),
 			)
 		);
+
+		$cache->set( $key, $html );
+
+		return $this->style() . $html;
 	}
 
 	/**

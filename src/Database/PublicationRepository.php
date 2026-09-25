@@ -315,6 +315,29 @@ class PublicationRepository {
 	}
 
 	/**
+	 * Check if a location has a published price list on a specific site date.
+	 *
+	 * @param int    $location_id Location ID.
+	 * @param string $date        Site-local date (Y-m-d). Defaults to today.
+	 * @return bool
+	 */
+	public function has_published_on_date( $location_id, $date = '' ) {
+		if ( empty( $date ) ) {
+			$date = Dates::today();
+		}
+
+		$last = $this->last_successful( (int) $location_id );
+
+		if ( ! $last || empty( $last['published_at'] ) ) {
+			return false;
+		}
+
+		$site_time = Dates::from_utc( (string) $last['published_at'] );
+
+		return (bool) ( $site_time && $site_time->format( 'Y-m-d' ) === $date );
+	}
+
+	/**
 	 * Count publications by status.
 	 *
 	 * @return array<string,int>

@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 1.0.2\n"
-"Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\n"
-"POT-Creation-Date: 2026-09-25T17:30:42+00:00\n"
+"Project-Id-Version: Sidrena cijena 1.0.3\n"
+"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
+"POT-Creation-Date: 2026-09-25T20:54:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,7 +29,37 @@ msgstr ""
 msgid "%s - Sidrena cijena"
 msgstr ""
 
+msgid "(done)"
+msgstr ""
+
+msgid "(map your categories)"
+msgstr ""
+
+msgid "(missing)"
+msgstr ""
+
+msgid "(not published yet)"
+msgstr ""
+
+msgid "(published)"
+msgstr ""
+
 msgid "- select -"
+msgstr ""
+
+msgid "1. Add sales locations"
+msgstr ""
+
+msgid "2. Check legal rules"
+msgstr ""
+
+msgid "3. Record anchor prices"
+msgstr ""
+
+msgid "4. Generate the price list"
+msgstr ""
+
+msgid "5. Run the compliance check"
 msgstr ""
 
 msgid "30 days"
@@ -191,6 +221,9 @@ msgstr ""
 msgid "Catalog item"
 msgstr ""
 
+msgid "Catalog items"
+msgstr ""
+
 msgid "category-slug, other-slug"
 msgstr ""
 
@@ -299,6 +332,9 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+msgid "Dismiss"
+msgstr ""
+
 msgid "Display"
 msgstr ""
 
@@ -341,6 +377,12 @@ msgstr ""
 msgid "End date (optional)"
 msgstr ""
 
+msgid "Enter anchors"
+msgstr ""
+
+msgid "Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically."
+msgstr ""
+
 msgid "Entity"
 msgstr ""
 
@@ -351,6 +393,9 @@ msgid "Every catalog item has an anchor price recorded."
 msgstr ""
 
 msgid "Every legal-rule change and every recorded correction is kept here with the user and the timestamp."
+msgstr ""
+
+msgid "Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename."
 msgstr ""
 
 msgid "Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason."
@@ -413,6 +458,12 @@ msgstr ""
 msgid "First appearance date"
 msgstr ""
 
+msgid "Five steps, a few minutes. Made by administrakt0r."
+msgstr ""
+
+msgid "Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list."
+msgstr ""
+
 msgid "For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records."
 msgstr ""
 
@@ -425,10 +476,19 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
+msgid "FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!"
+msgstr ""
+
 msgid "General reference date"
 msgstr ""
 
+msgid "General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them."
+msgstr ""
+
 msgid "Generate a price list for this location."
+msgstr ""
+
+msgid "Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately."
 msgstr ""
 
 msgid "Generate now"
@@ -444,6 +504,9 @@ msgid "Identifier"
 msgstr ""
 
 msgid "Import"
+msgstr ""
+
+msgid "Import CSV"
 msgstr ""
 
 msgid "Imported overwrite (batch %s)."
@@ -488,6 +551,9 @@ msgstr ""
 msgid "Legacy reference date"
 msgstr ""
 
+msgid "Legacy slugs"
+msgstr ""
+
 msgid "Legal-rule version"
 msgstr ""
 
@@ -527,7 +593,16 @@ msgstr ""
 msgid "Lowest price in the last 30 days"
 msgstr ""
 
+msgid "Made by administrakt0r."
+msgstr ""
+
+msgid "Manage locations"
+msgstr ""
+
 msgid "Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id."
+msgstr ""
+
+msgid "Mark setup complete"
 msgstr ""
 
 msgid "Message"
@@ -605,6 +680,9 @@ msgstr ""
 msgid "No log entries match these filters."
 msgstr ""
 
+msgid "none mapped yet"
+msgstr ""
+
 msgid "No price history records match the filter."
 msgstr ""
 
@@ -654,6 +732,15 @@ msgid "Only the selected categories"
 msgstr ""
 
 msgid "Only when the anchor differs"
+msgstr ""
+
+msgid "Open legal rules"
+msgstr ""
+
+msgid "Open price lists"
+msgstr ""
+
+msgid "Open Setup Guide"
 msgstr ""
 
 msgid "Open the price lists screen"
@@ -785,10 +872,16 @@ msgstr ""
 msgid "Reference date"
 msgstr ""
 
+msgid "Reference dates"
+msgstr ""
+
 msgid "Reference dates and legal rules"
 msgstr ""
 
 msgid "Regular price"
+msgstr ""
+
+msgid "Reopen setup"
 msgstr ""
 
 msgid "Report generated %1$s from %2$d of %3$d catalog items."
@@ -866,6 +959,12 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Setup Guide"
+msgstr ""
+
+msgid "Setup is marked complete. Reopen it any time you add locations or categories."
+msgstr ""
+
 msgid "Severity"
 msgstr ""
 
@@ -914,6 +1013,9 @@ msgstr ""
 msgid "Sidrena cijena: Sales locations"
 msgstr ""
 
+msgid "Sidrena cijena: Setup Guide"
+msgstr ""
+
 msgid "Sidrena cijena price history"
 msgstr ""
 
@@ -957,6 +1059,9 @@ msgid "Suggested prices are taken from the current price and are NOT verified hi
 msgstr ""
 
 msgid "system"
+msgstr ""
+
+msgid "Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes."
 msgstr ""
 
 msgid "The %1$s price list was last published on %2$s. Publish the current list before the daily deadline."
@@ -1247,7 +1352,13 @@ msgstr ""
 msgid "Web shop (webshop)"
 msgstr ""
 
+msgid "Welcome to Sidrena cijena!"
+msgstr ""
+
 msgid "When"
+msgstr ""
+
+msgid "WordPress in Europe — premium WordPress hosting, start free."
 msgstr ""
 
 msgid "Working-day deadline in 24-hour site time (default 08:00)."

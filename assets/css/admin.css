@@ -58,3 +58,36 @@
 .sidrena-cijena-progress {
 	margin: 8px 0;
 }
+
+.sidrena-welcome-banner__projects {
+	list-style: disc;
+	margin-left: 20px;
+}
+
+.sidrena-setup__projects {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin: 16px 0;
+}
+
+.sidrena-setup__project {
+	flex: 1 1 260px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 12px 16px;
+}
+
+.sidrena-setup__steps {
+	max-width: 760px;
+}
+
+.sidrena-setup__steps li {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 12px 16px;
+	margin-bottom: 12px;
+	list-style: none;
+}
