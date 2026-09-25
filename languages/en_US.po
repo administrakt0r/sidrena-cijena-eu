@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.0\n"
 "Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\n"
-"POT-Creation-Date: 2026-09-22T10:33:21+00:00\n"
-"PO-Revision-Date: 2026-09-22T10:33:21+00:00\n"
+"POT-Creation-Date: 2026-09-25T17:11:01+00:00\n"
+"PO-Revision-Date: 2026-09-25T17:11:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -97,6 +97,9 @@ msgstr "Amount only (6,99)"
 msgid "Anchor and price records already stored by this plugin."
 msgstr "Anchor and price records already stored by this plugin."
 
+msgid "Anchor date"
+msgstr "Anchor date"
+
 msgid "Anchor price"
 msgstr "Anchor price"
 
@@ -138,6 +141,12 @@ msgstr "A promotional price is set without a classified special form of sale. Cl
 
 msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
 msgstr "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
+
+msgid "Archive"
+msgstr "Archive"
+
+msgid "Archive of published price lists"
+msgstr "Archive of published price lists"
 
 msgid "Archives and lists"
 msgstr "Archives and lists"
@@ -205,6 +214,9 @@ msgstr "Choose a CSV file to import."
 msgid "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
 msgstr "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
 
+msgid "Cijena na dan %s"
+msgstr "Price on %s"
+
 msgid "City"
 msgstr "City"
 
@@ -259,11 +271,14 @@ msgstr "Current price below anchor"
 msgid "Current price equal to anchor"
 msgstr "Current price equal to anchor"
 
+msgid "Current price list"
+msgstr "Current price list"
+
 msgid "Daily publication deadline"
 msgstr "Daily publication deadline"
 
-msgid "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. Never touches WooCommerce or WordPress data."
-msgstr "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. Never touches WooCommerce or WordPress data."
+msgid "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data."
+msgstr "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data."
 
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -297,6 +312,9 @@ msgstr "Display priority"
 
 msgid "Do not delete the original data source until the imported anchors have been verified."
 msgstr "Do not delete the original data source until the imported anchors have been verified."
+
+msgid "Download"
+msgstr "Download"
 
 msgid "Download error report (CSV)"
 msgstr "Download error report (CSV)"
@@ -397,6 +415,12 @@ msgstr "Filter"
 msgid "First appearance date"
 msgstr "First appearance date"
 
+msgid "For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records."
+msgstr "For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records."
+
+msgid "For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records."
+msgstr "For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records."
+
 msgid "Format"
 msgstr "Format"
 
@@ -438,9 +462,6 @@ msgstr "Item"
 
 msgid "Items"
 msgstr "Items"
-
-msgid "Items introduced after the reference date receive no anchor price; they are reported for attention instead."
-msgstr "Items introduced after the reference date receive no anchor price; they are reported for attention instead."
 
 msgid "Items with no price history"
 msgstr "Items with no price history"
@@ -547,8 +568,8 @@ msgstr "No"
 msgid "No active sales location exists."
 msgstr "No active sales location exists."
 
-msgid "No anchor price is recorded. The item first appeared after the reference date %s, so the historical price cannot be reconstructed automatically."
-msgstr "No anchor price is recorded. The item first appeared after the reference date %s, so the historical price cannot be reconstructed automatically."
+msgid "No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied."
+msgstr "No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied."
 
 msgid "No anchor price is recorded for this item (reference date %s)."
 msgstr "No anchor price is recorded for this item (reference date %s)."
@@ -573,6 +594,9 @@ msgstr "No findings for the scanned items."
 
 msgid "No findings for this filter."
 msgstr "No findings for this filter."
+
+msgid "No items match this filter."
+msgstr "No items match this filter."
 
 msgid "No legal-rule changes have been recorded."
 msgstr "No legal-rule changes have been recorded."
@@ -685,6 +709,9 @@ msgstr "Price lists"
 msgid "Price lists stay publicly available at least 30 days; lower values are raised to 30."
 msgstr "Price lists stay publicly available at least 30 days; lower values are raised to 30."
 
+msgid "Price list with the anchor price"
+msgstr "Price list with the anchor price"
+
 msgid "Price per unit of measure"
 msgstr "Price per unit of measure"
 
@@ -693,6 +720,9 @@ msgstr "Prices include tax"
 
 msgid "Price type"
 msgstr "Price type"
+
+msgid "Product"
+msgstr "Product"
 
 msgid "Product ID"
 msgstr "Product ID"
@@ -703,6 +733,9 @@ msgstr "Product meta that may contain historical prices."
 msgid "Product pages"
 msgstr "Product pages"
 
+msgid "Products"
+msgstr "Products"
+
 msgid "Promotional price"
 msgstr "Promotional price"
 
@@ -711,6 +744,9 @@ msgstr "Publication and lifecycle"
 
 msgid "Published"
 msgstr "Published"
+
+msgid "Published price lists for %s."
+msgstr "Published price lists for %s."
 
 msgid "Reason"
 msgstr "Reason"
@@ -769,6 +805,9 @@ msgstr "Required. Explain why the original value is being corrected."
 msgid "Required for anchor prices."
 msgstr "Required for anchor prices."
 
+msgid "Retail price"
+msgstr "Retail price"
+
 msgid "Retail store (prodavaonica)"
 msgstr "Retail store (prodavaonica)"
 
@@ -787,6 +826,9 @@ msgstr "Sale name"
 msgid "Sale price"
 msgstr "Sale price"
 
+msgid "Sales location: %1$s. Rule version: %2$s. Generated: %3$s."
+msgstr "Sales location: %1$s. Rule version: %2$s. Generated: %3$s."
+
 msgid "Sales locations"
 msgstr "Sales locations"
 
@@ -799,6 +841,9 @@ msgstr "Sale types"
 msgid "Save location"
 msgstr "Save location"
 
+msgid "Search"
+msgstr "Search"
+
 msgid "Search catalog items"
 msgstr "Search catalog items"
 
@@ -808,8 +853,14 @@ msgstr "Separate block below the price"
 msgid "Sequence"
 msgstr "Sequence"
 
+msgid "Service"
+msgstr "Service"
+
 msgid "Service location (uslužno mjesto)"
 msgstr "Service location (uslužno mjesto)"
+
+msgid "Services"
+msgstr "Services"
 
 msgid "Setting"
 msgstr "Setting"
@@ -868,6 +919,12 @@ msgstr "Sidrena cijena: Sales locations"
 msgid "Sidrena cijena price history"
 msgstr "Sidrena cijena price history"
 
+msgid "Size"
+msgstr "Size"
+
+msgid "SKU"
+msgstr "SKU"
+
 msgid "SKU / code"
 msgstr "SKU / code"
 
@@ -879,6 +936,9 @@ msgstr "Source"
 
 msgid "Special forms of sale"
 msgstr "Special forms of sale"
+
+msgid "Special sale"
+msgstr "Special sale"
 
 msgid "Special sales"
 msgstr "Special sales"
@@ -994,6 +1054,9 @@ msgstr "The location could not be saved."
 msgid "The location has published price lists, so it was deactivated instead of deleted."
 msgstr "The location has published price lists, so it was deactivated instead of deleted."
 
+msgid "The location street address and city are required in the price-list filename."
+msgstr "The location street address and city are required in the price-list filename."
+
 msgid "The lowest price of the 30 days before the start date is calculated and stored automatically."
 msgstr "The lowest price of the 30 days before the start date is calculated and stored automatically."
 
@@ -1014,6 +1077,9 @@ msgstr "The price list could not be written."
 
 msgid "The price list failed compliance validation and was not published."
 msgstr "The price list failed compliance validation and was not published."
+
+msgid "The price list is being regenerated. Please try again shortly."
+msgstr "The price list is being regenerated. Please try again shortly."
 
 msgid "The price per unit of measure is not a valid non-negative amount."
 msgstr "The price per unit of measure is not a valid non-negative amount."
@@ -1060,6 +1126,9 @@ msgstr "The row has neither an SKU nor a product ID."
 msgid "The sales location %s has no identifier, so a legally named price-list file cannot be generated."
 msgstr "The sales location %s has no identifier, so a legally named price-list file cannot be generated."
 
+msgid "The sales location %s needs a street address and city for the required price-list filename."
+msgstr "The sales location %s needs a street address and city for the required price-list filename."
+
 msgid "The sales location could not be found."
 msgstr "The sales location could not be found."
 
@@ -1093,9 +1162,6 @@ msgstr "The special sale was recorded and the 30-day price was calculated."
 msgid "This item is not part of the active catalog."
 msgstr "This item is not part of the active catalog."
 
-msgid "This item was introduced after the reference date. Record the first-appearance date instead of an anchor price."
-msgstr "This item was introduced after the reference date. Record the first-appearance date instead of an anchor price."
-
 msgid "This location has published price lists. It will be deactivated instead of deleted. Continue?"
 msgstr "This location has published price lists. It will be deactivated instead of deleted. Continue?"
 
@@ -1123,8 +1189,14 @@ msgstr "Unavailable"
 msgid "Unclassified promotions"
 msgstr "Unclassified promotions"
 
+msgid "Unit"
+msgstr "Unit"
+
 msgid "Unit of measure"
 msgstr "Unit of measure"
+
+msgid "Unit price"
+msgstr "Unit price"
 
 msgid "Upload and preview"
 msgstr "Upload and preview"

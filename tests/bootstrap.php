@@ -19,14 +19,6 @@ if ( file_exists( $composer_autoload ) ) {
 	\SidrenaCijena\Support\Autoloader::register();
 }
 
-if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
-	define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__ ) . '/' );
-}
-
-if ( ! defined( 'SIDRENA_CIJENA_VERSION' ) ) {
-	define( 'SIDRENA_CIJENA_VERSION', '1.0.0' );
-}
-
 $sidrena_requested_suite = '';
 if ( isset( $_SERVER['argv'] ) && is_array( $_SERVER['argv'] ) ) {
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Test-runner CLI arguments compared as plain strings.
@@ -41,5 +33,8 @@ if ( false !== strpos( $sidrena_requested_suite, '--testsuite=integration' ) || 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', sys_get_temp_dir() . '/sidrena-cijena-wordpress/' );
 }
+
+define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__ ) . '/' );
+define( 'SIDRENA_CIJENA_VERSION', '1.0.0' );
 
 require_once __DIR__ . '/unit/wp-stubs.php';

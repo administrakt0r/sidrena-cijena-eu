@@ -47,7 +47,20 @@ were defects in our own code, not competitor ideas.
 | IMP-11 | Isolated E2E environment | The Playwright suite mutates the demo shop, so specs block each other (publication fails because another spec created an anchor-less product). Point the suite at the 8889 test environment. | High | `done` — see FIX-12; one Playwright worker, `tests/e2e/global-setup.js` baseline |
 | IMP-12 | Repair `npm run lint:js` | `@typescript-eslint` fails to load under Node 24, so the documented JS gate cannot run. | Medium | `done` — `.eslintrc.js` gives the project its own browser config (`eslint:recommended`, `env.browser`); `wp-scripts lint-js` uses it instead of the bundled one; gate passes |
 
-## Where we deliberately stay ahead
+## Public release work queue
+
+| ID | Item | Status and verification |
+|----|------|-------------------------|
+| REL-01 | Release readiness | `in progress` — 1.0.0 source ready; 427/427 strings in both catalogs and corrected MO offsets; all six gates green (unit 119/380, integration 70/329, E2E 27). Committed-source ZIP installation pending. |
+| REL-02 | Ministry filename example | `todo` — compare the documented contract and record the profile decision. |
+| REL-03 | WordPress.org submission | `todo` — metadata, assets, licensing, privacy and review checklist. |
+| REL-04 | Unit coverage | `todo` — public feed/page, builder compatibility and price recorder. |
+| REL-05 | Public page performance | `todo` — measure before caching; publication/settings invalidation. |
+| REL-06 | Daily 08:00 deadline | `todo` — timezone, missed runs, catch-up and failure visibility. |
+| REL-07 | Pending specification deletions | `todo` — user approved committing the deletions on 25 September 2026; reserved for this item's focused commit. |
+| REL-08 | CI | `todo` — static gates and integration with MySQL. |
+
+## Preserved strengths
 
 Keep these when borrowing ideas from the competitor:
 

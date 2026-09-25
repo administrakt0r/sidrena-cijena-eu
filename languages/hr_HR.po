@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.0\n"
 "Report-Msgid-Bugs-To: https://example.com/sidrena-cijena\n"
-"POT-Creation-Date: 2026-09-22T10:33:09+00:00\n"
-"PO-Revision-Date: 2026-09-22T10:33:09+00:00\n"
+"POT-Creation-Date: 2026-09-25T17:11:00+00:00\n"
+"PO-Revision-Date: 2026-09-25T17:11:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -97,6 +97,9 @@ msgstr "Samo iznos (6,99)"
 msgid "Anchor and price records already stored by this plugin."
 msgstr "Zapisi sidrenih i drugih cijena koje je ovaj dodatak već pohranio."
 
+msgid "Anchor date"
+msgstr "Datum sidrene cijene"
+
 msgid "Anchor price"
 msgstr "Sidrena cijena"
 
@@ -138,6 +141,12 @@ msgstr "Promotivna cijena postavljena je bez klasificiranog posebnog oblika prod
 
 msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
 msgstr "Promocija bez klasificirane vrste prodaje nikada se ne tretira kao poseban oblik prodaje i prijavljuje se provjerom usklađenosti."
+
+msgid "Archive"
+msgstr "Arhiva"
+
+msgid "Archive of published price lists"
+msgstr "Arhiva objavljenih cjenika"
 
 msgid "Archives and lists"
 msgstr "Arhive i popisi"
@@ -205,6 +214,9 @@ msgstr "Odaberite CSV datoteku za uvoz."
 msgid "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
 msgstr "Odaberite gdje i kako se sidrena cijena („Sidrena cijena\") prikazuje uz trenutačne cijene."
 
+msgid "Cijena na dan %s"
+msgstr "Cijena na dan %s"
+
 msgid "City"
 msgstr "Grad"
 
@@ -259,11 +271,14 @@ msgstr "Trenutačna cijena ispod sidrene"
 msgid "Current price equal to anchor"
 msgstr "Trenutačna cijena jednaka sidrenoj"
 
+msgid "Current price list"
+msgstr "Aktualni cjenik"
+
 msgid "Daily publication deadline"
 msgstr "Dnevni rok objave"
 
-msgid "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. Never touches WooCommerce or WordPress data."
-msgstr "Upozorenje: s uključenom opcijom deinstalacija briše povijest cijena, objave i postavke. Bez nje deinstalacija čuva povijesne i revizijske podatke. Nikada ne dira podatke WooCommercea ni WordPressa."
+msgid "Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data."
+msgstr "Opasnost: kada je ovo omogućeno, deinstalacija briše povijest cijena, objave i postavke. Inače deinstalacija čuva povijesne i revizijske podatke. Sidrene cijene i najniže cijene u 30 dana pravni su dokaz i uvijek se čuvaju; za njihovo uklanjanje ručno izbrišite tablicu wp_sidrena_price_history. Podaci WooCommercea i WordPressa ne mijenjaju se."
 
 msgid "Dashboard"
 msgstr "Nadzorna ploča"
@@ -297,6 +312,9 @@ msgstr "Prioritet prikaza"
 
 msgid "Do not delete the original data source until the imported anchors have been verified."
 msgstr "Ne brišite izvorni izvor podataka dok uvezeni zapisi sidrenih cijena ne budu provjereni."
+
+msgid "Download"
+msgstr "Preuzmi"
 
 msgid "Download error report (CSV)"
 msgstr "Preuzmi izvješće o greškama (CSV)"
@@ -397,6 +415,12 @@ msgstr "Filtriraj"
 msgid "First appearance date"
 msgstr "Datum prvog pojavljivanja"
 
+msgid "For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records."
+msgstr "Za stavku prvi put ponuđenu nakon referentnog datuma zabilježite cijenu pri prvom stavljanju u prodaju i taj datum. Provjerite datum i cijenu u prodajnoj evidenciji."
+
+msgid "For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records."
+msgstr "Za stavke prvi put ponuđene nakon referentnog datuma zabilježite prvu prodajnu cijenu i datum početka njezine primjene; provjerite ih u prodajnoj evidenciji."
+
 msgid "Format"
 msgstr "Format"
 
@@ -438,9 +462,6 @@ msgstr "Stavka"
 
 msgid "Items"
 msgstr "Stavke"
-
-msgid "Items introduced after the reference date receive no anchor price; they are reported for attention instead."
-msgstr "Stavke uvedene nakon referentnog datuma ne dobivaju sidrenu cijenu; umjesto toga prijavljuju se za pozornost."
 
 msgid "Items with no price history"
 msgstr "Stavke bez povijesti cijena"
@@ -547,8 +568,8 @@ msgstr "Ne"
 msgid "No active sales location exists."
 msgstr "Ne postoji aktivno prodajno mjesto."
 
-msgid "No anchor price is recorded. The item first appeared after the reference date %s, so the historical price cannot be reconstructed automatically."
-msgstr "Nije evidentirana sidrena cijena. Stavka se prvi put pojavila nakon referentnog datuma %s pa se povijesna cijena ne može automatski rekonstruirati."
+msgid "No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied."
+msgstr "Sidrena cijena nije evidentirana. Za stavku prvi put ponuđenu nakon %s zabilježite prvu prodajnu cijenu i datum početka njezine primjene."
 
 msgid "No anchor price is recorded for this item (reference date %s)."
 msgstr "Za ovu stavku nije evidentirana sidrena cijena (referentni datum %s)."
@@ -573,6 +594,9 @@ msgstr "Nema nalaza za pregledane stavke."
 
 msgid "No findings for this filter."
 msgstr "Nema nalaza za ovaj filtar."
+
+msgid "No items match this filter."
+msgstr "Nema stavki koje odgovaraju ovom filtru."
 
 msgid "No legal-rule changes have been recorded."
 msgstr "Nisu evidentirane izmjene pravnih pravila."
@@ -685,6 +709,9 @@ msgstr "Cjenici"
 msgid "Price lists stay publicly available at least 30 days; lower values are raised to 30."
 msgstr "Cjenici ostaju javno dostupni najmanje 30 dana; niže vrijednosti podižu se na 30."
 
+msgid "Price list with the anchor price"
+msgstr "Cjenik sa sidrenom cijenom"
+
 msgid "Price per unit of measure"
 msgstr "Cijena za jedinicu mjere"
 
@@ -693,6 +720,9 @@ msgstr "Cijene uključuju porez"
 
 msgid "Price type"
 msgstr "Vrsta cijene"
+
+msgid "Product"
+msgstr "Proizvod"
 
 msgid "Product ID"
 msgstr "ID proizvoda"
@@ -703,6 +733,9 @@ msgstr "Meta podaci proizvoda koji mogu sadržavati povijesne cijene."
 msgid "Product pages"
 msgstr "Stranice proizvoda"
 
+msgid "Products"
+msgstr "Proizvodi"
+
 msgid "Promotional price"
 msgstr "Promotivna cijena"
 
@@ -711,6 +744,9 @@ msgstr "Objava i životni ciklus"
 
 msgid "Published"
 msgstr "Objavljeno"
+
+msgid "Published price lists for %s."
+msgstr "Objavljeni cjenici za %s."
 
 msgid "Reason"
 msgstr "Razlog"
@@ -769,6 +805,9 @@ msgstr "Obvezno. Objasnite zašto se izvorna vrijednost ispravlja."
 msgid "Required for anchor prices."
 msgstr "Obvezno za sidrene cijene."
 
+msgid "Retail price"
+msgstr "Maloprodajna cijena"
+
 msgid "Retail store (prodavaonica)"
 msgstr "Prodavaonica"
 
@@ -787,6 +826,9 @@ msgstr "Naziv prodaje"
 msgid "Sale price"
 msgstr "Prodajna cijena"
 
+msgid "Sales location: %1$s. Rule version: %2$s. Generated: %3$s."
+msgstr "Prodajno mjesto: %1$s. Verzija pravila: %2$s. Generirano: %3$s."
+
 msgid "Sales locations"
 msgstr "Prodajna mjesta"
 
@@ -799,6 +841,9 @@ msgstr "Vrste prodaje"
 msgid "Save location"
 msgstr "Spremi lokaciju"
 
+msgid "Search"
+msgstr "Pretraži"
+
 msgid "Search catalog items"
 msgstr "Pretraži stavke kataloga"
 
@@ -808,8 +853,14 @@ msgstr "Zaseban blok ispod cijene"
 msgid "Sequence"
 msgstr "Redni broj"
 
+msgid "Service"
+msgstr "Usluga"
+
 msgid "Service location (uslužno mjesto)"
 msgstr "Uslužno mjesto"
+
+msgid "Services"
+msgstr "Usluge"
 
 msgid "Setting"
 msgstr "Postavka"
@@ -868,6 +919,12 @@ msgstr "Sidrena cijena: prodajna mjesta"
 msgid "Sidrena cijena price history"
 msgstr "Povijest sidrenih cijena"
 
+msgid "Size"
+msgstr "Veličina"
+
+msgid "SKU"
+msgstr "SKU"
+
 msgid "SKU / code"
 msgstr "SKU / šifra"
 
@@ -879,6 +936,9 @@ msgstr "Izvor"
 
 msgid "Special forms of sale"
 msgstr "Posebni oblici prodaje"
+
+msgid "Special sale"
+msgstr "Poseban oblik prodaje"
 
 msgid "Special sales"
 msgstr "Posebne prodaje"
@@ -994,6 +1054,9 @@ msgstr "Lokacija se nije mogla spremiti."
 msgid "The location has published price lists, so it was deactivated instead of deleted."
 msgstr "Lokacija ima objavljene cjenike pa je deaktivirana umjesto obrisana."
 
+msgid "The location street address and city are required in the price-list filename."
+msgstr "Ulica i grad prodajnog mjesta obvezni su u nazivu datoteke cjenika."
+
 msgid "The lowest price of the 30 days before the start date is calculated and stored automatically."
 msgstr "Najniža cijena u 30 dana prije datuma početka izračunava se i pohranjuje automatski."
 
@@ -1014,6 +1077,9 @@ msgstr "Cjenik se nije mogao zapisati."
 
 msgid "The price list failed compliance validation and was not published."
 msgstr "Cjenik nije prošao provjeru usklađenosti i nije objavljen."
+
+msgid "The price list is being regenerated. Please try again shortly."
+msgstr "Cjenik se ponovno generira. Pokušajte ponovno uskoro."
 
 msgid "The price per unit of measure is not a valid non-negative amount."
 msgstr "Cijena za jedinicu mjere nije valjan nenegativan iznos."
@@ -1060,6 +1126,9 @@ msgstr "Redak nema ni SKU ni ID proizvoda."
 msgid "The sales location %s has no identifier, so a legally named price-list file cannot be generated."
 msgstr "Prodajno mjesto %s nema oznaku pa se zakonski valjan naziv datoteke cjenika ne može generirati."
 
+msgid "The sales location %s needs a street address and city for the required price-list filename."
+msgstr "Prodajnom mjestu %s potrebni su ulica i grad za propisani naziv datoteke cjenika."
+
 msgid "The sales location could not be found."
 msgstr "Prodajno mjesto nije pronađeno."
 
@@ -1093,9 +1162,6 @@ msgstr "Poseban oblik prodaje je evidentiran i 30-dnevna cijena je izračunata."
 msgid "This item is not part of the active catalog."
 msgstr "Ova stavka nije dio aktivnog kataloga."
 
-msgid "This item was introduced after the reference date. Record the first-appearance date instead of an anchor price."
-msgstr "Ova stavka uvedena je nakon referentnog datuma. Evidentirajte datum prvog pojavljivanja umjesto sidrene cijene."
-
 msgid "This location has published price lists. It will be deactivated instead of deleted. Continue?"
 msgstr "Ova lokacija ima objavljene cjenike. Deaktivirat će se umjesto brisanja. Nastaviti?"
 
@@ -1123,8 +1189,14 @@ msgstr "Nedostupno"
 msgid "Unclassified promotions"
 msgstr "Neklasificirane promocije"
 
+msgid "Unit"
+msgstr "Jedinica"
+
 msgid "Unit of measure"
 msgstr "Jedinica mjere"
+
+msgid "Unit price"
+msgstr "Jedinična cijena"
 
 msgid "Upload and preview"
 msgstr "Prenesi i pregledaj"
