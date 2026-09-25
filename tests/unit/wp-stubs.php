@@ -1070,3 +1070,121 @@ if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
 if ( ! defined( 'SIDRENA_CIJENA_URL' ) ) {
 	define( 'SIDRENA_CIJENA_URL', 'http://example.org/wp-content/plugins/sidrena-cijena/' );
 }
+
+if ( ! defined( 'ARRAY_A' ) ) {
+	define( 'ARRAY_A', 'ARRAY_A' );
+}
+
+if ( ! defined( 'ARRAY_N' ) ) {
+	define( 'ARRAY_N', 'ARRAY_N' );
+}
+
+if ( ! defined( 'OBJECT' ) ) {
+	define( 'OBJECT', 'OBJECT' );
+}
+
+$GLOBALS['sidrena_test_rewrite_rules'] = array();
+$GLOBALS['sidrena_test_query_vars']    = array();
+$GLOBALS['sidrena_test_shortcodes']    = array();
+
+if ( ! function_exists( 'add_rewrite_rule' ) ) {
+	/**
+	 * Record an add_rewrite_rule() call.
+	 *
+	 * @param string $regex Route regex.
+	 * @param string $query Query string.
+	 * @param string $after Position.
+	 * @return void
+	 */
+	function add_rewrite_rule( $regex, $query, $after = 'top' ) {
+		$GLOBALS['sidrena_test_rewrite_rules'][] = array(
+			'regex' => $regex,
+			'query' => $query,
+			'after' => $after,
+		);
+	}
+}
+
+if ( ! function_exists( 'get_query_var' ) ) {
+	/**
+	 * Read a recorded query variable.
+	 *
+	 * @param string $var     Query var.
+	 * @param mixed  $default Fallback.
+	 * @return mixed
+	 */
+	function get_query_var( $var, $default = '' ) {
+		return isset( $GLOBALS['sidrena_test_query_vars'][ $var ] ) ? $GLOBALS['sidrena_test_query_vars'][ $var ] : $default;
+	}
+}
+
+if ( ! function_exists( 'home_url' ) ) {
+	/**
+	 * Build a stable site URL.
+	 *
+	 * @param string $path Path.
+	 * @return string
+	 */
+	function home_url( $path = '' ) {
+		return 'https://shop.example' . $path;
+	}
+}
+
+if ( ! function_exists( 'size_format' ) ) {
+	/**
+	 * Human-readable file size.
+	 *
+	 * @param int $bytes Size in bytes.
+	 * @return string
+	 */
+	function size_format( $bytes ) {
+		return round( (int) $bytes / 1024, 1 ) . ' KB';
+	}
+}
+
+if ( ! function_exists( 'locate_template' ) ) {
+	/**
+	 * No theme override in unit tests.
+	 *
+	 * @param string[] $template_names Template names.
+	 * @return string
+	 */
+	function locate_template( $template_names ) {
+		unset( $template_names );
+
+		return '';
+	}
+}
+
+if ( ! function_exists( 'wp_schedule_single_event' ) ) {
+	/**
+	 * Record a single scheduled event.
+	 *
+	 * @param int      $timestamp Run time.
+	 * @param string   $hook      Hook name.
+	 * @param mixed[]  $args      Arguments.
+	 * @return bool
+	 */
+	function wp_schedule_single_event( $timestamp, $hook, $args = array() ) {
+		$GLOBALS['sidrena_test_scheduled'][] = array(
+			'timestamp' => (int) $timestamp,
+			'hook'      => (string) $hook,
+			'args'      => $args,
+		);
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'add_shortcode' ) ) {
+	/**
+	 * Record a shortcode registration.
+	 *
+	 * @param string   $tag      Shortcode tag.
+	 * @param callable $callback Handler.
+	 * @return void
+	 */
+	function add_shortcode( $tag, $callback ) {
+		$GLOBALS['sidrena_test_shortcodes'][ (string) $tag ] = $callback;
+	}
+}
