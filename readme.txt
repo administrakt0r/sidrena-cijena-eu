@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Main features:
 * Immutable anchor price records with reference dates, sources and a full audit trail.
 * Frontend display of the current price and the anchor price, clearly labelled ("Sidrena cijena").
 * Separate 30-day lowest-price engine for special forms of sale (akcija, sniženje, sezonsko sniženje, rasprodaja).
-* Daily CSV and XML price-list generation per sales location, with legally structured filenames and 30-day retention.
+* Daily CSV and XML price-list generation per sales location, with a documented filename profile and at least 30-day retention.
 * Public, unauthenticated machine-readable price endpoint (`/wp-json/sidrena-cijena/v1/prices`).
 * Compliance dashboard, validator with severity levels, CSV import with preview and rollback, price-history audit screen, structured logs and WP-CLI commands.
 * WooCommerce is optional: the compliance workflow also works with the built-in standalone catalog.
@@ -55,14 +55,21 @@ active; otherwise the standalone catalog is used.
 The general reference date is 10 September 2026. Legacy categories (food,
 beverages, cosmetics, cleaning products, toiletries, household products) use
 2 May 2025. Both are configurable under *Sidrena cijena → Postavke → Pravna
-pravila*, and every change is recorded in the audit trail.
+pravila*, and every change is recorded in the audit trail. Map your actual legacy
+category slugs there before publishing; the plugin does not guess categories.
 
 = Does the plugin invent historical prices? =
 
-Never. Items introduced after the reference date receive no anchor price and
-are reported for merchant attention instead.
+Never. Newly created offers witnessed at publication can receive their actual
+first-offer price and observed date automatically. Existing catalog gaps and
+imports require evidenced historical prices. See docs/feature-acceptance.md for
+the first-offer boundaries, sale classification and setup requirements.
 
 == Changelog ==
+
+= 1.0.2 =
+* Capture witnessed first offers automatically, preserving product/variation identity and historical-import exclusions.
+* Publish an installable archive and checksum for every version, including patches.
 
 = 1.0.1 =
 * Document the retained filename profile and differences from the ministry example.

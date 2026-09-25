@@ -22,7 +22,7 @@ and the separate 30-day lowest-price rule for special forms of sale.
   (akcija, sniženje, sezonsko sniženje, rasprodaja, custom). Never a substitute
   for the anchor price.
 - **Daily price list** - deterministic CSV and XML price lists per sales
-  location, with legally structured filenames, checksums, validation and a
+  location, with documented filenames, checksums, validation and a
   retention archive of at least 30 days.
 - **Public machine-readable access** - unauthenticated JSON, CSV and XML
   endpoints under `/wp-json/sidrena-cijena/v1/`, plus stable public URLs
@@ -104,8 +104,9 @@ npm run lint:js             # ESLint
   `woocommerce_get_price_html` filter; no dedicated block is shipped.
 - Barcode, brand and unit-of-measure values are read from common meta keys
   and taxonomies; exotic providers may need the documented filters.
-- The plugin never invents historical prices: items introduced after the
-  reference date are reported for merchant attention instead.
+- New first offers can receive an anchor from the price/date actually observed
+  at publication. Existing catalog gaps and imports still need historical evidence.
+  See [feature acceptance and setup requirements](docs/feature-acceptance.md).
 
 ## Legal assumptions (see docs/legal-rules.md)
 

@@ -59,7 +59,7 @@ were defects in our own code, not competitor ideas.
 | REL-06 | Daily 08:00 deadline | `todo` — timezone, missed runs, catch-up and failure visibility. |
 | REL-07 | Pending specification deletions | `todo` — user approved committing the deletions on 25 September 2026; reserved for this item's focused commit. |
 | REL-08 | CI | `todo` — static gates and integration with MySQL. |
-| REL-09 | Requested feature acceptance | `in progress` — verify reference-date/category mapping, classified-sale minimum, daily files/archive, products/variations/services without a licence cap; implement observed first-offer recording without backfilling existing catalog gaps. |
+| REL-09 | Requested feature acceptance and version archives | `done` — 1.0.2 records witnessed new offers, including exact variation identity and services; excludes existing/imported catalog entries and preserves previous anchors. Prerequisites documented in feature-acceptance.md. Every version has a preserved installable ZIP/checksum in a numeric versions/ directory, committed and pushed. Unit 119/380, integration 76/342, E2E 28; PHPStan, PHPCS, ESLint, shell syntax and local.sh green. |
 
 ## Preserved strengths
 

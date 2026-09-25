@@ -371,7 +371,8 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$brand = (string) $brand_terms[0]->name;
 		}
 
-		$first_seen = get_the_date( 'Y-m-d', $is_variation ? $id : $id );
+		$first_seen = get_post_meta( $id, '_sidrena_first_seen', true );
+		$first_seen = $first_seen ? (string) $first_seen : get_the_date( 'Y-m-d', $id );
 
 		return new CatalogItem(
 			array(

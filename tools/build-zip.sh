@@ -8,8 +8,7 @@
 # Output: versions/<version>/sidrena-cijena.zip + SHA256SUMS.txt
 #
 # Version policy:
-#   0.0.x (patch) -> local only, never committed (see .gitignore).
-#   0.x.0 (minor) and x.0.0 (major) -> committed and pushed to GitHub.
+#   Every version, including patch releases, is committed and pushed to GitHub.
 set -euo pipefail
 
 VERSION="${1:-}"
@@ -43,6 +42,10 @@ if [ "$HEADER" != "$VERSION" ]; then
 fi
 
 OUT="$ROOT/versions/$VERSION"
+if [ -e "$OUT/sidrena-cijena.zip" ]; then
+	echo "error: versions/$VERSION already has a package; bump the version instead of replacing it." >&2
+	exit 1
+fi
 mkdir -p "$OUT"
 
 git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena/ HEAD \
@@ -70,8 +73,4 @@ fi
 
 echo "Built $OUT/sidrena-cijena.zip ($(du -h "$OUT/sidrena-cijena.zip" | cut -f1))"
 
-if [[ "$VERSION" =~ ^0\.0\.[0-9]+$ ]]; then
-	echo "Patch release: stays local (gitignored), not uploaded to GitHub."
-else
-	echo "Minor/major release: commit versions/$VERSION/ and push."
-fi
+echo "Release: commit versions/$VERSION/ and push."

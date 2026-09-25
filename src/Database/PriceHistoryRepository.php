@@ -32,7 +32,7 @@ class PriceHistoryRepository {
 	 *
 	 * @var string[]
 	 */
-	const SOURCES = array( 'woocommerce', 'standalone', 'manual', 'bulk', 'import', 'cli', 'migration', 'system' );
+	const SOURCES = array( 'woocommerce', 'standalone', 'manual', 'bulk', 'import', 'cli', 'migration', 'system', 'observed_first_offer' );
 
 	/**
 	 * Table name.

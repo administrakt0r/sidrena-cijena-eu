@@ -37,7 +37,8 @@ function wpCli( args ) {
  * @return {string} Command output.
  */
 function wpEval( code ) {
-	return wpCli( [ 'eval', code ] );
+	// Existing fixtures model imported historical catalogs, not witnessed first offers.
+	return wpCli( [ 'eval', 'define("WP_IMPORTING", true); ' + code ] );
 }
 
 /**

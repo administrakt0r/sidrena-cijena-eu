@@ -183,6 +183,7 @@ final class Plugin {
 	 * @return void
 	 */
 	public function register_hooks() {
+		( new \SidrenaCijena\Pricing\FirstOfferRecorder() )->register();
 		add_action( 'init', array( $this, 'register_standalone_catalog' ) );
 		add_action( 'admin_init', array( Migrator::class, 'maybe_upgrade' ) );
 		add_action( 'admin_menu', array( AdminMenu::class, 'register' ) );

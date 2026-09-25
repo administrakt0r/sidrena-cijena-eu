@@ -1,4 +1,18 @@
-# Release 1.0.0 verification
+# Release verification
+
+## 1.0.2
+
+Prospective first-offer capture and version archives: unit 119 tests/380 assertions,
+integration 76/342, E2E 28 passed (4.2 minutes, port 8889), PHPStan, PHPCS and
+ESLint clean; build script syntax checked; `./local.sh` exited 0. Integration
+covers standalone products/services, zero prices, pre-baseline observations,
+existing entries, copied eligibility and preserved anchors. Real WooCommerce
+E2E covers draft/publication, edits, exact variation identity and imported
+products including subsequent edits. Every bumped version is archived in a
+numeric version directory with an installable ZIP/checksum; the builder refuses
+to overwrite an existing ZIP.
+
+## 1.0.0
 
 Release preparation started 25 September 2026. The plugin header, runtime
 constant, npm manifest/lock and WordPress stable tag agree on 1.0.0.

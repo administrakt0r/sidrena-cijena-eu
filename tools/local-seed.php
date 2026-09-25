@@ -18,6 +18,10 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 }
 
 $plugin = \SidrenaCijena\Plugin::instance();
+// These explicit historical demo fixtures are imported, not new live offers.
+if ( ! defined( 'WP_IMPORTING' ) ) {
+	define( 'WP_IMPORTING', true );
+}
 
 // Activation creates a default location without an address. The legal
 // filename cannot be built without a street and a city, so the demo shop
