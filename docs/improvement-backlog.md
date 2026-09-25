@@ -51,7 +51,7 @@ were defects in our own code, not competitor ideas.
 
 | ID | Item | Status and verification |
 |----|------|-------------------------|
-| REL-01 | Release readiness | `in progress` — 1.0.0 source ready; 427/427 strings in both catalogs and corrected MO offsets; all six gates green (unit 119/380, integration 70/329, E2E 27). Committed-source ZIP installation pending. |
+| REL-01 | Release readiness | `done` — 1.0.0 ZIP built from `7e98210`; 427/427 strings in both catalogs, corrected MO offsets and WordPress `hr` filename. All six gates green (unit 119/380, integration 70/329, E2E 27), local.sh exit 0. Destroyed/recreated isolated wp-env: ZIP installed/activated on fresh WP 7.1.2 without WooCommerce; schema and automatic Croatian translation passed. See release-readiness.md. |
 | REL-02 | Ministry filename example | `todo` — compare the documented contract and record the profile decision. |
 | REL-03 | WordPress.org submission | `todo` — metadata, assets, licensing, privacy and review checklist. |
 | REL-04 | Unit coverage | `todo` — public feed/page, builder compatibility and price recorder. |

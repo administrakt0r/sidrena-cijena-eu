@@ -18,7 +18,12 @@ Verification so far:
 - PHPStan, PHPCS and ESLint: clean.
 - `sg docker -c './local.sh'`: exit 0.
 - E2E: 27 passed (4.1 minutes), exclusively on port 8889.
-- Clean ZIP installation: pending the committed-source build.
+- Clean ZIP installation: passed on fresh WordPress 7.1.2 / PHP 8.3 without
+  WooCommerce. A disposable wp-env on ports 8890/8891 was destroyed and recreated.
+  The final ZIP (source commit `7e98210`) installed and activated on its pristine
+  test instance. Verification checked runtime version, every schema table,
+  Croatian translation through `switch_to_locale('hr')` and `__()`, and absence
+  of development dependencies. `unzip -t` also passed.
 
 The integration bootstrap no longer predefines constants owned by the plugin,
 eliminating duplicate-constant warnings during actual WordPress loading.
