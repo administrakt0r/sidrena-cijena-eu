@@ -25,6 +25,8 @@ class WelcomeTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
+		require_once dirname( __DIR__ ) . '/wc-stubs.php';
+
 		$GLOBALS['sidrena_test_options'] = array();
 	}
 
@@ -62,5 +64,39 @@ class WelcomeTest extends TestCase {
 		update_option( WelcomeBanner::DISMISSED_OPTION, 1, false );
 
 		$this->assertFalse( WelcomeBanner::should_show() );
+	}
+
+	/**
+	 * Bulk activation suppresses redirect and clears the redirect flag.
+	 *
+	 * @return void
+	 */
+	public function test_maybe_redirect_handles_bulk_activation() {
+		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
+		$_GET['activate-multi'] = '1';
+
+		WelcomeBanner::maybe_redirect();
+
+		$this->assertFalse( get_option( WelcomeBanner::REDIRECT_OPTION, false ) );
+		unset( $_GET['activate-multi'] );
+	}
+
+	/**
+	 * Setup guide renders steps and author projects.
+	 *
+	 * @return void
+	 */
+	public function test_setup_guide_renders_checklist() {
+		ob_start();
+		SetupGuidePage::render();
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( '1. Add sales locations', $html );
+		$this->assertStringContainsString( '2. Check legal rules', $html );
+		$this->assertStringContainsString( '3. Record anchor prices', $html );
+		$this->assertStringContainsString( '4. Generate the price list', $html );
+		$this->assertStringContainsString( '5. Run the compliance check', $html );
+		$this->assertStringContainsString( 'WPinEU.com', $html );
+		$this->assertStringContainsString( 'LLM.kiwi', $html );
 	}
 }

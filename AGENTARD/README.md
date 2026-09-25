@@ -1,37 +1,70 @@
 # AGENTARD — AI agent prompt pack for `sidrena-cijena`
 
-Copy-paste prompts you can run with any AI coding agent (opencode, etc.) to
-audit, fix, verify and improve this plugin. Run them **in order**; each prompt
-is self-contained and states its own done-criteria.
+Copy-paste prompts you can run with any AI coding agent (Antigravity, OpenCode, Claude, etc.) to
+audit, cross-check, verify, improve and release this plugin. Run them **in order**; each prompt
+is self-contained, completely up to date, and states its own done-criteria.
 
 | # | File | Purpose | Needs Docker? |
 |---|------|---------|---------------|
-| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: lint, types, unit tests, fix loop | No |
-| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Spec/contract cross-check, fix deviations | No |
-| 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E + acceptance | **Yes** |
-| 4 | [04-improve.md](04-improve.md) | Improvement pass: perf, UX, docs | No |
-| 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish the plugin: remaining release queue and submission prep | No |
+| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No |
+| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No |
+| 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** |
+| 4 | [04-improve.md](04-improve.md) | Improvement pass: performance, admin UX, accessibility, robustness | No |
+| 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: WordPress.org readiness, plugin audit & release | Optional |
 
-General rules for every prompt below:
+## Hard rules for every prompt
 
-- Work in the plugin root (`sidrena-cijena.php` lives here).
-- Never modify WordPress core, theme or WooCommerce files.
-- Never invent historical prices; history tables are append-only.
-- For ANY live WordPress work (reproducing bugs, manual verification,
-  screenshots, wp-env runs): use `./local.sh` to start the demo webshop
-  and `./stoplocal.sh` to stop it. Do not hand-roll wp-env commands -
-  `local.sh` already handles install, activation, EUR/Europe-Zagreb,
-  demo products, anchors, a sale and price-list generation.
-- Commit after each logical change with conventional messages
-  (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
-- After every edit batch: bump the version, rebuild the install zip,
-  and follow the release policy below.
+- **Plugin boundaries:** Work **only** inside this plugin (`src/`, `assets/`, `tests/`, `languages/`, `docs/`, `tools/`, root config files). Never touch WordPress core, theme or WooCommerce files.
+- **Legal semantics:** Never change legal behavior silently: reference dates (general **2026-09-10**, legacy **2025-05-02**), the 30-day lowest-price window (`start-30` → `start-1`, start excluded), filename pattern (`{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`), 30+ day archive, and blocking publication gate are governed by `docs/legal-rules.md`.
+- **Append-only history:** Never invent or guess historical prices; history tables (`wp_sidrena_price_history`) are append-only legal evidence.
+- **Standalone catalog:** Keep the plugin functional **with and without WooCommerce**. Never fatal when WooCommerce is absent.
+- **CRITICAL - Do NOT run `wp plugin install --force`:** The host repository is directly bind-mounted into Docker containers. Running `wp plugin install <zip> --force` triggers WordPress's `Plugin_Upgrader` which deletes the directory contents before extracting!
+- **Local WordPress environments:**
+  - **Demo shop:** `./local.sh` starts wp-env at `http://localhost:8888` (`admin` / `password`), sets EUR/Europe-Zagreb, seeds demo items, anchors, a sale, and generates price lists. Stop with `./stoplocal.sh`.
+  - **Test shop:** `npm run wp-env:test -- start` starts the isolated test site at `http://localhost:8889`. Playwright E2E tests (`npm run test:e2e`) run **exclusively** against port 8889.
+  - Wrap docker commands in `sg docker -c '…'` if the running shell does not inherit docker group permissions.
+  - Before integration tests, clean test DB: `npx wp-env clean tests`.
 
-## Release policy (`tools/build-zip.sh`, `versions/README.md`)
+## Release policy (mandatory at the end of every completed run)
 
-1. Bump the version in `sidrena-cijena.php` (header + constant),
-   `readme.txt` (Stable tag + changelog) and `package.json`.
-2. Commit everything, then run `tools/build-zip.sh <version>`
-   (produces `versions/<version>/sidrena-cijena.zip` + `SHA256SUMS.txt`).
-3. Patch `0.0.x` → stays local (gitignored), never pushed.
-   Minor `0.x.0` and major `x.0.0` → commit `versions/<version>/` and push.
+Every completed run ships a new version archive following the repository convention:
+
+1. **Bump the version in all 4 places** (they must agree exactly):
+   - `sidrena-cijena.php` (header `Version:` and constant `SIDRENA_CIJENA_VERSION`)
+   - `readme.txt` (`Stable tag:` and `= X.Y.Z =` changelog entry)
+   - `package.json` (`"version": "X.Y.Z"`)
+2. **Ensure all quality gates pass**:
+   ```bash
+   composer test:unit          # PHPUnit unit suite
+   composer lint               # PHPCS WordPress Coding Standards
+   composer analyse            # PHPStan level 6 (0 errors)
+   npm run lint:js             # ESLint for assets/js
+   ```
+   When Docker is available:
+   ```bash
+   npx wp-env clean tests
+   composer test:integration   # PHPUnit integration suite in wp-env
+   ./local.sh                  # One-command local setup, must exit 0
+   npm run wp-env:test -- start
+   npm run test:e2e            # Playwright E2E on port 8889 only
+   ```
+3. **Regenerate translations** if `__()` strings changed:
+   ```bash
+   php tools/i18n/make-pot.php --locale=hr_HR
+   # Verify 0 untranslated strings in languages/hr_HR.po
+   ```
+4. **Build release archive**:
+   ```bash
+   tools/build-zip.sh <version>
+   unzip -t versions/<version>/sidrena-cijena.zip
+   ```
+5. **Update documentation**:
+   - Add verification notes to `docs/release-readiness.md`.
+   - Update `docs/improvement-backlog.md` with closed items.
+6. **Commit and push**:
+   Commit the release archive and push to `origin master`:
+   ```bash
+   git add versions/<version>/
+   git commit -m "chore: archive installable <version> release"
+   git push origin master
+   ```

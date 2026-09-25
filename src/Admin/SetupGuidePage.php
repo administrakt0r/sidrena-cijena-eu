@@ -97,14 +97,26 @@ final class SetupGuidePage {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
 		}
 
-		$plugin    = Plugin::instance();
-		$locations = $plugin->locations()->all();
-		$rule      = RuleConfig::all();
-		$total     = (int) $plugin->catalog()->count_items();
-		$last      = $plugin->publications()->last_successful();
-		$complete  = self::is_complete();
+		$plugin       = Plugin::instance();
+		$locations    = $plugin->locations()->all();
+		$rule         = RuleConfig::all();
+		$total        = (int) $plugin->catalog()->count_items();
+		$last         = $plugin->publications()->last_successful();
+		$anchor_count = (int) $plugin->history()->count( array( 'price_type' => 'anchor' ) );
+		$report       = CompliancePage::stored_report();
+		$complete     = self::is_complete();
 
 		$legacy_slugs = isset( $rule['legacy_category_slugs'] ) ? array_filter( array_map( 'strval', (array) $rule['legacy_category_slugs'] ) ) : array();
+
+		$anchor_badge = $anchor_count > 0
+			? sprintf( /* translators: %d: count of recorded anchors */ esc_html__( '(done: %d recorded)', 'sidrena-cijena' ), $anchor_count )
+			: esc_html__( '(none recorded)', 'sidrena-cijena' );
+
+		$check_badge = esc_html__( '(not run yet)', 'sidrena-cijena' );
+		if ( is_array( $report ) ) {
+			$error_count = isset( $report['counts']['ERROR'] ) ? (int) $report['counts']['ERROR'] : 0;
+			$check_badge = $error_count > 0 ? esc_html__( '(errors found)', 'sidrena-cijena' ) : esc_html__( '(clean)', 'sidrena-cijena' );
+		}
 
 		echo '<div class="wrap sidrena-setup">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Setup Guide', 'sidrena-cijena' ) . '</h1>';
@@ -147,8 +159,9 @@ final class SetupGuidePage {
 
 		// Step 3: anchors.
 		printf(
-			'<li><h2>%1$s</h2><p>%2$s</p><p>%3$s: %4$d. <a class="button" href="%5$s">%6$s</a> <a class="button" href="%7$s">%8$s</a></p></li>',
+			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$d. <a class="button" href="%6$s">%7$s</a> <a class="button" href="%8$s">%9$s</a></p></li>',
 			esc_html__( '3. Record anchor prices', 'sidrena-cijena' ),
+			esc_html( $anchor_badge ),
 			esc_html__( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'sidrena-cijena' ),
 			esc_html__( 'Catalog items', 'sidrena-cijena' ),
 			(int) $total,
@@ -169,10 +182,11 @@ final class SetupGuidePage {
 		);
 
 		// Step 5: check.
-		echo '<li><h2>' . esc_html__( '5. Run the compliance check', 'sidrena-cijena' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'sidrena-cijena' ) . '</p>';
 		printf(
-			'<p><a class="button button-primary" href="%1$s">%2$s</a></p></li>',
+			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></li>',
+			esc_html__( '5. Run the compliance check', 'sidrena-cijena' ),
+			esc_html( $check_badge ),
+			esc_html__( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'sidrena-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-compliance' ) ),
 			esc_html__( 'Run compliance check', 'sidrena-cijena' )
 		);

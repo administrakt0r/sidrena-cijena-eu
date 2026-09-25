@@ -2,7 +2,7 @@
 /**
  * Database schema for the plugin's custom tables.
  *
- * Tables follow `specs/001-sidrena-cijena-compliance/data-model.md` exactly.
+ * Tables follow the data model documented in `docs/price-history.md` and `docs/operations.md`.
  *
  * @package SidrenaCijena\Database
  */

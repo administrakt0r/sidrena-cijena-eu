@@ -91,5 +91,5 @@ Key principles: WooCommerce is optional and the plugin never fatals
 without it; price history is append-only (corrections link to originals);
 exports are deterministic (fixed columns, delimiters, filename rules);
 the public REST endpoint exposes price data only, no customer or file-path
-data. See `specs/001-sidrena-cijena-compliance/` for the full spec, plan,
-data model, contracts and task list.
+data. See `docs/legal-rules.md`, `docs/feature-acceptance.md` and `docs/price-list-format.md`
+for legal rules, requirements, data model and price-list contracts.

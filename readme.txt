@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,13 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.4 =
+* Setup Guide enhancements: dynamic status badges across all five checklist steps, showing recorded anchor counts and compliance scan health.
+* Welcome banner hardening: suppressed activation redirects during bulk plugin activation, network admin, cron, and REST requests.
+* Agentard prompts refresh: comprehensive overhaul of all AI agent workflow prompts in AGENTARD/ with up-to-date quality gates, documentation paths, and release policies.
+* Cleaned up legacy specification and contract references throughout source code and documentation.
+* Rebuilt translation catalogs with 100% complete Croatian translations (479/479 strings).
 
 = 1.0.3 =
 * First-run Setup Guide checklist covering locations, legal rules, anchor prices, price lists, and compliance check.

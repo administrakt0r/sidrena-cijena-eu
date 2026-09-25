@@ -95,6 +95,21 @@ final class WelcomeBanner {
 			return;
 		}
 
+		if ( ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return;
+		}
+
+		if ( function_exists( 'is_network_admin' ) && is_network_admin() ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check for bulk activation.
+		if ( isset( $_GET['activate-multi'] ) ) {
+			delete_option( self::REDIRECT_OPTION );
+
+			return;
+		}
+
 		delete_option( self::REDIRECT_OPTION );
 
 		// Never redirect on bulk/plugin activation screens or when already there.

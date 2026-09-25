@@ -1175,6 +1175,27 @@ if ( ! function_exists( 'wp_nonce_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_nonce_field' ) ) {
+	/**
+	 * Retrieve or display nonce hidden field for forms.
+	 *
+	 * @param int|string $action  Action name.
+	 * @param string     $name    Nonce name.
+	 * @param bool       $referer Whether to set referer field.
+	 * @param bool       $echo    Whether to echo or return.
+	 * @return string
+	 */
+	function wp_nonce_field( $action = -1, $name = '_wpnonce', $referer = true, $echo = true ) {
+		unset( $action, $referer );
+		$html = sprintf( '<input type="hidden" name="%s" value="test-nonce" />', esc_attr( $name ) );
+		if ( $echo ) {
+			echo $html;
+		}
+
+		return $html;
+	}
+}
+
 if ( ! function_exists( 'add_query_arg' ) ) {
 	/**
 	 * Append query arguments to a URL.
@@ -1334,5 +1355,43 @@ if ( ! function_exists( 'add_shortcode' ) ) {
 	 */
 	function add_shortcode( $tag, $callback ) {
 		$GLOBALS['sidrena_test_shortcodes'][ (string) $tag ] = $callback;
+	}
+}
+
+if ( ! function_exists( 'menu_page_url' ) ) {
+	/**
+	 * Stub for menu_page_url.
+	 *
+	 * @param string $menu_slug Menu slug.
+	 * @param bool   $echo      Whether to echo or return.
+	 * @return string
+	 */
+	function menu_page_url( $menu_slug, $echo = true ) {
+		$url = admin_url( 'admin.php?page=' . rawurlencode( $menu_slug ) );
+		if ( $echo ) {
+			echo esc_url( $url );
+		}
+		return $url;
+	}
+}
+
+if ( ! function_exists( 'submit_button' ) ) {
+	/**
+	 * Stub for submit_button.
+	 *
+	 * @param string|null $text  Button text.
+	 * @param string      $type  Button type.
+	 * @param string      $name  Button name.
+	 * @param bool        $wrap  Whether to wrap.
+	 * @param array|null  $other Other attributes.
+	 * @return string
+	 */
+	function submit_button( $text = null, $type = 'primary', $name = 'submit', $wrap = true, $other = null ) {
+		$html = sprintf( '<input type="submit" name="%s" value="%s" class="button button-%s" />', esc_attr( $name ), esc_attr( (string) $text ), esc_attr( $type ) );
+		if ( $wrap ) {
+			$html = '<p class="submit">' . $html . '</p>';
+		}
+		echo $html;
+		return $html;
 	}
 }

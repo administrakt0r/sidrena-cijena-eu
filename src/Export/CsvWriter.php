@@ -12,7 +12,7 @@ use SidrenaCijena\Support\Currency;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Writes the documented CSV format (`contracts/csv-format.md`): UTF-8 without
+ * Writes the documented CSV format (`docs/price-list-format.md`): UTF-8 without
  * BOM, `;` delimiter, comma decimals, RFC 4180 quoting, LF line endings.
  */
 class CsvWriter {

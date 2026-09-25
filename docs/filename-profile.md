@@ -3,8 +3,8 @@
 Decision: keep the existing normalized filename contract. No filename setting,
 default, published URL or retained archive entry changes in this release.
 
-The repository contract at commit `a271c6a` is preserved in Git at
-`specs/001-sidrena-cijena-compliance/contracts/filename.md`. Its runtime pattern is:
+The repository contract at commit `a271c6a` is preserved in Git history
+(previously `specs/001-sidrena-cijena-compliance/contracts/filename.md`). Its runtime pattern is:
 
 `{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`
 

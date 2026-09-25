@@ -13,7 +13,7 @@ use SidrenaCijena\Support\Dates;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Writes the documented XML format (`contracts/xml-format.md`): UTF-8 without
+ * Writes the documented XML format (`docs/price-list-format.md`): UTF-8 without
  * BOM, versioned root element, escaped values, omitted empty elements.
  */
 class XmlWriter {

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Turns catalog items into the canonical rows shared by the CSV/XML exports and
- * the public REST endpoint (`contracts/csv-format.md`).
+ * the public REST endpoint (`docs/price-list-format.md`).
  */
 class PriceListBuilder {
 

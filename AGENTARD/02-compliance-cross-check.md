@@ -1,42 +1,47 @@
 # Prompt 2 — Compliance cross-check (no Docker needed)
 
 ```
-You are auditing the plugin in the current directory against its own
-specification. Read specs/001-sidrena-cijena-compliance/spec.md,
-contracts/ (csv-format, xml-format, filename, rest-api, cli,
-wordpress-integration), data-model.md and quickstart.md first.
+You are auditing the plugin in the current directory against Croatian legal requirements
+and its documentation. Read `docs/legal-rules.md`, `docs/feature-acceptance.md`,
+`docs/price-list-format.md`, `docs/filename-profile.md`, `docs/price-history.md`,
+and `docs/operations.md` first.
 
-For each item below, verify the implementation and fix deviations
-(tests first where behaviour changes). Commit each fix separately.
+For each item below, verify the implementation and fix deviations (tests first
+where behaviour changes). Commit each fix separately.
 
-1. CSV contract: `;` delimiter, comma decimals, UTF-8 no BOM, LF endings,
-   exact 12-column order, DA/NE flags, `dostupno`/`nedostupno`, products
-   before services ordered by sifra/naziv/ID, effective retail price in
-   `maloprodajna_cijena`. Generate a list via CsvWriter + PriceListBuilder
-   in a unit test and diff it against tests/fixtures/example-price-list.csv
-   structurally (header + row shapes).
-2. XML contract: declaration, root <cjenik verzija pravilo generirano>,
-   <prodajnoMjesto>, <stavka vrsta>, ASCII element names, empty elements
-   omitted, point decimals, escaped entities. Validate
-   tests/fixtures/example-price-list.xml with simplexml in a unit test.
-3. Filename contract: {FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_
-   {DDMMYYYY}_{HHMM}.{EXT}, transliteration (ČĆ→C, Đ→D, Š→S, Ž→Z), only
-   separator/case configurable. Run FilenameGeneratorTest and add cases for
-   diacritics, lowercase+dash config and per-location overrides.
-4. 30-day engine: window = 30 calendar days before sale start, start
-   excluded, day-30 included, site timezone; pure calculator; consecutive
-   and overlapping sales; DST boundaries. Extend
-   LowestPrice30DayCalculatorTest with any missing edge case.
-5. Anchor vs 30-day separation: grep the codebase for any path where the
-   anchor price is used as the 30-day price or vice versa; report or fix.
-6. Validator coverage: every FR-058..FR-061 finding code must have a rule
-   in src/Compliance/Rules/ and a case in ValidatorTest.
-7. REST contract: routes, per_page clamps (500 / 200), ETag/Last-Modified,
-   Cache-Control max-age=300, X-Robots-Tag, 304 handling, 429 throttle,
-   capability on /status, price-data-only payloads.
-8. CLI contract: exit codes 0/1/2/3 per contracts/cli.md for all seven
-   subcommands; `seed-test-data` refuses without --yes/WP_ENV.
+1. CSV contract (docs/price-list-format.md): `;` delimiter, comma decimals, UTF-8 no BOM,
+   LF endings, exact 12-column order, DA/NE flags, `dostupno`/`nedostupno`, products
+   before services ordered by sifra/naziv/ID, effective retail price in `maloprodajna_cijena`,
+   and formula-injection neutralisation (`=`, `+`, `-`, `@` escaped). Diff generated output
+   against tests/fixtures/example-price-list.csv structurally.
+2. XML contract (docs/price-list-format.md): XML declaration, root <cjenik verzija pravilo generirano>,
+   <prodajnoMjesto>, <stavka vrsta>, ASCII element names, empty elements omitted, point decimals,
+   escaped entities. Validate tests/fixtures/example-price-list.xml with simplexml in a unit test.
+3. Filename contract (docs/filename-profile.md):
+   {FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT},
+   transliteration (ČĆ→C, Đ→D, Š→S, Ž→Z), only separator/case configurable.
+   Run FilenameGeneratorTest and verify edge cases.
+4. 30-day engine (docs/legal-rules.md): window = 30 calendar days before sale start
+   (`start-30` to `start-1`), start date excluded, day-30 included, site timezone; pure calculator;
+   consecutive and overlapping sales; DST boundaries. Never use `lowest_30_day` row as its own input.
+   Verify with LowestPrice30DayCalculatorTest.
+5. Anchor vs 30-day separation: verify that anchor prices are never used as 30-day prices,
+   and 30-day prices are never used as anchor prices.
+6. First-offer boundaries (docs/feature-acceptance.md): brand new products published with the
+   plugin active record first offer; existing/imported items are NEVER backfilled; draft/pre-baseline
+   publishes excluded; exact variation identity preserved.
+7. Validator coverage: missing anchors, missing location addresses, and unclassified promotions
+   produce blocking ERROR findings that prevent price-list publication (FR-007).
+8. REST and Public Feeds: `/sidrena-cijena.xml` and `/sidrena-cijena.csv` serve published files
+   with checksum headers; HTML price list at `/sidrena-cjenik/` and archive at `/arhiva-sidrene-cijene/`.
+9. CLI contract: exit codes 0 (clean), 1 (error), 2 (finding warnings), 3 (blocking error);
+   `seed-test-data` refuses without `--yes`.
 
-Done when: every contract clause maps to passing test coverage, deviations
-are fixed and committed, and docs/price-list-format.md matches the code.
+When deviations or gaps are fixed:
+- Run all static gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`.
+- Follow the release procedure in AGENTARD/README.md: bump version, build zip with `tools/build-zip.sh <version>`,
+  verify with `unzip -t`, update docs, commit and push to origin master.
+
+Done when: every compliance rule is backed by passing test coverage, deviations
+are fixed and committed, and a new version is packaged and pushed.
 ```

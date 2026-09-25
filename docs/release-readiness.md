@@ -1,5 +1,19 @@
 # Release verification
 
+## 1.0.4
+
+Setup Guide status badges, activation redirect hardening, documentation/spec references cleanup, full AGENTARD prompts refresh, and translation catalogs:
+- Unit: 175 tests, 525 assertions passed (`composer test:unit`).
+- Static analysis & linting: PHPStan 106/106 files clean (0 errors), PHPCS 133/133 files clean, ESLint clean (`npm run lint:js`).
+- Integration: 76 tests, 342 assertions passed on `wp-env` with MySQL (`composer test:integration`).
+- Local environment: `./local.sh` exited 0; seeded 17 compliance test scenarios, forced generation, status healthy.
+- Setup Guide checklist: Added dynamic status badges for all 5 steps: step 3 reports recorded anchor counts (`(done: %d recorded)` / `(none recorded)`), step 5 reports stored compliance report status (`(clean)`, `(errors found)`, or `(not run yet)`).
+- Welcome banner hardening: Enhanced `WelcomeBanner::maybe_redirect()` to guard against redirects during bulk activation (`$_GET['activate-multi']`), network admin (`is_network_admin()`), cron runs, and REST requests.
+- AGENTARD prompts refresh: Overhauled `AGENTARD/README.md` and prompts 01 through 05 with current quality gates (including `npm run lint:js`), strict isolation (E2E on port 8889), accurate documentation paths, and mandatory version release workflow.
+- Cleaned up obsolete references to deleted `specs/001-sidrena-cijena-compliance/` and `contracts/` across `src/Database/Schema.php`, `src/Export/PriceListBuilder.php`, `src/Export/CsvWriter.php`, `src/Export/XmlWriter.php`, `docs/development.md`, and `docs/filename-profile.md`.
+- Translations: Full Croatian translation (479/479 strings translated, 0 untranslated in `hr_HR.po` / `sidrena-cijena-hr.mo`).
+- Release archive: Built via `tools/build-zip.sh 1.0.4`, checksum generated, `unzip -t` passed.
+
 ## 1.0.3
 
 Setup guide onboarding, public page caching, resilient 08:00 daily generation (REL-06), CI pipeline (REL-08), translations and failure visibility:

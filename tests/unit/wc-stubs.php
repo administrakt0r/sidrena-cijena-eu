@@ -144,3 +144,26 @@ if ( ! function_exists( 'get_queried_object_id' ) ) {
 		return isset( $GLOBALS['sidrena_test_queried_object_id'] ) ? (int) $GLOBALS['sidrena_test_queried_object_id'] : 0;
 	}
 }
+
+if ( ! function_exists( 'wc_get_products' ) ) {
+
+	/**
+	 * Retrieve products matching query.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @return array<int,int>|object
+	 */
+	function wc_get_products( $args = array() ) {
+		$items = isset( $GLOBALS['sidrena_test_wc_products'] ) ? (array) $GLOBALS['sidrena_test_wc_products'] : array();
+
+		if ( ! empty( $args['paginate'] ) ) {
+			return (object) array(
+				'total'         => count( $items ),
+				'max_num_pages' => 1,
+				'products'      => array_keys( $items ),
+			);
+		}
+
+		return array_keys( $items );
+	}
+}
