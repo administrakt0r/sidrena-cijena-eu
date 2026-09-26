@@ -11,7 +11,11 @@ use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Admin\BulkAnchorEntryPage;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
+use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Tests\Support\PluginSwap;
+
+require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
  * Fake catalog provider for bulk anchor tests.
@@ -117,6 +121,71 @@ class BulkFakeCatalog implements CatalogProvider {
 }
 
 /**
+ * History repository double that only answers batched existence lookups.
+ */
+class BulkFakeHistory extends PriceHistoryRepository {
+
+	/**
+	 * Number of `exists_map()` calls.
+	 *
+	 * @var int
+	 */
+	public $exists_map_calls = 0;
+
+	/**
+	 * Number of per-item `latest()` calls.
+	 *
+	 * @var int
+	 */
+	public $latest_calls = 0;
+
+	/**
+	 * Anchored keys (`product:variation`).
+	 *
+	 * @var array<string,bool>
+	 */
+	public $anchored = array();
+
+	/**
+	 * Batched existence lookup.
+	 *
+	 * @param int[]  $product_ids Item IDs.
+	 * @param string $price_type  Price type.
+	 * @return array<string,bool>
+	 */
+	public function exists_map( array $product_ids, $price_type ) {
+		++$this->exists_map_calls;
+
+		$ids = array_map( 'intval', $product_ids );
+		$map = array();
+
+		foreach ( $this->anchored as $key => $value ) {
+			$parts = explode( ':', (string) $key );
+
+			if ( in_array( (int) $parts[0], $ids, true ) ) {
+				$map[ $key ] = $value;
+			}
+		}
+
+		return $map;
+	}
+
+	/**
+	 * Per-item lookup, expected to remain unused.
+	 *
+	 * @param int    $product_id   Item ID.
+	 * @param int    $variation_id Variation ID.
+	 * @param string $price_type   Price type.
+	 * @return array|null
+	 */
+	public function latest( $product_id, $variation_id, $price_type ) {
+		++$this->latest_calls;
+
+		return null;
+	}
+}
+
+/**
  * @covers \SidrenaCijena\Admin\BulkAnchorEntryPage
  */
 class BulkAnchorEntryTest extends TestCase {
@@ -132,6 +201,9 @@ class BulkAnchorEntryTest extends TestCase {
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
 		$GLOBALS['sidrena_test_options'] = array();
+
+		PluginSwap::swap( 'catalog', null );
+		PluginSwap::swap( 'history', null );
 	}
 
 	/**
@@ -187,5 +259,47 @@ class BulkAnchorEntryTest extends TestCase {
 		$this->assertStringContainsString( 'sidrena-select-all', $html );
 		$this->assertStringContainsString( 'Proizvod Bez Sidrene', $html );
 		$this->assertStringContainsString( 'PBS-101', $html );
+	}
+
+	/**
+	 * Existing anchors are resolved with one batched query, never per item.
+	 *
+	 * @return void
+	 */
+	public function test_bulk_anchor_uses_batched_existence_lookup() {
+		$catalog = new BulkFakeCatalog();
+
+		$catalog->items[101] = new CatalogItem(
+			array(
+				'id'            => 101,
+				'name'          => 'Proizvod Sa Sidrenom',
+				'sku'           => 'PSS-101',
+				'regular_price' => '24.99',
+			)
+		);
+		$catalog->items[102] = new CatalogItem(
+			array(
+				'id'            => 102,
+				'name'          => 'Proizvod Bez Sidrene',
+				'sku'           => 'PBS-102',
+				'regular_price' => '9.99',
+			)
+		);
+
+		$history           = new BulkFakeHistory();
+		$history->anchored = array( '101:0' => true );
+
+		Plugin::instance()->set_catalog( $catalog );
+		PluginSwap::swap( 'history', $history );
+
+		ob_start();
+		BulkAnchorEntryPage::render();
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( 'Proizvod Bez Sidrene', $html );
+		$this->assertStringNotContainsString( 'Proizvod Sa Sidrenom', $html );
+		$this->assertStringContainsString( '1 item(s) have no anchor price yet.', $html );
+		$this->assertSame( 0, $history->latest_calls, 'The screen must not run per-item anchor lookups.' );
+		$this->assertGreaterThanOrEqual( 1, $history->exists_map_calls, 'Anchors must be resolved with batched existence queries.' );
 	}
 }
