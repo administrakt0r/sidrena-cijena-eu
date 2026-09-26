@@ -211,6 +211,8 @@ final class Plugin {
 		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
+		add_action( 'transition_post_status', array( $this, 'flush_on_catalog_status_change' ), 10, 3 );
+		add_action( 'before_delete_post', array( $this, 'flush_on_catalog_item_deleted' ), 10, 2 );
 		add_action( 'rest_api_init', array( PriceListController::class, 'register' ) );
 		add_action( 'admin_post_' . PublicationsPage::ACTION, array( PublicationsPage::class, 'handle_generate' ) );
 		add_action( 'admin_post_' . CompliancePage::ACTION_RUN, array( CompliancePage::class, 'handle_run' ) );
@@ -283,6 +285,61 @@ final class Plugin {
 	 */
 	public function flush_rest_cache() {
 		$this->rest_cache()->flush();
+	}
+
+	/**
+	 * Post types that make up the active catalog.
+	 *
+	 * @return string[]
+	 */
+	public static function catalog_post_types() {
+		return array(
+			StandalonePostType::POST_TYPE,
+			'product',
+			'product_variation',
+		);
+	}
+
+	/**
+	 * Flush cached price data when a catalog item enters or leaves the catalog.
+	 *
+	 * Public pages and REST responses are cached for up to five minutes, so a
+	 * trashed or unpublished item must disappear immediately and a newly
+	 * published item must appear immediately. Content edits of published items
+	 * do not change catalog membership and stay cached.
+	 *
+	 * @param string   $new_status New post status.
+	 * @param string   $old_status Old post status.
+	 * @param \WP_Post $post       Post in transition.
+	 * @return void
+	 */
+	public function flush_on_catalog_status_change( $new_status, $old_status, $post ) {
+		if ( ! in_array( (string) $post->post_type, self::catalog_post_types(), true ) ) {
+			return;
+		}
+
+		if ( ( 'publish' === $new_status ) === ( 'publish' === $old_status ) ) {
+			return;
+		}
+
+		$this->flush_caches();
+	}
+
+	/**
+	 * Flush cached price data when a catalog item is deleted.
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post being deleted.
+	 * @return void
+	 */
+	public function flush_on_catalog_item_deleted( $post_id, $post ) {
+		unset( $post_id );
+
+		if ( ! in_array( (string) $post->post_type, self::catalog_post_types(), true ) ) {
+			return;
+		}
+
+		$this->flush_caches();
 	}
 
 	/**
