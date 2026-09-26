@@ -58,33 +58,32 @@ test.describe( 'Anchor price display', () => {
 		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 1 );
 	} );
 
-	test( 'shows the anchor price in the product archive', async ( { page } ) => {
+	test( 'hides the anchor price in product cards by default', async ( { page } ) => {
 		await page.goto( '/?post_type=product' );
 
-		await expect( page.locator( '.sidrena-cijena' ).first() ).toBeVisible();
-		await expect( page.locator( '.sidrena-cijena__anchor-value' ).first() ).toContainText( '25,00' );
+		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 0 );
 	} );
 
-	test( 'product editor can hide its anchor on cards without hiding the product page', async ( { page } ) => {
+	test( 'product editor can show its anchor on cards without changing the product page', async ( { page } ) => {
 		await login( page );
 		await page.goto( '/wp-admin/post.php?post=' + productId + '&action=edit' );
 		await page.locator( '#woocommerce-product-data .sidrena_cijena_options a' ).click();
 		const choice = page.locator( '#sidrena-cijena-show-in-cards' );
-		await expect( choice ).toBeChecked();
-		await choice.uncheck();
+		await expect( choice ).not.toBeChecked();
+		await choice.check();
 		await page.locator( '#publish' ).click();
-		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '0' );
+		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '1' );
 
 		await page.goto( '/?post_type=product' );
-		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 0 );
+		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toBeVisible();
 		await page.goto( '/?p=' + productId );
 		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toBeVisible();
 
 		await page.goto( '/wp-admin/post.php?post=' + productId + '&action=edit' );
 		await page.locator( '#woocommerce-product-data .sidrena_cijena_options a' ).click();
-		await choice.check();
+		await choice.uncheck();
 		await page.locator( '#publish' ).click();
-		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '1' );
+		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '0' );
 	} );
 
 	test( 'hides the anchor price when display is disabled', async ( { page } ) => {

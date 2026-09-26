@@ -33,7 +33,7 @@ final class CardVisibility {
 	 * @return bool
 	 */
 	public static function is_visible( $product_id ) {
-		return '0' !== (string) get_post_meta( (int) $product_id, self::META_KEY, true );
+		return '1' === (string) get_post_meta( (int) $product_id, self::META_KEY, true );
 	}
 
 	/**

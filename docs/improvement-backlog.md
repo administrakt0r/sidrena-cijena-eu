@@ -165,3 +165,13 @@ AUD-05 is closed: selected WooCommerce variations now show their own dated
 anchor beside their selected price, including when WooCommerce omits variation
 price HTML for equal prices. Variable parent ranges do not show one variation's
 anchor. `VariationDisplayTest` covers the parent and selected variation paths.
+
+## Settings, publication and storefront pass (2026-09-26)
+
+| ID | Status | Item | Evidence |
+| --- | --- | --- | --- |
+| FIX-14 | `done` | Legal rules sanitizer wrote the same option recursively during WordPress Settings API saves; malformed settings payloads could also fatal | `ReferenceDateResolverTest` recursion test and browser Legal rules save |
+| FIX-15 | `done` | Nonessential catalog findings stopped cjenik generation even with a current price and dated anchor | `PublicationGateTest` and WordPress publication integration test |
+| UX-09 | `done` | Missing admin anchor icon; three large display styles with no previews or size control | SVG menu icon, nine compact previews, browser styling test |
+| UX-10 | `done` | No per-product choice for Sidrena cijena on shop cards; default cards were too busy | WooCommerce editor opt-in checkbox and browser card/product-page test |
+| REL-09 | `done` | `Contributors:` used display name instead of WordPress.org username | Profile checked; changed to `titanworks`; publishing steps documented |

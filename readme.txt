@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.17
+Stable tag: 1.0.18
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.18 =
+* Fix Legal rules saves that could cause a WordPress error page.
+* Generate cjenici despite optional catalog findings; current price and dated anchor remain required.
+* Add nine compact Sidrena cijena styles, live previews, and a size control.
+* Restore the admin sidebar anchor icon and add an opt-in per-product shop-card display choice; product pages show the anchor by default.
 
 = 1.0.17 =
 * Remove personal identity fields from structured log context.
