@@ -51,11 +51,6 @@ final class DisplaySettingsPage {
 				'label' => __( 'Display position', 'sidrena-cijena' ),
 				'type'  => 'select',
 			),
-			'product_display_style' => array(
-				'label'       => __( 'Product display style', 'sidrena-cijena' ),
-				'type'        => 'select',
-				'description' => __( 'Choose a presentation for the anchor and 30-day price on product pages and lists. Your theme’s price typography remains in control.', 'sidrena-cijena' ),
-			),
 			'display_priority'      => array(
 				'label' => __( 'Display priority', 'sidrena-cijena' ),
 				'type'  => 'number',
@@ -92,7 +87,7 @@ final class DisplaySettingsPage {
 				array(
 					'key'         => $key,
 					'type'        => $field['type'],
-					'description' => isset( $field['description'] ) ? $field['description'] : '',
+					'description' => '',
 				)
 			);
 		}
@@ -138,12 +133,6 @@ final class DisplaySettingsPage {
 						'symbol' => __( 'Currency symbol (6,99 EUR)', 'sidrena-cijena' ),
 						'code'   => __( 'Currency code (6,99 EUR)', 'sidrena-cijena' ),
 						'none'   => __( 'Amount only (6,99)', 'sidrena-cijena' ),
-					);
-				} elseif ( 'product_display_style' === $key ) {
-					$choices = array(
-						'plain' => __( 'Plain — minimal text, blends with the theme', 'sidrena-cijena' ),
-						'badge' => __( 'Badge — compact blue highlight', 'sidrena-cijena' ),
-						'card'  => __( 'Card — separated panel with more breathing room', 'sidrena-cijena' ),
 					);
 				} else {
 					$choices = array(

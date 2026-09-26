@@ -34,7 +34,7 @@ final class AdminMenu {
 			$capability,
 			self::PARENT,
 			array( DashboardPage::class, 'render' ),
-			'dashicons-anchor',
+			self::menu_icon(),
 			56
 		);
 
@@ -104,6 +104,10 @@ final class AdminMenu {
 			SIDRENA_CIJENA_VERSION
 		);
 
+		if ( isset( $_GET['tab'] ) && 'styling' === sanitize_key( wp_unslash( $_GET['tab'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only asset selection.
+			wp_enqueue_style( 'sidrena-cijena-frontend', SIDRENA_CIJENA_URL . 'assets/css/frontend.css', array(), SIDRENA_CIJENA_VERSION );
+		}
+
 		if ( false === strpos( (string) $hook_suffix, 'sidrena-cijena' ) && false === strpos( (string) $hook_suffix, 'sidrena_item' ) ) {
 			return;
 		}
@@ -115,5 +119,16 @@ final class AdminMenu {
 			SIDRENA_CIJENA_VERSION,
 			true
 		);
+	}
+
+	/**
+	 * An anchor glyph, since Dashicons has no anchor icon.
+	 *
+	 * @return string
+	 */
+	public static function menu_icon() {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="M12 6v14m-5-9h10M4 15c0 4 3.6 6 8 6s8-2 8-6m-16 0 2.5 1.5M20 15l-2.5 1.5"/></g></svg>';
+
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- WordPress admin menu recognizes SVG icons only in this encoded form.
 	}
 }

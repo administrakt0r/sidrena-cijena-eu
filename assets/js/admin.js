@@ -40,9 +40,29 @@
 		}
 	}
 
+	function bindStylePreviews() {
+		var size = document.getElementById( 'sidrena-display-size' );
+		var value = document.getElementById( 'sidrena-display-size-value' );
+
+		if ( ! size || ! value ) {
+			return;
+		}
+
+		size.addEventListener( 'input', function () {
+			value.textContent = size.value + '%';
+			document.querySelectorAll( '.sidrena-style-preview' ).forEach( function ( preview ) {
+				preview.style.setProperty( '--sidrena-size', Number( size.value ) / 100 );
+			} );
+		} );
+	}
+
 	if ( 'loading' === document.readyState ) {
-		document.addEventListener( 'DOMContentLoaded', focusFeedback );
+		document.addEventListener( 'DOMContentLoaded', function () {
+			focusFeedback();
+			bindStylePreviews();
+		} );
 	} else {
 		focusFeedback();
+		bindStylePreviews();
 	}
 } )();

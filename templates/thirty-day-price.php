@@ -19,9 +19,10 @@ if ( ! isset( $display ) ) {
 	return;
 }
 
-$sidrena_style = isset( $style ) && in_array( $style, array( 'plain', 'badge', 'card' ), true ) ? $style : 'plain';
+$sidrena_style = isset( $style ) && array_key_exists( $style, \SidrenaCijena\Support\DisplayStyles::presets() ) ? $style : 'plain';
+$sidrena_size  = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( 'display_size', 40 ) ) );
 ?>
-<div class="sidrena-cijena sidrena-cijena--30-day sidrena-cijena--style-<?php echo esc_attr( $sidrena_style ); ?>" data-product-id="<?php echo esc_attr( (string) $item->id ); ?>" data-variation-id="<?php echo esc_attr( (string) $item->variation_id ); ?>">
+<div class="sidrena-cijena sidrena-cijena--30-day sidrena-cijena--style-<?php echo esc_attr( $sidrena_style ); ?>" style="--sidrena-size:<?php echo esc_attr( (string) ( $sidrena_size / 100 ) ); ?>" data-product-id="<?php echo esc_attr( (string) $item->id ); ?>" data-variation-id="<?php echo esc_attr( (string) $item->variation_id ); ?>">
 	<span class="sidrena-cijena__30-day">
 		<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
 		<span class="sidrena-cijena__30-day-value" data-sidrena-cijena-30-day><?php echo esc_html( $display ); ?></span>

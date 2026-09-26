@@ -130,3 +130,52 @@
 .sidrena-cijena-product-panel > hr {
 	margin-top: 20px;
 }
+
+.sidrena-style-gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	gap: 12px;
+	max-width: 980px;
+	margin: 18px 0 24px;
+}
+
+.sidrena-style-choice {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	min-width: 0;
+	padding: 14px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+}
+
+.sidrena-style-choice:hover,
+.sidrena-style-choice:focus-within {
+	border-color: #2271b1;
+}
+
+.sidrena-style-choice:has(input:checked) {
+	border-color: #2271b1;
+	box-shadow: inset 0 0 0 1px #2271b1;
+}
+
+.sidrena-style-choice__heading {
+	font-weight: 600;
+}
+
+.sidrena-style-choice__price {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.sidrena-style-preview {
+	margin: 0;
+}
+
+#sidrena-display-size {
+	width: min(320px, 75vw);
+	vertical-align: middle;
+}

@@ -1,12 +1,16 @@
 /**
- * Sidrena cijena - frontend display styles.
+ * Sidrena cijena - compact storefront evidence styles.
  */
 
 .sidrena-cijena {
+	--sidrena-size: 0.4;
 	display: block;
-	margin: 0.25em 0;
-	font-size: 0.95em;
-	line-height: 1.4;
+	width: fit-content;
+	max-width: 100%;
+	margin: 0.1em 0;
+	font-size: max(12px, calc(0.95em * var(--sidrena-size)));
+	line-height: 1.3;
+	color: #28323a;
 }
 
 .sidrena-cijena__anchor {
@@ -14,59 +18,60 @@
 }
 
 .sidrena-cijena__label {
-	margin-right: 0.35em;
-	color: #50575e;
+	margin-right: 0.25em;
+	color: #47535d;
 }
 
-.sidrena-cijena__anchor-value {
-	font-weight: 600;
+.sidrena-cijena__anchor-value,
+.sidrena-cijena__30-day-value {
+	font-weight: 650;
+}
+
+.sidrena-cijena__reference-date {
+	margin-left: 0.25em;
+	color: #47535d;
 }
 
 .sidrena-cijena__current {
-	margin-right: 0.5em;
+	margin-right: 0.4em;
 }
 
 .sidrena-cijena__disclaimer {
 	display: block;
-	margin-top: 0.15em;
-	font-size: 0.85em;
-	color: #646970;
-}
-
-.sidrena-cijena--archive {
+	margin-top: 0.1em;
 	font-size: 0.9em;
+	color: #47535d;
 }
 
-.woocommerce-price-suffix .sidrena-cijena,
-.price .sidrena-cijena {
+.price .sidrena-cijena,
+.woocommerce-price-suffix .sidrena-cijena {
 	display: inline-block;
-	margin-left: 0.5em;
+	vertical-align: middle;
+	margin-left: 0.35em;
 }
 
-/* Presets alter only the plugin's evidence labels, not the theme's prices. */
+.sidrena-cijena--style-badge,
+.sidrena-cijena--style-card,
+.sidrena-cijena--style-outline,
+.sidrena-cijena--style-soft,
+.sidrena-cijena--style-mono,
+.sidrena-cijena--style-pill {
+	box-sizing: border-box;
+	padding: 0.12em 0.38em;
+	border-radius: 3px;
+}
+
 .sidrena-cijena--style-badge {
-	width: fit-content;
-	padding: 0.2em 0.55em;
-	border: 1px solid #b6d4ea;
-	border-left: 3px solid #2271b1;
-	border-radius: 4px;
-	background: #f0f6fb;
-	color: #1d3c54;
-}
-
-.sidrena-cijena--style-badge .sidrena-cijena__label {
-	color: #38566d;
+	background: #eaf4fb;
+	border: 1px solid #9ac8e8;
+	color: #174465;
 }
 
 .sidrena-cijena--style-card {
-	box-sizing: border-box;
-	width: fit-content;
-	max-width: 100%;
-	padding: 0.65em 0.8em;
-	border: 1px solid #dcdcde;
-	border-left: 3px solid #2271b1;
-	border-radius: 5px;
+	padding: 0.3em 0.45em;
 	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	border-left: 2px solid #2271b1;
 }
 
 .sidrena-cijena--style-card .sidrena-cijena__anchor,
@@ -74,8 +79,35 @@
 	display: block;
 }
 
-.sidrena-cijena--style-card .sidrena-cijena__label {
-	display: block;
-	margin: 0 0 0.15em;
-	font-size: 0.85em;
+.sidrena-cijena--style-underline {
+	border-bottom: 1px solid currentColor;
+}
+
+.sidrena-cijena--style-outline {
+	border: 1px solid #65727e;
+}
+
+.sidrena-cijena--style-stripe {
+	padding-left: 0.4em;
+	border-left: 2px solid #2271b1;
+}
+
+.sidrena-cijena--style-soft {
+	background: #f1f5f2;
+}
+
+.sidrena-cijena--style-mono {
+	background: #28323a;
+	color: #fff;
+}
+
+.sidrena-cijena--style-mono .sidrena-cijena__label,
+.sidrena-cijena--style-mono .sidrena-cijena__reference-date {
+	color: #e5edf2;
+}
+
+.sidrena-cijena--style-pill {
+	border: 1px solid #9ac8e8;
+	border-radius: 999px;
+	background: #fff;
 }

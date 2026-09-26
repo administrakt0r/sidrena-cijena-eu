@@ -13,10 +13,12 @@ defined( 'ABSPATH' ) || exit;
 
 /* translators: %s: date of the reference price. */
 $sidrena_date_template = __( 'Cijena na dan %s', 'sidrena-cijena' );
-$sidrena_style         = isset( $style ) && in_array( $style, array( 'plain', 'badge', 'card' ), true ) ? $style : 'plain';
+$sidrena_style         = isset( $style ) && array_key_exists( $style, \SidrenaCijena\Support\DisplayStyles::presets() ) ? $style : 'plain';
 $sidrena_classes       = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context ) . ' sidrena-cijena--style-' . $sidrena_style;
+$sidrena_size          = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( 'display_size', 40 ) ) );
 ?>
 <div class="<?php echo esc_attr( $sidrena_classes ); ?>"
+	style="--sidrena-size:<?php echo esc_attr( (string) ( $sidrena_size / 100 ) ); ?>"
 	title="<?php echo esc_attr( $anchor_title ); ?>"
 	data-product-id="<?php echo esc_attr( (string) $product_id ); ?>"
 	data-variation-id="<?php echo esc_attr( (string) $variation_id ); ?>"

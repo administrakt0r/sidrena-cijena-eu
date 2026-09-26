@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.17\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-26T15:18:09+00:00\n"
-"PO-Revision-Date: 2026-09-26T15:18:09+00:00\n"
+"POT-Creation-Date: 2026-09-26T15:47:16+00:00\n"
+"PO-Revision-Date: 2026-09-26T15:47:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -217,6 +217,9 @@ msgstr "Zapisi sidrenih i drugih cijena koje je ovaj dodatak već pohranio."
 msgid "Anchor date"
 msgstr "Datum sidrene cijene"
 
+msgid "Anchor display styles"
+msgstr "Stilovi prikaza sidrene cijene"
+
 msgid "Anchor price"
 msgstr "Sidrena cijena"
 
@@ -298,8 +301,8 @@ msgstr "Dostupno"
 msgid "A valid reference date is required for anchor prices."
 msgstr "Za sidrene cijene obvezan je valjan referentni datum."
 
-msgid "Badge — compact blue highlight"
-msgstr "Bedž — kompaktna plava oznaka"
+msgid "Badge"
+msgstr "Oznaka"
 
 msgid "Barcode"
 msgstr "Barkod"
@@ -334,8 +337,8 @@ msgstr "Odustani od uređivanja"
 msgid "Cancelled"
 msgstr "Otkazano"
 
-msgid "Card — separated panel with more breathing room"
-msgstr "Kartica — odvojeni prikaz s više prostora"
+msgid "Card"
+msgstr "Kartica"
 
 msgid "Catalog item"
 msgstr "Stavka kataloga"
@@ -358,11 +361,11 @@ msgstr "Izmjena ovih vrijednosti nikada ne prepisuje postojeće povijesne zapise
 msgid "Checksum"
 msgstr "Kontrolni zbroj"
 
+msgid "Choose a compact preset. Each preview shows a current price, its anchor and the reference date."
+msgstr "Odaberite sažeti stil. Svaki pregled prikazuje trenutačnu cijenu, sidrenu cijenu i referentni datum."
+
 msgid "Choose a CSV file to import."
 msgstr "Odaberite CSV datoteku za uvoz."
-
-msgid "Choose a presentation for the anchor and 30-day price on product pages and lists. Your theme’s price typography remains in control."
-msgstr "Odaberite prikaz sidrene i najniže cijene u zadnjih 30 dana na stranicama proizvoda i popisima. Tipografiju cijena i dalje određuje vaša tema."
 
 msgid "Choose a price type."
 msgstr "Odaberite vrstu cijene."
@@ -504,6 +507,9 @@ msgstr "Mjesto prikaza"
 
 msgid "Display priority"
 msgstr "Prioritet prikaza"
+
+msgid "Display size"
+msgstr "Veličina prikaza"
 
 msgid "Dnevni cron posao:"
 msgstr "Dnevni cron posao:"
@@ -931,6 +937,9 @@ msgstr "Put migracije"
 msgid "Missing"
 msgstr "Nedostaje"
 
+msgid "Monochrome"
+msgstr "Jednobojno"
+
 msgid "More than one catalog record uses the SKU %s. Price history may be ambiguous."
 msgstr "Više zapisa kataloga koristi SKU %s. Povijest cijena može biti dvosmislena."
 
@@ -1123,6 +1132,9 @@ msgstr "Opći proizvodi i usluge"
 msgid "Otvori unos sidrenih cijena"
 msgstr "Otvori unos sidrenih cijena"
 
+msgid "Outline"
+msgstr "Okvir"
+
 msgid "Page"
 msgstr "Stranica"
 
@@ -1132,8 +1144,11 @@ msgstr "Na čekanju"
 msgid "Period"
 msgstr "Razdoblje"
 
-msgid "Plain — minimal text, blends with the theme"
-msgstr "Jednostavno — minimalan tekst uklopljen u temu"
+msgid "Pill"
+msgstr "Zaobljena oznaka"
+
+msgid "Plain"
+msgstr "Jednostavno"
 
 msgid "Plugin activated."
 msgstr "Dodatak je aktiviran."
@@ -1215,9 +1230,6 @@ msgstr "Primjer: PRODAVAONICA_ILICA-1_POSL-01_1_26092026_0800.csv"
 
 msgid "Product"
 msgstr "Proizvod"
-
-msgid "Product display style"
-msgstr "Stil prikaza proizvoda"
 
 msgid "Product ID"
 msgstr "ID proizvoda"
@@ -1447,6 +1459,9 @@ msgstr "Ozbiljnost"
 msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
 msgstr "Prikazuju se zbrojevi za prvih %1$d od %2$d stavki kataloga. Za potpuno izvješće pokrenite provjeru usklađenosti."
 
+msgid "Side stripe"
+msgstr "Bočna crta"
+
 msgid "Sidrena cijena"
 msgstr "Sidrena cijena"
 
@@ -1516,6 +1531,9 @@ msgstr "SKU"
 msgid "SKU / code"
 msgstr "SKU / šifra"
 
+msgid "Soft background"
+msgstr "Blaga pozadina"
+
 msgid "Some rows would replace existing anchor records. Tick the confirmation box below to allow that; replacements are stored as corrections with a reason."
 msgstr "Neki redci bi zamijenili postojeće zapise sidrenih cijena. Označite potvrdni okvir za dopuštenje; zamjene se pohranjuju kao ispravci s razlogom."
 
@@ -1548,6 +1566,9 @@ msgstr "Struktura naziva datoteke:"
 
 msgid "Stvara testne podatke povijesti cijena za provjeru izračuna najniže 30-dnevne cijene."
 msgstr "Stvara testne podatke povijesti cijena za provjeru izračuna najniže 30-dnevne cijene."
+
+msgid "Styling"
+msgstr "Stil prikaza"
 
 msgid "Successful"
 msgstr "Uspješno"
@@ -1608,6 +1629,9 @@ msgstr "Kategorija u datoteci ne odgovara kategoriji stavke kataloga."
 
 msgid "The correction could not be stored."
 msgstr "Ispravak se nije mogao pohraniti."
+
+msgid "The default is 40% of the former display size. Text stays at least 12 pixels for readability; increase the size here when needed."
+msgstr "Zadana veličina iznosi 40 % prethodne veličine prikaza. Tekst ostaje visok najmanje 12 piksela radi čitljivosti; po potrebi povećajte veličinu."
 
 msgid "The end date must be a valid date on or after the start date."
 msgstr "Datum završetka mora biti valjan datum na ili nakon datuma početka."
@@ -1815,6 +1839,9 @@ msgstr "Nepromijenjeno"
 
 msgid "Unclassified promotions"
 msgstr "Neklasificirane promocije"
+
+msgid "Underline"
+msgstr "Podcrtano"
 
 msgid "Unit"
 msgstr "Jedinica"

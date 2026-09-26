@@ -67,6 +67,7 @@ final class SettingsPage {
 	public static function tabs() {
 		$tabs = array(
 			'display'    => array( DisplaySettingsPage::class, __( 'Display', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
+			'styling'    => array( StyleSettingsPage::class, __( 'Styling', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
 			'legal'      => array( LegalSettingsPage::class, __( 'Legal rules', 'sidrena-cijena' ), self::GROUP_RULES ),
 			'sales'      => array( SaleTypesSettings::class, __( 'Special sales', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
 			'operations' => array( OperationsSettingsPage::class, __( 'Operations', 'sidrena-cijena' ), self::GROUP_SETTINGS ),
