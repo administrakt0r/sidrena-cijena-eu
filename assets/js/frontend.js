@@ -22,7 +22,18 @@
 
 		var dateNodes = document.querySelectorAll( '[data-sidrena-cijena-reference-date]' );
 		for ( var j = 0; j < dateNodes.length; j++ ) {
-			dateNodes[ j ].textContent = date ? 'Cijena na dan ' + date : '';
+			var template = '';
+			var wrapper = dateNodes[ j ].closest
+				? dateNodes[ j ].closest( '[data-sidrena-cijena-date-template]' )
+				: null;
+
+			if ( wrapper ) {
+				template = wrapper.getAttribute( 'data-sidrena-cijena-date-template' ) || '';
+			}
+
+			dateNodes[ j ].textContent = date && template
+				? template.replace( '%s', date )
+				: date;
 		}
 	}
 

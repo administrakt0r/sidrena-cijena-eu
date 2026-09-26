@@ -83,6 +83,31 @@ class LowestPrice30DayCalculator {
 
 		$lowest = null;
 		$rows   = 0;
+		$starts = array();
+
+		foreach ( $history as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			$type = isset( $row['price_type'] ) ? (string) $row['price_type'] : '';
+
+			if ( 'lowest_30_day' === $type ) {
+				continue;
+			}
+
+			$start = $this->start_date( $row );
+
+			if ( '' !== $start ) {
+				$starts[ $type ][] = $start;
+			}
+		}
+
+		foreach ( $starts as $type => $dates ) {
+			$dates = array_values( array_unique( $dates ) );
+			sort( $dates );
+			$starts[ $type ] = $dates;
+		}
 
 		foreach ( $history as $row ) {
 			if ( ! is_array( $row ) ) {
@@ -99,21 +124,27 @@ class LowestPrice30DayCalculator {
 				continue;
 			}
 
-			$from = $this->date_part( isset( $row['valid_from'] ) ? $row['valid_from'] : null );
-
-			if ( '' === $from ) {
-				$from = $this->date_part( isset( $row['created_at'] ) ? $row['created_at'] : null );
-			}
+			$from = $this->start_date( $row );
 
 			if ( '' === $from || $from > $window['window_end'] ) {
 				continue;
 			}
 
-			$to = $this->date_part( isset( $row['valid_to'] ) ? $row['valid_to'] : null );
+			$has_valid_from = '' !== $this->date_part( isset( $row['valid_from'] ) ? $row['valid_from'] : null );
+			$to             = $this->date_part( isset( $row['valid_to'] ) ? $row['valid_to'] : null );
 
-			if ( '' === $to && '' === $this->date_part( isset( $row['valid_from'] ) ? $row['valid_from'] : null ) ) {
+			if ( '' === $to && ! $has_valid_from ) {
 				// A record without a validity period applies on its creation day only.
 				$to = $from;
+			} elseif ( '' === $to && isset( $starts[ $type ] ) ) {
+				// An open-ended observation applies until the next observation of
+				// the same price type. Without this, a price superseded long ago
+				// would keep understating the lowest price in every later window.
+				$next = $this->next_start( $starts[ $type ], $from );
+
+				if ( '' !== $next ) {
+					$to = Dates::add_days( $next, -1 );
+				}
 			}
 
 			if ( '' !== $to && $to < $window['window_start'] ) {
@@ -135,6 +166,50 @@ class LowestPrice30DayCalculator {
 			'window_end'   => $window['window_end'],
 			'rows'         => $rows,
 		);
+	}
+
+	/**
+	 * First observation date of a history row, in site-local calendar days.
+	 *
+	 * `created_at` is stored in UTC, so it has to be converted before it is
+	 * compared with the site-local calculation window.
+	 *
+	 * @param array<mixed> $row History row.
+	 * @return string `Y-m-d` or an empty string.
+	 */
+	protected function start_date( array $row ) {
+		$from = $this->date_part( isset( $row['valid_from'] ) ? $row['valid_from'] : null );
+
+		if ( '' !== $from ) {
+			return $from;
+		}
+
+		$created = isset( $row['created_at'] ) ? (string) $row['created_at'] : '';
+
+		if ( '' === $created ) {
+			return '';
+		}
+
+		$local = Dates::from_utc( $created );
+
+		return $local ? $local->format( 'Y-m-d' ) : $this->date_part( $created );
+	}
+
+	/**
+	 * Earliest start date strictly after a date.
+	 *
+	 * @param string[] $dates Sorted unique start dates.
+	 * @param string   $from  Current observation date.
+	 * @return string `Y-m-d` or an empty string when the row is the latest.
+	 */
+	protected function next_start( array $dates, $from ) {
+		foreach ( $dates as $date ) {
+			if ( $date > $from ) {
+				return $date;
+			}
+		}
+
+		return '';
 	}
 
 	/**

@@ -103,9 +103,35 @@ final class GenerateCommand {
 	protected static function dry_run( $plugin, $location, $formats ) {
 		$builder   = new PriceListBuilder( $plugin->catalog(), $plugin->history(), $plugin->special_sales() );
 		$locations = $location > 0 ? array( $plugin->locations()->get( $location ) ) : $plugin->locations()->all( true );
+		$failed    = 0;
 
 		foreach ( $locations as $row ) {
 			if ( ! $row ) {
+				continue;
+			}
+
+			$report = $plugin->validator()->validate(
+				array(
+					'scope'       => 'catalog',
+					'location_id' => (int) $row['id'],
+					'severity'    => 'ERROR',
+				)
+			);
+
+			if ( ! empty( $report['findings'] ) ) {
+				++$failed;
+
+				Cli::out(
+					sprintf(
+						/* translators: 1: location ID, 2: location name, 3: number of validation errors. */
+						__( 'Location #%1$d %2$s: %3$d compliance error(s); nothing would be published.', 'sidrena-cijena' ),
+						(int) $row['id'],
+						(string) $row['name'],
+						count( $report['findings'] )
+					),
+					'error'
+				);
+
 				continue;
 			}
 
@@ -116,7 +142,7 @@ final class GenerateCommand {
 			}
 		}
 
-		return 0;
+		return $failed > 0 ? 1 : 0;
 	}
 
 	/**

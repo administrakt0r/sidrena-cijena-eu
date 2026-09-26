@@ -40,10 +40,11 @@ class BulkAnchorEntryPage {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
 		}
 
-		$paged = self::current_page();
-		$rows  = self::rows( $paged );
-		$total = self::missing_count();
-		$pages = (int) ceil( $total / self::PER_PAGE );
+		$paged   = self::current_page();
+		$missing = self::missing_items( $paged );
+		$rows    = $missing['rows'];
+		$total   = $missing['total'];
+		$pages   = (int) ceil( $total / self::PER_PAGE );
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Anchor entry', 'sidrena-cijena' ) . '</h1>';
@@ -67,7 +68,28 @@ class BulkAnchorEntryPage {
 		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored.', 'sidrena-cijena' ) . '</p></div>';
 
 		if ( ! $rows ) {
-			echo '<p>' . esc_html__( 'Every catalog item has an anchor price recorded.', 'sidrena-cijena' ) . '</p></div>';
+			if ( $total > 0 ) {
+				echo '<p>' . esc_html__( 'No items without an anchor price on this page.', 'sidrena-cijena' ) . '</p>';
+			} else {
+				echo '<p>' . esc_html__( 'Every catalog item has an anchor price recorded.', 'sidrena-cijena' ) . '</p>';
+			}
+
+			if ( $pages > 1 ) {
+				echo '<div class="tablenav"><div class="tablenav-pages">';
+				echo wp_kses_post(
+					(string) paginate_links(
+						array(
+							'base'    => add_query_arg( 'paged', '%#%' ),
+							'format'  => '',
+							'current' => $paged,
+							'total'   => $pages,
+						)
+					)
+				);
+				echo '</div></div>';
+			}
+
+			echo '</div>';
 			return;
 		}
 
@@ -93,7 +115,7 @@ class BulkAnchorEntryPage {
 		echo '<table class="widefat striped"><thead><tr>';
 		echo '<th class="check-column" scope="col"><input type="checkbox" id="sidrena-select-all" title="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" aria-label="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" /></th>';
 		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">SKU</th>';
+		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Current price', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Suggested anchor (unverified)', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</th>';
@@ -388,62 +410,73 @@ class BulkAnchorEntryPage {
 	}
 
 	/**
-	 * Items without an anchor for the current page.
+	 * Items without an anchor for one page of the missing set.
+	 *
+	 * The catalog is streamed once; both the total and the requested page are
+	 * derived from the same filtered set, so a page can never claim the catalog
+	 * is complete while unanchored items exist on another page.
 	 *
 	 * @param int $paged Page number.
-	 * @return array<int,array<string,mixed>>
+	 * @return array{rows:array<int,array<string,mixed>>,total:int}
 	 */
-	protected static function rows( $paged ) {
+	protected static function missing_items( $paged ) {
 		$plugin  = Plugin::instance();
 		$catalog = $plugin->catalog();
 		$history = $plugin->history();
 
-		$items = $catalog->get_items(
-			array(
-				'page'     => max( 1, $paged ),
-				'per_page' => self::PER_PAGE,
-			)
+		$offset = ( max( 1, (int) $paged ) - 1 ) * self::PER_PAGE;
+		$total  = 0;
+		$rows   = array();
+		$chunk  = array();
+
+		foreach ( $catalog->iterate( array( 'per_page' => self::CHECK_CHUNK ) ) as $item ) {
+			$chunk[] = $item;
+
+			if ( count( $chunk ) >= self::CHECK_CHUNK ) {
+				self::collect_missing( $history, $chunk, $offset, $total, $rows );
+				$chunk = array();
+			}
+		}
+
+		self::collect_missing( $history, $chunk, $offset, $total, $rows );
+
+		return array(
+			'rows'  => $rows,
+			'total' => $total,
 		);
+	}
+
+	/**
+	 * Add a batch of unanchored items to the page and total accumulators.
+	 *
+	 * @param \SidrenaCijena\Database\PriceHistoryRepository $history History repository.
+	 * @param array<int,\SidrenaCijena\Catalog\CatalogItem>  $items   Items.
+	 * @param int                                            $offset  First wanted index.
+	 * @param int                                            $total   Running total (by reference).
+	 * @param array<int,array<string,mixed>>                 $rows    Collected page rows (by reference).
+	 * @return void
+	 */
+	protected static function collect_missing( $history, array $items, $offset, &$total, array &$rows ) {
+		if ( empty( $items ) ) {
+			return;
+		}
 
 		$anchored = $history->exists_map( self::item_ids( $items ), 'anchor' );
-		$rows     = array();
 
 		foreach ( $items as $item ) {
 			if ( isset( $anchored[ $item->key() ] ) ) {
 				continue;
 			}
 
-			$rows[] = array(
-				'item'           => $item,
-				'reference_date' => \SidrenaCijena\Compliance\ReferenceDateResolver::resolve( $item )['date'],
-			);
-		}
-
-		return $rows;
-	}
-
-	/**
-	 * Number of catalog items without an anchor (best effort).
-	 *
-	 * @return int
-	 */
-	protected static function missing_count() {
-		$plugin  = Plugin::instance();
-		$catalog = $plugin->catalog();
-		$history = $plugin->history();
-		$count   = 0;
-		$chunk   = array();
-
-		foreach ( $catalog->iterate( array( 'per_page' => self::CHECK_CHUNK ) ) as $item ) {
-			$chunk[] = $item;
-
-			if ( count( $chunk ) >= self::CHECK_CHUNK ) {
-				$count += self::missing_in( $history, $chunk );
-				$chunk  = array();
+			if ( $total >= $offset && count( $rows ) < self::PER_PAGE ) {
+				$rows[] = array(
+					'item'           => $item,
+					'reference_date' => \SidrenaCijena\Compliance\ReferenceDateResolver::resolve( $item )['date'],
+				);
 			}
-		}
 
-		return $count + self::missing_in( $history, $chunk );
+			++$total;
+		}
 	}
 
 	/**

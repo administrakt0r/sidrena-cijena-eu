@@ -299,7 +299,7 @@ class ImportPage {
 		$args = array(
 			'page'                       => self::SLUG,
 			'sidrena_cijena_notice'      => sanitize_key( $type ),
-			'sidrena_cijena_notice_text' => $message,
+			'sidrena_cijena_notice_text' => rawurlencode( $message ),
 		);
 
 		if ( '' !== $batch_id ) {

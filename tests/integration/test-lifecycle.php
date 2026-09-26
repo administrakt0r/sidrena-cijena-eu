@@ -12,6 +12,7 @@ use SidrenaCijena\Database\Migrator;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Deactivator;
 use SidrenaCijena\Support\Install;
+use SidrenaCijena\Support\Settings;
 use SidrenaCijena\Support\Uninstaller;
 
 /**
@@ -106,7 +107,7 @@ class Test_Lifecycle extends WP_UnitTestCase {
 	 */
 	public function test_uninstall_without_optin_preserves_everything() {
 		Install::activate();
-		delete_option( Uninstaller::DELETE_OPTION );
+		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => false ) ) );
 
 		$summary = Uninstaller::run();
 
@@ -189,7 +190,7 @@ class Test_Lifecycle extends WP_UnitTestCase {
 		);
 
 		update_option( 'sidrena_lifecycle_foreign_option', 'keep me', false );
-		update_option( Uninstaller::DELETE_OPTION, true );
+		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => true ) ) );
 
 		$summary = Uninstaller::run();
 
@@ -215,7 +216,7 @@ class Test_Lifecycle extends WP_UnitTestCase {
 		$this->assertSame( array( 'anchor' ), $remaining );
 
 		$this->assertNull( get_post( $post_id ) );
-		$this->assertFalse( get_option( Uninstaller::DELETE_OPTION, false ) );
+		$this->assertFalse( get_option( Settings::OPTION, false ) );
 
 		// Foreign data must survive.
 		$this->assertNotNull( get_post( $foreign_post ) );

@@ -77,4 +77,45 @@ class CsvParserEncodingTest extends TestCase {
 		$this->assertIsArray( $utf8_rows );
 		$this->assertSame( $utf8_rows['rows'], $legacy_rows['rows'] );
 	}
+
+	/**
+	 * A quoted field containing a line break stays one record.
+	 *
+	 * @return void
+	 */
+	public function test_quoted_multiline_field_is_one_record() {
+		$csv   = 'sku;naziv;anchor_price' . "\n" . 'KAV;"Čokolada' . "\n" . '65% kakaa";7,49' . "\n" . 'KAV2;Kava;2,00' . "\n";
+		$parse = ( new CsvParser() )->parse_string( $csv );
+
+		$this->assertIsArray( $parse );
+		$this->assertCount( 2, $parse['rows'] );
+		$this->assertSame( "Čokolada\n65% kakaa", $parse['rows'][0]['name'] );
+		$this->assertSame( 'Kava', $parse['rows'][1]['name'] );
+	}
+
+	/**
+	 * Doubled quotes inside a quoted field survive the record splitter.
+	 *
+	 * @return void
+	 */
+	public function test_doubled_quotes_are_preserved() {
+		$csv   = 'sku;naziv;anchor_price' . "\n" . 'KAV;"Kava ""Premium""";5,00' . "\n";
+		$parse = ( new CsvParser() )->parse_string( $csv );
+
+		$this->assertSame( 'Kava "Premium"', $parse['rows'][0]['name'] );
+	}
+
+	/**
+	 * The date column name used by the plugin's own price list is accepted, so
+	 * re-importing an exported list keeps the reference date.
+	 *
+	 * @return void
+	 */
+	public function test_export_date_column_alias_is_accepted() {
+		$csv   = 'sku;naziv;maloprodajna_cijena;sidrena_cijena;datum_sidrene_cijene' . "\n" . 'KAV;Kava;7,49;6,99;2026-09-10' . "\n";
+		$parse = ( new CsvParser() )->parse_string( $csv );
+
+		$this->assertSame( '6,99', $parse['rows'][0]['anchor_price'] );
+		$this->assertSame( '2026-09-10', $parse['rows'][0]['reference_date'] );
+	}
 }

@@ -85,7 +85,7 @@ final class StatusCommand {
 
 				Cli::out( sprintf( 'Schema: %s | Rules: %s', $data['schema_version'], $data['rule_version'] ) );
 				Cli::out( sprintf( 'Reference dates: general %s, legacy %s', $data['general_date'], $data['legacy_date'] ) );
-				Cli::out( sprintf( 'Scheduler: %s%s', $data['cron']['healthy'] ? 'healthy' : 'NOT SCHEDULED', $data['cron']['next_run'] ? ', next run ' . $data['cron']['next_run'] : '' ) );
+				Cli::out( sprintf( 'Scheduler: %s%s', $data['cron']['healthy'] ? 'healthy' : 'NOT SCHEDULED OR OVERDUE', $data['cron']['next_run'] ? ', next run ' . $data['cron']['next_run'] : '' ) );
 
 				if ( $last_gen && is_array( $last_gen ) ) {
 					$gen_date = ! empty( $last_gen['timestamp'] ) ? Dates::from_utc( gmdate( 'Y-m-d H:i:s', (int) $last_gen['timestamp'] ) )->format( 'c' ) : 'unknown';

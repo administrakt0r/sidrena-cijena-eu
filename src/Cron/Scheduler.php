@@ -83,9 +83,10 @@ final class Scheduler {
 	/**
 	 * Schedule daily generation with a 15-minute buffer before the configured deadline.
 	 *
+	 * @param bool $allow_prompt Whether a run may be queued within the buffer window.
 	 * @return void
 	 */
-	public static function schedule_daily() {
+	public static function schedule_daily( $allow_prompt = true ) {
 		if ( wp_next_scheduled( self::HOOK_DAILY ) ) {
 			return;
 		}
@@ -98,7 +99,7 @@ final class Scheduler {
 		$due_by   = $now->setTime( (int) substr( $deadline, 0, 2 ), (int) substr( $deadline, 3, 2 ) );
 
 		// If activated/re-scheduled after the buffer but before the deadline, run promptly rather than missing today's list.
-		$timestamp = $now >= $run_at && $now < $due_by
+		$timestamp = $allow_prompt && $now >= $run_at && $now < $due_by
 			? time() + 30
 			: Dates::next_occurrence( $run_time, false );
 
@@ -141,13 +142,17 @@ final class Scheduler {
 	 * @return void
 	 */
 	public static function queue_service_regeneration( array $args = array(), $delay = 0 ) {
+		// Cron handlers receive scheduled arguments as positional callback
+		// arguments, so the request array has to be wrapped to stay one argument.
+		$event_args = empty( $args ) ? array() : array( $args );
+
 		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'sidrena_cijena_use_action_scheduler', true ) ) {
-			as_schedule_single_action( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $args, self::AS_GROUP );
+			as_schedule_single_action( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $event_args, self::AS_GROUP );
 
 			return;
 		}
 
-		wp_schedule_single_event( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $args );
+		wp_schedule_single_event( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $event_args );
 	}
 
 	/**
@@ -160,12 +165,18 @@ final class Scheduler {
 	}
 
 	/**
-	 * Whether the daily event is scheduled.
+	 * Whether the daily event is scheduled and not overdue.
+	 *
+	 * WP-Cron runs on the next request, so an event whose timestamp has just
+	 * passed is normal; only an event that stayed due beyond the grace period
+	 * means generation is actually falling behind.
 	 *
 	 * @return bool
 	 */
 	public static function is_healthy() {
-		return (bool) wp_next_scheduled( self::HOOK_DAILY );
+		$next = wp_next_scheduled( self::HOOK_DAILY );
+
+		return false !== $next && (int) $next >= time() - HOUR_IN_SECONDS;
 	}
 
 	/**
@@ -344,10 +355,11 @@ final class Scheduler {
 	/**
 	 * Re-schedule the daily event when the deadline setting changed.
 	 *
+	 * @param bool $allow_prompt Whether a run may be queued within the buffer window.
 	 * @return void
 	 */
-	public static function reschedule_daily() {
+	public static function reschedule_daily( $allow_prompt = true ) {
 		wp_clear_scheduled_hook( self::HOOK_DAILY );
-		self::schedule_daily();
+		self::schedule_daily( $allow_prompt );
 	}
 }

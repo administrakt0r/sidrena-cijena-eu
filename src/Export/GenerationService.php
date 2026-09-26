@@ -152,7 +152,8 @@ class GenerationService {
 			return new \WP_Error( 'missing_store_identifier', $findings[0]['message'], array( 'findings' => $findings ) );
 		}
 
-		$findings = $this->error_findings( $location_id );
+		$validation = $this->catalog_report( $location_id );
+		$findings   = $validation['errors'];
 
 		if ( ! empty( $findings ) ) {
 			$this->record_failure( $location_id, $format, $findings );
@@ -181,7 +182,7 @@ class GenerationService {
 				'rule_version'       => (string) $meta['rule_version'],
 				'validation_summary' => array(
 					'errors'   => 0,
-					'warnings' => 0,
+					'warnings' => (int) $validation['warnings'],
 				),
 				'force'              => ! empty( $args['force'] ),
 			)
@@ -252,29 +253,37 @@ class GenerationService {
 	}
 
 	/**
-	 * Catalog-level ERROR findings for a location.
+	 * Catalog-level findings for a location, split by severity.
 	 *
 	 * @param int $location_id Location ID.
-	 * @return array<mixed>[]
+	 * @return array{errors:array<mixed>,warnings:int}
 	 */
-	protected function error_findings( $location_id ) {
+	protected function catalog_report( $location_id ) {
 		$validator = Plugin::instance()->validator();
 
 		$report = $validator->validate(
 			array(
 				'scope'       => 'catalog',
 				'location_id' => (int) $location_id,
-				'severity'    => 'ERROR',
 			)
 		);
 
-		$findings = array();
+		$errors   = array();
+		$warnings = 0;
 
 		foreach ( $report['findings'] as $finding ) {
-			$findings[] = $finding->to_array();
+			if ( 'ERROR' === $finding->severity ) {
+				$errors[] = $finding->to_array();
+				continue;
+			}
+
+			++$warnings;
 		}
 
-		return $findings;
+		return array(
+			'errors'   => $errors,
+			'warnings' => $warnings,
+		);
 	}
 
 	/**

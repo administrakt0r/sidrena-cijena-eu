@@ -74,7 +74,7 @@ class VariationDisplay {
 			return $data;
 		}
 
-		$price = (float) $anchor['price'];
+		$price = PriceDisplay::display_price( (float) $anchor['price'], $item );
 
 		$data['sidrena_cijena_anchor']                 = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
 		$data['sidrena_cijena_anchor_raw']             = $price;

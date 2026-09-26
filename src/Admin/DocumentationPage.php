@@ -137,11 +137,11 @@ class DocumentationPage {
 		echo '<table class="widefat striped" style="margin-top:15px;margin-bottom:15px;">';
 		echo '<thead><tr><th>' . esc_html__( 'Kuka', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Tip', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Opis primjene', 'sidrena-cijena' ) . '</th></tr></thead>';
 		echo '<tbody>';
-		echo '<tr><td><code>sidrena_cijena_display_anchor</code></td><td>Filter</td><td>' . esc_html__( 'Omogućuje programsku kontrolu treba li prikazati sidrenu cijenu na određenom proizvodu ili stranici.', 'sidrena-cijena' ) . '</td></tr>';
-		echo '<tr><td><code>sidrena_cijena_anchor_recorded</code></td><td>Action</td><td>' . esc_html__( 'Aktivira se nakon uspješnog evidentiranja nove sidrene cijene.', 'sidrena-cijena' ) . '</td></tr>';
-		echo '<tr><td><code>sidrena_cijena_publication_published</code></td><td>Action</td><td>' . esc_html__( 'Aktivira se nakon što se generira i objavi novi cjenik na poslužitelju.', 'sidrena-cijena' ) . '</td></tr>';
-		echo '<tr><td><code>sidrena_cijena_special_sale_changed</code></td><td>Action</td><td>' . esc_html__( 'Aktivira se prilikom izmjene ili ponovnog izračuna posebnog oblika prodaje.', 'sidrena-cijena' ) . '</td></tr>';
-		echo '<tr><td><code>sidrena_cijena_enable_standalone_catalog</code></td><td>Filter</td><td>' . esc_html__( 'Dopušta registraciju samostalnog kataloga (CPT) čak i ako je WooCommerce aktivan.', 'sidrena-cijena' ) . '</td></tr>';
+		echo '<tr><td><code>sidrena_cijena_display_anchor</code></td><td>' . esc_html__( 'Filter', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Omogućuje programsku kontrolu treba li prikazati sidrenu cijenu na određenom proizvodu ili stranici.', 'sidrena-cijena' ) . '</td></tr>';
+		echo '<tr><td><code>sidrena_cijena_anchor_recorded</code></td><td>' . esc_html__( 'Action', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Aktivira se nakon uspješnog evidentiranja nove sidrene cijene.', 'sidrena-cijena' ) . '</td></tr>';
+		echo '<tr><td><code>sidrena_cijena_publication_published</code></td><td>' . esc_html__( 'Action', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Aktivira se nakon što se generira i objavi novi cjenik na poslužitelju.', 'sidrena-cijena' ) . '</td></tr>';
+		echo '<tr><td><code>sidrena_cijena_special_sale_changed</code></td><td>' . esc_html__( 'Action', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Aktivira se prilikom izmjene ili ponovnog izračuna posebnog oblika prodaje.', 'sidrena-cijena' ) . '</td></tr>';
+		echo '<tr><td><code>sidrena_cijena_enable_standalone_catalog</code></td><td>' . esc_html__( 'Filter', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Dopušta registraciju samostalnog kataloga (CPT) čak i ako je WooCommerce aktivan.', 'sidrena-cijena' ) . '</td></tr>';
 		echo '</tbody></table>';
 		echo '</div>';
 

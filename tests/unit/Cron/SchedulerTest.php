@@ -105,6 +105,59 @@ class SchedulerTest extends TestCase {
 	}
 
 	/**
+	 * An event that is overdue beyond the grace period is not healthy.
+	 *
+	 * @return void
+	 */
+	public function test_is_healthy_reports_overdue_events() {
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+		$this->assertFalse( Scheduler::is_healthy() );
+
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', Scheduler::HOOK_DAILY );
+		$this->assertTrue( Scheduler::is_healthy() );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+		wp_schedule_event( time() - ( 2 * HOUR_IN_SECONDS ), 'daily', Scheduler::HOOK_DAILY );
+		$this->assertFalse( Scheduler::is_healthy() );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+	}
+
+	/**
+	 * Inside the buffer window a prompt run is queued soon, while a
+	 * reschedule after running must not queue another forced run.
+	 *
+	 * @return void
+	 */
+	public function test_prompt_window_queue_and_non_prompt_reschedule() {
+		$now = Dates::now_site();
+
+		if ( $now->modify( '-5 minutes' )->format( 'Y-m-d' ) !== $now->modify( '+10 minutes' )->format( 'Y-m-d' ) ) {
+			$this->markTestSkipped( 'The buffer window crosses midnight on this run.' );
+		}
+
+		update_option( 'sidrena_cijena_settings', array( 'deadline' => $now->modify( '+10 minutes' )->format( 'H:i' ) ), false );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+
+		Scheduler::schedule_daily( true );
+		$prompt = wp_next_scheduled( Scheduler::HOOK_DAILY );
+
+		$this->assertNotFalse( $prompt );
+		$this->assertLessThanOrEqual( time() + 40, $prompt );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+
+		Scheduler::schedule_daily( false );
+		$next = wp_next_scheduled( Scheduler::HOOK_DAILY );
+
+		$this->assertNotFalse( $next );
+		$this->assertGreaterThan( time() + 600, $next );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
+	}
+
+	/**
 	 * Notice shows error when last generation failed.
 	 *
 	 * @return void

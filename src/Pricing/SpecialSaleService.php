@@ -10,6 +10,7 @@ namespace SidrenaCijena\Pricing;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
 use WP_Error;
 
@@ -253,6 +254,13 @@ class SpecialSaleService {
 			);
 		}
 
+		// The end date is inclusive: store it as the last second of that day so
+		// the sale stays active for the whole end day instead of ending at
+		// midnight (a one-day sale must be able to be active).
+		$end_stored = null !== $end ? $end . ' 23:59:59' : null;
+
+		$promo = Currency::to_storage( isset( $args['promo_price'] ) && '' !== $args['promo_price'] ? $args['promo_price'] : null );
+
 		$window = $this->calculator->window( $start );
 		$lowest = $this->calculator->calculate(
 			$this->history->timeline(
@@ -271,8 +279,8 @@ class SpecialSaleService {
 				'sale_type'           => $sale_type,
 				'sale_name'           => isset( $args['sale_name'] ) ? (string) $args['sale_name'] : '',
 				'start_date'          => $start,
-				'end_date'            => $end,
-				'promo_price'         => isset( $args['promo_price'] ) && '' !== $args['promo_price'] ? (float) $args['promo_price'] : null,
+				'end_date'            => $end_stored,
+				'promo_price'         => $promo,
 				'lowest_30_day_price' => $lowest,
 				'window_start'        => $window ? $window['window_start'] : null,
 				'window_end'          => $window ? $window['window_end'] : null,

@@ -252,7 +252,12 @@ final class RowValidator {
 			'items' => array(),
 		);
 
-		foreach ( $this->catalog->iterate( array( 'per_page' => 200 ) ) as $item ) {
+		foreach ( $this->catalog->iterate(
+			array(
+				'per_page'           => 200,
+				'include_variations' => true,
+			)
+		) as $item ) {
 			$index['items'][ $item->key() ] = $item;
 
 			if ( '' !== (string) $item->sku ) {

@@ -261,8 +261,8 @@ class PriceDisplay {
 		// WooCommerce stores prices excluding tax and adjusts them for display,
 		// so the anchor has to be shown on the same basis as the price next to
 		// it (FR-014).
-		$anchor_price  = $this->display_price( $anchor_price, $item );
-		$current_price = $this->display_price( $current_price, $item );
+		$anchor_price  = self::display_price( $anchor_price, $item );
+		$current_price = self::display_price( $current_price, $item );
 
 		$only_when_different = array_key_exists( 'only_when_different', $args )
 			? (bool) $args['only_when_different']
@@ -455,8 +455,15 @@ class PriceDisplay {
 	 * @param CatalogItem $item   Catalog item.
 	 * @return float|null
 	 */
-	protected function display_price( $amount, CatalogItem $item ) {
+	public static function display_price( $amount, CatalogItem $item ) {
 		if ( null === $amount || ! function_exists( 'wc_get_price_to_display' ) || ! function_exists( 'wc_get_product' ) ) {
+			return $amount;
+		}
+
+		// An anchor stored gross already is the customer-facing retail price.
+		// Passing it through wc_get_price_to_display() in a shop that enters
+		// prices net of tax would add tax again and overstate the legal price.
+		if ( ! empty( $item->tax_inclusive ) ) {
 			return $amount;
 		}
 

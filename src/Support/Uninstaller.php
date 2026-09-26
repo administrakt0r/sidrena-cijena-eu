@@ -69,7 +69,9 @@ final class Uninstaller {
 	 * @return bool
 	 */
 	public static function should_delete() {
-		return (bool) get_option( self::DELETE_OPTION, false );
+		$settings = Settings::all();
+
+		return ! empty( $settings['delete_data_on_uninstall'] );
 	}
 
 	/**

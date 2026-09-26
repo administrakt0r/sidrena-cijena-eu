@@ -302,4 +302,50 @@ class BulkAnchorEntryTest extends TestCase {
 		$this->assertSame( 0, $history->latest_calls, 'The screen must not run per-item anchor lookups.' );
 		$this->assertGreaterThanOrEqual( 1, $history->exists_map_calls, 'Anchors must be resolved with batched existence queries.' );
 	}
+
+	/**
+	 * Pagination slices the filtered (missing) set, not the raw catalog page.
+	 *
+	 * A page of raw catalog items that are all anchored must not hide later
+	 * unanchored items nor print the all-clear.
+	 *
+	 * @return void
+	 */
+	public function test_bulk_anchor_paginates_the_filtered_missing_set() {
+		$catalog = new BulkFakeCatalog();
+
+		for ( $id = 1; $id <= 60; $id++ ) {
+			$catalog->items[ $id ] = new CatalogItem(
+				array(
+					'id'            => $id,
+					'name'          => 'Item ' . $id,
+					'sku'           => 'SKU-' . $id,
+					'regular_price' => '9.99',
+				)
+			);
+		}
+
+		$history = new BulkFakeHistory();
+
+		for ( $id = 1; $id <= 50; $id++ ) {
+			$history->anchored[ $id . ':0' ] = true;
+		}
+
+		Plugin::instance()->set_catalog( $catalog );
+		PluginSwap::swap( 'history', $history );
+
+		$_GET['paged'] = 1;
+
+		ob_start();
+		BulkAnchorEntryPage::render();
+		$html = ob_get_clean();
+
+		unset( $_GET['paged'] );
+
+		$this->assertStringContainsString( 'SKU-51', $html );
+		$this->assertStringContainsString( 'SKU-60', $html );
+		$this->assertStringNotContainsString( 'SKU-50', $html );
+		$this->assertStringContainsString( '10 item(s) have no anchor price yet.', $html );
+		$this->assertStringNotContainsString( 'Every catalog item has an anchor price recorded.', $html );
+	}
 }

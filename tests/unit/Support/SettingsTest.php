@@ -115,14 +115,36 @@ class SettingsTest extends TestCase {
 	}
 
 	/**
-	 * Checkbox-style settings are booleanized.
+	 * Checkbox-style settings are booleanized when they are submitted.
 	 *
 	 * @return void
 	 */
 	public function test_sanitize_booleans() {
-		$sanitized = Settings::sanitize( array() );
+		$sanitized = Settings::sanitize(
+			array(
+				'display_enabled'     => '1',
+				'only_when_different' => '0',
+			)
+		);
 
-		$this->assertFalse( $sanitized['display_enabled'] );
+		$this->assertTrue( $sanitized['display_enabled'] );
 		$this->assertFalse( $sanitized['only_when_different'] );
+	}
+
+	/**
+	 * Flags belonging to another settings tab keep their stored value when a
+	 * partial form is submitted (each tab posts only its own fields).
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_preserves_flags_not_in_submission() {
+		$sanitized = Settings::sanitize( array( 'anchor_label' => 'Cijena' ) );
+
+		$this->assertTrue( $sanitized['display_enabled'] );
+		$this->assertTrue( $sanitized['display_product_pages'] );
+		$this->assertTrue( $sanitized['display_archives'] );
+		$this->assertTrue( $sanitized['display_variations'] );
+		$this->assertFalse( $sanitized['only_when_different'] );
+		$this->assertFalse( $sanitized['delete_data_on_uninstall'] );
 	}
 }

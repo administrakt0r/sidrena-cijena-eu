@@ -11,12 +11,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$sidrena_classes = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context );
+/* translators: %s: date of the reference price. */
+$sidrena_date_template = __( 'Cijena na dan %s', 'sidrena-cijena' );
+$sidrena_classes       = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context );
 ?>
 <div class="<?php echo esc_attr( $sidrena_classes ); ?>"
 	title="<?php echo esc_attr( $anchor_title ); ?>"
 	data-product-id="<?php echo esc_attr( (string) $product_id ); ?>"
-	data-variation-id="<?php echo esc_attr( (string) $variation_id ); ?>">
+	data-variation-id="<?php echo esc_attr( (string) $variation_id ); ?>"
+	data-sidrena-cijena-date-template="<?php echo esc_attr( $sidrena_date_template ); ?>">
 	<?php if ( $show_current && $current_display ) : ?>
 		<span class="sidrena-cijena__current">
 			<span class="sidrena-cijena__current-value"><?php echo esc_html( $current_display ); ?></span>
@@ -28,7 +31,7 @@ $sidrena_classes = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $con
 			<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
 			<span class="sidrena-cijena__anchor-value" data-sidrena-cijena-anchor><?php echo esc_html( $anchor_display ); ?></span>
 			<?php if ( $reference_date_display ) : ?>
-				<span class="sidrena-cijena__reference-date" data-sidrena-cijena-reference-date><?php /* translators: %s: date on which the anchor price applied. */ echo esc_html( sprintf( __( 'Cijena na dan %s', 'sidrena-cijena' ), $reference_date_display ) ); ?></span>
+				<span class="sidrena-cijena__reference-date" data-sidrena-cijena-reference-date><?php echo esc_html( sprintf( $sidrena_date_template, $reference_date_display ) ); ?></span>
 			<?php endif; ?>
 		</span>
 	<?php endif; ?>

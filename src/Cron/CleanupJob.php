@@ -37,7 +37,15 @@ class CleanupJob {
 			$path = isset( $row['path'] ) ? (string) $row['path'] : '';
 
 			if ( '' !== $path && file_exists( $path ) ) {
-				wp_delete_file( $path );
+				$deleted_file = wp_delete_file( $path );
+
+				// WordPress < 6.7 returns nothing here; only a definitive
+				// failure keeps the row active so the next run retries the
+				// file instead of losing it forever.
+				if ( false === $deleted_file ) {
+					continue;
+				}
+
 				++$deleted;
 			}
 

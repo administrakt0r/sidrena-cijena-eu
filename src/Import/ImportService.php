@@ -122,7 +122,11 @@ final class ImportService {
 		);
 
 		if ( $report['dry_run'] ) {
-			$report['inserted'] = (int) $preview['summary']['valid'] + $overwrite;
+			$summary = $preview['summary'];
+
+			$report['inserted'] = (int) $summary['valid'] + $overwrite;
+			$report['skipped']  = (int) $summary['invalid'] + (int) $summary['duplicate'] + (int) $summary['unchanged'];
+			$report['failed']   = (int) $summary['parse_errors'];
 
 			return $report;
 		}
@@ -201,7 +205,7 @@ final class ImportService {
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Commit of the atomic import batch.
 			$wpdb->query( 'COMMIT' );
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Rollback of the atomic import batch.
 			$wpdb->query( 'ROLLBACK' );
 
@@ -210,7 +214,7 @@ final class ImportService {
 			return new \WP_Error( 'import_rolled_back', __( 'The import failed and was rolled back.', 'sidrena-cijena' ) );
 		}
 
-		$report['failed'] = count( $report['errors'] );
+		$report['failed'] = max( (int) $report['failed'], count( $report['errors'] ) );
 
 		Logger::info(
 			'import',

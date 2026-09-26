@@ -8,6 +8,7 @@
 namespace SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
+use SidrenaCijena\Support\Settings;
 use SidrenaCijena\Support\Uninstaller;
 
 /**
@@ -46,10 +47,10 @@ class UninstallerTest extends TestCase {
 	public function test_should_delete_defaults_to_false() {
 		$this->assertFalse( Uninstaller::should_delete() );
 
-		update_option( Uninstaller::DELETE_OPTION, 1 );
+		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => true ) ) );
 		$this->assertTrue( Uninstaller::should_delete() );
 
-		update_option( Uninstaller::DELETE_OPTION, 0 );
+		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => false ) ) );
 		$this->assertFalse( Uninstaller::should_delete() );
 	}
 

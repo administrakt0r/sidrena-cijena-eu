@@ -243,7 +243,7 @@ class SpecialSaleMetaBox {
 				'post'                       => (int) $post_id,
 				'action'                     => 'edit',
 				'sidrena_cijena_notice'      => $type,
-				'sidrena_cijena_notice_text' => $message,
+				'sidrena_cijena_notice_text' => rawurlencode( $message ),
 			),
 			admin_url( 'post.php' )
 		);

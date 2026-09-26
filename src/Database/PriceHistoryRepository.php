@@ -71,7 +71,11 @@ class PriceHistoryRepository {
 
 		$row = $this->normalize( $data );
 
-		$wpdb->insert( $this->table, $row, $this->formats( $row ) );
+		$inserted = $wpdb->insert( $this->table, $row, $this->formats( $row ) );
+
+		if ( false === $inserted || (int) $wpdb->insert_id <= 0 ) {
+			return 0;
+		}
 
 		return (int) $wpdb->insert_id;
 	}

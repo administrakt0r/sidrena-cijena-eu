@@ -25,23 +25,24 @@ final class CsvParser {
 	 */
 	public static function aliases() {
 		return array(
-			'sku'              => 'sku',
-			'sifra'            => 'sku',
-			'product_id'       => 'product_id',
-			'product'          => 'product_id',
-			'proizvod_id'      => 'product_id',
-			'variation_id'     => 'variation_id',
-			'varijacija_id'    => 'variation_id',
-			'reference_date'   => 'reference_date',
-			'referentni_datum' => 'reference_date',
-			'datum'            => 'reference_date',
-			'anchor_price'     => 'anchor_price',
-			'sidrena_cijena'   => 'anchor_price',
-			'cijena'           => 'anchor_price',
-			'category'         => 'category',
-			'kategorija'       => 'category',
-			'name'             => 'name',
-			'naziv'            => 'name',
+			'sku'                  => 'sku',
+			'sifra'                => 'sku',
+			'product_id'           => 'product_id',
+			'product'              => 'product_id',
+			'proizvod_id'          => 'product_id',
+			'variation_id'         => 'variation_id',
+			'varijacija_id'        => 'variation_id',
+			'reference_date'       => 'reference_date',
+			'referentni_datum'     => 'reference_date',
+			'datum'                => 'reference_date',
+			'datum_sidrene_cijene' => 'reference_date',
+			'anchor_price'         => 'anchor_price',
+			'sidrena_cijena'       => 'anchor_price',
+			'cijena'               => 'anchor_price',
+			'category'             => 'category',
+			'kategorija'           => 'category',
+			'name'                 => 'name',
+			'naziv'                => 'name',
 		);
 	}
 
@@ -147,22 +148,21 @@ final class CsvParser {
 	 * @return array<mixed>|\WP_Error
 	 */
 	public function parse_string( $contents ) {
-		$contents = preg_replace( '/^\xEF\xBB\xBF/', '', (string) $contents );
-		$lines    = preg_split( '/\r\n|\r|\n/', (string) $contents );
-		$lines    = is_array( $lines ) ? $lines : array();
+		$contents   = (string) preg_replace( '/^\xEF\xBB\xBF/', '', (string) $contents );
+		$first_line = substr( $contents, 0, (int) strcspn( $contents, "\r\n" ) );
+		$delimiter  = $this->detect_delimiter( $first_line );
+		$records    = $this->split_records( $contents );
 
-		$header    = null;
-		$delimiter = ';';
+		$header = null;
 
-		foreach ( $lines as $index => $line ) {
-			if ( '' === trim( (string) $line ) ) {
-				unset( $lines[ $index ] );
+		foreach ( $records as $index => $record ) {
+			if ( '' === trim( $record ) ) {
+				unset( $records[ $index ] );
 				continue;
 			}
 
-			$delimiter = $this->detect_delimiter( (string) $line );
-			$header    = $this->map_header( str_getcsv( (string) $line, $delimiter, '"', '\\' ) );
-			unset( $lines[ $index ] );
+			$header = $this->map_header( str_getcsv( $record, $delimiter, '"', '\\' ) );
+			unset( $records[ $index ] );
 			break;
 		}
 
@@ -178,8 +178,8 @@ final class CsvParser {
 		$errors = array();
 		$count  = 0;
 
-		foreach ( $lines as $line ) {
-			if ( '' === trim( (string) $line ) ) {
+		foreach ( $records as $record ) {
+			if ( '' === trim( $record ) ) {
 				continue;
 			}
 
@@ -193,7 +193,7 @@ final class CsvParser {
 				break;
 			}
 
-			$cells = str_getcsv( (string) $line, $delimiter, '"', '\\' );
+			$cells = str_getcsv( $record, $delimiter, '"', '\\' );
 			$row   = array();
 
 			foreach ( $header as $column => $field ) {
@@ -210,6 +210,57 @@ final class CsvParser {
 			'headers'   => array_values( $header ),
 			'delimiter' => $delimiter,
 		);
+	}
+
+	/**
+	 * Split CSV contents into records, honouring quoted newlines.
+	 *
+	 * `str_getcsv()` handles quoted newlines inside a single record, but the
+	 * records themselves still have to be split without breaking quoted
+	 * fields. Splitting on `\r\n|\r|\n` first would corrupt any field that
+	 * contains a line break, including the plugin's own exports.
+	 *
+	 * @param string $contents Raw file contents.
+	 * @return string[]
+	 */
+	protected function split_records( $contents ) {
+		$records = array();
+		$record  = '';
+		$quoted  = false;
+		$length  = strlen( $contents );
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$char = $contents[ $i ];
+
+			if ( '"' === $char ) {
+				// A doubled quote escapes a quote inside a quoted field.
+				if ( $quoted && $i + 1 < $length && '"' === $contents[ $i + 1 ] ) {
+					$record .= '""';
+					++$i;
+					continue;
+				}
+
+				$quoted  = ! $quoted;
+				$record .= $char;
+				continue;
+			}
+
+			if ( ! $quoted && ( "\n" === $char || "\r" === $char ) ) {
+				if ( "\r" === $char && $i + 1 < $length && "\n" === $contents[ $i + 1 ] ) {
+					++$i;
+				}
+
+				$records[] = $record;
+				$record    = '';
+				continue;
+			}
+
+			$record .= $char;
+		}
+
+		$records[] = $record;
+
+		return $records;
 	}
 
 	/**

@@ -256,4 +256,80 @@ class LowestPrice30DayCalculatorTest extends TestCase {
 
 		$this->assertNull( $this->calculator->calculate( $history, '2026-10-01' ) );
 	}
+
+	/**
+	 * An open-ended observation ends when the next observation of the same
+	 * price type starts; a long superseded cheap price must not understate
+	 * the lowest price of a later window.
+	 *
+	 * @return void
+	 */
+	public function test_open_row_is_bounded_by_next_row_of_same_type() {
+		$history = array(
+			$this->row( 5.00, '2026-02-01' ),
+			$this->row( 12.00, '2026-09-01' ),
+		);
+
+		$this->assertSame( 12.0, $this->calculator->calculate( $history, '2026-10-01' ) );
+	}
+
+	/**
+	 * A superseded observation that ended before the window is excluded even
+	 * when it was the cheapest price ever recorded.
+	 *
+	 * @return void
+	 */
+	public function test_superseded_row_ending_before_window_is_excluded() {
+		$history = array(
+			$this->row( 4.00, '2026-06-01' ),
+			$this->row( 9.00, '2026-08-15' ),
+		);
+
+		$this->assertSame( 9.0, $this->calculator->calculate( $history, '2026-10-01' ) );
+	}
+
+	/**
+	 * The latest observation of a type stays open-ended.
+	 *
+	 * @return void
+	 */
+	public function test_latest_row_of_type_stays_open_ended() {
+		$history = array(
+			$this->row( 7.25, '2026-01-01' ),
+		);
+
+		$this->assertSame( 7.25, $this->calculator->calculate( $history, '2026-10-01' ) );
+	}
+
+	/**
+	 * A UTC creation timestamp is converted to the site-local day before it is
+	 * compared with the window.
+	 *
+	 * @return void
+	 */
+	public function test_created_at_is_converted_from_utc_to_site_time() {
+		$inside = array(
+			array(
+				'price'      => 8.00,
+				'valid_from' => null,
+				'valid_to'   => null,
+				'price_type' => 'historical',
+				'created_at' => '2026-08-31 22:30:00',
+			),
+		);
+
+		$this->assertSame( 8.0, $this->calculator->calculate( $inside, '2026-10-01' ) );
+
+		$outside = array(
+			array(
+				'price'      => 8.00,
+				'valid_from' => null,
+				'valid_to'   => null,
+				'price_type' => 'historical',
+				'created_at' => '2026-09-30 23:30:00',
+			),
+		);
+
+		$this->assertNull( $this->calculator->calculate( $outside, '2026-10-01' ) );
+	}
 }

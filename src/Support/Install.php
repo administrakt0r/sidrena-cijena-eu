@@ -35,6 +35,11 @@ final class Install {
 
 		Migrator::migrate();
 
+		// Settings defaults are translatable strings, and `init` has not run
+		// yet during activation, so the textdomain has to be loaded explicitly
+		// or the seeded labels would be stored in English.
+		load_plugin_textdomain( 'sidrena-cijena', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
+
 		self::seed_options();
 
 		if ( ! WooCommerceDetector::is_active() ) {

@@ -151,6 +151,7 @@ class PriceListBuilder {
 			'poseban_oblik_prodaje'         => null !== $sale,
 			'naziv_posebnog_oblika_prodaje' => null !== $sale ? $this->sale_name( $sale ) : '',
 			'sidrena_cijena'                => $anchor ? (float) $anchor['price'] : null,
+			'currency'                      => (string) $item->currency,
 			'barkod'                        => (string) $item->barcode,
 			'dostupnost'                    => 'available' === $item->availability ? 'dostupno' : 'nedostupno',
 			'product_id'                    => (int) $item->id,
@@ -288,6 +289,8 @@ class PriceListBuilder {
 				$item['poseban_oblik_prodaje'],
 				$item['naziv_posebnog_oblika_prodaje'],
 				$item['sidrena_cijena'],
+				$item['anchor_reference_date'],
+				$item['currency'],
 				$item['barkod'],
 				$item['dostupnost'],
 			);

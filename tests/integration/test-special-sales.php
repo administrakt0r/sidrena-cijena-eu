@@ -143,6 +143,7 @@ class Test_Special_Sales extends WP_UnitTestCase {
 
 		$this->assertSame( 'akcija', $sale['sale_type'] );
 		$this->assertSame( 'Jesenska akcija', $sale['sale_name'] );
+		$this->assertSame( '2026-10-15 23:59:59', $sale['end_date'] );
 		$this->assertSame( 8.0, (float) $sale['lowest_30_day_price'] );
 		$this->assertSame( '2026-09-01', $sale['window_start'] );
 		$this->assertSame( '2026-09-30', $sale['window_end'] );
@@ -283,5 +284,36 @@ class Test_Special_Sales extends WP_UnitTestCase {
 
 		$this->assertTrue( $this->service->cancel( $sale_id ) );
 		$this->assertNull( $this->service->active( $item->id ) );
+	}
+
+	/**
+	 * The end date is inclusive: a one-day sale is active for that whole day.
+	 *
+	 * @return void
+	 */
+	public function test_sale_is_active_on_its_end_day() {
+		$item  = $this->create_item( 'Kava mljevena', 'KAV-250', 10.00 );
+		$today = Dates::today();
+
+		$sale_id = $this->service->create(
+			$item,
+			array(
+				'sale_type'  => 'akcija',
+				'start_date' => $today,
+				'end_date'   => $today,
+			)
+		);
+
+		$this->assertIsInt( $sale_id );
+
+		$sale = $this->sales->get( $sale_id );
+		$this->assertSame( $today . ' 23:59:59', $sale['end_date'] );
+
+		$this->sales->refresh_statuses();
+		$this->assertSame( 'active', $this->sales->get( $sale_id )['status'] );
+
+		$active = $this->service->active( $item->id );
+		$this->assertNotNull( $active );
+		$this->assertSame( $sale_id, (int) $active['id'] );
 	}
 }

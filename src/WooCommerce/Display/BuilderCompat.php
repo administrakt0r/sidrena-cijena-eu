@@ -141,11 +141,20 @@ class BuilderCompat {
 			return $content;
 		}
 
-		$product = wc_get_product( get_queried_object_id() );
+		$queried = (int) get_queried_object_id();
+		$global  = isset( $GLOBALS['product'] ) && $GLOBALS['product'] instanceof \WC_Product ? $GLOBALS['product'] : null;
+
+		// Inside a related/upsell/widget loop the global product is the loop
+		// item, not the queried product; appending the queried product's
+		// anchor to such a price element would leak the wrong anchor.
+		if ( $queried > 0 && $global instanceof \WC_Product && (int) $global->get_id() !== $queried ) {
+			return $content;
+		}
+
+		$product = wc_get_product( $queried );
 
 		if ( ! $product instanceof \WC_Product ) {
-			$fallback = isset( $GLOBALS['product'] ) ? $GLOBALS['product'] : null;
-			$product  = $fallback instanceof \WC_Product ? $fallback : null;
+			$product = $global;
 		}
 
 		if ( ! $product instanceof \WC_Product ) {

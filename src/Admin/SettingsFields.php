@@ -94,9 +94,10 @@ final class SettingsFields {
 	 */
 	public function checkbox( $key, $value, array $args = array() ) {
 		printf(
-			'<label for="%1$s"><input type="checkbox" id="%1$s" name="%2$s" value="1" %3$s /> %4$s</label>',
-			esc_attr( $key ),
+			'<input type="hidden" name="%1$s" value="0" />'
+			. '<label for="%2$s"><input type="checkbox" id="%2$s" name="%1$s" value="1" %3$s /> %4$s</label>',
 			esc_attr( $this->name( $key ) ),
+			esc_attr( $key ),
 			checked( (bool) $value, true, false ),
 			esc_html( isset( $args['label'] ) ? $args['label'] : '' )
 		);

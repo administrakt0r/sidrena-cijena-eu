@@ -40,7 +40,11 @@ class DailyGeneration {
 	 */
 	public static function run_scheduled() {
 		self::execute_generation( 'scheduled' );
-		Scheduler::reschedule_daily();
+
+		// Re-anchor to the next wall-clock occurrence. The prompt branch in
+		// schedule_daily() would queue another run 30 seconds later and loop
+		// until the deadline, force-publishing duplicate lists.
+		Scheduler::reschedule_daily( false );
 	}
 
 	/**
@@ -59,6 +63,10 @@ class DailyGeneration {
 	 * @return array<mixed>
 	 */
 	public static function execute_generation( $source = 'scheduled' ) {
+		// Transition stale sale statuses before the lists are built so the
+		// published data and the admin screens agree on which sales are active.
+		Plugin::instance()->special_sales()->refresh_statuses();
+
 		$results = Plugin::instance()->generation()->generate_all(
 			array(
 				'source' => $source,

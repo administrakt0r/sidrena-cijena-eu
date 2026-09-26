@@ -1091,6 +1091,14 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 	class WP_CLI_Command {}
 }
 
+if ( ! defined( 'SIDRENA_CIJENA_FILE' ) ) {
+	define( 'SIDRENA_CIJENA_FILE', dirname( __DIR__, 2 ) . '/sidrena-cijena.php' );
+}
+
+if ( ! defined( 'SIDRENA_CIJENA_BASENAME' ) ) {
+	define( 'SIDRENA_CIJENA_BASENAME', 'sidrena-cijena/sidrena-cijena.php' );
+}
+
 if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
 	define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__, 2 ) . '/' );
 }

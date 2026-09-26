@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,16 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.8 =
+* Reliability: the daily 08:00 run no longer force-publishes duplicate price lists when a run happens just before the deadline, and service price changes queue the correct regeneration request.
+* Special sales: the end date is inclusive (a sale is active until the end of its last day), one-day sales work, and promo prices entered with a comma decimal are stored correctly.
+* 30-day lowest price: superseded prices no longer pin the lowest value forever, and stored timestamps are converted to site time before window comparison.
+* Publication gate: locations with an incomplete street address or city block filename generation as documented.
+* Import: re-importing the plugin's own CSV keeps the reference-date column, quoted multi-line fields parse correctly, and variation rows validate against the catalog.
+* WooCommerce: price changes refresh the public feed, variation anchors respect the shop tax display settings, and builder-rendered prices no longer borrow the anchor of a different product.
+* Admin: saving one settings tab no longer resets the flags of another, the uninstall data-deletion opt-in works, the bulk anchor screen paginates the items that actually lack anchors, and several labels and notices are translated and escaped.
+* Rebuilt translation catalogs with 100% Croatian coverage (572 strings).
 
 = 1.0.7 =
 * Performance: batched anchor lookups in the bulk anchor setup screen and the price-list builder, eliminating N+1 queries on large catalogs.

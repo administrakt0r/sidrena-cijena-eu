@@ -436,7 +436,7 @@ class PriceListController {
 			'barcode'               => (string) $item['barkod'],
 			'unit'                  => (string) $item['jedinica_mjere'],
 			'unit_price'            => null === $item['cijena_za_jedinicu_mjere'] ? null : (float) $item['cijena_za_jedinicu_mjere'],
-			'currency'              => Currency::DEFAULT_CURRENCY,
+			'currency'              => isset( $item['currency'] ) && '' !== $item['currency'] ? (string) $item['currency'] : Currency::DEFAULT_CURRENCY,
 			'current_price'         => (float) $item['maloprodajna_cijena'],
 			'anchor_price'          => null === $item['sidrena_cijena'] ? null : (float) $item['sidrena_cijena'],
 			'anchor_reference_date' => $item['anchor_reference_date'],

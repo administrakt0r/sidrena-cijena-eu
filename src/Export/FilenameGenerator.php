@@ -89,9 +89,16 @@ class FilenameGenerator {
 			return new \WP_Error( 'invalid_filename', __( 'The facility identifier is missing.', 'sidrena-cijena' ) );
 		}
 
+		$street = isset( $location['address'] ) ? trim( (string) $location['address'] ) : '';
+		$city   = isset( $location['city'] ) ? trim( (string) $location['city'] ) : '';
+
+		if ( '' === $street || '' === $city ) {
+			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'sidrena-cijena' ) );
+		}
+
 		$address = self::address_token(
-			isset( $location['address'] ) ? (string) $location['address'] : '',
-			isset( $location['city'] ) ? (string) $location['city'] : '',
+			$street,
+			$city,
 			self::separator( $location )
 		);
 

@@ -94,7 +94,7 @@ class PriceHistoryRecorder {
 			return;
 		}
 
-		$history->insert(
+		$inserted = $history->insert(
 			array(
 				'product_id'    => (int) $item->id,
 				'variation_id'  => (int) $item->variation_id,
@@ -109,5 +109,23 @@ class PriceHistoryRecorder {
 				'created_by'    => get_current_user_id(),
 			)
 		);
+
+		if ( ! $inserted ) {
+			return;
+		}
+
+		/**
+		 * Fires when a catalog price was recorded from WooCommerce.
+		 *
+		 * Mirrors the standalone catalog signal so REST caches are flushed and
+		 * service-price changes queue a regeneration for WooCommerce stores too.
+		 *
+		 * @param int         $product_id   Product ID.
+		 * @param int         $variation_id Variation ID (0 for none).
+		 * @param float|null  $previous     Previous stored price.
+		 * @param float       $current      New stored price.
+		 * @param string      $source       Price source.
+		 */
+		do_action( 'sidrena_cijena_price_changed', (int) $item->id, (int) $item->variation_id, $last ? (float) $last['price'] : null, (float) $amount, 'woocommerce' );
 	}
 }

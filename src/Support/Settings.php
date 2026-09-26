@@ -180,8 +180,14 @@ final class Settings {
 			$output['display_priority'] = (int) $input['display_priority'];
 		}
 
+		// Each settings tab submits only its own fields. A flag that is not part
+		// of the submitted tab must keep its stored value; the hidden companion
+		// input rendered by SettingsFields::checkbox() makes present flags
+		// always visible to the sanitizer, including an unchecked one.
 		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall' ) as $flag ) {
-			$output[ $flag ] = ! empty( $input[ $flag ] );
+			if ( array_key_exists( $flag, $input ) ) {
+				$output[ $flag ] = ! empty( $input[ $flag ] );
+			}
 		}
 
 		if ( isset( $input['disclaimer'] ) ) {

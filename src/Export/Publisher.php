@@ -146,6 +146,8 @@ class Publisher {
 		);
 
 		if ( ! $id ) {
+			wp_delete_file( $path );
+
 			return new \WP_Error( 'publication_archive_failed', __( 'The publication archive row could not be stored.', 'sidrena-cijena' ) );
 		}
 

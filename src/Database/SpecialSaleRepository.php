@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Database;
 
+use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
@@ -297,6 +298,13 @@ class SpecialSaleRepository {
 
 		$end_date = ! empty( $data['end_date'] ) ? (string) $data['end_date'] : null;
 
+		if ( $end_date && Dates::is_valid_date( $end_date ) ) {
+			// The end date is inclusive, so a date-only value has to cover the
+			// whole day; otherwise the sale would end at midnight and a one-day
+			// sale could never be active.
+			$end_date .= ' 23:59:59';
+		}
+
 		if ( $end_date && strtotime( $end_date ) < strtotime( $start_date ) ) {
 			throw new \InvalidArgumentException( 'end_date must be later than start_date.' );
 		}
@@ -310,7 +318,7 @@ class SpecialSaleRepository {
 			'sale_name'           => isset( $data['sale_name'] ) ? sanitize_text_field( (string) $data['sale_name'] ) : null,
 			'start_date'          => $start_date,
 			'end_date'            => $end_date,
-			'promo_price'         => isset( $data['promo_price'] ) && '' !== $data['promo_price'] ? (float) $data['promo_price'] : null,
+			'promo_price'         => Currency::to_storage( isset( $data['promo_price'] ) && '' !== $data['promo_price'] ? $data['promo_price'] : null ),
 			'lowest_30_day_price' => isset( $data['lowest_30_day_price'] ) && '' !== $data['lowest_30_day_price'] ? (float) $data['lowest_30_day_price'] : null,
 			'window_start'        => ! empty( $data['window_start'] ) ? (string) $data['window_start'] : null,
 			'window_end'          => ! empty( $data['window_end'] ) ? (string) $data['window_end'] : null,
