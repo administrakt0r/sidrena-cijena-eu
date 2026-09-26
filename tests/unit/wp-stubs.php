@@ -1545,3 +1545,15 @@ if ( ! function_exists( 'add_meta_box' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'sanitize_html_class' ) ) {
+	/**
+	 * Sanitize a CSS class in unit rendering tests.
+	 *
+	 * @param string $class Class name.
+	 * @return string
+	 */
+	function sanitize_html_class( $class ) {
+		return preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $class );
+	}
+}

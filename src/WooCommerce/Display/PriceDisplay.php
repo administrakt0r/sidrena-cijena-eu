@@ -222,6 +222,12 @@ class PriceDisplay {
 			return '';
 		}
 
+		// A variable parent has no single retail price. Its selected variation
+		// supplies the matching anchor through WooCommerce variation data.
+		if ( $product->is_type( 'variable' ) ) {
+			return '';
+		}
+
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			return '';
 		}

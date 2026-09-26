@@ -59,11 +59,28 @@ class VariationDisplay {
 	public function filter_available_variation( $data, $parent, $variation ) {
 		unset( $parent );
 
+		if ( ! Settings::get( 'display_enabled' ) || ! Settings::get( 'display_product_pages' ) ) {
+			return $data;
+		}
+
 		$item = Plugin::instance()->catalog()->get_variation( $variation->get_parent_id(), $variation->get_id() );
 
 		if ( ! $item ) {
 			return $data;
 		}
+
+		// WooCommerce replaces this HTML when a variation is chosen, including
+		// when its price equals the parent range and core leaves price_html empty.
+		$price_html = isset( $data['price_html'] ) ? (string) $data['price_html'] : '';
+		if ( '' === $price_html ) {
+			$price_html = $variation->get_price_html();
+		}
+
+		if ( false === strpos( $price_html, 'sidrena-cijena' ) ) {
+			$price_html .= ( new PriceDisplay( $this->anchors ) )->render_item( $item );
+		}
+
+		$data['price_html'] = $price_html;
 
 		$anchor = $this->anchors->get_anchor( $item );
 
