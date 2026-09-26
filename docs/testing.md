@@ -30,11 +30,11 @@ in `languages/` is restored automatically so the tree stays release-clean;
 real catalogue changes are kept and flagged for commit. The E2E gate refuses to
 run when `WP_BASE_URL` points at port 8888 (the demo shop).
 
-## Current baselines (v1.0.13)
+## Current baselines (v1.0.14)
 
 Compare against these when judging whether a change regressed anything:
 
-* Unit: 301 tests / 1078 assertions · E2E: 28 specs · Integration: 77 tests / 349 assertions.
+* Unit: 306 tests / 1083 assertions · E2E: 28 specs · Integration: 77 tests / 349 assertions.
 * `languages/hr_HR.po`: 632 strings, 0 untranslated.
 * PHPStan level 6, PHPCS and ESLint: clean.
 

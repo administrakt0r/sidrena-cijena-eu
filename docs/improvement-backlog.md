@@ -104,6 +104,20 @@ Not derived from the MJDD comparison; a defect sweep over `src/` against
 | UX-06 | `pending` | One site-time datetime display helper in `Support\Dates` (Croatian display, consistent with `format_date_display`) for the raw `Y-m-d H:i` prints across screens and `LegalSettingsPage`'s unconverted timestamp; one amount rendering per context (`Currency::format` vs `format_decimal`) | — |
 | UX-07 | `pending` | Accessibility/i18n hygiene: missing `label_for` on settings fields, the `SaleTypesSettings` label/id mismatch, a `<legend>` for the `SettingsFields` checkbox fieldset, `aria-live` on the variation anchor update in `assets/js/frontend.js`, the duplicated screen-reader-text in `LocationsPage`, remaining literals | — |
 
+## Static audit pass (2026-09-26)
+
+Security sweep of the six standing criteria — capability + nonce on every admin
+action, escaped echoes, prepared SQL, `CsvParser::is_allowed_path()` on upload
+paths, `Logger::sanitize_context()` on log context and every
+`WelcomeBanner::maybe_redirect()` guard. Everything except AUD-01 already held,
+so the run closed one gap.
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| AUD-01 | `done` (2026-09-26) | `AnchorMetaBox::register()` and `SpecialSaleMetaBox::register()` were the only admin entry points without `manage_sidrena_cijena`; they exposed the recorded anchor price, its reference date and the 30-day lowest price on every supported edit screen and offered a form whose handler answered with `wp_die()`. The admin-post handlers were already guarded, so only the registration was open | Both now return early without the capability; `MetaBoxCapabilityTest` (5 cases) pins the gate and the capability name |
+| AUD-02 | `pending` | The unit suite asserts the capability/nonce contract for the meta boxes only; the other `admin_post_` handlers, the REST `permission_callback`s, the menu registrations and the settings capability are verified by the integration suite and by manual review, not by a unit test | — |
+| AUD-03 | `pending` | `SettingsPage::register_settings()` registers both option groups without a `capability` argument, so `wp-admin/options.php` enforces core's `manage_options` instead of `manage_sidrena_cijena`. That is stricter than the plugin capability today, but the capability model is split across two names; if `manage_sidrena_cijena` is ever granted to a non-administrator role the settings screen will stay view-only for them | `option_page_capability_{group}` filters once a decision is made |
+
 ## Preserved strengths
 
 Keep these when borrowing ideas from the competitor:

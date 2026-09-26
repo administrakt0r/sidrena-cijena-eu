@@ -360,3 +360,58 @@ are untouched.
   `e240aa801d6ad7234bb5467e9df935ca42c76c1caaae0b21ab0e92e7d94b6319`.
 
 
+
+## Release 1.0.14 (2026-09-26)
+
+Full static audit run (AGENTARDS/01-audit-and-fix.md), no Docker required. No
+legal semantics changed: `docs/legal-rules.md`, the CSV/XML contracts, the
+filename pattern and the append-only history contract are untouched.
+
+- **Security sweep (all six criteria verified)**:
+  - *Admin actions*: every `admin_post_` handler (`AnchorMetaBox`,
+    `SpecialSaleMetaBox`, `PublicationsPage`, `CompliancePage` run/export,
+    `ImportPage` preview/commit/report, `BulkAnchorEntryPage`,
+    `LocationsPage` save/delete, `PriceHistoryPage`, `SetupGuidePage`
+    complete/reopen, `WelcomeBanner`, `Scheduler` dismiss) pairs
+    `Capabilities::current_user_can()` with `check_admin_referer()`;
+    `StandalonePostType::save()` pairs `wp_verify_nonce()` with
+    `current_user_can( Capabilities::capability() )`. Every menu and submenu is
+    registered with `Capabilities::capability()`.
+  - *Escaping*: PHPCS runs `WordPress.Security.EscapeOutput` over `src/`,
+    `templates/` and the bootstrap; the audit reviewed each
+    `phpcs:ignore OutputNotEscaped` site (CSV/XML download bodies, JSON/CSV
+    report bodies, `FormState::error_attributes()` attribute markup) and found
+    no unescaped echo.
+  - *SQL*: `src/Database/*` is exempted from the PreparedSQL sniffs, so every
+    query was read by hand — all values go through `$wpdb->prepare()` or
+    `$wpdb->insert/update/delete` formats, `build_where()` emits placeholders
+    only, `sanitize_orderby()` whitelists `ORDER BY`, and `LogRepository`
+    prepares the dynamic `WHERE`. Only the plugin-owned table name is ever
+    interpolated.
+  - *Uploaded paths*: `CsvParser::parse_file()` rejects anything outside
+    `wp_upload_dir()['basedir']` and `sys_get_temp_dir()` before reading;
+    `ImportService::preview()` and `commit()` both go through it.
+  - *Logs*: every `Logger::{info,warning,error}()` call site passes counters,
+    codes and IDs; `Logger::sanitize_context()` drops sensitive keys
+    (pass/secret/token/api_key/card/iban/email/phone/customer/session/cookie/…)
+    recursively and truncates values to 500 characters.
+  - *Post-activation redirect*: `WelcomeBanner::maybe_redirect()` guards the
+    redirect option, the capability, AJAX, WP-CLI, cron, `REST_REQUEST`,
+    `is_network_admin()`, `$_GET['activate-multi']` (which clears the option),
+    the current screen and the `plugins` screen before `wp_safe_redirect()`.
+- **Gap fixed**: `AnchorMetaBox::register()` and `SpecialSaleMetaBox::register()`
+  were the only admin entry points without the capability check — they exposed
+  the recorded anchor price, its reference date and the 30-day lowest price on
+  every supported edit screen, and offered a form whose handler answered with
+  `wp_die()`. Both now return early without `manage_sidrena_cijena`.
+- **Tests**: new `MetaBoxCapabilityTest` (5 cases) plus `post_type_exists()` /
+  `add_meta_box()` stubs in `tests/unit/wp-stubs.php` — the first unit tests to
+  pin the `manage_sidrena_cijena` contract. Unit suite 301/1078 → **306/1083**.
+- **Translations**: 632 strings, **0 untranslated**; no translatable string was
+  added or changed, `tools/i18n/make-pot.php` and `--locale=hr_HR` only
+  refreshed the POT/PO timestamps.
+- **Quality gates**: `composer test:unit` 306/1083 green; PHPCS 159/159 clean;
+  PHPStan level 6 111/111 clean; ESLint clean.
+- **Archive**: `tools/build-zip.sh 1.0.14` from source commit `e4aa6da`;
+  `unzip -t` reports no errors, 154 files; 292,396 bytes (286K). SHA-256
+  `a931403390ec6bfb2f55ba29d2bc777b3a01236788c1e19616d06d3bfc661644`.
