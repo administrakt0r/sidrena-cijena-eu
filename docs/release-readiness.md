@@ -217,8 +217,8 @@ history are untouched, and `docs/legal-rules.md` is unchanged.
   ESLint clean. No translatable strings were added or changed, so the
   Croatian catalogs were not regenerated.
 - **Archive**: `tools/build-zip.sh 1.0.10` from source commit `9ab5d62`;
-  `unzip -t` reports no errors; 281,361 bytes (275K). SHA-256
-  `REPLACE_WITH_CHECKSUM`.
+  `unzip -t` reports no errors; 282,117 bytes (276K). SHA-256
+  `f2ede613c5d28e04da6d008ae267338c1405286b9421fdc3f6e939d26f269dc7`.
 
 ## Release 1.0.9 (2026-09-26)
 
