@@ -88,6 +88,78 @@ final class SetupGuidePage {
 	}
 
 	/**
+	 * Current completion status of every setup step.
+	 *
+	 * @return array<string,array<string,mixed>> Keyed by step key.
+	 */
+	public static function statuses() {
+		$plugin       = Plugin::instance();
+		$locations    = $plugin->locations()->all();
+		$rule         = RuleConfig::all();
+		$total        = (int) $plugin->catalog()->count_items();
+		$last         = $plugin->publications()->last_successful();
+		$anchor_count = (int) $plugin->history()->count( array( 'price_type' => 'anchor' ) );
+		$report       = CompliancePage::stored_report();
+
+		$legacy_slugs = isset( $rule['legacy_category_slugs'] ) ? array_filter( array_map( 'strval', (array) $rule['legacy_category_slugs'] ) ) : array();
+
+		if ( $anchor_count <= 0 ) {
+			$anchor_badge = __( '(none recorded)', 'sidrena-cijena' );
+		} elseif ( $total > $anchor_count ) {
+			$anchor_badge = sprintf(
+				/* translators: 1: recorded anchors, 2: catalog items. */
+				__( '(done: %1$d of %2$d recorded)', 'sidrena-cijena' ),
+				$anchor_count,
+				$total
+			);
+		} else {
+			$anchor_badge = sprintf(
+				/* translators: %d: count of recorded anchors. */
+				__( '(done: %d recorded)', 'sidrena-cijena' ),
+				$anchor_count
+			);
+		}
+
+		$error_count = is_array( $report ) && isset( $report['counts']['ERROR'] ) ? (int) $report['counts']['ERROR'] : null;
+
+		if ( null === $error_count ) {
+			$check_badge = __( '(not run yet)', 'sidrena-cijena' );
+		} else {
+			$check_badge = $error_count > 0 ? __( '(errors found)', 'sidrena-cijena' ) : __( '(clean)', 'sidrena-cijena' );
+		}
+
+		return array(
+			'locations' => array(
+				'complete' => ! empty( $locations ),
+				'badge'    => empty( $locations ) ? __( '(missing)', 'sidrena-cijena' ) : __( '(done)', 'sidrena-cijena' ),
+				'count'    => count( $locations ),
+			),
+			'rules'     => array(
+				'complete'               => ! empty( $legacy_slugs ),
+				'badge'                  => empty( $legacy_slugs ) ? __( '(map your categories)', 'sidrena-cijena' ) : __( '(done)', 'sidrena-cijena' ),
+				'slugs'                  => array_values( $legacy_slugs ),
+				'general_reference_date' => isset( $rule['general_reference_date'] ) ? (string) $rule['general_reference_date'] : '',
+				'legacy_reference_date'  => isset( $rule['legacy_reference_date'] ) ? (string) $rule['legacy_reference_date'] : '',
+			),
+			'anchors'   => array(
+				'complete' => $anchor_count > 0,
+				'badge'    => $anchor_badge,
+				'count'    => $anchor_count,
+				'total'    => $total,
+			),
+			'lists'     => array(
+				'complete' => (bool) $last,
+				'badge'    => $last ? __( '(published)', 'sidrena-cijena' ) : __( '(not published yet)', 'sidrena-cijena' ),
+			),
+			'check'     => array(
+				'complete' => null !== $error_count && 0 === $error_count,
+				'badge'    => $check_badge,
+				'errors'   => $error_count,
+			),
+		);
+	}
+
+	/**
 	 * Render the screen.
 	 *
 	 * @return void
@@ -97,26 +169,8 @@ final class SetupGuidePage {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
 		}
 
-		$plugin       = Plugin::instance();
-		$locations    = $plugin->locations()->all();
-		$rule         = RuleConfig::all();
-		$total        = (int) $plugin->catalog()->count_items();
-		$last         = $plugin->publications()->last_successful();
-		$anchor_count = (int) $plugin->history()->count( array( 'price_type' => 'anchor' ) );
-		$report       = CompliancePage::stored_report();
-		$complete     = self::is_complete();
-
-		$legacy_slugs = isset( $rule['legacy_category_slugs'] ) ? array_filter( array_map( 'strval', (array) $rule['legacy_category_slugs'] ) ) : array();
-
-		$anchor_badge = $anchor_count > 0
-			? sprintf( /* translators: %d: count of recorded anchors */ esc_html__( '(done: %d recorded)', 'sidrena-cijena' ), $anchor_count )
-			: esc_html__( '(none recorded)', 'sidrena-cijena' );
-
-		$check_badge = esc_html__( '(not run yet)', 'sidrena-cijena' );
-		if ( is_array( $report ) ) {
-			$error_count = isset( $report['counts']['ERROR'] ) ? (int) $report['counts']['ERROR'] : 0;
-			$check_badge = $error_count > 0 ? esc_html__( '(errors found)', 'sidrena-cijena' ) : esc_html__( '(clean)', 'sidrena-cijena' );
-		}
+		$statuses = self::statuses();
+		$complete = self::is_complete();
 
 		echo '<div class="wrap sidrena-setup">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Setup Guide', 'sidrena-cijena' ) . '</h1>';
@@ -135,23 +189,25 @@ final class SetupGuidePage {
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$d. <a class="button" href="%6$s">%7$s</a></p></li>',
 			esc_html__( '1. Add sales locations', 'sidrena-cijena' ),
-			empty( $locations ) ? esc_html__( '(missing)', 'sidrena-cijena' ) : esc_html__( '(done)', 'sidrena-cijena' ),
+			esc_html( (string) $statuses['locations']['badge'] ),
 			esc_html__( 'Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename.', 'sidrena-cijena' ),
 			esc_html__( 'Locations', 'sidrena-cijena' ),
-			count( $locations ),
+			(int) $statuses['locations']['count'],
 			esc_url( AdminMenu::url( LocationsPage::SLUG ) ),
 			esc_html__( 'Manage locations', 'sidrena-cijena' )
 		);
 
 		// Step 2: rules.
+		$legacy_slugs = array_map( 'strval', (array) $statuses['rules']['slugs'] );
+
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$s / %6$s. %7$s: %8$s. <a class="button" href="%9$s">%10$s</a></p></li>',
 			esc_html__( '2. Check legal rules', 'sidrena-cijena' ),
-			empty( $legacy_slugs ) ? esc_html__( '(map your categories)', 'sidrena-cijena' ) : esc_html__( '(done)', 'sidrena-cijena' ),
+			esc_html( (string) $statuses['rules']['badge'] ),
 			esc_html__( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'sidrena-cijena' ),
 			esc_html__( 'Reference dates', 'sidrena-cijena' ),
-			esc_html( isset( $rule['general_reference_date'] ) ? (string) $rule['general_reference_date'] : '' ),
-			esc_html( isset( $rule['legacy_reference_date'] ) ? (string) $rule['legacy_reference_date'] : '' ),
+			esc_html( (string) $statuses['rules']['general_reference_date'] ),
+			esc_html( (string) $statuses['rules']['legacy_reference_date'] ),
 			esc_html__( 'Legacy slugs', 'sidrena-cijena' ),
 			esc_html( $legacy_slugs ? implode( ', ', $legacy_slugs ) : __( 'none mapped yet', 'sidrena-cijena' ) ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-settings', array( 'tab' => 'legal' ) ) ),
@@ -162,10 +218,10 @@ final class SetupGuidePage {
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$d. <a class="button" href="%6$s">%7$s</a> <a class="button" href="%8$s">%9$s</a></p></li>',
 			esc_html__( '3. Record anchor prices', 'sidrena-cijena' ),
-			esc_html( $anchor_badge ),
+			esc_html( (string) $statuses['anchors']['badge'] ),
 			esc_html__( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'sidrena-cijena' ),
 			esc_html__( 'Catalog items', 'sidrena-cijena' ),
-			(int) $total,
+			(int) $statuses['anchors']['total'],
 			esc_url( AdminMenu::url( 'sidrena-cijena-anchors' ) ),
 			esc_html__( 'Enter anchors', 'sidrena-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-import' ) ),
@@ -176,7 +232,7 @@ final class SetupGuidePage {
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></li>',
 			esc_html__( '4. Generate the price list', 'sidrena-cijena' ),
-			$last ? esc_html__( '(published)', 'sidrena-cijena' ) : esc_html__( '(not published yet)', 'sidrena-cijena' ),
+			esc_html( (string) $statuses['lists']['badge'] ),
 			esc_html__( 'Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately.', 'sidrena-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-publications' ) ),
 			esc_html__( 'Open price lists', 'sidrena-cijena' )
@@ -186,7 +242,7 @@ final class SetupGuidePage {
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></li>',
 			esc_html__( '5. Run the compliance check', 'sidrena-cijena' ),
-			esc_html( $check_badge ),
+			esc_html( (string) $statuses['check']['badge'] ),
 			esc_html__( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'sidrena-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-compliance' ) ),
 			esc_html__( 'Run compliance check', 'sidrena-cijena' )
