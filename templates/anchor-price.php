@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /* translators: %s: date of the reference price. */
-$sidrena_date_template = __( 'Cijena na dan %s', 'sidrena-cijena' );
+$sidrena_date_template = __( 'Cijena na dan %s', 'sidrena-cijena-eu' );
 $sidrena_style         = isset( $style ) && array_key_exists( $style, \SidrenaCijena\Support\DisplayStyles::presets() ) ? $style : 'plain';
 $sidrena_classes       = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context ) . ' sidrena-cijena--style-' . $sidrena_style;
 $sidrena_size          = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( 'display_size', 40 ) ) );

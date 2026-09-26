@@ -294,7 +294,7 @@ class PriceDisplay {
 
 		if ( null !== $anchor_price
 			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
-			$label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena' ) );
+			$label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
 
 			/**
 			 * Filters the anchor-price label.
@@ -381,7 +381,7 @@ class PriceDisplay {
 		$template_args = array(
 			'item'    => $item,
 			'price'   => $price,
-			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena' ) ),
+			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) ),
 			'display' => Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 			'style'   => (string) Settings::get( 'product_display_style', 'plain' ),
 		);

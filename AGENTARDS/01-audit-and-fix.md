@@ -26,7 +26,7 @@ Steps:
    Run `php tools/i18n/make-pot.php`. If translatable strings were added or changed:
    update tools/i18n/en_US.php and tools/i18n/hr_HR.php, then run
    `php tools/i18n/make-pot.php --locale=hr_HR` to regenerate
-   languages/sidrena-cijena.pot, languages/hr_HR.po, and languages/sidrena-cijena-hr.mo.
+   languages/sidrena-cijena-eu.pot, languages/hr_HR.po, and languages/sidrena-cijena-eu-hr.mo.
    Confirm 0 untranslated strings.
 4. Security sweep:
    - Every admin action requires capability check (manage_sidrena_cijena) + valid nonce.
@@ -43,7 +43,7 @@ Steps:
    - Bump version in all 4 places: sidrena-cijena.php (header Version and SIDRENA_CIJENA_VERSION constant),
      readme.txt (Stable tag and = X.Y.Z = changelog), and package.json.
    - Run `tools/build-zip.sh <version>`.
-   - Verify archive with `unzip -t versions/<version>/sidrena-cijena.zip`.
+   - Verify archive with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
    - Commit everything including versions/<version>/ and push to origin master.
 

@@ -72,7 +72,7 @@ class PublicationRules {
 				'missing_store_identifier',
 				sprintf(
 					/* translators: %s: location name. */
-					__( 'The sales location %s has no identifier, so a legally named price-list file cannot be generated.', 'sidrena-cijena' ),
+					__( 'The sales location %s has no identifier, so a legally named price-list file cannot be generated.', 'sidrena-cijena-eu' ),
 					(string) $location['name']
 				),
 				array(
@@ -105,7 +105,7 @@ class PublicationRules {
 				'missing_location_address',
 				sprintf(
 					/* translators: %s: location name. */
-					__( 'The sales location %s needs a street address and city for the required price-list filename.', 'sidrena-cijena' ),
+					__( 'The sales location %s needs a street address and city for the required price-list filename.', 'sidrena-cijena-eu' ),
 					(string) $location['name']
 				),
 				array(
@@ -140,7 +140,7 @@ class PublicationRules {
 				'invalid_filename',
 				sprintf(
 					/* translators: %s: file name. */
-					__( 'The published file name %s does not follow the required pattern.', 'sidrena-cijena' ),
+					__( 'The published file name %s does not follow the required pattern.', 'sidrena-cijena-eu' ),
 					'' === $filename ? '—' : $filename
 				),
 				array(
@@ -183,13 +183,13 @@ class PublicationRules {
 					$exists
 						? sprintf(
 							/* translators: 1: format, 2: location name. */
-							__( 'The archived %1$s price list for %2$s is missing from storage.', 'sidrena-cijena' ),
+							__( 'The archived %1$s price list for %2$s is missing from storage.', 'sidrena-cijena-eu' ),
 							strtoupper( $format ),
 							(string) $location['name']
 						)
 						: sprintf(
 							/* translators: 1: format, 2: location name. */
-							__( 'No archived %1$s price list exists for %2$s.', 'sidrena-cijena' ),
+							__( 'No archived %1$s price list exists for %2$s.', 'sidrena-cijena-eu' ),
 							strtoupper( $format ),
 							(string) $location['name']
 						),
@@ -237,7 +237,7 @@ class PublicationRules {
 				'stale_price_list',
 				sprintf(
 					/* translators: 1: format, 2: last publication date. */
-					__( 'The %1$s price list was last published on %2$s. Publish the current list before the daily deadline.', 'sidrena-cijena' ),
+					__( 'The %1$s price list was last published on %2$s. Publish the current list before the daily deadline.', 'sidrena-cijena-eu' ),
 					strtoupper( (string) $row['format'] ),
 					$site_date
 				),
@@ -292,7 +292,7 @@ class PublicationRules {
 
 			$findings[] = Finding::error(
 				'malformed_csv',
-				__( 'The published CSV file does not start with the required column header.', 'sidrena-cijena' ),
+				__( 'The published CSV file does not start with the required column header.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'publication',
 					'entity_id'      => isset( $row['id'] ) ? (int) $row['id'] : 0,
@@ -339,7 +339,7 @@ class PublicationRules {
 
 			$findings[] = Finding::error(
 				'malformed_xml',
-				__( 'The published XML file cannot be parsed as valid XML.', 'sidrena-cijena' ),
+				__( 'The published XML file cannot be parsed as valid XML.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'publication',
 					'entity_id'      => isset( $row['id'] ) ? (int) $row['id'] : 0,

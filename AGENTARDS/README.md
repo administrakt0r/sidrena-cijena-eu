@@ -79,7 +79,7 @@ Every completed run ships a new version archive following the repository convent
 4. **Build release archive**:
    ```bash
    tools/build-zip.sh <version>
-   unzip -t versions/<version>/sidrena-cijena.zip
+   unzip -t versions/<version>/sidrena-cijena-eu.zip
    ```
 5. **Update documentation**:
    - Add verification notes to `docs/release-readiness.md`.

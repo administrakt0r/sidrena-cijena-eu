@@ -183,7 +183,7 @@ class PublicFeed {
 		header( 'Content-Type: text/plain; charset=utf-8' );
 		header( 'Retry-After: ' . self::REBUILD_COOLDOWN );
 
-		echo esc_html__( 'The price list is being regenerated. Please try again shortly.', 'sidrena-cijena' ) . "\n";
+		echo esc_html__( 'The price list is being regenerated. Please try again shortly.', 'sidrena-cijena-eu' ) . "\n";
 		exit;
 	}
 

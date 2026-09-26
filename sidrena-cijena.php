@@ -10,7 +10,7 @@
  * Author URI:        https://github.com/administrakt0r
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       sidrena-cijena
+ * Text Domain:       sidrena-cijena-eu
  * Domain Path:       /languages
  *
  * @package SidrenaCijena
@@ -41,8 +41,7 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
  * @return void
  */
 function sidrena_cijena_load_textdomain() {
-	load_textdomain( 'sidrena-cijena', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-hr.mo' );
-	load_plugin_textdomain( 'sidrena-cijena', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
+	load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
 }
 add_action( 'plugins_loaded', 'sidrena_cijena_load_textdomain', 5 );
 add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );

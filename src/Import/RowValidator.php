@@ -114,21 +114,21 @@ final class RowValidator {
 		if ( '' === $values['sku'] && $values['product_id'] <= 0 ) {
 			$errors[] = array(
 				'code'    => 'missing_identifier',
-				'message' => __( 'The row has neither an SKU nor a product ID.', 'sidrena-cijena' ),
+				'message' => __( 'The row has neither an SKU nor a product ID.', 'sidrena-cijena-eu' ),
 			);
 		}
 
 		if ( '' === $values['reference_date'] ) {
 			$errors[] = array(
 				'code'    => 'invalid_reference_date',
-				'message' => __( 'The reference date is missing or not a valid date.', 'sidrena-cijena' ),
+				'message' => __( 'The reference date is missing or not a valid date.', 'sidrena-cijena-eu' ),
 			);
 		}
 
 		if ( null === $values['price'] || $values['price'] < 0 ) {
 			$errors[] = array(
 				'code'    => 'invalid_anchor_price',
-				'message' => __( 'The anchor price is missing or not a valid non-negative number.', 'sidrena-cijena' ),
+				'message' => __( 'The anchor price is missing or not a valid non-negative number.', 'sidrena-cijena-eu' ),
 			);
 		}
 
@@ -137,7 +137,7 @@ final class RowValidator {
 		if ( ! $item ) {
 			$errors[] = array(
 				'code'    => 'unknown_product',
-				'message' => __( 'No catalog item matches this SKU or product ID.', 'sidrena-cijena' ),
+				'message' => __( 'No catalog item matches this SKU or product ID.', 'sidrena-cijena-eu' ),
 			);
 		}
 
@@ -146,7 +146,7 @@ final class RowValidator {
 		if ( isset( $seen[ $key ] ) ) {
 			$errors[] = array(
 				'code'    => 'duplicate_row',
-				'message' => __( 'The same item appears more than once in this file.', 'sidrena-cijena' ),
+				'message' => __( 'The same item appears more than once in this file.', 'sidrena-cijena-eu' ),
 			);
 		}
 
@@ -159,7 +159,7 @@ final class RowValidator {
 		if ( '' !== $values['category'] && $item->categories && ! in_array( $values['category'], $item->categories, true ) ) {
 			$warnings[] = array(
 				'code'    => 'category_mismatch',
-				'message' => __( 'The category in the file does not match the catalog item category.', 'sidrena-cijena' ),
+				'message' => __( 'The category in the file does not match the catalog item category.', 'sidrena-cijena-eu' ),
 			);
 		}
 
@@ -175,7 +175,7 @@ final class RowValidator {
 		if ( $same_price && $same_date ) {
 			$warnings[] = array(
 				'code'    => 'already_recorded',
-				'message' => __( 'An identical anchor record already exists; the row will be skipped.', 'sidrena-cijena' ),
+				'message' => __( 'An identical anchor record already exists; the row will be skipped.', 'sidrena-cijena-eu' ),
 			);
 
 			return $this->result( $index, $values, $item, 'unchanged', $errors, $warnings, $existing );
@@ -183,7 +183,7 @@ final class RowValidator {
 
 		$warnings[] = array(
 			'code'    => 'would_overwrite',
-			'message' => __( 'This row would replace an existing anchor record and requires explicit confirmation.', 'sidrena-cijena' ),
+			'message' => __( 'This row would replace an existing anchor record and requires explicit confirmation.', 'sidrena-cijena-eu' ),
 		);
 
 		return $this->result( $index, $values, $item, 'overwrite', $errors, $warnings, $existing );

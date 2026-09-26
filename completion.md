@@ -24,8 +24,8 @@ untranslated.
 
 ```sh
 ls tools/i18n
-# rebuild POT + PO + sidrena-cijena-hr.mo per tools/i18n README, then verify:
-# 0 untranslated strings, runtime loads sidrena-cijena-hr.mo under locale hr
+# rebuild POT + PO + sidrena-cijena-eu-hr.mo per tools/i18n README, then verify:
+# 0 untranslated strings, runtime loads sidrena-cijena-eu-hr.mo under locale hr
 ```
 
 ## 3. Full gate suite green

@@ -39,12 +39,12 @@ final class WelcomeBanner {
 			array(
 				'url'         => 'https://wpineu.com',
 				'title'       => 'WPinEU.com',
-				'description' => __( 'WordPress in Europe — premium WordPress hosting, start free.', 'sidrena-cijena' ),
+				'description' => __( 'WordPress in Europe — premium WordPress hosting, start free.', 'sidrena-cijena-eu' ),
 			),
 			array(
 				'url'         => 'https://llm.kiwi',
 				'title'       => 'LLM.kiwi',
-				'description' => __( 'FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!', 'sidrena-cijena' ),
+				'description' => __( 'FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!', 'sidrena-cijena-eu' ),
 			),
 		);
 	}
@@ -156,9 +156,9 @@ final class WelcomeBanner {
 		);
 
 		echo '<div class="notice notice-info sidrena-welcome-banner">';
-		echo '<h2>' . esc_html__( 'Welcome to Sidrena cijena!', 'sidrena-cijena' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes.', 'sidrena-cijena' ) . '</p>';
-		echo '<p>' . esc_html__( 'Made by administrakt0r.', 'sidrena-cijena' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Welcome to Sidrena cijena!', 'sidrena-cijena-eu' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes.', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<p>' . esc_html__( 'Made by administrakt0r.', 'sidrena-cijena-eu' ) . '</p>';
 		echo '<ul class="sidrena-welcome-banner__projects">';
 
 		foreach ( self::links() as $link ) {
@@ -176,11 +176,11 @@ final class WelcomeBanner {
 		printf(
 			'<p><a class="button button-primary" href="%1$s">%2$s</a> <a class="button" href="%3$s">%4$s</a> <a class="button button-secondary" href="%5$s">%6$s</a></p>',
 			esc_url( $setup_url ),
-			esc_html__( 'Open Setup Guide', 'sidrena-cijena' ),
+			esc_html__( 'Open Setup Guide', 'sidrena-cijena-eu' ),
 			esc_url( $dismiss_url ),
-			esc_html__( 'Dismiss', 'sidrena-cijena' ),
+			esc_html__( 'Dismiss', 'sidrena-cijena-eu' ),
 			esc_url( $docs_url ),
-			esc_html__( 'Documentation', 'sidrena-cijena' )
+			esc_html__( 'Documentation', 'sidrena-cijena-eu' )
 		);
 		echo '</div>';
 	}
@@ -192,7 +192,7 @@ final class WelcomeBanner {
 	 */
 	public static function handle_dismiss() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::DISMISS_ACTION );

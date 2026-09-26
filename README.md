@@ -7,7 +7,7 @@
 An open-source WordPress plugin for `sidrena cijena`, Croatian price transparency,
 and WooCommerce price history.
 
-[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download 2.0.0 for WordPress](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena.zip)
+[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download 2.0.0 for WordPress](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip)
 
 ![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-1d6b55?style=flat-square)
 ![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)
@@ -52,7 +52,7 @@ what to publish and remain responsible for checking their catalog and locations.
 
 ## Download and install
 
-1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena.zip).
+1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip).
 2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**, choose the
    ZIP, and install it.
 3. Activate **Sidrena Cijena EU** and follow the setup guide to configure

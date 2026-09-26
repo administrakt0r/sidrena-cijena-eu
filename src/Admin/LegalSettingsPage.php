@@ -31,30 +31,30 @@ final class LegalSettingsPage {
 	public static function register_settings() {
 		add_settings_section(
 			'sidrena_cijena_legal',
-			__( 'Reference dates and legal rules', 'sidrena-cijena' ),
+			__( 'Reference dates and legal rules', 'sidrena-cijena-eu' ),
 			array( __CLASS__, 'section_intro' ),
 			self::PAGE
 		);
 
 		$fields = array(
 			'general_reference_date' => array(
-				'label' => __( 'General reference date', 'sidrena-cijena' ),
+				'label' => __( 'General reference date', 'sidrena-cijena-eu' ),
 				'type'  => 'date',
 			),
 			'legacy_reference_date'  => array(
-				'label' => __( 'Legacy reference date', 'sidrena-cijena' ),
+				'label' => __( 'Legacy reference date', 'sidrena-cijena-eu' ),
 				'type'  => 'date',
 			),
 			'legacy_enabled'         => array(
-				'label' => __( 'Enable legacy treatment', 'sidrena-cijena' ),
+				'label' => __( 'Enable legacy treatment', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
 			'legacy_category_slugs'  => array(
-				'label' => __( 'Legacy categories', 'sidrena-cijena' ),
+				'label' => __( 'Legacy categories', 'sidrena-cijena-eu' ),
 				'type'  => 'categories',
 			),
 			'rule_version'           => array(
-				'label' => __( 'Legal-rule version', 'sidrena-cijena' ),
+				'label' => __( 'Legal-rule version', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
 		);
@@ -80,7 +80,7 @@ final class LegalSettingsPage {
 	 * @return void
 	 */
 	public static function section_intro() {
-		echo '<p>' . esc_html__( 'Changing these values never rewrites existing historical records; every change is recorded in the audit trail.', 'sidrena-cijena' ) . '</p>';
+		echo '<p>' . esc_html__( 'Changing these values never rewrites existing historical records; every change is recorded in the audit trail.', 'sidrena-cijena-eu' ) . '</p>';
 	}
 
 	/**
@@ -116,7 +116,7 @@ final class LegalSettingsPage {
 				}
 
 				if ( empty( $choices ) ) {
-					echo '<em>' . esc_html__( 'No catalog categories are available.', 'sidrena-cijena' ) . '</em>';
+					echo '<em>' . esc_html__( 'No catalog categories are available.', 'sidrena-cijena-eu' ) . '</em>';
 
 					return;
 				}
@@ -143,15 +143,15 @@ final class LegalSettingsPage {
 			return;
 		}
 
-		echo '<h2>' . esc_html__( 'Recent rule changes', 'sidrena-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Recent rule changes', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Recent legal rule changes', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Recent legal rule changes', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'When', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Setting', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Old value', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'New value', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'User', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'When', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Setting', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Old value', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'New value', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'User', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( array_slice( array_reverse( $history ), 0, 20 ) as $entry ) {
@@ -176,7 +176,7 @@ final class LegalSettingsPage {
 	 */
 	private static function user_label( $user_id ) {
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'sidrena-cijena' );
+			return __( 'system', 'sidrena-cijena-eu' );
 		}
 
 		$user = get_userdata( $user_id );
@@ -196,7 +196,7 @@ final class LegalSettingsPage {
 		}
 
 		if ( is_bool( $value ) ) {
-			return $value ? __( 'Yes', 'sidrena-cijena' ) : __( 'No', 'sidrena-cijena' );
+			return $value ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
 		}
 
 		return (string) $value;

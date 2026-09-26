@@ -103,7 +103,7 @@ final class ImportService {
 				'overwrite_confirmation_required',
 				sprintf(
 					/* translators: %d: number of rows that would overwrite existing anchors. */
-					__( '%d row(s) would overwrite existing anchor records. Confirm overwriting to continue.', 'sidrena-cijena' ),
+					__( '%d row(s) would overwrite existing anchor records. Confirm overwriting to continue.', 'sidrena-cijena-eu' ),
 					$overwrite
 				)
 			);
@@ -165,7 +165,7 @@ final class ImportService {
 				if ( 'overwrite' === $status ) {
 					$record['correction_reason'] = sprintf(
 						/* translators: %s: import batch identifier. */
-						__( 'Imported overwrite (batch %s).', 'sidrena-cijena' ),
+						__( 'Imported overwrite (batch %s).', 'sidrena-cijena-eu' ),
 						$batch_id
 					);
 				}
@@ -189,7 +189,7 @@ final class ImportService {
 						'import_rolled_back',
 						sprintf(
 							/* translators: %s: error message. */
-							__( 'The import failed and was rolled back: %s', 'sidrena-cijena' ),
+							__( 'The import failed and was rolled back: %s', 'sidrena-cijena-eu' ),
 							$result->get_error_message()
 						),
 						array( 'report' => $report )
@@ -211,7 +211,7 @@ final class ImportService {
 
 			Logger::error( 'import', 'Import rolled back after an exception.', array( 'batch_id' => $batch_id ) );
 
-			return new \WP_Error( 'import_rolled_back', __( 'The import failed and was rolled back.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'import_rolled_back', __( 'The import failed and was rolled back.', 'sidrena-cijena-eu' ) );
 		}
 
 		$report['failed'] = max( (int) $report['failed'], count( $report['errors'] ) );

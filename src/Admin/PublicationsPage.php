@@ -42,7 +42,7 @@ class PublicationsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		$page     = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
@@ -66,21 +66,21 @@ class PublicationsPage {
 		$next = Scheduler::next_run();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Price lists', 'sidrena-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Price lists', 'sidrena-cijena-eu' ) . '</h1>';
 
 		self::notice();
 
 		echo '<p>';
-		echo esc_html__( 'Filenames follow the legally structured pattern:', 'sidrena-cijena' ) . ' ';
+		echo esc_html__( 'Filenames follow the legally structured pattern:', 'sidrena-cijena-eu' ) . ' ';
 		echo '<code>' . esc_html( FilenameGenerator::pattern() ) . '</code>';
 		echo '</p>';
 
 		echo '<p>';
 		printf(
 			/* translators: 1: last publication time, 2: next scheduled run. */
-			esc_html__( 'Last published: %1$s. Next scheduled generation: %2$s.', 'sidrena-cijena' ),
-			esc_html( $last && $last['published_at'] ? self::site_time( $last['published_at'] ) : __( 'never', 'sidrena-cijena' ) ),
-			esc_html( $next ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $next ) ) : __( 'not scheduled', 'sidrena-cijena' ) )
+			esc_html__( 'Last published: %1$s. Next scheduled generation: %2$s.', 'sidrena-cijena-eu' ),
+			esc_html( $last && $last['published_at'] ? self::site_time( $last['published_at'] ) : __( 'never', 'sidrena-cijena-eu' ) ),
+			esc_html( $next ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $next ) ) : __( 'not scheduled', 'sidrena-cijena-eu' ) )
 		);
 		echo '</p>';
 
@@ -90,13 +90,13 @@ class PublicationsPage {
 			$gen_time = ! empty( $last_gen['timestamp'] ) ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $last_gen['timestamp'] ) ) : '';
 			$source   = isset( $last_gen['source'] ) ? (string) $last_gen['source'] : 'scheduled';
 
-			echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena' ) . '</strong> ';
+			echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena-eu' ) . '</strong> ';
 			printf(
 				/* translators: 1: generation time, 2: run source, 3: error details */
-				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena' ),
+				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena-eu' ),
 				esc_html( $gen_time ),
 				esc_html( Labels::run_source( $source ) ),
-				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'sidrena-cijena' ) )
+				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'sidrena-cijena-eu' ) )
 			);
 			echo '</p></div>';
 		}
@@ -104,28 +104,28 @@ class PublicationsPage {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		wp_nonce_field( self::ACTION );
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
-		submit_button( __( 'Generate now', 'sidrena-cijena' ), 'primary', 'submit', false );
+		submit_button( __( 'Generate now', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Published price lists', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Published price lists', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'Filename', 'sidrena-cijena' ),
-			__( 'Format', 'sidrena-cijena' ),
-			__( 'Location', 'sidrena-cijena' ),
-			__( 'Published', 'sidrena-cijena' ),
-			__( 'Expires', 'sidrena-cijena' ),
-			__( 'Items', 'sidrena-cijena' ),
-			__( 'Checksum', 'sidrena-cijena' ),
-			__( 'Status', 'sidrena-cijena' ),
+			__( 'Filename', 'sidrena-cijena-eu' ),
+			__( 'Format', 'sidrena-cijena-eu' ),
+			__( 'Location', 'sidrena-cijena-eu' ),
+			__( 'Published', 'sidrena-cijena-eu' ),
+			__( 'Expires', 'sidrena-cijena-eu' ),
+			__( 'Items', 'sidrena-cijena-eu' ),
+			__( 'Checksum', 'sidrena-cijena-eu' ),
+			__( 'Status', 'sidrena-cijena-eu' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $result['items'] ) ) {
-			echo '<tr><td colspan="8">' . esc_html__( 'No price lists have been published yet.', 'sidrena-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="8">' . esc_html__( 'No price lists have been published yet.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		}
 
 		foreach ( $result['items'] as $row ) {
@@ -163,7 +163,7 @@ class PublicationsPage {
 	 */
 	public static function handle_generate() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION );
@@ -227,7 +227,7 @@ class PublicationsPage {
 			'error' === $notice ? 'error' : 'success',
 			sprintf(
 				/* translators: 1: number of generated price lists, 2: number of failures. */
-				__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena' ),
+				__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena-eu' ),
 				(int) $generated,
 				(int) $failed
 			)

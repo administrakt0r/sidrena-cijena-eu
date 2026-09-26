@@ -34,13 +34,13 @@ class Pagination {
 		echo '<span class="displaying-num">' . esc_html(
 			sprintf(
 				/* translators: %s: number of rows. */
-				__( '%s item(s)', 'sidrena-cijena' ),
+				__( '%s item(s)', 'sidrena-cijena-eu' ),
 				number_format_i18n( $total )
 			)
 		) . '</span>';
 
 		if ( $pages > 1 ) {
-			echo '<nav class="tablenav-pages-nav" aria-label="' . esc_attr__( 'Table pagination', 'sidrena-cijena' ) . '">';
+			echo '<nav class="tablenav-pages-nav" aria-label="' . esc_attr__( 'Table pagination', 'sidrena-cijena-eu' ) . '">';
 			echo wp_kses_post(
 				paginate_links(
 					array(
@@ -48,7 +48,7 @@ class Pagination {
 						'format'             => '',
 						'current'            => $page,
 						'total'              => $pages,
-						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'sidrena-cijena' ) . ' </span>',
+						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'sidrena-cijena-eu' ) . ' </span>',
 					)
 				)
 			);

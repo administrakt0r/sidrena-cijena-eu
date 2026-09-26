@@ -201,22 +201,22 @@ final class Scheduler {
 			$failed_count = isset( $failure['summary']['failed'] ) ? (int) $failure['summary']['failed'] : 1;
 			$details      = ! empty( $failure['errors'] ) ? implode( '; ', (array) $failure['errors'] ) : '';
 			$message      = 1 === $failed_count
-				? __( '1 price list failed to publish.', 'sidrena-cijena' )
+				? __( '1 price list failed to publish.', 'sidrena-cijena-eu' )
 				: sprintf(
 					/* translators: %d: count of failed price lists */
-					__( '%d price lists failed to publish.', 'sidrena-cijena' ),
+					__( '%d price lists failed to publish.', 'sidrena-cijena-eu' ),
 					$failed_count
 				);
 
 			printf(
 				'<div class="notice notice-error"><p><strong>%1$s</strong> %2$s %3$s <a href="%4$s">%5$s</a> | <a href="%6$s">%7$s</a></p></div>',
-				esc_html__( 'Sidrena cijena: daily price-list generation failed.', 'sidrena-cijena' ),
+				esc_html__( 'Sidrena cijena: daily price-list generation failed.', 'sidrena-cijena-eu' ),
 				esc_html( $message ),
 				$details ? esc_html( '(' . $details . ')' ) : '',
 				esc_url( $pub_url ),
-				esc_html__( 'Open the price lists screen', 'sidrena-cijena' ),
+				esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' ),
 				esc_url( $dismiss_url ),
-				esc_html__( 'Dismiss', 'sidrena-cijena' )
+				esc_html__( 'Dismiss', 'sidrena-cijena-eu' )
 			);
 
 			return;
@@ -230,11 +230,11 @@ final class Scheduler {
 				'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
 				sprintf(
 					/* translators: %s: deadline time */
-					esc_html__( 'Sidrena cijena: today\'s %s deadline passed without a successful price-list publication. Catch-up generation is pending.', 'sidrena-cijena' ),
+					esc_html__( 'Sidrena cijena: today\'s %s deadline passed without a successful price-list publication. Catch-up generation is pending.', 'sidrena-cijena-eu' ),
 					esc_html( $deadline )
 				),
 				esc_url( $url ),
-				esc_html__( 'Open the price lists screen', 'sidrena-cijena' )
+				esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' )
 			);
 
 			return;
@@ -250,9 +250,9 @@ final class Scheduler {
 
 		printf(
 			'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale.', 'sidrena-cijena' ),
+			esc_html__( 'Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale.', 'sidrena-cijena-eu' ),
 			esc_url( $url ),
-			esc_html__( 'Open the price lists screen', 'sidrena-cijena' )
+			esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' )
 		);
 	}
 
@@ -263,7 +263,7 @@ final class Scheduler {
 	 */
 	public static function handle_dismiss_failure() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::DISMISS_FAILURE_ACTION );

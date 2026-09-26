@@ -68,7 +68,7 @@ Constraints:
   `npm run test:e2e` (port 8889 only).
 
 Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
-`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
+`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`,
 update docs/improvement-backlog.md (PERF-xx) and docs/release-readiness.md, commit and
 push to origin master.
 

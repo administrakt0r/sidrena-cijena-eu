@@ -48,7 +48,7 @@ class AuditPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
@@ -59,9 +59,9 @@ class AuditPage {
 		$history_page = isset( $_GET['history_paged'] ) ? max( 1, absint( wp_unslash( $_GET['history_paged'] ) ) ) : 1;
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Audit trail', 'sidrena-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Audit trail', 'sidrena-cijena-eu' ) . '</h1>';
 
-		echo '<p>' . esc_html__( 'Every legal-rule change and every recorded correction is kept here with the user and the timestamp.', 'sidrena-cijena' ) . '</p>';
+		echo '<p>' . esc_html__( 'Every legal-rule change and every recorded correction is kept here with the user and the timestamp.', 'sidrena-cijena-eu' ) . '</p>';
 
 		self::render_rule_changes( $history_page );
 		self::render_logs( $event, $page );
@@ -80,24 +80,24 @@ class AuditPage {
 		$total   = count( $history );
 		$offset  = ( max( 1, (int) $page ) - 1 ) * self::HISTORY_PER_PAGE;
 
-		echo '<h2>' . esc_html__( 'Legal rule changes', 'sidrena-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Legal rule changes', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Legal rule change history', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Legal rule change history', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'When', 'sidrena-cijena' ),
-			__( 'Setting', 'sidrena-cijena' ),
-			__( 'Old value', 'sidrena-cijena' ),
-			__( 'New value', 'sidrena-cijena' ),
-			__( 'User', 'sidrena-cijena' ),
-			__( 'Reason', 'sidrena-cijena' ),
+			__( 'When', 'sidrena-cijena-eu' ),
+			__( 'Setting', 'sidrena-cijena-eu' ),
+			__( 'Old value', 'sidrena-cijena-eu' ),
+			__( 'New value', 'sidrena-cijena-eu' ),
+			__( 'User', 'sidrena-cijena-eu' ),
+			__( 'Reason', 'sidrena-cijena-eu' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $history ) ) {
-			echo '<tr><td colspan="6">' . esc_html__( 'No legal-rule changes have been recorded.', 'sidrena-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="6">' . esc_html__( 'No legal-rule changes have been recorded.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		}
 
 		foreach ( array_slice( $history, $offset, self::HISTORY_PER_PAGE ) as $entry ) {
@@ -139,37 +139,37 @@ class AuditPage {
 		$result = $logs->query( $args );
 		$rows   = $result['items'];
 
-		echo '<h2>' . esc_html__( 'Operational log', 'sidrena-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Operational log', 'sidrena-cijena-eu' ) . '</h2>';
 
 		echo '<form method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
-		echo '<p><label>' . esc_html__( 'Event', 'sidrena-cijena' ) . ' <select name="event">';
-		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena' ) . '</option>';
+		echo '<p><label>' . esc_html__( 'Event', 'sidrena-cijena-eu' ) . ' <select name="event">';
+		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena-eu' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $option ) {
 			echo '<option value="' . esc_attr( $option ) . '"' . selected( $event, $option, false ) . '>' . esc_html( Labels::log_event( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
-		submit_button( __( 'Filter', 'sidrena-cijena' ), 'secondary', 'submit', false );
+		submit_button( __( 'Filter', 'sidrena-cijena-eu' ), 'secondary', 'submit', false );
 		echo '</p></form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'When', 'sidrena-cijena' ),
-			__( 'Level', 'sidrena-cijena' ),
-			__( 'Event', 'sidrena-cijena' ),
-			__( 'Message', 'sidrena-cijena' ),
-			__( 'User', 'sidrena-cijena' ),
+			__( 'When', 'sidrena-cijena-eu' ),
+			__( 'Level', 'sidrena-cijena-eu' ),
+			__( 'Event', 'sidrena-cijena-eu' ),
+			__( 'Message', 'sidrena-cijena-eu' ),
+			__( 'User', 'sidrena-cijena-eu' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $rows ) ) {
-			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match the filter.', 'sidrena-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match the filter.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		}
 
 		foreach ( $rows as $row ) {
@@ -218,7 +218,7 @@ class AuditPage {
 		}
 
 		if ( is_bool( $value ) ) {
-			return $value ? __( 'Yes', 'sidrena-cijena' ) : __( 'No', 'sidrena-cijena' );
+			return $value ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
 		}
 
 		return (string) $value;
@@ -232,7 +232,7 @@ class AuditPage {
 	 */
 	protected static function user_label( $user_id ) {
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'sidrena-cijena' );
+			return __( 'system', 'sidrena-cijena-eu' );
 		}
 
 		$user = get_userdata( $user_id );

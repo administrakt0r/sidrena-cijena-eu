@@ -48,7 +48,7 @@ Work items — verify each against the real code first:
    lands in the autoloaded options table. Prefer batched entries or wp_cache where a
    persistent object cache exists; make sure no cache bookkeeping row is autoloaded.
 5. Textdomain loading: sidrena-cijena.php registers sidrena_cijena_load_textdomain twice
-   (plugins_loaded and init) and explicitly loads languages/sidrena-cijena-hr.mo on every
+   (plugins_loaded and init) and explicitly loads languages/sidrena-cijena-eu-hr.mo on every
    request regardless of the active locale. Load once, respect the current locale, keep
    Croatian strings working in tests and in the hr catalog.
 6. Asset loading: assets/css/frontend.css and assets/js/frontend.js are enqueued on EVERY
@@ -72,7 +72,7 @@ Constraints:
   with Docker also `npx wp-env clean tests && composer test:integration`.
 
 Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
-`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
+`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`,
 update docs/improvement-backlog.md (PERF-xx) and docs/release-readiness.md, commit and
 push to origin master.
 

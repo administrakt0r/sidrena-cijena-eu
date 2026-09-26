@@ -87,7 +87,7 @@ UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and thei
      - `package.json` (`"version": "X.Y.Z"`)
    - Ensure all quality gates pass.
    - Build archive: `tools/build-zip.sh <version>`.
-   - Verify archive: `unzip -t versions/<version>/sidrena-cijena.zip`.
+   - Verify archive: `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
    - Update `docs/release-readiness.md` and `docs/improvement-backlog.md`.
    - Commit all changes including `versions/<version>/` and push to `origin master`.
 

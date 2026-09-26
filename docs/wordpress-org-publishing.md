@@ -10,10 +10,10 @@ plugin.
 ## Before submission
 
 1. The selected display name is **Sidrena Cijena EU**. The exact-name search
-   returned no current plugin listing. The source and release ZIP keep the
-   established `sidrena-cijena` folder and text domain. At submission, request
-   the directory slug `sidrena-cijena-eu` if WordPress.org offers it; slug
-   assignment and availability are decided by the directory review team.
+   returned no current plugin listing. The release uses the matching
+   `sidrena-cijena-eu` text domain and package folder. WordPress.org derives
+   the slug from the plugin name; confirm the assigned slug in the submission
+   flow because availability is decided by the directory review team.
 2. Check the current [Detailed Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/),
    [common review issues](https://developer.wordpress.org/plugins/wordpress-org/common-issues/),
    and [readme format](https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/).

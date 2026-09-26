@@ -157,7 +157,7 @@ final class TemplateFunctions {
 		$args = array(
 			'item'    => $item,
 			'price'   => $price,
-			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena' ) ),
+			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) ),
 			'display' => \SidrenaCijena\Support\Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 		);
 

@@ -25,11 +25,11 @@ final class Labels {
 	 */
 	public static function price_type( $type ) {
 		$labels = array(
-			'regular'       => __( 'Regular price', 'sidrena-cijena' ),
-			'sale'          => __( 'Sale price', 'sidrena-cijena' ),
-			'anchor'        => __( 'Anchor price', 'sidrena-cijena' ),
-			'lowest_30_day' => __( 'Lowest price in the last 30 days', 'sidrena-cijena' ),
-			'historical'    => __( 'Historical price', 'sidrena-cijena' ),
+			'regular'       => __( 'Regular price', 'sidrena-cijena-eu' ),
+			'sale'          => __( 'Sale price', 'sidrena-cijena-eu' ),
+			'anchor'        => __( 'Anchor price', 'sidrena-cijena-eu' ),
+			'lowest_30_day' => __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ),
+			'historical'    => __( 'Historical price', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -46,14 +46,14 @@ final class Labels {
 	public static function source( $source ) {
 		$labels = array(
 			'woocommerce'          => 'WooCommerce',
-			'standalone'           => __( 'Standalone catalog', 'sidrena-cijena' ),
-			'manual'               => __( 'Manual entry', 'sidrena-cijena' ),
-			'bulk'                 => __( 'Bulk entry', 'sidrena-cijena' ),
-			'import'               => __( 'CSV import', 'sidrena-cijena' ),
+			'standalone'           => __( 'Standalone catalog', 'sidrena-cijena-eu' ),
+			'manual'               => __( 'Manual entry', 'sidrena-cijena-eu' ),
+			'bulk'                 => __( 'Bulk entry', 'sidrena-cijena-eu' ),
+			'import'               => __( 'CSV import', 'sidrena-cijena-eu' ),
 			'cli'                  => 'WP-CLI',
-			'migration'            => __( 'Migration', 'sidrena-cijena' ),
-			'system'               => __( 'System', 'sidrena-cijena' ),
-			'observed_first_offer' => __( 'Observed first offer', 'sidrena-cijena' ),
+			'migration'            => __( 'Migration', 'sidrena-cijena-eu' ),
+			'system'               => __( 'System', 'sidrena-cijena-eu' ),
+			'observed_first_offer' => __( 'Observed first offer', 'sidrena-cijena-eu' ),
 		);
 
 		$source = (string) $source;
@@ -69,13 +69,13 @@ final class Labels {
 	 */
 	public static function publication_status( $status ) {
 		$labels = array(
-			'pending'    => __( 'Pending', 'sidrena-cijena' ),
-			'generated'  => __( 'Generated', 'sidrena-cijena' ),
-			'validated'  => __( 'Validated', 'sidrena-cijena' ),
-			'published'  => __( 'Published', 'sidrena-cijena' ),
-			'failed'     => __( 'Failed', 'sidrena-cijena' ),
-			'superseded' => __( 'Superseded', 'sidrena-cijena' ),
-			'expired'    => __( 'Expired', 'sidrena-cijena' ),
+			'pending'    => __( 'Pending', 'sidrena-cijena-eu' ),
+			'generated'  => __( 'Generated', 'sidrena-cijena-eu' ),
+			'validated'  => __( 'Validated', 'sidrena-cijena-eu' ),
+			'published'  => __( 'Published', 'sidrena-cijena-eu' ),
+			'failed'     => __( 'Failed', 'sidrena-cijena-eu' ),
+			'superseded' => __( 'Superseded', 'sidrena-cijena-eu' ),
+			'expired'    => __( 'Expired', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;
@@ -91,10 +91,10 @@ final class Labels {
 	 */
 	public static function sale_status( $status ) {
 		$labels = array(
-			'scheduled' => __( 'Scheduled', 'sidrena-cijena' ),
-			'active'    => __( 'Active', 'sidrena-cijena' ),
-			'ended'     => __( 'Ended', 'sidrena-cijena' ),
-			'cancelled' => __( 'Cancelled', 'sidrena-cijena' ),
+			'scheduled' => __( 'Scheduled', 'sidrena-cijena-eu' ),
+			'active'    => __( 'Active', 'sidrena-cijena-eu' ),
+			'ended'     => __( 'Ended', 'sidrena-cijena-eu' ),
+			'cancelled' => __( 'Cancelled', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;
@@ -110,9 +110,9 @@ final class Labels {
 	 */
 	public static function log_level( $level ) {
 		$labels = array(
-			'info'    => __( 'Info', 'sidrena-cijena' ),
-			'warning' => __( 'Warning', 'sidrena-cijena' ),
-			'error'   => __( 'Error', 'sidrena-cijena' ),
+			'info'    => __( 'Info', 'sidrena-cijena-eu' ),
+			'warning' => __( 'Warning', 'sidrena-cijena-eu' ),
+			'error'   => __( 'Error', 'sidrena-cijena-eu' ),
 		);
 
 		$level = (string) $level;
@@ -128,15 +128,15 @@ final class Labels {
 	 */
 	public static function log_event( $event ) {
 		$labels = array(
-			'export_scheduled'   => __( 'Scheduled generation', 'sidrena-cijena' ),
-			'export_manual'      => __( 'Manual generation', 'sidrena-cijena' ),
-			'export_failed'      => __( 'Failed generation', 'sidrena-cijena' ),
-			'import'             => __( 'Import', 'sidrena-cijena' ),
-			'validation_failure' => __( 'Validation failure', 'sidrena-cijena' ),
-			'history_correction' => __( 'History correction', 'sidrena-cijena' ),
-			'migration'          => __( 'Migration', 'sidrena-cijena' ),
-			'settings_change'    => __( 'Settings change', 'sidrena-cijena' ),
-			'cleanup'            => __( 'Cleanup', 'sidrena-cijena' ),
+			'export_scheduled'   => __( 'Scheduled generation', 'sidrena-cijena-eu' ),
+			'export_manual'      => __( 'Manual generation', 'sidrena-cijena-eu' ),
+			'export_failed'      => __( 'Failed generation', 'sidrena-cijena-eu' ),
+			'import'             => __( 'Import', 'sidrena-cijena-eu' ),
+			'validation_failure' => __( 'Validation failure', 'sidrena-cijena-eu' ),
+			'history_correction' => __( 'History correction', 'sidrena-cijena-eu' ),
+			'migration'          => __( 'Migration', 'sidrena-cijena-eu' ),
+			'settings_change'    => __( 'Settings change', 'sidrena-cijena-eu' ),
+			'cleanup'            => __( 'Cleanup', 'sidrena-cijena-eu' ),
 		);
 
 		$event = (string) $event;
@@ -152,9 +152,9 @@ final class Labels {
 	 */
 	public static function severity( $severity ) {
 		$labels = array(
-			'ERROR'   => __( 'Error', 'sidrena-cijena' ),
-			'WARNING' => __( 'Warning', 'sidrena-cijena' ),
-			'INFO'    => __( 'Info', 'sidrena-cijena' ),
+			'ERROR'   => __( 'Error', 'sidrena-cijena-eu' ),
+			'WARNING' => __( 'Warning', 'sidrena-cijena-eu' ),
+			'INFO'    => __( 'Info', 'sidrena-cijena-eu' ),
 		);
 
 		$severity = (string) $severity;
@@ -170,9 +170,9 @@ final class Labels {
 	 */
 	public static function entity_type( $type ) {
 		$labels = array(
-			'catalog_item' => __( 'Catalog item', 'sidrena-cijena' ),
-			'location'     => __( 'Sales location', 'sidrena-cijena' ),
-			'publication'  => __( 'Publication', 'sidrena-cijena' ),
+			'catalog_item' => __( 'Catalog item', 'sidrena-cijena-eu' ),
+			'location'     => __( 'Sales location', 'sidrena-cijena-eu' ),
+			'publication'  => __( 'Publication', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -190,10 +190,10 @@ final class Labels {
 	 */
 	public static function sale_type( $type ) {
 		$labels = array(
-			'akcija'            => __( 'Promotion (akcija)', 'sidrena-cijena' ),
-			'snizenje'          => __( 'Price reduction (snizenje)', 'sidrena-cijena' ),
-			'sezonsko_snizenje' => __( 'Seasonal reduction (sezonsko_snizenje)', 'sidrena-cijena' ),
-			'rasprodaja'        => __( 'Clearance (rasprodaja)', 'sidrena-cijena' ),
+			'akcija'            => __( 'Promotion (akcija)', 'sidrena-cijena-eu' ),
+			'snizenje'          => __( 'Price reduction (snizenje)', 'sidrena-cijena-eu' ),
+			'sezonsko_snizenje' => __( 'Seasonal reduction (sezonsko_snizenje)', 'sidrena-cijena-eu' ),
+			'rasprodaja'        => __( 'Clearance (rasprodaja)', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -209,10 +209,10 @@ final class Labels {
 	 */
 	public static function location_type( $type ) {
 		$labels = array(
-			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'sidrena-cijena' ),
-			'webshop'        => __( 'Web shop (webshop)', 'sidrena-cijena' ),
-			'poslovnica'     => __( 'Branch office (poslovnica)', 'sidrena-cijena' ),
-			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'sidrena-cijena' ),
+			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'sidrena-cijena-eu' ),
+			'webshop'        => __( 'Web shop (webshop)', 'sidrena-cijena-eu' ),
+			'poslovnica'     => __( 'Branch office (poslovnica)', 'sidrena-cijena-eu' ),
+			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -228,8 +228,8 @@ final class Labels {
 	 */
 	public static function run_source( $source ) {
 		$labels = array(
-			'scheduled' => __( 'Scheduled run', 'sidrena-cijena' ),
-			'manual'    => __( 'Manual run', 'sidrena-cijena' ),
+			'scheduled' => __( 'Scheduled run', 'sidrena-cijena-eu' ),
+			'manual'    => __( 'Manual run', 'sidrena-cijena-eu' ),
 			'cli'       => 'WP-CLI',
 		);
 
@@ -246,12 +246,12 @@ final class Labels {
 	 */
 	public static function rule_setting( $key ) {
 		$labels = array(
-			'general_reference_date' => __( 'General reference date', 'sidrena-cijena' ),
-			'legacy_reference_date'  => __( 'Legacy reference date', 'sidrena-cijena' ),
-			'legacy_enabled'         => __( 'Enable legacy treatment', 'sidrena-cijena' ),
-			'legacy_category_ids'    => __( 'Legacy categories', 'sidrena-cijena' ),
-			'legacy_category_slugs'  => __( 'Legacy categories', 'sidrena-cijena' ),
-			'rule_version'           => __( 'Legal-rule version', 'sidrena-cijena' ),
+			'general_reference_date' => __( 'General reference date', 'sidrena-cijena-eu' ),
+			'legacy_reference_date'  => __( 'Legacy reference date', 'sidrena-cijena-eu' ),
+			'legacy_enabled'         => __( 'Enable legacy treatment', 'sidrena-cijena-eu' ),
+			'legacy_category_ids'    => __( 'Legacy categories', 'sidrena-cijena-eu' ),
+			'legacy_category_slugs'  => __( 'Legacy categories', 'sidrena-cijena-eu' ),
+			'rule_version'           => __( 'Legal-rule version', 'sidrena-cijena-eu' ),
 		);
 
 		$key = (string) $key;
@@ -267,11 +267,11 @@ final class Labels {
 	 */
 	public static function import_status( $status ) {
 		$labels = array(
-			'valid'     => __( 'Valid', 'sidrena-cijena' ),
-			'invalid'   => __( 'Invalid', 'sidrena-cijena' ),
-			'duplicate' => __( 'Duplicate', 'sidrena-cijena' ),
-			'overwrite' => __( 'Will overwrite', 'sidrena-cijena' ),
-			'unchanged' => __( 'Unchanged', 'sidrena-cijena' ),
+			'valid'     => __( 'Valid', 'sidrena-cijena-eu' ),
+			'invalid'   => __( 'Invalid', 'sidrena-cijena-eu' ),
+			'duplicate' => __( 'Duplicate', 'sidrena-cijena-eu' ),
+			'overwrite' => __( 'Will overwrite', 'sidrena-cijena-eu' ),
+			'unchanged' => __( 'Unchanged', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;

@@ -64,7 +64,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_sale_type',
-				__( 'A promotional price is set without a classified special form of sale. Classify the promotion (for example akcija or sniženje).', 'sidrena-cijena' ),
+				__( 'A promotional price is set without a classified special form of sale. Classify the promotion (for example akcija or sniženje).', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -109,7 +109,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_30_day_price',
-				__( 'The special form of sale has no calculated lowest price of the last 30 days. Recalculate the sale before publishing.', 'sidrena-cijena' ),
+				__( 'The special form of sale has no calculated lowest price of the last 30 days. Recalculate the sale before publishing.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,

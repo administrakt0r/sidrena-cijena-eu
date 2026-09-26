@@ -39,7 +39,7 @@ Work items:
    version in 4 places (`Version:` header + `SIDRENA_CIJENA_VERSION` in
    sidrena-cijena.php, `Stable tag:` + a changelog entry in readme.txt,
    `"version"` in package.json), then `tools/build-zip.sh <version>`, then
-   `unzip -t versions/<version>/sidrena-cijena.zip`, then docs updates
+   `unzip -t versions/<version>/sidrena-cijena-eu.zip`, then docs updates
    (docs/improvement-backlog.md, docs/release-readiness.md), then push to origin
    master. The hard rules (append-only price history, reference dates general
    2026-09-10 / legacy 2025-05-02, 30-day window, filename pattern, 30+ day

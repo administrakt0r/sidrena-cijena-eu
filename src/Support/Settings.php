@@ -29,7 +29,7 @@ final class Settings {
 	public static function defaults() {
 		return array(
 			'display_enabled'          => true,
-			'anchor_label'             => __( 'Sidrena cijena', 'sidrena-cijena' ),
+			'anchor_label'             => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
 			'currency_display'         => 'symbol',
 			'display_location'         => 'price_html',
 			'product_display_style'    => 'plain',
@@ -51,7 +51,7 @@ final class Settings {
 			'sale_types'               => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
 			'filename_separator'       => '_',
 			'filename_case'            => 'upper',
-			'thirty_day_label'         => __( 'Lowest price in the last 30 days', 'sidrena-cijena' ),
+			'thirty_day_label'         => __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ),
 		);
 	}
 
@@ -139,7 +139,7 @@ final class Settings {
 
 		Logger::info(
 			'settings_change',
-			__( 'Plugin settings changed.', 'sidrena-cijena' ),
+			__( 'Plugin settings changed.', 'sidrena-cijena-eu' ),
 			array(
 				'changed' => $changed,
 				'user_id' => (int) $user_id,

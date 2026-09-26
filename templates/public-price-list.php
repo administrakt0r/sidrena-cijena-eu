@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php
 			printf(
 				/* translators: 1: sales location name, 2: legal rule version, 3: generation timestamp. */
-				esc_html__( 'Sales location: %1$s. Rule version: %2$s. Generated: %3$s.', 'sidrena-cijena' ),
+				esc_html__( 'Sales location: %1$s. Rule version: %2$s. Generated: %3$s.', 'sidrena-cijena-eu' ),
 				esc_html( (string) $location['name'] ),
 				esc_html( isset( $meta['rule_version'] ) ? (string) $meta['rule_version'] : '' ),
 				esc_html( isset( $meta['generated_at'] ) ? (string) $meta['generated_at'] : '' )
@@ -34,39 +34,39 @@ defined( 'ABSPATH' ) || exit;
 	<?php endif; ?>
 
 	<form method="get" class="sidrena-cijena-cjenik__search">
-		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'sidrena-cijena' ); ?></label>
+		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'sidrena-cijena-eu' ); ?></label>
 		<input type="search" id="sidrena-cijena-q" name="q" value="<?php echo esc_attr( $q ); ?>" />
-		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'sidrena-cijena' ); ?></label>
+		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'sidrena-cijena-eu' ); ?></label>
 		<select name="type" id="sidrena-cijena-type">
-			<option value=""><?php esc_html_e( 'All', 'sidrena-cijena' ); ?></option>
-			<option value="proizvod" <?php selected( $type, 'proizvod' ); ?>><?php esc_html_e( 'Products', 'sidrena-cijena' ); ?></option>
-			<option value="usluga" <?php selected( $type, 'usluga' ); ?>><?php esc_html_e( 'Services', 'sidrena-cijena' ); ?></option>
+			<option value=""><?php esc_html_e( 'All', 'sidrena-cijena-eu' ); ?></option>
+			<option value="proizvod" <?php selected( $type, 'proizvod' ); ?>><?php esc_html_e( 'Products', 'sidrena-cijena-eu' ); ?></option>
+			<option value="usluga" <?php selected( $type, 'usluga' ); ?>><?php esc_html_e( 'Services', 'sidrena-cijena-eu' ); ?></option>
 		</select>
-		<button type="submit"><?php esc_html_e( 'Filter', 'sidrena-cijena' ); ?></button>
+		<button type="submit"><?php esc_html_e( 'Filter', 'sidrena-cijena-eu' ); ?></button>
 	</form>
 
 	<table class="sidrena-cijena-table">
-		<caption><?php esc_html_e( 'Price list with the anchor price', 'sidrena-cijena' ); ?></caption>
+		<caption><?php esc_html_e( 'Price list with the anchor price', 'sidrena-cijena-eu' ); ?></caption>
 		<thead>
 			<tr>
-				<th scope="col"><?php esc_html_e( 'Type', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Name', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'SKU', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Brand', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Unit', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Unit price', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Retail price', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Special sale', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Anchor price', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Anchor date', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Barcode', 'sidrena-cijena' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Availability', 'sidrena-cijena' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Type', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Name', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'SKU', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Brand', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Unit', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Unit price', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Retail price', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Special sale', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Anchor price', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Anchor date', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Barcode', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Availability', 'sidrena-cijena-eu' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if ( empty( $rows ) ) : ?>
 				<tr>
-					<td colspan="12"><?php esc_html_e( 'No items match this filter.', 'sidrena-cijena' ); ?></td>
+					<td colspan="12"><?php esc_html_e( 'No items match this filter.', 'sidrena-cijena-eu' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			<?php foreach ( $rows as $sidrena_row ) : ?>
@@ -91,6 +91,6 @@ defined( 'ABSPATH' ) || exit;
 	<p class="sidrena-cijena-cjenik__links">
 		<a href="<?php echo esc_url( $feed_xml ); ?>">XML</a>
 		<a href="<?php echo esc_url( $feed_csv ); ?>">CSV</a>
-		<a href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'Archive', 'sidrena-cijena' ); ?></a>
+		<a href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'Archive', 'sidrena-cijena-eu' ); ?></a>
 	</p>
 </div>

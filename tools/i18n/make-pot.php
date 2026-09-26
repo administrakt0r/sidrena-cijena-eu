@@ -3,7 +3,7 @@
  * Translation catalogue builder.
  *
  * Extracts translatable strings from the plugin source and writes
- * `languages/sidrena-cijena.pot`. With `--locale=hr_HR` it also writes a
+ * `languages/sidrena-cijena-eu.pot`. With `--locale=hr_HR` it also writes a
  * `.po` catalogue using the translations in `tools/i18n/hr_HR.php`.
  *
  * Usage (host PHP):
@@ -54,22 +54,22 @@ $pot .= "# This file is distributed under the GPL-2.0-or-later license.\n";
 $pot .= "msgid \"\"\n";
 $pot .= "msgstr \"\"\n";
 $pot .= "\"Project-Id-Version: Sidrena cijena " . $version . "\\n\"\n";
-$pot .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\\n\"\n";
+$pot .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\\n\"\n";
 $pot .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 $pot .= "\"MIME-Version: 1.0\\n\"\n";
 $pot .= "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
 $pot .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
 $pot .= "\"X-Generator: tools/i18n/make-pot.php\\n\"\n";
-$pot .= "\"X-Domain: sidrena-cijena\\n\"\n\n";
+$pot .= "\"X-Domain: sidrena-cijena-eu\\n\"\n\n";
 
 foreach ( $strings as $string => $unused ) {
 	$pot .= 'msgid "' . sidrena_po_escape( $string ) . "\"\n";
 	$pot .= "msgstr \"\"\n\n";
 }
 
-file_put_contents( $root . '/languages/sidrena-cijena.pot', $pot );
+file_put_contents( $root . '/languages/sidrena-cijena-eu.pot', $pot );
 
-echo 'Wrote languages/sidrena-cijena.pot with ' . count( $strings ) . " strings.\n";
+echo 'Wrote languages/sidrena-cijena-eu.pot with ' . count( $strings ) . " strings.\n";
 
 if ( '' !== $locale ) {
 	$translations_file = $root . '/tools/i18n/' . $locale . '.php';
@@ -86,7 +86,7 @@ if ( '' !== $locale ) {
 	$po .= "msgid \"\"\n";
 	$po .= "msgstr \"\"\n";
 	$po .= "\"Project-Id-Version: Sidrena cijena " . $version . "\\n\"\n";
-	$po .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\\n\"\n";
+	$po .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\\n\"\n";
 	$po .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"PO-Revision-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"MIME-Version: 1.0\\n\"\n";
@@ -94,7 +94,7 @@ if ( '' !== $locale ) {
 	$po .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
 	$po .= "\"Language: " . $locale . "\\n\"\n";
 	$po .= "\"X-Generator: tools/i18n/make-pot.php\\n\"\n";
-	$po .= "\"X-Domain: sidrena-cijena\\n\"\n\n";
+	$po .= "\"X-Domain: sidrena-cijena-eu\\n\"\n\n";
 
 	$translated = 0;
 	$missing    = 0;
@@ -118,8 +118,8 @@ if ( '' !== $locale ) {
 
 	if ( 'hr_HR' === $locale ) {
 		$mo = sidrena_compile_mo( $translations );
-		file_put_contents( $root . '/languages/sidrena-cijena-hr.mo', $mo );
-		echo "Wrote languages/sidrena-cijena-hr.mo (" . strlen( $mo ) . " bytes).\n";
+		file_put_contents( $root . '/languages/sidrena-cijena-eu-hr.mo', $mo );
+		echo "Wrote languages/sidrena-cijena-eu-hr.mo (" . strlen( $mo ) . " bytes).\n";
 	}
 }
 
@@ -152,7 +152,7 @@ function sidrena_collect_php_files( $directory ) {
  * @return void
  */
 function sidrena_extract_strings( $contents, &$strings ) {
-	$pattern = '/(?:__|_e|esc_html__|esc_attr__|esc_html_e|esc_attr_e)\s*\(\s*([\'"])((?:\\\\.|(?!\1).)*)\1\s*,\s*[\'"]sidrena-cijena[\'"]/s';
+	$pattern = '/(?:__|_e|esc_html__|esc_attr__|esc_html_e|esc_attr_e)\s*\(\s*([\'"])((?:\\\\.|(?!\1).)*)\1\s*,\s*[\'"]sidrena-cijena-eu[\'"]/s';
 
 	if ( preg_match_all( $pattern, $contents, $matches, PREG_SET_ORDER ) ) {
 		foreach ( $matches as $match ) {

@@ -37,7 +37,7 @@ class BulkAnchorEntryPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		$paged   = self::current_page();
@@ -46,31 +46,31 @@ class BulkAnchorEntryPage {
 		$total   = $missing['total'];
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Anchor entry', 'sidrena-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Anchor entry', 'sidrena-cijena-eu' ) . '</h1>';
 
 		self::render_notice();
 
 		echo '<div class="card sidrena-bulk-all-card" style="max-width:100%;margin-top:15px;margin-bottom:20px;padding:16px 20px;">';
-		echo '<h2>' . esc_html__( 'Set anchor prices for all products at once (from current price)', 'sidrena-cijena' ) . '</h2>';
-		echo '<p>' . esc_html__( 'This option automatically sets the anchor price for products and variations in your shop based on their current active price and prescribed legal reference date (2 May 2025 for legacy categories, 10 September 2026 for all others).', 'sidrena-cijena' ) . '</p>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return confirm(\'' . esc_js( __( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena' ) ) . '\');">';
+		echo '<h2>' . esc_html__( 'Set anchor prices for all products at once (from current price)', 'sidrena-cijena-eu' ) . '</h2>';
+		echo '<p>' . esc_html__( 'This option automatically sets the anchor price for products and variations in your shop based on their current active price and prescribed legal reference date (2 May 2025 for legacy categories, 10 September 2026 for all others).', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return confirm(\'' . esc_js( __( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena-eu' ) ) . '\');">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_ALL_CURRENT ) . '" />';
 		wp_nonce_field( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
 		echo '<p>';
-		echo '<label style="margin-right:20px;"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena' ) . '</label>';
-		echo '<label><input type="radio" name="scope" value="all" /> ' . esc_html__( 'For all products in catalog (including overwriting existing)', 'sidrena-cijena' ) . '</label>';
+		echo '<label style="margin-right:20px;"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena-eu' ) . '</label>';
+		echo '<label><input type="radio" name="scope" value="all" /> ' . esc_html__( 'For all products in catalog (including overwriting existing)', 'sidrena-cijena-eu' ) . '</label>';
 		echo '</p>';
-		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena' ) . '</button></p>';
+		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena-eu' ) . '</button></p>';
 		echo '</form>';
 		echo '</div>';
 
-		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored.', 'sidrena-cijena' ) . '</p></div>';
+		echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored.', 'sidrena-cijena-eu' ) . '</p></div>';
 
 		if ( ! $rows ) {
 			if ( $total > 0 ) {
-				echo '<p>' . esc_html__( 'No items without an anchor price on this page.', 'sidrena-cijena' ) . '</p>';
+				echo '<p>' . esc_html__( 'No items without an anchor price on this page.', 'sidrena-cijena-eu' ) . '</p>';
 			} else {
-				echo '<p>' . esc_html__( 'Every catalog item has an anchor price recorded.', 'sidrena-cijena' ) . '</p>';
+				echo '<p>' . esc_html__( 'Every catalog item has an anchor price recorded.', 'sidrena-cijena-eu' ) . '</p>';
 			}
 
 			Pagination::render( $paged, $total, self::PER_PAGE );
@@ -83,15 +83,15 @@ class BulkAnchorEntryPage {
 		echo esc_html(
 			sprintf(
 				/* translators: %d: number of items without an anchor. */
-				__( '%d item(s) have no anchor price yet.', 'sidrena-cijena' ),
+				__( '%d item(s) have no anchor price yet.', 'sidrena-cijena-eu' ),
 				$total
 			)
 		);
 		echo '</p>';
 
 		echo '<p class="sidrena-bulk-selection-actions" style="margin-bottom:12px;">';
-		echo '<button type="button" class="button button-secondary" id="sidrena-btn-select-all">' . esc_html__( 'Select all on this page', 'sidrena-cijena' ) . '</button> ';
-		echo '<button type="button" class="button button-secondary" id="sidrena-btn-deselect-all">' . esc_html__( 'Deselect all', 'sidrena-cijena' ) . '</button>';
+		echo '<button type="button" class="button button-secondary" id="sidrena-btn-select-all">' . esc_html__( 'Select all on this page', 'sidrena-cijena-eu' ) . '</button> ';
+		echo '<button type="button" class="button button-secondary" id="sidrena-btn-deselect-all">' . esc_html__( 'Deselect all', 'sidrena-cijena-eu' ) . '</button>';
 		echo '</p>';
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -99,14 +99,14 @@ class BulkAnchorEntryPage {
 		wp_nonce_field( self::ACTION, 'sidrena_cijena_bulk_nonce' );
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Items without an anchor price', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Items without an anchor price', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th class="check-column" scope="col"><input type="checkbox" id="sidrena-select-all" title="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" aria-label="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" /></th>';
-		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Current price', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Suggested anchor (unverified)', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</th>';
+		echo '<th class="check-column" scope="col"><input type="checkbox" id="sidrena-select-all" title="' . esc_attr__( 'Select all on page', 'sidrena-cijena-eu' ) . '" aria-label="' . esc_attr__( 'Select all on page', 'sidrena-cijena-eu' ) . '" /></th>';
+		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Current price', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Suggested anchor (unverified)', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $rows as $row ) {
@@ -115,17 +115,17 @@ class BulkAnchorEntryPage {
 			$field   = 'rows[' . (int) $item->id . '][' . (int) $item->variation_id . ']';
 
 			echo '<tr>';
-			echo '<td class="check-column"><input type="checkbox" class="sidrena-row-cb" name="' . esc_attr( $field ) . '[record]" value="1" aria-label="' . esc_attr( sprintf( /* translators: %s: catalog item name. */ __( 'Select %s', 'sidrena-cijena' ), $item->name ) ) . '" /></td>';
-			echo '<td>' . esc_html( $item->name ) . ( $item->is_variation() ? ' (' . esc_html__( 'variation', 'sidrena-cijena' ) . ' #' . (int) $item->variation_id . ')' : '' ) . '</td>';
+			echo '<td class="check-column"><input type="checkbox" class="sidrena-row-cb" name="' . esc_attr( $field ) . '[record]" value="1" aria-label="' . esc_attr( sprintf( /* translators: %s: catalog item name. */ __( 'Select %s', 'sidrena-cijena-eu' ), $item->name ) ) . '" /></td>';
+			echo '<td>' . esc_html( $item->name ) . ( $item->is_variation() ? ' (' . esc_html__( 'variation', 'sidrena-cijena-eu' ) . ' #' . (int) $item->variation_id . ')' : '' ) . '</td>';
 			echo '<td>' . esc_html( (string) $item->sku ) . '</td>';
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
-			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'sidrena-cijena' ) . '" /></td>';
-			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'sidrena-cijena' ) . '" /></td>';
+			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'sidrena-cijena-eu' ) . '" /></td>';
+			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'sidrena-cijena-eu' ) . '" /></td>';
 			echo '</tr>';
 		}
 
 		echo '</tbody></table>';
-		submit_button( __( 'Record checked anchors', 'sidrena-cijena' ) );
+		submit_button( __( 'Record checked anchors', 'sidrena-cijena-eu' ) );
 		echo '</form>';
 
 		echo '<script>
@@ -174,7 +174,7 @@ class BulkAnchorEntryPage {
 	 */
 	public static function handle_set_all_current() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to record anchor prices.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to record anchor prices.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
@@ -228,7 +228,7 @@ class BulkAnchorEntryPage {
 					'sidrena_cijena_notice'      => $recorded > 0 ? 'success' : ( $failed > 0 ? 'error' : 'info' ),
 					'sidrena_cijena_notice_text' => sprintf(
 						/* translators: 1: count recorded, 2: count skipped, 3: count failed */
-						__( 'Successfully set %1$d anchor price(s) from current prices. %2$d item(s) already had an anchor. %3$d item(s) had no valid price.', 'sidrena-cijena' ),
+						__( 'Successfully set %1$d anchor price(s) from current prices. %2$d item(s) already had an anchor. %3$d item(s) had no valid price.', 'sidrena-cijena-eu' ),
 						$recorded,
 						$skipped,
 						$failed
@@ -284,7 +284,7 @@ class BulkAnchorEntryPage {
 				array(
 					'source'            => 'bulk_current',
 					'reference_date'    => $resolved['date'],
-					'correction_reason' => __( 'Bulk setup of anchor price from current catalog price', 'sidrena-cijena' ),
+					'correction_reason' => __( 'Bulk setup of anchor price from current catalog price', 'sidrena-cijena-eu' ),
 				)
 			);
 
@@ -304,7 +304,7 @@ class BulkAnchorEntryPage {
 	 */
 	public static function handle_save() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to record anchor prices.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to record anchor prices.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION, 'sidrena_cijena_bulk_nonce' );
@@ -373,7 +373,7 @@ class BulkAnchorEntryPage {
 					'sidrena_cijena_notice'      => $failed > 0 ? 'error' : 'success',
 					'sidrena_cijena_notice_text' => sprintf(
 						/* translators: 1: recorded anchors, 2: failed rows. */
-						__( 'Recorded %1$d anchor(s); %2$d row(s) failed.', 'sidrena-cijena' ),
+						__( 'Recorded %1$d anchor(s); %2$d row(s) failed.', 'sidrena-cijena-eu' ),
 						$recorded,
 						$failed
 					),

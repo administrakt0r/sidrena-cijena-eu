@@ -4,8 +4,9 @@
 
 - Renamed the public-facing plugin to **Sidrena Cijena EU** and synchronized the
   plugin header, runtime version, `readme.txt`, npm metadata and lockfile at
-  2.0.0. The source folder and text domain remain `sidrena-cijena`; the
-  WordPress.org submission should request slug `sidrena-cijena-eu`.
+  2.0.0. The WordPress.org text domain, translation catalogs and package folder
+  use `sidrena-cijena-eu`; the main PHP file and established internal URLs keep
+  their existing identifiers.
 - Fixed the Styling tab destination to the registered settings page. Added a
   public archive page with publication dates and CSV/XML links, plus
   default-enabled controls for archive visibility, a footer link and a sitemap

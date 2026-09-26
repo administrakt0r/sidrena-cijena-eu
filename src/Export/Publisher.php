@@ -89,7 +89,7 @@ class Publisher {
 		$dir = $this->directory( $location );
 
 		if ( ! $dir ) {
-			return new \WP_Error( 'publication_directory_failed', __( 'The price-list storage directory could not be created.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'publication_directory_failed', __( 'The price-list storage directory could not be created.', 'sidrena-cijena-eu' ) );
 		}
 
 		$sequence = 0;
@@ -112,12 +112,12 @@ class Publisher {
 		}
 
 		if ( $this->file_exists( $path ) ) {
-			return new \WP_Error( 'invalid_filename', __( 'A unique price-list filename could not be generated.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'invalid_filename', __( 'A unique price-list filename could not be generated.', 'sidrena-cijena-eu' ) );
 		}
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writes the generated price list into the plugin's uploads directory.
 		if ( false === file_put_contents( $path, (string) $content ) ) {
-			return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
 		}
 
 		$published = Dates::now_utc();
@@ -148,7 +148,7 @@ class Publisher {
 		if ( ! $id ) {
 			wp_delete_file( $path );
 
-			return new \WP_Error( 'publication_archive_failed', __( 'The publication archive row could not be stored.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'publication_archive_failed', __( 'The publication archive row could not be stored.', 'sidrena-cijena-eu' ) );
 		}
 
 		$this->publications->supersede( $location_id, $format, $id );

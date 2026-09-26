@@ -5,7 +5,7 @@
 # Usage: tools/build-zip.sh <version>   (e.g. tools/build-zip.sh 0.1.1)
 #
 # The zip is built from committed HEAD only, so commit your changes first.
-# Output: versions/<version>/sidrena-cijena.zip + SHA256SUMS.txt
+# Output: versions/<version>/sidrena-cijena-eu.zip + SHA256SUMS.txt
 #
 # Version policy:
 #   Every version, including patch releases, is committed and pushed to GitHub.
@@ -42,13 +42,13 @@ if [ "$HEADER" != "$VERSION" ]; then
 fi
 
 OUT="$ROOT/versions/$VERSION"
-if [ -e "$OUT/sidrena-cijena.zip" ]; then
+if [ -e "$OUT/sidrena-cijena-eu.zip" ]; then
 	echo "error: versions/$VERSION already has a package; bump the version instead of replacing it." >&2
 	exit 1
 fi
 mkdir -p "$OUT"
 
-git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena/ HEAD \
+git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena-eu/ HEAD \
 	sidrena-cijena.php \
 	uninstall.php \
 	readme.txt \
@@ -57,10 +57,10 @@ git -C "$ROOT" archive --format=zip --prefix=sidrena-cijena/ HEAD \
 	assets \
 	templates \
 	languages \
-	-o "$OUT/sidrena-cijena.zip"
+	-o "$OUT/sidrena-cijena-eu.zip"
 
-ENTRIES="$(unzip -l "$OUT/sidrena-cijena.zip" | awk 'NR>3' | head -n -2)"
-LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "sidrena-cijena/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md)" || true)"
+ENTRIES="$(unzip -l "$OUT/sidrena-cijena-eu.zip" | awk 'NR>3' | head -n -2)"
+LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "sidrena-cijena-eu/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md)" || true)"
 
 if [ -n "$LEAKS" ]; then
 	echo "error: dev-only files leaked into the zip:" >&2
@@ -68,8 +68,8 @@ if [ -n "$LEAKS" ]; then
 	exit 1
 fi
 
-( cd "$OUT" && sha256sum sidrena-cijena.zip > SHA256SUMS.txt )
+( cd "$OUT" && sha256sum sidrena-cijena-eu.zip > SHA256SUMS.txt )
 
-echo "Built $OUT/sidrena-cijena.zip ($(du -h "$OUT/sidrena-cijena.zip" | cut -f1))"
+echo "Built $OUT/sidrena-cijena-eu.zip ($(du -h "$OUT/sidrena-cijena-eu.zip" | cut -f1))"
 
 echo "Release: commit versions/$VERSION/ and push."

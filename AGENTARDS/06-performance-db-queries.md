@@ -71,7 +71,7 @@ Constraints:
 
 Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places (plugin header +
 SIDRENA_CIJENA_VERSION, readme.txt Stable tag + changelog, package.json), `tools/build-zip.sh
-<version>`, `unzip -t versions/<version>/sidrena-cijena.zip`, update docs/improvement-backlog.md
+<version>`, `unzip -t versions/<version>/sidrena-cijena-eu.zip`, update docs/improvement-backlog.md
 (PERF-xx) and docs/release-readiness.md, commit everything and push to origin master.
 
 Done when: measured query counts/timings improved with numbers recorded, every item covered by

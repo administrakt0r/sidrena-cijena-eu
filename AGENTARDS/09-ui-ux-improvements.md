@@ -90,7 +90,7 @@ with Docker also `npm run test:e2e` (port 8889 only — never point Playwright a
 update specs when markup intentionally changes.
 
 Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
-`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
+`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`,
 update docs/improvement-backlog.md (UX-xx items) and docs/release-readiness.md, commit and
 push to origin master.
 

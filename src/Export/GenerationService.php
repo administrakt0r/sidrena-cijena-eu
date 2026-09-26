@@ -102,7 +102,7 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ) );
 		}
 
 		$results = array();
@@ -126,13 +126,13 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ) );
 		}
 
 		$format = strtolower( (string) $format );
 
 		if ( ! in_array( $format, array( 'csv', 'xml' ), true ) ) {
-			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'sidrena-cijena' ) );
+			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'sidrena-cijena-eu' ) );
 		}
 
 		$source = isset( $args['source'] ) ? (string) $args['source'] : 'manual';
@@ -143,7 +143,7 @@ class GenerationService {
 				array(
 					'code'     => 'missing_store_identifier',
 					'severity' => 'ERROR',
-					'message'  => __( 'The sales location has no facility identifier.', 'sidrena-cijena' ),
+					'message'  => __( 'The sales location has no facility identifier.', 'sidrena-cijena-eu' ),
 				),
 			);
 
@@ -158,7 +158,7 @@ class GenerationService {
 		if ( ! empty( $findings ) ) {
 			$this->record_failure( $location_id, $format, $findings );
 
-			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'sidrena-cijena' ), array( 'findings' => $findings ) );
+			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'sidrena-cijena-eu' ), array( 'findings' => $findings ) );
 		}
 
 		$build = $this->builder()->build( $location, $args );

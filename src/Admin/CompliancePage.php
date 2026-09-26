@@ -48,24 +48,24 @@ class CompliancePage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		$report = self::stored_report();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'sidrena-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'sidrena-cijena-eu' ) . '</h1>';
 
 		self::notice();
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RUN ) . '" />';
 		wp_nonce_field( self::ACTION_RUN );
-		submit_button( __( 'Run compliance check', 'sidrena-cijena' ), 'primary', 'submit', false );
+		submit_button( __( 'Run compliance check', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
 		echo '</form>';
 
 		if ( ! $report ) {
-			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'sidrena-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'sidrena-cijena-eu' ) . '</p>';
 			echo '</div>';
 
 			return;
@@ -79,7 +79,7 @@ class CompliancePage {
 			esc_html(
 				sprintf(
 					/* translators: 1: generation timestamp, 2: scanned items, 3: total items. */
-					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'sidrena-cijena' ),
+					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'sidrena-cijena-eu' ),
 					isset( $report['generated_at'] ) ? (string) $report['generated_at'] : '',
 					isset( $report['scanned'] ) ? (int) $report['scanned'] : 0,
 					isset( $report['total'] ) ? (int) $report['total'] : 0
@@ -103,7 +103,7 @@ class CompliancePage {
 
 		echo '<p>';
 		foreach ( array(
-			''               => __( 'All', 'sidrena-cijena' ),
+			''               => __( 'All', 'sidrena-cijena-eu' ),
 			Finding::ERROR   => Labels::severity( Finding::ERROR ),
 			Finding::WARNING => Labels::severity( Finding::WARNING ),
 			Finding::INFO    => Labels::severity( Finding::INFO ),
@@ -122,30 +122,30 @@ class CompliancePage {
 		printf(
 			'<a class="button" href="%1$s">%2$s</a> ',
 			esc_url( self::export_url( 'csv' ) ),
-			esc_html__( 'Export report (CSV)', 'sidrena-cijena' )
+			esc_html__( 'Export report (CSV)', 'sidrena-cijena-eu' )
 		);
 		printf(
 			'<a class="button" href="%1$s">%2$s</a>',
 			esc_url( self::export_url( 'json' ) ),
-			esc_html__( 'Export report (JSON)', 'sidrena-cijena' )
+			esc_html__( 'Export report (JSON)', 'sidrena-cijena-eu' )
 		);
 		echo '</p>';
 
 		if ( empty( $filtered ) ) {
-			echo '<p>' . esc_html__( 'No findings for this filter.', 'sidrena-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'No findings for this filter.', 'sidrena-cijena-eu' ) . '</p>';
 			echo '</div>';
 
 			return;
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		$shown = 0;
@@ -174,7 +174,7 @@ class CompliancePage {
 				esc_html(
 					sprintf(
 						/* translators: %d: number of findings not shown. */
-						__( '%d further findings are not shown. Export the report to see all of them.', 'sidrena-cijena' ),
+						__( '%d further findings are not shown. Export the report to see all of them.', 'sidrena-cijena-eu' ),
 						count( $filtered ) - $shown
 					)
 				)
@@ -191,7 +191,7 @@ class CompliancePage {
 	 */
 	public static function handle_run() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION_RUN );
@@ -243,7 +243,7 @@ class CompliancePage {
 	 */
 	public static function handle_export() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION_EXPORT );
@@ -382,7 +382,7 @@ class CompliancePage {
 			$errors > 0 ? 'error' : 'success',
 			sprintf(
 				/* translators: 1: error count, 2: warning count. */
-				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena' ),
+				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena-eu' ),
 				$errors,
 				$warnings
 			)

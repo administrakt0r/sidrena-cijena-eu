@@ -50,7 +50,7 @@ final class AnchorMetaBox {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				self::ID,
-				__( 'Sidrena cijena - anchor price', 'sidrena-cijena' ),
+				__( 'Sidrena cijena - anchor price', 'sidrena-cijena-eu' ),
 				array( __CLASS__, 'render' ),
 				$screen,
 				'side',
@@ -71,7 +71,7 @@ final class AnchorMetaBox {
 		}
 
 		$tabs['sidrena_cijena'] = array(
-			'label'    => __( 'Sidrena cijena', 'sidrena-cijena' ),
+			'label'    => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
 			'target'   => 'sidrena_cijena_product_data',
 			'class'    => array( 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ),
 			'priority' => 80,
@@ -94,12 +94,12 @@ final class AnchorMetaBox {
 
 		echo '<div id="sidrena_cijena_product_data" class="panel woocommerce_options_panel">';
 		echo '<div class="sidrena-cijena-product-panel">';
-		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena' ) . '</h2>';
-		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena-eu' ) . '</h2>';
+		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena-eu' ) . '</p>';
 		CardVisibility::render_control( $post->ID );
-		echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</h3>';
+		echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h3>';
 		self::render( $post );
-		echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena' ) . '</h3>';
+		echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h3>';
 		SpecialSaleMetaBox::render( $post );
 		echo '</div></div>';
 	}
@@ -114,7 +114,7 @@ final class AnchorMetaBox {
 		$item = Plugin::instance()->catalog()->get_item( $post->ID );
 
 		if ( ! $item ) {
-			echo '<p>' . esc_html__( 'The catalog item could not be loaded.', 'sidrena-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'The catalog item could not be loaded.', 'sidrena-cijena-eu' ) . '</p>';
 
 			return;
 		}
@@ -129,36 +129,36 @@ final class AnchorMetaBox {
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Anchor price', 'sidrena-cijena' ),
+			esc_html__( 'Anchor price', 'sidrena-cijena-eu' ),
 			$status['anchor'] && null !== $status['anchor']['price']
 				? esc_html( Currency::format( (float) $status['anchor']['price'], $item->currency ) )
-				: '<em>' . esc_html__( 'Not recorded', 'sidrena-cijena' ) . '</em>'
+				: '<em>' . esc_html__( 'Not recorded', 'sidrena-cijena-eu' ) . '</em>'
 		);
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Applicable reference date', 'sidrena-cijena' ),
-			esc_html( $status['reference_date'] . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'sidrena-cijena' ) . ')' : '' ) )
+			esc_html__( 'Applicable reference date', 'sidrena-cijena-eu' ),
+			esc_html( $status['reference_date'] . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'sidrena-cijena-eu' ) . ')' : '' ) )
 		);
 
 		if ( $status['anchor'] ) {
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td></tr>',
-				esc_html__( 'Recorded for', 'sidrena-cijena' ),
+				esc_html__( 'Recorded for', 'sidrena-cijena-eu' ),
 				esc_html( (string) $status['anchor']['reference_date'] . ' / ' . Labels::source( (string) $status['anchor']['source'] ) )
 			);
 		}
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Status', 'sidrena-cijena' ),
+			esc_html__( 'Status', 'sidrena-cijena-eu' ),
 			esc_html( self::state_label( $status ) )
 		);
 
 		echo '</tbody></table>';
 
 		if ( 'missing' === $status['state'] && $status['introduced_after'] ) {
-			echo '<p class="description">' . esc_html__( 'For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records.', 'sidrena-cijena' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records.', 'sidrena-cijena-eu' ) . '</p>';
 		}
 
 		?>
@@ -167,27 +167,27 @@ final class AnchorMetaBox {
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $post->ID ); ?>" />
 
 			<p>
-				<label for="sidrena-anchor-price"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena' ); ?></label>
+				<label for="sidrena-anchor-price"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena-eu' ); ?></label>
 				<input type="text" class="regular-text" id="sidrena-anchor-price" name="anchor_price"
 					value="<?php echo $status['anchor'] && null !== $status['anchor']['price'] ? esc_attr( (string) $status['anchor']['price'] ) : ''; ?>" />
-				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena' ); ?></span>
+				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<p>
-				<label for="sidrena-anchor-date"><?php echo esc_html__( 'Reference date', 'sidrena-cijena' ); ?></label>
+				<label for="sidrena-anchor-date"><?php echo esc_html__( 'Reference date', 'sidrena-cijena-eu' ); ?></label>
 				<input type="date" id="sidrena-anchor-date" name="reference_date" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
-				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'sidrena-cijena' ); ?></span>
+				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<?php if ( $status['anchor'] ) : ?>
 				<p>
-					<label for="sidrena-anchor-reason"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena' ); ?></label>
+					<label for="sidrena-anchor-reason"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena-eu' ); ?></label>
 					<input type="text" class="regular-text" id="sidrena-anchor-reason" name="correction_reason" value="" />
 				</p>
 			<?php endif; ?>
 
 			<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post">
-				<?php echo esc_html__( 'Record anchor price', 'sidrena-cijena' ); ?>
+				<?php echo esc_html__( 'Record anchor price', 'sidrena-cijena-eu' ); ?>
 			</button>
 		</div>
 		<?php
@@ -195,7 +195,7 @@ final class AnchorMetaBox {
 		printf(
 			'<p><a href="%1$s">%2$s</a></p>',
 			esc_url( AdminMenu::url( 'sidrena-cijena-history', array( 'product_id' => $post->ID ) ) ),
-			esc_html__( 'View the full price history', 'sidrena-cijena' )
+			esc_html__( 'View the full price history', 'sidrena-cijena-eu' )
 		);
 	}
 
@@ -206,7 +206,7 @@ final class AnchorMetaBox {
 	 */
 	public static function handle_record() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You are not allowed to record anchor prices.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You are not allowed to record anchor prices.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION, 'sidrena_cijena_anchor_nonce' );
@@ -215,7 +215,7 @@ final class AnchorMetaBox {
 		$item       = $product_id ? Plugin::instance()->catalog()->get_item( $product_id ) : null;
 
 		if ( ! $item ) {
-			self::redirect_back( 0, __( 'The catalog item could not be loaded.', 'sidrena-cijena' ) );
+			self::redirect_back( 0, __( 'The catalog item could not be loaded.', 'sidrena-cijena-eu' ) );
 
 			return;
 		}
@@ -236,7 +236,7 @@ final class AnchorMetaBox {
 			return;
 		}
 
-		self::redirect_back( $product_id, __( 'The anchor price has been recorded.', 'sidrena-cijena' ), 'success' );
+		self::redirect_back( $product_id, __( 'The anchor price has been recorded.', 'sidrena-cijena-eu' ), 'success' );
 	}
 
 	/**
@@ -304,13 +304,13 @@ final class AnchorMetaBox {
 	 */
 	private static function state_label( array $status ) {
 		if ( 'valid' === $status['state'] ) {
-			return __( 'Valid', 'sidrena-cijena' );
+			return __( 'Valid', 'sidrena-cijena-eu' );
 		}
 
 		if ( 'needs_verification' === $status['state'] ) {
-			return __( 'Needs verification', 'sidrena-cijena' );
+			return __( 'Needs verification', 'sidrena-cijena-eu' );
 		}
 
-		return __( 'Missing', 'sidrena-cijena' );
+		return __( 'Missing', 'sidrena-cijena-eu' );
 	}
 }

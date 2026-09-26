@@ -20,15 +20,15 @@ final class DisplayStyles {
 	 */
 	public static function presets() {
 		return array(
-			'plain'     => __( 'Plain', 'sidrena-cijena' ),
-			'badge'     => __( 'Badge', 'sidrena-cijena' ),
-			'card'      => __( 'Card', 'sidrena-cijena' ),
-			'underline' => __( 'Underline', 'sidrena-cijena' ),
-			'outline'   => __( 'Outline', 'sidrena-cijena' ),
-			'stripe'    => __( 'Side stripe', 'sidrena-cijena' ),
-			'soft'      => __( 'Soft background', 'sidrena-cijena' ),
-			'mono'      => __( 'Monochrome', 'sidrena-cijena' ),
-			'pill'      => __( 'Pill', 'sidrena-cijena' ),
+			'plain'     => __( 'Plain', 'sidrena-cijena-eu' ),
+			'badge'     => __( 'Badge', 'sidrena-cijena-eu' ),
+			'card'      => __( 'Card', 'sidrena-cijena-eu' ),
+			'underline' => __( 'Underline', 'sidrena-cijena-eu' ),
+			'outline'   => __( 'Outline', 'sidrena-cijena-eu' ),
+			'stripe'    => __( 'Side stripe', 'sidrena-cijena-eu' ),
+			'soft'      => __( 'Soft background', 'sidrena-cijena-eu' ),
+			'mono'      => __( 'Monochrome', 'sidrena-cijena-eu' ),
+			'pill'      => __( 'Pill', 'sidrena-cijena-eu' ),
 		);
 	}
 }

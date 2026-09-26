@@ -38,7 +38,7 @@ final class Install {
 		// Settings defaults are translatable strings, and `init` has not run
 		// yet during activation, so the textdomain has to be loaded explicitly
 		// or the seeded labels would be stored in English.
-		load_plugin_textdomain( 'sidrena-cijena', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
+		load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
 
 		self::seed_options();
 
@@ -59,7 +59,7 @@ final class Install {
 
 		Logger::info(
 			'migration',
-			__( 'Plugin activated.', 'sidrena-cijena' ),
+			__( 'Plugin activated.', 'sidrena-cijena-eu' ),
 			array(
 				'version' => defined( 'SIDRENA_CIJENA_VERSION' ) ? SIDRENA_CIJENA_VERSION : '',
 			)

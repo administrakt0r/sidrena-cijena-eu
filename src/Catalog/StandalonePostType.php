@@ -48,12 +48,12 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Standalone catalog', 'sidrena-cijena' ),
-					'singular_name' => __( 'Catalog item', 'sidrena-cijena' ),
-					'add_new_item'  => __( 'Add catalog item', 'sidrena-cijena' ),
-					'edit_item'     => __( 'Edit catalog item', 'sidrena-cijena' ),
-					'search_items'  => __( 'Search catalog items', 'sidrena-cijena' ),
-					'not_found'     => __( 'No catalog items found.', 'sidrena-cijena' ),
+					'name'          => __( 'Standalone catalog', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Catalog item', 'sidrena-cijena-eu' ),
+					'add_new_item'  => __( 'Add catalog item', 'sidrena-cijena-eu' ),
+					'edit_item'     => __( 'Edit catalog item', 'sidrena-cijena-eu' ),
+					'search_items'  => __( 'Search catalog items', 'sidrena-cijena-eu' ),
+					'not_found'     => __( 'No catalog items found.', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -71,8 +71,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Brands', 'sidrena-cijena' ),
-					'singular_name' => __( 'Brand', 'sidrena-cijena' ),
+					'name'          => __( 'Brands', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Brand', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -86,8 +86,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Item types', 'sidrena-cijena' ),
-					'singular_name' => __( 'Item type', 'sidrena-cijena' ),
+					'name'          => __( 'Item types', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Item type', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -130,7 +130,7 @@ final class StandalonePostType {
 	public static function register_meta_box() {
 		add_meta_box(
 			'sidrena-cijena-item-fields',
-			__( 'Sidrena cijena - item data', 'sidrena-cijena' ),
+			__( 'Sidrena cijena - item data', 'sidrena-cijena-eu' ),
 			array( __CLASS__, 'render_meta_box' ),
 			self::POST_TYPE,
 			'normal',
@@ -146,47 +146,47 @@ final class StandalonePostType {
 	public static function fields() {
 		return array(
 			'_sidrena_sku'           => array(
-				'label' => __( 'SKU / code', 'sidrena-cijena' ),
+				'label' => __( 'SKU / code', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
 			'_sidrena_barcode'       => array(
-				'label' => __( 'Barcode', 'sidrena-cijena' ),
+				'label' => __( 'Barcode', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
 			'_sidrena_unit'          => array(
-				'label' => __( 'Unit of measure', 'sidrena-cijena' ),
+				'label' => __( 'Unit of measure', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
 			'_sidrena_unit_price'    => array(
-				'label' => __( 'Price per unit of measure', 'sidrena-cijena' ),
+				'label' => __( 'Price per unit of measure', 'sidrena-cijena-eu' ),
 				'type'  => 'price',
 			),
 			'_sidrena_regular_price' => array(
-				'label' => __( 'Regular price', 'sidrena-cijena' ),
+				'label' => __( 'Regular price', 'sidrena-cijena-eu' ),
 				'type'  => 'price',
 			),
 			'_sidrena_sale_price'    => array(
-				'label' => __( 'Sale price', 'sidrena-cijena' ),
+				'label' => __( 'Sale price', 'sidrena-cijena-eu' ),
 				'type'  => 'price',
 			),
 			'_sidrena_availability'  => array(
-				'label'   => __( 'Availability', 'sidrena-cijena' ),
+				'label'   => __( 'Availability', 'sidrena-cijena-eu' ),
 				'type'    => 'select',
 				'options' => array(
-					'available'   => __( 'Available', 'sidrena-cijena' ),
-					'unavailable' => __( 'Unavailable', 'sidrena-cijena' ),
+					'available'   => __( 'Available', 'sidrena-cijena-eu' ),
+					'unavailable' => __( 'Unavailable', 'sidrena-cijena-eu' ),
 				),
 			),
 			'_sidrena_currency'      => array(
-				'label' => __( 'Currency', 'sidrena-cijena' ),
+				'label' => __( 'Currency', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
 			'_sidrena_first_seen'    => array(
-				'label' => __( 'First appearance date', 'sidrena-cijena' ),
+				'label' => __( 'First appearance date', 'sidrena-cijena-eu' ),
 				'type'  => 'date',
 			),
 			'_sidrena_tax_inclusive' => array(
-				'label' => __( 'Prices include tax', 'sidrena-cijena' ),
+				'label' => __( 'Prices include tax', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
 		);
@@ -234,7 +234,7 @@ final class StandalonePostType {
 
 		echo '</tbody></table>';
 
-		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'sidrena-cijena' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'sidrena-cijena-eu' ) . '</p>';
 	}
 
 	/**

@@ -55,7 +55,7 @@ This pass focuses on robustness and compatibility:
    - Follow the release procedure in AGENTARDS/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
      2. Run `tools/build-zip.sh <version>`.
-     3. Verify with `unzip -t versions/<version>/sidrena-cijena.zip`.
+     3. Verify with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
      4. Append release notes to docs/release-readiness.md and update docs/improvement-backlog.md.
      5. Commit all changes including versions/<version>/ and push to origin master.
 

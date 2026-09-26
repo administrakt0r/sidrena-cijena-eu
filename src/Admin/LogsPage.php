@@ -33,7 +33,7 @@ class LogsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only log filters.
@@ -59,14 +59,14 @@ class LogsPage {
 		$result = Plugin::instance()->logs()->query( $args );
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'sidrena-cijena' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'sidrena-cijena' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'sidrena-cijena-eu' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'sidrena-cijena-eu' ) . '</p>';
 
 		echo '<form method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 
-		echo '<label>' . esc_html__( 'Level', 'sidrena-cijena' ) . ' <select name="level">';
-		echo '<option value="">' . esc_html__( 'All levels', 'sidrena-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Level', 'sidrena-cijena-eu' ) . ' <select name="level">';
+		echo '<option value="">' . esc_html__( 'All levels', 'sidrena-cijena-eu' ) . '</option>';
 
 		foreach ( LogRepository::LEVELS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $level, $candidate, false ) . '>' . esc_html( Labels::log_level( $candidate ) ) . '</option>';
@@ -74,33 +74,33 @@ class LogsPage {
 
 		echo '</select></label> ';
 
-		echo '<label>' . esc_html__( 'Event', 'sidrena-cijena' ) . ' <select name="event">';
-		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Event', 'sidrena-cijena-eu' ) . ' <select name="event">';
+		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena-eu' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $event, $candidate, false ) . '>' . esc_html( Labels::log_event( $candidate ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
-		submit_button( __( 'Filter', 'sidrena-cijena' ), 'secondary', 'submit', false );
+		submit_button( __( 'Filter', 'sidrena-cijena-eu' ), 'secondary', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'Time', 'sidrena-cijena' ),
-			__( 'Level', 'sidrena-cijena' ),
-			__( 'Event', 'sidrena-cijena' ),
-			__( 'Message', 'sidrena-cijena' ),
-			__( 'User', 'sidrena-cijena' ),
+			__( 'Time', 'sidrena-cijena-eu' ),
+			__( 'Level', 'sidrena-cijena-eu' ),
+			__( 'Event', 'sidrena-cijena-eu' ),
+			__( 'Message', 'sidrena-cijena-eu' ),
+			__( 'User', 'sidrena-cijena-eu' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $result['items'] ) ) {
-			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'sidrena-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		}
 
 		foreach ( $result['items'] as $row ) {
@@ -130,7 +130,7 @@ class LogsPage {
 		$user_id = isset( $row['user_id'] ) ? (int) $row['user_id'] : 0;
 
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'sidrena-cijena' );
+			return __( 'system', 'sidrena-cijena-eu' );
 		}
 
 		$user = get_userdata( $user_id );

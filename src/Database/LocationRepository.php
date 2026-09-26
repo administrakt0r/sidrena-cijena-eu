@@ -198,7 +198,7 @@ class LocationRepository {
 
 		return $this->insert(
 			array(
-				'name'       => __( 'Webshop', 'sidrena-cijena' ),
+				'name'       => __( 'Webshop', 'sidrena-cijena-eu' ),
 				'type'       => 'webshop',
 				'identifier' => 'P1',
 				'active'     => true,
