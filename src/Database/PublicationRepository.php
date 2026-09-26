@@ -84,7 +84,8 @@ class PublicationRepository {
 	public function update( $id, array $data ) {
 		global $wpdb;
 
-		$row = $this->normalize( array_merge( $this->get( $id ) ? $this->get( $id ) : array(), $data ) );
+		$existing = $this->get( $id );
+		$row      = $this->normalize( array_merge( $existing ? $existing : array(), $data ) );
 
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
 
@@ -275,13 +276,20 @@ class PublicationRepository {
 	 * @return bool
 	 */
 	public function mark_expired( $id ) {
-		return $this->update(
-			$id,
+		global $wpdb;
+
+		$result = $wpdb->update(
+			$this->table,
 			array(
 				'status'     => 'expired',
 				'expired_at' => Dates::now_utc(),
-			)
+			),
+			array( 'id' => (int) $id ),
+			array( '%s', '%s' ),
+			array( '%d' )
 		);
+
+		return false !== $result;
 	}
 
 	/**
