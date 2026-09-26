@@ -92,4 +92,40 @@ assets, templates, catalogs and documentation; development dependencies are excl
 - **All Quality Gates Green**: PHPUnit unit (184/571 passed), PHPStan (107/107 clean, 0 errors), PHPCS (137/137 clean), ESLint clean, integration (76/342 passed), Playwright E2E (28/28 passed), and `./local.sh` clean exit 0.
 - **Translations**: Croatian translation catalogs fully compiled (567/567 strings translated, 0 untranslated in `hr_HR.po` / `sidrena-cijena-hr.mo`).
 
+## Release 1.0.7 (2026-09-26)
+
+Improvement pass over performance, admin UX, accessibility and robustness.
+No legal semantics, reference dates, filename profile or retention rules were
+touched; `docs/legal-rules.md` is unchanged.
+
+- **Performance**: `PriceListBuilder` verified to issue exactly one batched
+  anchor lookup (`PriceHistoryRepository::latest_map()`) and one active-sale map
+  per build, with a unit test asserting zero per-item `latest()` calls; empty
+  catalogs now skip both pricing queries. Bulk Anchor Setup renders rows, counts
+  missing anchors and sets shop-wide anchors through
+  `PriceHistoryRepository::exists_map()` in 200-item chunks, removing the former
+  per-item N+1 queries on large catalogs. `RestCache` keys, generation bumps and
+  warm hits are covered by unit tests.
+- **Cache invalidation**: price, anchor, sale, publication and settings changes
+  already flushed the REST/public-page cache; saving, deactivating or deleting a
+  sales location now does too.
+- **Correctness**: fixed `PriceListBuilder` `meta.counts`, which always reported
+  zero products and services because lookup keys and row values differed.
+- **Admin UX (Croatian-first)**: Setup Guide completion data moved into
+  `SetupGuidePage::statuses()`, consumed by all five checklist steps; the anchor
+  step now shows coverage (`(done: %1$d of %2$d recorded)`) and the checklist
+  reflects the current shop state instead of static badges.
+- **Accessibility**: visible label for the import file input and the public
+  type filter, `scope="col"` on admin, history, location and import-preview
+  table headers, ARIA labels for bulk checkboxes and inputs, and a darker
+  disclaimer color (`#646970`) in the public stylesheet.
+- **Quality gates**: unit suite 184/571 → 196/633 passed; PHPStan 107/107
+  clean (0 errors); PHPCS clean; ESLint clean. Integration/E2E were not rerun
+  this pass (no Docker on the releasing machine); PHP 7.4–8.4 compatibility is
+  unchanged and remains guarded by PHPCompatibilityWP.
+- **Translations**: regenerated to 569/569 Croatian strings, 0 untranslated.
+- **Archive**: `tools/build-zip.sh 1.0.7` from source commit `488b58c`;
+  `unzip -t` reports no errors; 272K. SHA-256
+  `01a687c2739c8a96ba146aa1fab5f787edb56e73ca22ff5c905647d0d6c6f2d5`.
+
 
