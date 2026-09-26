@@ -129,7 +129,7 @@ class Test_Cli extends WP_UnitTestCase {
 
 		$data = json_decode( $this->output(), true );
 
-		$this->assertSame( '1.0.0', $data['schema_version'] );
+		$this->assertSame( '1.1.0', $data['schema_version'] );
 		$this->assertNotEmpty( $data['locations'] );
 	}
 

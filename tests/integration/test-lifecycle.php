@@ -101,6 +101,37 @@ class Test_Lifecycle extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Upgrade adds performance indexes and remains idempotent.
+	 *
+	 * @return void
+	 */
+	public function test_upgrade_adds_indexes_and_is_idempotent() {
+		global $wpdb;
+
+		Install::activate();
+		update_option( Migrator::OPTION, '1.0.0' );
+		Migrator::migrate();
+
+		$expected = array(
+			$wpdb->prefix . 'sidrena_price_history' => array( 'created_at', 'item_type', 'correction_of', 'product_type_id' ),
+			$wpdb->prefix . 'sidrena_special_sales' => array( 'status_start' ),
+			$wpdb->prefix . 'sidrena_publications'  => array( 'location_format_status_id' ),
+		);
+
+		foreach ( $expected as $table => $indexes ) {
+			$found = $wpdb->get_col( 'SHOW INDEX FROM `' . esc_sql( $table ) . '`', 2 ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			foreach ( $indexes as $index ) {
+				$this->assertContains( $index, $found, $table . ' should have index ' . $index );
+			}
+		}
+
+		$version = Migrator::installed_version();
+		Migrator::migrate();
+		$this->assertSame( $version, Migrator::installed_version() );
+		$this->assertSame( '1.1.0', $version );
+	}
+
+	/**
 	 * Uninstall without opt-in deletes nothing.
 	 *
 	 * @return void

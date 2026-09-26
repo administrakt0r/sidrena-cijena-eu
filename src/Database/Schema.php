@@ -19,7 +19,7 @@ final class Schema {
 	/**
 	 * Current schema version.
 	 */
-	const DB_VERSION = '1.0.0';
+	const DB_VERSION = '1.1.0';
 
 	/**
 	 * Table suffixes relative to the WordPress table prefix.
@@ -122,7 +122,11 @@ final class Schema {
 			KEY valid_from (valid_from),
 			KEY reference_date (reference_date),
 			KEY product_variation_type (product_id,variation_id,price_type),
-			KEY product_type_reference (product_id,price_type,reference_date)
+			KEY product_type_reference (product_id,price_type,reference_date),
+			KEY created_at (created_at),
+			KEY item_type (item_type),
+			KEY correction_of (correction_of),
+			KEY product_type_id (product_id,price_type,id)
 		) {$charset_collate};";
 
 		$statements[] = "CREATE TABLE {$tables['special_sales']} (
@@ -148,7 +152,8 @@ final class Schema {
 			KEY start_date (start_date),
 			KEY end_date (end_date),
 			KEY status (status),
-			KEY sale_type (sale_type)
+			KEY sale_type (sale_type),
+			KEY status_start (status,start_date)
 		) {$charset_collate};";
 
 		$statements[] = "CREATE TABLE {$tables['locations']} (
@@ -198,7 +203,8 @@ final class Schema {
 			KEY expires_at (expires_at),
 			KEY checksum (checksum),
 			KEY content_fingerprint (content_fingerprint),
-			KEY filename (filename)
+			KEY filename (filename),
+			KEY location_format_status_id (location_id,format,status,id)
 		) {$charset_collate};";
 
 		$statements[] = "CREATE TABLE {$tables['logs']} (
