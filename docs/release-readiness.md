@@ -186,4 +186,33 @@ append-only history are untouched, and `docs/legal-rules.md` is unchanged.
   `unzip -t` reports no errors; 280,703 bytes (276K). SHA-256
   `a9d262080b9b402d6920ed30cec9856e83a5facdae79d1130440429dabfe5593`.
 
+## Release 1.0.9 (2026-09-26)
+
+Improvement pass: accessibility completion, new unit coverage for the anchor
+cache and the special-sale service, and a PHP 7.4–8.4 syntax scan. No legal
+semantics were changed: reference dates, the 30-day window, the filename
+pattern, retention and the append-only history are untouched, and
+`docs/legal-rules.md` is unchanged.
+
+- **Accessibility**: all remaining admin `<th>` elements now carry
+  `scope="col"` (dashboard publications/findings, compliance findings,
+  publications, logs, both audit tables, recent rule changes, all three
+  documentation tables, import sources, sale history meta box), completing the
+  1.0.7 pass that had scoped only part of the screens. Verified by source scan:
+  no unscoped `<th>` remains in `src/`, `templates/` or `assets/`.
+- **Tests**: new `AnchorCacheTest` (miss/hit semantics, cached nulls,
+  malformed entries, per-item and variation-cascading invalidation, generation
+  flush) and `SpecialSaleServiceTest` (FR-023 sale-type gate, start/end date
+  validation, not-found paths for update/recompute/cancel, null active sale).
+- **Compatibility**: static scan of `src/` finds no PHP 8-only syntax (no
+  nullsafe operator, `match`, `str_contains`/`str_starts_with`/
+  `str_ends_with`, `readonly`, enums); PHP 7.4 to 8.4 supported. Behavior is
+  unchanged with and without WooCommerce (no Woo-dependent code touched).
+- **Quality gates**: unit suite 207/664 → 223/698 passed; PHPStan 107/107
+  clean; PHPCS 142/142 clean; ESLint clean. No translatable strings were
+  added or changed, so the Croatian catalogs were not regenerated.
+- **Archive**: `tools/build-zip.sh 1.0.9` from source commit `b39c49c`;
+  `unzip -t` reports no errors; 281,028 bytes (276K). SHA-256
+  `89391821e8878cbaa3d558d2fd915a6ec26ab444ca6504527920e6b21aad67dd`.
+
 
