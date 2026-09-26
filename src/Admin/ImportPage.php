@@ -389,7 +389,7 @@ class ImportPage {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" enctype="multipart/form-data">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_PREVIEW ) . '" />';
 		wp_nonce_field( self::ACTION_PREVIEW, 'sidrena_cijena_import_nonce' );
-		echo '<p><input type="file" id="sidrena_import_file" name="sidrena_import_file" accept=".csv,.txt,text/csv" required /></p>';
+		echo '<p><label for="sidrena_import_file">' . esc_html__( 'Upload an import file', 'sidrena-cijena' ) . '</label> <input type="file" id="sidrena_import_file" name="sidrena_import_file" accept=".csv,.txt,text/csv" required /></p>';
 		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'sidrena-cijena' ) . '</label></p>';
 		submit_button( __( 'Upload and preview', 'sidrena-cijena' ), 'primary', 'submit', false );
 		echo '</form>';
@@ -425,13 +425,13 @@ class ImportPage {
 		}
 
 		echo '<table class="widefat striped sidrena-cijena-import-preview"><thead><tr>';
-		echo '<th>' . esc_html__( 'Row', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Status', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
-		echo '<th>SKU</th>';
-		echo '<th>' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Notes', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Row', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Status', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">SKU</th>';
+		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Notes', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $preview['rows'] as $row ) {

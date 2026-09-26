@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
 	<form method="get" class="sidrena-cijena-cjenik__search">
 		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'sidrena-cijena' ); ?></label>
 		<input type="search" id="sidrena-cijena-q" name="q" value="<?php echo esc_attr( $q ); ?>" />
+		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'sidrena-cijena' ); ?></label>
 		<select name="type" id="sidrena-cijena-type">
 			<option value=""><?php esc_html_e( 'All', 'sidrena-cijena' ); ?></option>
 			<option value="proizvod" <?php selected( $type, 'proizvod' ); ?>><?php esc_html_e( 'Products', 'sidrena-cijena' ); ?></option>
