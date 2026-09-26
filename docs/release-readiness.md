@@ -318,4 +318,45 @@ changed, so the Croatian catalogs were not regenerated.
   `unzip -t` reports no errors; 284,421 bytes (278K). SHA-256
   `fc24a6a380ee5ed974bcdfbb0b036c837f4e219e23a295e784f4a570a0ecb560`.
 
+## Release 1.0.13 (2026-09-26)
+
+UI/UX pass on the admin screens (session items UX-01..UX-03; the remaining
+UX-04..UX-07 are tracked in `docs/improvement-backlog.md`). No legal semantics
+changed: `docs/legal-rules.md`, the CSV/XML contracts and the filename pattern
+are untouched.
+
+- **Labels (UX-01)**: one shared `Support\Labels` resolver translates every
+  internal vocabulary (publication and sale statuses, log levels, log events,
+  finding severities, entity types, sale types, location types, import row
+  statuses, rule-change keys, generation run sources) and is used by every
+  admin screen that printed raw slugs (`DashboardPage`, `CompliancePage` cards
+  and filters, `PublicationsPage`, `ImportPage`, `LogsPage`, `AuditPage`,
+  `LocationsPage`, `SpecialSaleMetaBox`, `LegalSettingsPage`). Unknown slugs
+  pass through unchanged. The resolver replaces `Support\HistoryLabels`; its
+  price-type and source labels are carried over verbatim.
+- **Tables and pagination (UX-02)**: shared `Admin\Pagination` renders the
+  WordPress tablenav wrapper with a screen-reader pagination label on
+  `PublicationsPage`, `PriceHistoryPage`, `LogsPage`, `BulkAnchorEntryPage`,
+  `ImportPage` and `AuditPage`; admin tables gained `<caption>` elements. The
+  audit log is now reachable page by page (50/page), the rule-change history is
+  capped at 20 entries per page, and the import preview renders 50 rows per
+  page instead of the whole parsed CSV.
+- **Form error UX (UX-03)**: `Admin\Notice` renders one dismissible,
+  focus-managed notice for every screen (several were missing
+  `is-dismissible`), and `Admin\FormState` keeps submitted values and attaches
+  per-field errors (`aria-invalid`, `aria-describedby`) on the price-history
+  correction form and the sales-location form. `assets/js/admin.js` moves focus
+  to the first invalid field or the notice. "Mark setup complete" and "Reopen
+  setup" now confirm their action.
+- **Tests**: `LabelsTest`, `PaginationTest`, `ImportPageTest`, `NoticeTest`,
+  `FormStateTest`, `PriceHistoryPageTest` and new `LocationsPageTest` cases.
+  Unit suite 268/869 → 301/1078. E2E 28/28 green on port 8889, including an
+  updated price-history spec that asserts the labelled type and source.
+- **Translations**: 632 strings in `languages/hr_HR.po`, 0 untranslated;
+  `tools/i18n/make-pot.php --locale=hr_HR` regenerated the POT/PO/MO.
+- **Quality gates**: PHPCS clean; PHPStan level 6 clean; ESLint clean.
+- **Archive**: `tools/build-zip.sh 1.0.13` from source commit `9c2e9a7`;
+  `unzip -t` reports no errors; 291,982 bytes (285K). SHA-256
+  `e240aa801d6ad7234bb5467e9df935ca42c76c1caaae0b21ab0e92e7d94b6319`.
+
 
