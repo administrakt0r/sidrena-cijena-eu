@@ -99,7 +99,7 @@ class DashboardPage {
 
 		$anchors   = $ids ? $history->latest_map( $ids, 'anchor' ) : array();
 		$regular   = $ids ? $history->latest_map( $ids, 'regular' ) : array();
-		$sales_map = $sales->active_map();
+		$sales_map = $items ? $sales->active_map() : array();
 
 		$anchor_states = array(
 			'valid'              => 0,
@@ -149,11 +149,11 @@ class DashboardPage {
 				}
 			}
 
-			if ( ! isset( $regular[ $key ] ) && ! isset( $sales_map[ $key ] ) ) {
+			$sale = isset( $sales_map[ $key ] ) ? $sales_map[ $key ] : ( $item->is_variation() && isset( $sales_map[ $item->id . ':0' ] ) ? $sales_map[ $item->id . ':0' ] : null );
+
+			if ( ! isset( $regular[ $key ] ) && ! $sale ) {
 				++$missing_history;
 			}
-
-			$sale = isset( $sales_map[ $key ] ) ? $sales_map[ $key ] : ( $item->is_variation() && isset( $sales_map[ $item->id . ':0' ] ) ? $sales_map[ $item->id . ':0' ] : null );
 
 			if ( $sale && empty( $sale['lowest_30_day_price'] ) ) {
 				++$thirty_day_warnings;
