@@ -11,6 +11,7 @@ use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\HistoryLabels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -122,7 +123,7 @@ class PriceHistoryPage {
 		echo '<option value="">' . esc_html__( 'All types', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( PriceHistoryRepository::TYPES as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '"' . selected( $type, $option, false ) . '>' . esc_html( $option ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $type, $option, false ) . '>' . esc_html( HistoryLabels::type( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -131,7 +132,7 @@ class PriceHistoryPage {
 		echo '<option value="">' . esc_html__( 'All sources', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( PriceHistoryRepository::SOURCES as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '"' . selected( $source, $option, false ) . '>' . esc_html( $option ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $source, $option, false ) . '>' . esc_html( HistoryLabels::source( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -177,9 +178,9 @@ class PriceHistoryPage {
 			echo '<tr>';
 			echo '<td>' . esc_html( Dates::from_utc( (string) $row['created_at'] )->format( 'Y-m-d H:i' ) ) . '</td>';
 			echo '<td>' . esc_html( $item ) . '</td>';
-			echo '<td>' . esc_html( (string) $row['price_type'] ) . '</td>';
+			echo '<td>' . esc_html( HistoryLabels::type( (string) $row['price_type'] ) ) . '</td>';
 			echo '<td>' . esc_html( Currency::format_decimal( (float) $row['price'] ) . ' ' . (string) $row['currency'] ) . '</td>';
-			echo '<td>' . esc_html( (string) $row['source'] ) . '</td>';
+			echo '<td>' . esc_html( HistoryLabels::source( (string) $row['source'] ) ) . '</td>';
 			echo '<td>' . esc_html( $user ) . '</td>';
 			echo '<td>' . esc_html( ! empty( $row['reference_date'] ) ? (string) $row['reference_date'] : '—' ) . '</td>';
 			echo '<td>';
@@ -233,7 +234,7 @@ class PriceHistoryPage {
 		echo '<tr><th scope="row"><label for="sidrena-history-type">' . esc_html__( 'Price type', 'sidrena-cijena' ) . '</label></th><td><select id="sidrena-history-type" name="price_type">';
 
 		foreach ( array( 'anchor', 'regular', 'sale' ) as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '">' . esc_html( $option ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '">' . esc_html( HistoryLabels::type( $option ) ) . '</option>';
 		}
 
 		echo '</select></td></tr>';

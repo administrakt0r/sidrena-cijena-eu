@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 1.0.7\n"
+"Project-Id-Version: Sidrena cijena 1.0.10\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-26T01:00:45+00:00\n"
+"POT-Creation-Date: 2026-09-26T02:14:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -308,6 +308,9 @@ msgstr ""
 msgid "Brzi odabir na stranici:"
 msgstr ""
 
+msgid "Bulk entry"
+msgstr ""
+
 msgid "Bulk setup of anchor price from current catalog price"
 msgstr ""
 
@@ -378,6 +381,9 @@ msgid "Correction recorded. The original value is preserved."
 msgstr ""
 
 msgid "CSV"
+msgstr ""
+
+msgid "CSV import"
 msgstr ""
 
 msgid "Currency"
@@ -626,6 +632,9 @@ msgstr ""
 msgid "Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta."
 msgstr ""
 
+msgid "Historical price"
+msgstr ""
+
 msgid "Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila."
 msgstr ""
 
@@ -776,6 +785,9 @@ msgstr ""
 msgid "Manage locations"
 msgstr ""
 
+msgid "Manual entry"
+msgstr ""
+
 msgid "Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id."
 msgstr ""
 
@@ -783,6 +795,9 @@ msgid "Mark setup complete"
 msgstr ""
 
 msgid "Message"
+msgstr ""
+
+msgid "Migration"
 msgstr ""
 
 msgid "Migration path"
@@ -915,6 +930,9 @@ msgid "Not scheduled."
 msgstr ""
 
 msgid "Novi proizvodi (prva ponuda)"
+msgstr ""
+
+msgid "Observed first offer"
 msgstr ""
 
 msgid "Old value"
@@ -1353,6 +1371,9 @@ msgid "Suggested prices are taken from the current price and are NOT verified hi
 msgstr ""
 
 msgid "system"
+msgstr ""
+
+msgid "System"
 msgstr ""
 
 msgid "Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes."
