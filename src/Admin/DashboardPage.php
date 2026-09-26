@@ -16,6 +16,7 @@ use SidrenaCijena\Cron\Scheduler;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -246,7 +247,9 @@ class DashboardPage {
 	 */
 	protected static function render_export_section( array $data ) {
 		echo '<h2>' . esc_html__( 'Export status', 'sidrena-cijena' ) . '</h2>';
-		echo '<table class="widefat striped"><tbody>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Export status', 'sidrena-cijena' ) . '</caption>';
+		echo '<tbody>';
 
 		echo '<tr><td>' . esc_html__( 'Last successful publication', 'sidrena-cijena' ) . '</td><td>';
 		if ( $data['last_successful'] ) {
@@ -290,7 +293,9 @@ class DashboardPage {
 
 		if ( ! empty( $data['publications'] ) ) {
 			echo '<h3>' . esc_html__( 'Recent publications', 'sidrena-cijena' ) . '</h3>';
-			echo '<table class="widefat striped"><thead><tr>';
+			echo '<table class="widefat striped">';
+			echo '<caption class="screen-reader-text">' . esc_html__( 'Recent publications', 'sidrena-cijena' ) . '</caption>';
+			echo '<thead><tr>';
 			echo '<th scope="col">' . esc_html__( 'File', 'sidrena-cijena' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Format', 'sidrena-cijena' ) . '</th>';
 			echo '<th scope="col">' . esc_html__( 'Published', 'sidrena-cijena' ) . '</th>';
@@ -302,7 +307,7 @@ class DashboardPage {
 				echo '<td>' . esc_html( (string) $row['filename'] ) . '</td>';
 				echo '<td>' . esc_html( strtoupper( (string) $row['format'] ) ) . '</td>';
 				echo '<td>' . esc_html( self::site_time( isset( $row['published_at'] ) ? (string) $row['published_at'] : '' ) ) . '</td>';
-				echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( (string) $row['status'] ) . '</span></td>';
+				echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( Labels::publication_status( (string) $row['status'] ) ) . '</span></td>';
 				echo '</tr>';
 			}
 
@@ -331,7 +336,9 @@ class DashboardPage {
 			return;
 		}
 
-		echo '<table class="widefat striped"><thead><tr>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Validation findings', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
@@ -348,9 +355,9 @@ class DashboardPage {
 			++$shown;
 
 			echo '<tr>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( $finding->severity ) ) . '">' . esc_html( $finding->severity ) . '</span></td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( $finding->severity ) ) . '">' . esc_html( Labels::severity( $finding->severity ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( $finding->code ) . '</code></td>';
-			echo '<td>' . esc_html( $finding->entity_type . ' #' . $finding->entity_id ) . '</td>';
+			echo '<td>' . esc_html( Labels::entity_type( $finding->entity_type ) . ' #' . $finding->entity_id ) . '</td>';
 			echo '<td>' . esc_html( $finding->message ) . '</td>';
 			echo '</tr>';
 		}

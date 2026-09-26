@@ -10,7 +10,7 @@ namespace SidrenaCijena\Admin;
 use SidrenaCijena\Catalog\StandalonePostType;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\HistoryLabels;
+use SidrenaCijena\Support\Labels;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 defined( 'ABSPATH' ) || exit;
@@ -99,7 +99,7 @@ final class AnchorMetaBox {
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td></tr>',
 				esc_html__( 'Recorded for', 'sidrena-cijena' ),
-				esc_html( (string) $status['anchor']['reference_date'] . ' / ' . HistoryLabels::source( (string) $status['anchor']['source'] ) )
+				esc_html( (string) $status['anchor']['reference_date'] . ' / ' . Labels::source( (string) $status['anchor']['source'] ) )
 			);
 		}
 

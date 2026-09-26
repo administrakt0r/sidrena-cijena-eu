@@ -12,6 +12,7 @@ use SidrenaCijena\Import\MigrationDetector;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,6 +32,8 @@ class ImportPage {
 	const TRANSIENT_PREFIX = 'sidrena_cijena_import_';
 
 	const TRANSIENT_TTL = 1800;
+
+	const PREVIEW_PER_PAGE = 50;
 
 	/**
 	 * Render the screen.
@@ -316,18 +319,7 @@ class ImportPage {
 	 * @return void
 	 */
 	protected static function render_notice() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display.
-		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display.
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
-
-		if ( '' === $type || '' === $text ) {
-			return;
-		}
-
-		$class = in_array( $type, array( 'success', 'dry-run', 'preview' ), true ) ? 'notice-success sidrena-cijena-notice' : 'notice-error sidrena-cijena-notice';
-
-		echo '<div class="notice ' . esc_attr( $class ) . ' is-dismissible"><p>' . esc_html( $text ) . '</p></div>';
+		Notice::from_request();
 	}
 
 	/**
@@ -354,7 +346,9 @@ class ImportPage {
 		$sources = MigrationDetector::detect();
 
 		echo '<h2>' . esc_html__( 'Existing price history sources', 'sidrena-cijena' ) . '</h2>';
-		echo '<table class="widefat striped" style="max-width:900px;"><thead><tr>';
+		echo '<table class="widefat striped" style="max-width:900px;">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Existing price history sources', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Source', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Description', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Records', 'sidrena-cijena' ) . '</th>';
@@ -403,6 +397,10 @@ class ImportPage {
 	 */
 	protected static function render_preview( array $preview ) {
 		$summary = $preview['summary'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
+		$page   = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1;
+		$rows   = isset( $preview['rows'] ) ? (array) $preview['rows'] : array();
+		$offset = ( $page - 1 ) * self::PREVIEW_PER_PAGE;
 
 		echo '<h2>' . esc_html__( 'Preview', 'sidrena-cijena' ) . '</h2>';
 		echo '<p>';
@@ -424,17 +422,19 @@ class ImportPage {
 			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Some rows would replace existing anchor records. Tick the confirmation box below to allow that; replacements are stored as corrections with a reason.', 'sidrena-cijena' ) . '</p></div>';
 		}
 
-		echo '<table class="widefat striped sidrena-cijena-import-preview"><thead><tr>';
+		echo '<table class="widefat striped sidrena-cijena-import-preview">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Import preview', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Row', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Status', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
-		echo '<th scope="col">SKU</th>';
+		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Notes', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
-		foreach ( $preview['rows'] as $row ) {
+		foreach ( array_slice( $rows, $offset, self::PREVIEW_PER_PAGE ) as $row ) {
 			$item = $row['item'];
 			$name = $item ? $item->name : '—';
 
@@ -444,7 +444,7 @@ class ImportPage {
 
 			echo '<tr>';
 			echo '<td>' . esc_html( (string) ( $row['index'] + 2 ) ) . '</td>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( $row['status'] ) . '">' . esc_html( $row['status'] ) . '</span></td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( $row['status'] ) . '">' . esc_html( Labels::import_status( (string) $row['status'] ) ) . '</span></td>';
 			echo '<td>' . esc_html( $name ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['values']['sku'] ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['values']['reference_date'] ) . '</td>';
@@ -459,6 +459,8 @@ class ImportPage {
 		}
 
 		echo '</tbody></table>';
+
+		Pagination::render( $page, count( $rows ), self::PREVIEW_PER_PAGE );
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" style="margin-top:1em;">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_COMMIT ) . '" />';

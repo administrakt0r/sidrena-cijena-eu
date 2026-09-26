@@ -12,6 +12,7 @@ use SidrenaCijena\Compliance\Finding;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -91,7 +92,7 @@ class CompliancePage {
 		foreach ( array( Finding::ERROR, Finding::WARNING, Finding::INFO ) as $severity ) {
 			echo '<div class="sidrena-cijena-card">';
 			echo '<span class="sidrena-cijena-card__value">' . esc_html( (string) ( isset( $counts[ $severity ] ) ? $counts[ $severity ] : 0 ) ) . '</span>';
-			echo '<span class="sidrena-cijena-card__label">' . esc_html( $severity ) . '</span>';
+			echo '<span class="sidrena-cijena-card__label">' . esc_html( Labels::severity( $severity ) ) . '</span>';
 			echo '</div>';
 		}
 
@@ -103,9 +104,9 @@ class CompliancePage {
 		echo '<p>';
 		foreach ( array(
 			''               => __( 'All', 'sidrena-cijena' ),
-			Finding::ERROR   => Finding::ERROR,
-			Finding::WARNING => Finding::WARNING,
-			Finding::INFO    => Finding::INFO,
+			Finding::ERROR   => Labels::severity( Finding::ERROR ),
+			Finding::WARNING => Labels::severity( Finding::WARNING ),
+			Finding::INFO    => Labels::severity( Finding::INFO ),
 		) as $value => $label ) {
 			$url = AdminMenu::url( 'sidrena-cijena-compliance', '' === $value ? array() : array( 'severity' => $value ) );
 			printf(
@@ -137,7 +138,9 @@ class CompliancePage {
 			return;
 		}
 
-		echo '<table class="widefat striped"><thead><tr>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena' ) . '</th>';
@@ -155,9 +158,9 @@ class CompliancePage {
 			++$shown;
 
 			echo '<tr>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( (string) $finding['severity'] ) ) . '">' . esc_html( (string) $finding['severity'] ) . '</span></td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( (string) $finding['severity'] ) ) . '">' . esc_html( Labels::severity( (string) $finding['severity'] ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( (string) $finding['code'] ) . '</code></td>';
-			echo '<td>' . esc_html( (string) $finding['entity_type'] . ' #' . (int) $finding['entity_id'] ) . '</td>';
+			echo '<td>' . esc_html( Labels::entity_type( (string) $finding['entity_type'] ) . ' #' . (int) $finding['entity_id'] ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['message'] ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['rule_reference'] ) . '</td>';
 			echo '</tr>';
@@ -375,16 +378,13 @@ class CompliancePage {
 		$errors   = isset( $_GET['errors'] ) ? absint( wp_unslash( $_GET['errors'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$warnings = isset( $_GET['warnings'] ) ? absint( wp_unslash( $_GET['warnings'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		printf(
-			'<div class="notice notice-%1$s sidrena-cijena-notice is-dismissible"><p>%2$s</p></div>',
+		Notice::render(
 			$errors > 0 ? 'error' : 'success',
-			esc_html(
-				sprintf(
-					/* translators: 1: error count, 2: warning count. */
-					__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena' ),
-					$errors,
-					$warnings
-				)
+			sprintf(
+				/* translators: 1: error count, 2: warning count. */
+				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena' ),
+				$errors,
+				$warnings
 			)
 		);
 	}

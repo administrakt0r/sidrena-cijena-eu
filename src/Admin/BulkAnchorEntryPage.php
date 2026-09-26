@@ -44,7 +44,6 @@ class BulkAnchorEntryPage {
 		$missing = self::missing_items( $paged );
 		$rows    = $missing['rows'];
 		$total   = $missing['total'];
-		$pages   = (int) ceil( $total / self::PER_PAGE );
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Anchor entry', 'sidrena-cijena' ) . '</h1>';
@@ -74,20 +73,7 @@ class BulkAnchorEntryPage {
 				echo '<p>' . esc_html__( 'Every catalog item has an anchor price recorded.', 'sidrena-cijena' ) . '</p>';
 			}
 
-			if ( $pages > 1 ) {
-				echo '<div class="tablenav"><div class="tablenav-pages">';
-				echo wp_kses_post(
-					(string) paginate_links(
-						array(
-							'base'    => add_query_arg( 'paged', '%#%' ),
-							'format'  => '',
-							'current' => $paged,
-							'total'   => $pages,
-						)
-					)
-				);
-				echo '</div></div>';
-			}
+			Pagination::render( $paged, $total, self::PER_PAGE );
 
 			echo '</div>';
 			return;
@@ -112,7 +98,9 @@ class BulkAnchorEntryPage {
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
 		wp_nonce_field( self::ACTION, 'sidrena_cijena_bulk_nonce' );
 
-		echo '<table class="widefat striped"><thead><tr>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Items without an anchor price', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th class="check-column" scope="col"><input type="checkbox" id="sidrena-select-all" title="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" aria-label="' . esc_attr__( 'Select all on page', 'sidrena-cijena' ) . '" /></th>';
 		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena' ) . '</th>';
@@ -174,20 +162,7 @@ class BulkAnchorEntryPage {
 		});
 		</script>';
 
-		if ( $pages > 1 ) {
-			echo '<div class="tablenav"><div class="tablenav-pages">';
-			echo wp_kses_post(
-				(string) paginate_links(
-					array(
-						'base'    => add_query_arg( 'paged', '%#%' ),
-						'format'  => '',
-						'current' => $paged,
-						'total'   => $pages,
-					)
-				)
-			);
-			echo '</div></div>';
-		}
+		Pagination::render( $paged, $total, self::PER_PAGE );
 
 		echo '</div>';
 	}
@@ -535,17 +510,6 @@ class BulkAnchorEntryPage {
 	 * @return void
 	 */
 	protected static function render_notice() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display.
-		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display.
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
-
-		if ( '' === $type || '' === $text ) {
-			return;
-		}
-
-		$class = 'success' === $type ? 'notice-success sidrena-cijena-notice' : 'notice-error sidrena-cijena-notice';
-
-		echo '<div class="notice ' . esc_attr( $class ) . ' is-dismissible"><p>' . esc_html( $text ) . '</p></div>';
+		Notice::from_request();
 	}
 }

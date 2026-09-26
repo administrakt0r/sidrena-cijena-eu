@@ -12,6 +12,7 @@ use SidrenaCijena\Cron\Scheduler;
 use SidrenaCijena\Export\FilenameGenerator;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -94,7 +95,7 @@ class PublicationsPage {
 				/* translators: 1: generation time, 2: run source, 3: error details */
 				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena' ),
 				esc_html( $gen_time ),
-				esc_html( $source ),
+				esc_html( Labels::run_source( $source ) ),
 				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'sidrena-cijena' ) )
 			);
 			echo '</p></div>';
@@ -107,6 +108,7 @@ class PublicationsPage {
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Published price lists', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'Filename', 'sidrena-cijena' ),
@@ -143,29 +145,13 @@ class PublicationsPage {
 			echo '<td>' . esc_html( self::site_time( $row['expires_at'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) (int) $row['item_count'] ) . '</td>';
 			echo '<td><code>' . esc_html( substr( (string) $row['checksum'], 0, 12 ) ) . '</code></td>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( (string) $row['status'] ) . '</span></td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( Labels::publication_status( (string) $row['status'] ) ) . '</span></td>';
 			echo '</tr>';
 		}
 
 		echo '</tbody></table>';
 
-		$total = (int) $result['total'];
-		$pages = (int) ceil( $total / $per_page );
-
-		if ( $pages > 1 ) {
-			echo '<p>';
-			echo wp_kses_post(
-				paginate_links(
-					array(
-						'base'    => add_query_arg( 'paged', '%#%' ),
-						'format'  => '',
-						'current' => $page,
-						'total'   => $pages,
-					)
-				)
-			);
-			echo '</p>';
-		}
+		Pagination::render( $page, (int) $result['total'], $per_page );
 
 		echo '</div>';
 	}
@@ -237,18 +223,13 @@ class PublicationsPage {
 		$generated = isset( $_GET['generated'] ) ? absint( wp_unslash( $_GET['generated'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$failed    = isset( $_GET['failed'] ) ? absint( wp_unslash( $_GET['failed'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$class = 'error' === $notice ? 'notice notice-error sidrena-cijena-notice' : 'notice notice-success sidrena-cijena-notice';
-
-		printf(
-			'<div class="%1$s"><p>%2$s</p></div>',
-			esc_attr( $class ),
-			esc_html(
-				sprintf(
-					/* translators: 1: number of generated price lists, 2: number of failures. */
-					__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena' ),
-					(int) $generated,
-					(int) $failed
-				)
+		Notice::render(
+			'error' === $notice ? 'error' : 'success',
+			sprintf(
+				/* translators: 1: number of generated price lists, 2: number of failures. */
+				__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena' ),
+				(int) $generated,
+				(int) $failed
 			)
 		);
 	}

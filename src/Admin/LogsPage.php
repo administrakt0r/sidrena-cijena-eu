@@ -10,6 +10,7 @@ namespace SidrenaCijena\Admin;
 use SidrenaCijena\Database\LogRepository;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -68,7 +69,7 @@ class LogsPage {
 		echo '<option value="">' . esc_html__( 'All levels', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( LogRepository::LEVELS as $candidate ) {
-			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $level, $candidate, false ) . '>' . esc_html( ucfirst( $candidate ) ) . '</option>';
+			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $level, $candidate, false ) . '>' . esc_html( Labels::log_level( $candidate ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -77,7 +78,7 @@ class LogsPage {
 		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $candidate ) {
-			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $event, $candidate, false ) . '>' . esc_html( $candidate ) . '</option>';
+			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $event, $candidate, false ) . '>' . esc_html( Labels::log_event( $candidate ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -85,6 +86,7 @@ class LogsPage {
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'Time', 'sidrena-cijena' ),
@@ -104,8 +106,8 @@ class LogsPage {
 		foreach ( $result['items'] as $row ) {
 			echo '<tr>';
 			echo '<td>' . esc_html( self::site_time( $row['created_at'] ) ) . '</td>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['level'] ) . '">' . esc_html( (string) $row['level'] ) . '</span></td>';
-			echo '<td><code>' . esc_html( (string) $row['event'] ) . '</code></td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['level'] ) . '">' . esc_html( Labels::log_level( (string) $row['level'] ) ) . '</span></td>';
+			echo '<td>' . esc_html( Labels::log_event( (string) $row['event'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['message'] ) . '</td>';
 			echo '<td>' . esc_html( self::user_label( $row ) ) . '</td>';
 			echo '</tr>';
@@ -113,23 +115,7 @@ class LogsPage {
 
 		echo '</tbody></table>';
 
-		$total = (int) $result['total'];
-		$pages = (int) ceil( $total / 50 );
-
-		if ( $pages > 1 ) {
-			echo '<p>';
-			echo wp_kses_post(
-				paginate_links(
-					array(
-						'base'    => add_query_arg( 'paged', '%#%' ),
-						'format'  => '',
-						'current' => $page,
-						'total'   => $pages,
-					)
-				)
-			);
-			echo '</p>';
-		}
+		Pagination::render( $page, (int) $result['total'], 50 );
 
 		echo '</div>';
 	}

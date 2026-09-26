@@ -177,6 +177,8 @@ final class SetupGuidePage {
 		echo '<p>' . esc_html__( 'Five steps, a few minutes. Made by administrakt0r.', 'sidrena-cijena' ) . '</p>';
 		echo '<p><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book" style="vertical-align:middle;margin-right:4px;"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena' ) . '</a></p>';
 
+		Notice::from_request();
+
 		self::render_projects();
 
 		if ( $complete ) {
@@ -302,7 +304,15 @@ final class SetupGuidePage {
 		update_option( self::COMPLETE_OPTION, 1, false );
 		update_option( WelcomeBanner::DISMISSED_OPTION, 1, false );
 
-		wp_safe_redirect( AdminMenu::url( self::SLUG ) );
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'sidrena_cijena_notice'      => 'success',
+					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup marked as complete.', 'sidrena-cijena' ) ),
+				),
+				AdminMenu::url( self::SLUG )
+			)
+		);
 		exit;
 	}
 
@@ -320,7 +330,15 @@ final class SetupGuidePage {
 
 		delete_option( self::COMPLETE_OPTION );
 
-		wp_safe_redirect( AdminMenu::url( self::SLUG ) );
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'sidrena_cijena_notice'      => 'success',
+					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup reopened.', 'sidrena-cijena' ) ),
+				),
+				AdminMenu::url( self::SLUG )
+			)
+		);
 		exit;
 	}
 }

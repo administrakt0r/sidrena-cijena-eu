@@ -11,7 +11,7 @@ use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\HistoryLabels;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -123,7 +123,7 @@ class PriceHistoryPage {
 		echo '<option value="">' . esc_html__( 'All types', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( PriceHistoryRepository::TYPES as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '"' . selected( $type, $option, false ) . '>' . esc_html( HistoryLabels::type( $option ) ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $type, $option, false ) . '>' . esc_html( Labels::price_type( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -132,7 +132,7 @@ class PriceHistoryPage {
 		echo '<option value="">' . esc_html__( 'All sources', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( PriceHistoryRepository::SOURCES as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '"' . selected( $source, $option, false ) . '>' . esc_html( HistoryLabels::source( $option ) ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $source, $option, false ) . '>' . esc_html( Labels::source( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -151,6 +151,7 @@ class PriceHistoryPage {
 	 */
 	protected static function render_table( array $rows, $total, $page ) {
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Price history records', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'Date', 'sidrena-cijena' ),
@@ -178,9 +179,9 @@ class PriceHistoryPage {
 			echo '<tr>';
 			echo '<td>' . esc_html( Dates::from_utc( (string) $row['created_at'] )->format( 'Y-m-d H:i' ) ) . '</td>';
 			echo '<td>' . esc_html( $item ) . '</td>';
-			echo '<td>' . esc_html( HistoryLabels::type( (string) $row['price_type'] ) ) . '</td>';
+			echo '<td>' . esc_html( Labels::price_type( (string) $row['price_type'] ) ) . '</td>';
 			echo '<td>' . esc_html( Currency::format_decimal( (float) $row['price'] ) . ' ' . (string) $row['currency'] ) . '</td>';
-			echo '<td>' . esc_html( HistoryLabels::source( (string) $row['source'] ) ) . '</td>';
+			echo '<td>' . esc_html( Labels::source( (string) $row['source'] ) ) . '</td>';
 			echo '<td>' . esc_html( $user ) . '</td>';
 			$reference = Dates::format_date_display( isset( $row['reference_date'] ) ? $row['reference_date'] : '' );
 			echo '<td>' . esc_html( '' !== $reference ? $reference : '—' ) . '</td>';
@@ -196,22 +197,7 @@ class PriceHistoryPage {
 
 		echo '</tbody></table>';
 
-		$pages = (int) ceil( $total / self::PER_PAGE );
-
-		if ( $pages > 1 ) {
-			echo '<p>';
-			echo wp_kses_post(
-				paginate_links(
-					array(
-						'base'    => add_query_arg( 'paged', '%#%' ),
-						'format'  => '',
-						'current' => $page,
-						'total'   => $pages,
-					)
-				)
-			);
-			echo '</p>';
-		}
+		Pagination::render( $page, $total, self::PER_PAGE );
 	}
 
 	/**
@@ -221,6 +207,16 @@ class PriceHistoryPage {
 	 * @return void
 	 */
 	protected static function render_correction_form( $product_id ) {
+		$state     = FormState::pull( 'history-correction' );
+		$values    = $state['values'];
+		$errors    = $state['errors'];
+		$product   = isset( $values['product_id'] ) ? (string) $values['product_id'] : (string) $product_id;
+		$variation = isset( $values['variation_id'] ) ? (string) $values['variation_id'] : '0';
+		$type      = isset( $values['price_type'] ) ? (string) $values['price_type'] : 'anchor';
+		$price     = isset( $values['price'] ) ? (string) $values['price'] : '';
+		$reference = isset( $values['reference_date'] ) ? (string) $values['reference_date'] : '';
+		$reason    = isset( $values['correction_reason'] ) ? (string) $values['correction_reason'] : '';
+
 		echo '<h2>' . esc_html__( 'Record a correction', 'sidrena-cijena' ) . '</h2>';
 		echo '<p>' . esc_html__( 'The original record stays in the history. A correction stores who recorded it, when and why.', 'sidrena-cijena' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -229,24 +225,34 @@ class PriceHistoryPage {
 
 		echo '<table class="form-table" role="presentation"><tbody>';
 		echo '<tr><th scope="row"><label for="sidrena-history-product">' . esc_html__( 'Product ID', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="number" id="sidrena-history-product" name="product_id" min="1" required value="' . esc_attr( (string) $product_id ) . '" /></td></tr>';
+		echo '<td><input type="number" id="sidrena-history-product" name="product_id" min="1" required value="' . esc_attr( $product ) . '"' . FormState::error_attributes( $errors, 'product_id', 'sidrena-history-product' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		FormState::render_error( $errors, 'product_id', 'sidrena-history-product' );
+		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-variation">' . esc_html__( 'Variation ID', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="number" id="sidrena-history-variation" name="variation_id" min="0" value="0" /></td></tr>';
-		echo '<tr><th scope="row"><label for="sidrena-history-type">' . esc_html__( 'Price type', 'sidrena-cijena' ) . '</label></th><td><select id="sidrena-history-type" name="price_type">';
+		echo '<td><input type="number" id="sidrena-history-variation" name="variation_id" min="0" value="' . esc_attr( $variation ) . '" /></td></tr>';
+		echo '<tr><th scope="row"><label for="sidrena-history-type">' . esc_html__( 'Price type', 'sidrena-cijena' ) . '</label></th><td><select id="sidrena-history-type" name="price_type"' . FormState::error_attributes( $errors, 'price_type', 'sidrena-history-type' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
 
 		foreach ( array( 'anchor', 'regular', 'sale' ) as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '">' . esc_html( HistoryLabels::type( $option ) ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $type, $option, false ) . '>' . esc_html( Labels::price_type( $option ) ) . '</option>';
 		}
 
-		echo '</select></td></tr>';
+		echo '</select>';
+		FormState::render_error( $errors, 'price_type', 'sidrena-history-type' );
+		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-price">' . esc_html__( 'New price', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" id="sidrena-history-price" name="price" required value="" /></td></tr>';
+		echo '<td><input type="text" id="sidrena-history-price" name="price" required value="' . esc_attr( $price ) . '"' . FormState::error_attributes( $errors, 'price', 'sidrena-history-price' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		FormState::render_error( $errors, 'price', 'sidrena-history-price' );
+		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-reference">' . esc_html__( 'Reference date', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="date" id="sidrena-history-reference" name="reference_date" value="" />';
-		echo '<p class="description">' . esc_html__( 'Required for anchor prices.', 'sidrena-cijena' ) . '</p></td></tr>';
+		echo '<td><input type="date" id="sidrena-history-reference" name="reference_date" value="' . esc_attr( $reference ) . '"' . FormState::error_attributes( $errors, 'reference_date', 'sidrena-history-reference' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'Required for anchor prices.', 'sidrena-cijena' ) . '</p>';
+		FormState::render_error( $errors, 'reference_date', 'sidrena-history-reference' );
+		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-reason">' . esc_html__( 'Reason', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-history-reason" name="correction_reason" required value="" />';
-		echo '<p class="description">' . esc_html__( 'Required. Explain why the original value is being corrected.', 'sidrena-cijena' ) . '</p></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-history-reason" name="correction_reason" required value="' . esc_attr( $reason ) . '"' . FormState::error_attributes( $errors, 'correction_reason', 'sidrena-history-reason' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'Required. Explain why the original value is being corrected.', 'sidrena-cijena' ) . '</p>';
+		FormState::render_error( $errors, 'correction_reason', 'sidrena-history-reason' );
+		echo '</td></tr>';
 		echo '</tbody></table>';
 
 		submit_button( __( 'Record correction', 'sidrena-cijena' ) );
@@ -272,32 +278,59 @@ class PriceHistoryPage {
 		$reference    = isset( $_POST['reference_date'] ) ? sanitize_text_field( wp_unslash( $_POST['reference_date'] ) ) : '';
 		$reason       = isset( $_POST['correction_reason'] ) ? sanitize_text_field( wp_unslash( $_POST['correction_reason'] ) ) : '';
 
+		$values = array(
+			'product_id'        => $product_id,
+			'variation_id'      => $variation_id,
+			'price_type'        => $type,
+			'price'             => $price,
+			'reference_date'    => $reference,
+			'correction_reason' => $reason,
+		);
+
 		if ( $product_id <= 0 || ! in_array( $type, array( 'anchor', 'regular', 'sale' ), true ) || '' === $price || '' === $reason ) {
-			self::redirect( 'error', __( 'The product, price type, price and reason are required.', 'sidrena-cijena' ) );
+			$errors = array();
+
+			if ( $product_id <= 0 ) {
+				$errors['product_id'] = __( 'Enter a product ID.', 'sidrena-cijena' );
+			}
+
+			if ( ! in_array( $type, array( 'anchor', 'regular', 'sale' ), true ) ) {
+				$errors['price_type'] = __( 'Choose a price type.', 'sidrena-cijena' );
+			}
+
+			if ( '' === $price ) {
+				$errors['price'] = __( 'Enter the new price.', 'sidrena-cijena' );
+			}
+
+			if ( '' === $reason ) {
+				$errors['correction_reason'] = __( 'Enter a correction reason.', 'sidrena-cijena' );
+			}
+
+			self::redirect_error( __( 'The product, price type, price and reason are required.', 'sidrena-cijena' ), $values, $errors );
 		}
 
 		$catalog = Plugin::instance()->catalog();
 		$item    = $variation_id > 0 ? $catalog->get_variation( $product_id, $variation_id ) : $catalog->get_item( $product_id );
 
 		if ( ! $item ) {
-			self::redirect( 'error', __( 'The product could not be found.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'The product could not be found.', 'sidrena-cijena' ), $values, array( 'product_id' => __( 'The product could not be found.', 'sidrena-cijena' ) ) );
 		}
 
 		$history = Plugin::instance()->history();
 		$latest  = $history->latest( $product_id, $variation_id, $type );
 
 		if ( ! $latest ) {
-			self::redirect( 'error', __( 'There is no record of this type to correct.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'There is no record of this type to correct.', 'sidrena-cijena' ), $values, array( 'price_type' => __( 'There is no record of this type to correct.', 'sidrena-cijena' ) ) );
 		}
 
 		if ( 'anchor' === $type && ! Dates::is_valid_date( $reference ) ) {
-			self::redirect( 'error', __( 'A valid reference date is required for anchor prices.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'A valid reference date is required for anchor prices.', 'sidrena-cijena' ), $values, array( 'reference_date' => __( 'A valid reference date is required for anchor prices.', 'sidrena-cijena' ) ) );
 		}
 
 		$normalized = Currency::to_storage( $price );
 
 		if ( null === $normalized || $normalized < 0 ) {
-			self::redirect( 'error', __( 'The price is not a valid amount.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'The price is not a valid amount.', 'sidrena-cijena' ), $values, array( 'price' => __( 'The price is not a valid amount.', 'sidrena-cijena' ) ) );
 		}
 
 		$record = array(
@@ -318,12 +351,26 @@ class PriceHistoryPage {
 		$result = $history->insert_correction( $record );
 
 		if ( ! $result ) {
-			self::redirect( 'error', __( 'The correction could not be stored.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'The correction could not be stored.', 'sidrena-cijena' ), $values );
 		}
 
 		Plugin::instance()->flush_caches();
 
 		self::redirect( 'success', __( 'Correction recorded. The original value is preserved.', 'sidrena-cijena' ) );
+	}
+
+	/**
+	 * Redirect back to the form keeping the submitted values and field errors.
+	 *
+	 * @param string                $message Notice text.
+	 * @param array<string, mixed>  $values  Submitted values.
+	 * @param array<string, string> $errors  Field errors.
+	 * @return void
+	 */
+	private static function redirect_error( $message, array $values, array $errors = array() ) {
+		FormState::store( 'history-correction', $values, $errors );
+
+		self::redirect( 'error', $message );
 	}
 
 	/**
@@ -387,18 +434,6 @@ class PriceHistoryPage {
 	 * @return void
 	 */
 	protected static function notice() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice flags.
-		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
-
-		if ( '' === $type ) {
-			return;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice text.
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
-
-		$class = 'error' === $type ? 'notice notice-error sidrena-cijena-notice' : 'notice notice-success sidrena-cijena-notice';
-
-		echo '<div class="' . esc_attr( $class ) . '"><p>' . esc_html( $text ) . '</p></div>';
+		Notice::from_request();
 	}
 }

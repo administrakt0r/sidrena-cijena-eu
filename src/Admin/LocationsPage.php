@@ -7,9 +7,11 @@
 
 namespace SidrenaCijena\Admin;
 
+use SidrenaCijena\Database\LocationRepository;
 use SidrenaCijena\Export\FilenameGenerator;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,12 +47,13 @@ class LocationsPage {
 	 * @return array<string,string>
 	 */
 	protected static function types() {
-		return array(
-			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'sidrena-cijena' ),
-			'webshop'        => __( 'Web shop (webshop)', 'sidrena-cijena' ),
-			'poslovnica'     => __( 'Branch office (poslovnica)', 'sidrena-cijena' ),
-			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'sidrena-cijena' ),
-		);
+		$types = array();
+
+		foreach ( LocationRepository::TYPES as $type ) {
+			$types[ $type ] = Labels::location_type( $type );
+		}
+
+		return $types;
 	}
 
 	/**
@@ -88,15 +91,24 @@ class LocationsPage {
 	 * @return void
 	 */
 	protected static function render_form( $location ) {
-		$config  = $location && is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
-		$applies = $location && is_array( $location['applies_to'] ) ? $location['applies_to'] : array();
-		$formats = isset( $config['formats'] ) ? (array) $config['formats'] : array( 'csv', 'xml' );
-		$mode    = isset( $applies['mode'] ) ? (string) $applies['mode'] : 'all';
-		$cats    = isset( $applies['categories'] ) ? implode( ', ', array_map( 'strval', (array) $applies['categories'] ) ) : '';
-		$edit_id = $location ? (int) $location['id'] : 0;
-		$heading = $edit_id > 0 ? __( 'Edit location', 'sidrena-cijena' ) : __( 'Add location', 'sidrena-cijena' );
-		$sep     = isset( $config['separator'] ) ? (string) $config['separator'] : '';
-		$case    = isset( $config['case'] ) ? (string) $config['case'] : '';
+		$state        = FormState::pull( 'location-form' );
+		$values       = $state['values'];
+		$errors       = $state['errors'];
+		$config       = $location && is_array( $location['price_list_config'] ) ? $location['price_list_config'] : array();
+		$applies      = $location && is_array( $location['applies_to'] ) ? $location['applies_to'] : array();
+		$formats      = isset( $values['formats'] ) ? (array) $values['formats'] : ( isset( $config['formats'] ) ? (array) $config['formats'] : array( 'csv', 'xml' ) );
+		$mode         = isset( $values['applies_mode'] ) ? (string) $values['applies_mode'] : ( isset( $applies['mode'] ) ? (string) $applies['mode'] : 'all' );
+		$cats         = isset( $values['applies_categories'] ) ? (string) $values['applies_categories'] : ( isset( $applies['categories'] ) ? implode( ', ', array_map( 'strval', (array) $applies['categories'] ) ) : '' );
+		$edit_id      = $location ? (int) $location['id'] : 0;
+		$heading      = $edit_id > 0 ? __( 'Edit location', 'sidrena-cijena' ) : __( 'Add location', 'sidrena-cijena' );
+		$sep          = isset( $values['separator'] ) ? (string) $values['separator'] : ( isset( $config['separator'] ) ? (string) $config['separator'] : '' );
+		$case         = isset( $values['case'] ) ? (string) $values['case'] : ( isset( $config['case'] ) ? (string) $config['case'] : '' );
+		$name         = isset( $values['name'] ) ? (string) $values['name'] : ( $location ? (string) $location['name'] : '' );
+		$identifier   = isset( $values['identifier'] ) ? (string) $values['identifier'] : ( $location ? (string) $location['identifier'] : '' );
+		$address      = isset( $values['address'] ) ? (string) $values['address'] : ( $location ? (string) $location['address'] : '' );
+		$city         = isset( $values['city'] ) ? (string) $values['city'] : ( $location ? (string) $location['city'] : '' );
+		$current_type = isset( $values['type'] ) ? (string) $values['type'] : ( $location ? (string) $location['type'] : 'prodavaonica' );
+		$active       = isset( $values['active'] ) ? ! empty( $values['active'] ) : ( $location ? (bool) $location['active'] : true );
 
 		echo '<h2>' . esc_html( $heading ) . '</h2>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -107,12 +119,12 @@ class LocationsPage {
 		echo '<table class="form-table" role="presentation"><tbody>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-name">' . esc_html__( 'Name', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $location ? (string) $location['name'] : '' ) . '" /></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $name ) . '"' . FormState::error_attributes( $errors, 'name', 'sidrena-location-name' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		FormState::render_error( $errors, 'name', 'sidrena-location-name' );
+		echo '</td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-type">' . esc_html__( 'Facility form', 'sidrena-cijena' ) . '</label></th>';
 		echo '<td><select id="sidrena-location-type" name="type">';
-
-		$current_type = $location ? (string) $location['type'] : 'prodavaonica';
 
 		foreach ( self::types() as $value => $label ) {
 			echo '<option value="' . esc_attr( $value ) . '"' . selected( $current_type, $value, false ) . '>' . esc_html( $label ) . '</option>';
@@ -121,17 +133,19 @@ class LocationsPage {
 		echo '</select></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-address">' . esc_html__( 'Address', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $location ? (string) $location['address'] : '' ) . '" /></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $address ) . '" /></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-city">' . esc_html__( 'City', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $location ? (string) $location['city'] : '' ) . '" /></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $city ) . '" /></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-identifier">' . esc_html__( 'Facility identifier', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $location ? (string) $location['identifier'] : '' ) . '" />';
-		echo '<p class="description">' . esc_html__( 'Required, unique across locations and used in the filename.', 'sidrena-cijena' ) . '</p></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $identifier ) . '"' . FormState::error_attributes( $errors, 'identifier', 'sidrena-location-identifier' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'Required, unique across locations and used in the filename.', 'sidrena-cijena' ) . '</p>';
+		FormState::render_error( $errors, 'identifier', 'sidrena-location-identifier' );
+		echo '</td></tr>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Active', 'sidrena-cijena' ) . '</th>';
-		echo '<td><label><input type="checkbox" name="active" value="1"' . checked( $location ? (bool) $location['active'] : true, true, false ) . ' /> ' . esc_html__( 'Generate a price list for this location.', 'sidrena-cijena' ) . '</label></td></tr>';
+		echo '<td><label><input type="checkbox" name="active" value="1"' . checked( $active, true, false ) . ' /> ' . esc_html__( 'Generate a price list for this location.', 'sidrena-cijena' ) . '</label></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-applies">' . esc_html__( 'Applicable products', 'sidrena-cijena' ) . '</label></th>';
 		echo '<td><select id="sidrena-location-applies" name="applies_mode">';
@@ -199,6 +213,7 @@ class LocationsPage {
 
 		echo '<h2>' . esc_html__( 'Locations', 'sidrena-cijena' ) . '</h2>';
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Sales locations', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'Name', 'sidrena-cijena' ),
@@ -228,7 +243,7 @@ class LocationsPage {
 
 			echo '<tr>';
 			echo '<td><strong>' . esc_html( (string) $location['name'] ) . '</strong></td>';
-			echo '<td>' . esc_html( (string) $location['type'] ) . '</td>';
+			echo '<td>' . esc_html( Labels::location_type( (string) $location['type'] ) ) . '</td>';
 			echo '<td>' . esc_html( trim( (string) $location['address'] . ' ' . (string) $location['city'] ) ) . '</td>';
 			echo '<td><code>' . esc_html( (string) $location['identifier'] ) . '</code></td>';
 			echo '<td>' . esc_html( (string) (int) $location['sequence_no'] ) . '</td>';
@@ -267,34 +282,67 @@ class LocationsPage {
 		$name       = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$identifier = isset( $_POST['identifier'] ) ? sanitize_text_field( wp_unslash( $_POST['identifier'] ) ) : '';
 
-		if ( '' === $name || '' === $identifier ) {
-			self::redirect( 'error', __( 'The name and the facility identifier are required.', 'sidrena-cijena' ) );
-		}
-
-		$existing = $locations->find_by_identifier( $identifier );
-
-		if ( $existing && (int) $existing['id'] !== $id ) {
-			self::redirect( 'error', __( 'Another location already uses this facility identifier.', 'sidrena-cijena' ) );
-		}
-
 		$applies_categories = isset( $_POST['applies_categories'] ) ? sanitize_text_field( wp_unslash( $_POST['applies_categories'] ) ) : '';
 		$categories         = array_values( array_filter( array_map( 'sanitize_title', preg_split( '/[\s,;]+/', $applies_categories ) ) ) );
 
 		$formats = isset( $_POST['formats'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['formats'] ) ) : array();
 		$formats = array_values( array_intersect( array( 'csv', 'xml' ), $formats ) );
 
-		$separator = isset( $_POST['separator'] ) ? sanitize_text_field( wp_unslash( $_POST['separator'] ) ) : '';
-		$case      = isset( $_POST['case'] ) ? sanitize_text_field( wp_unslash( $_POST['case'] ) ) : '';
+		$separator    = isset( $_POST['separator'] ) ? sanitize_text_field( wp_unslash( $_POST['separator'] ) ) : '';
+		$case         = isset( $_POST['case'] ) ? sanitize_text_field( wp_unslash( $_POST['case'] ) ) : '';
+		$type         = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'prodavaonica';
+		$address      = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
+		$city         = isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '';
+		$active       = ! empty( $_POST['active'] ) ? 1 : 0;
+		$applies_mode = isset( $_POST['applies_mode'] ) ? sanitize_key( wp_unslash( $_POST['applies_mode'] ) ) : 'all';
+
+		$values = array(
+			'name'               => $name,
+			'type'               => $type,
+			'address'            => $address,
+			'city'               => $city,
+			'identifier'         => $identifier,
+			'active'             => $active,
+			'applies_mode'       => $applies_mode,
+			'applies_categories' => $applies_categories,
+			'formats'            => $formats,
+			'separator'          => $separator,
+			'case'               => $case,
+		);
+
+		if ( '' === $name || '' === $identifier ) {
+			$errors = array();
+
+			if ( '' === $name ) {
+				$errors['name'] = __( 'Enter a name.', 'sidrena-cijena' );
+			}
+
+			if ( '' === $identifier ) {
+				$errors['identifier'] = __( 'Enter a facility identifier.', 'sidrena-cijena' );
+			}
+
+			self::redirect_error( __( 'The name and the facility identifier are required.', 'sidrena-cijena' ), $values, $errors );
+		}
+
+		$existing = $locations->find_by_identifier( $identifier );
+
+		if ( $existing && (int) $existing['id'] !== $id ) {
+			self::redirect_error(
+				__( 'Another location already uses this facility identifier.', 'sidrena-cijena' ),
+				$values,
+				array( 'identifier' => __( 'Another location already uses this facility identifier.', 'sidrena-cijena' ) )
+			);
+		}
 
 		$data = array(
 			'name'              => $name,
-			'type'              => isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'prodavaonica',
-			'address'           => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
-			'city'              => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+			'type'              => $type,
+			'address'           => $address,
+			'city'              => $city,
 			'identifier'        => $identifier,
-			'active'            => ! empty( $_POST['active'] ) ? 1 : 0,
+			'active'            => $active,
 			'applies_to'        => array(
-				'mode'       => isset( $_POST['applies_mode'] ) ? sanitize_key( wp_unslash( $_POST['applies_mode'] ) ) : 'all',
+				'mode'       => $applies_mode,
 				'categories' => $categories,
 			),
 			'price_list_config' => array(
@@ -307,7 +355,7 @@ class LocationsPage {
 		$result = $id > 0 ? $locations->update( $id, $data ) : $locations->insert( $data );
 
 		if ( false === $result || 0 === $result ) {
-			self::redirect( 'error', __( 'The location could not be saved.', 'sidrena-cijena' ) );
+			self::redirect_error( __( 'The location could not be saved.', 'sidrena-cijena' ), $values );
 		}
 
 		Plugin::instance()->flush_caches();
@@ -402,23 +450,25 @@ class LocationsPage {
 	}
 
 	/**
+	 * Redirect back to the form keeping the submitted values and field errors.
+	 *
+	 * @param string                $message Notice text.
+	 * @param array<string, mixed>  $values  Submitted values.
+	 * @param array<string, string> $errors  Field errors.
+	 * @return void
+	 */
+	private static function redirect_error( $message, array $values, array $errors = array() ) {
+		FormState::store( 'location-form', $values, $errors );
+
+		self::redirect( 'error', $message );
+	}
+
+	/**
 	 * Render the notice.
 	 *
 	 * @return void
 	 */
 	protected static function notice() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice flags.
-		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
-
-		if ( '' === $type ) {
-			return;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice text.
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
-
-		$class = 'error' === $type ? 'notice notice-error sidrena-cijena-notice' : 'notice notice-success sidrena-cijena-notice';
-
-		echo '<div class="' . esc_attr( $class ) . '"><p>' . esc_html( $text ) . '</p></div>';
+		Notice::from_request();
 	}
 }

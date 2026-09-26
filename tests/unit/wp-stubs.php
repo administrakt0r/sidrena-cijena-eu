@@ -1220,22 +1220,53 @@ if ( ! function_exists( 'wp_nonce_field' ) ) {
 	}
 }
 
+if ( ! function_exists( 'sidrena_test_build_query' ) ) {
+	/**
+	 * Build a query string without encoding values, matching WordPress' `build_query()`.
+	 *
+	 * @param array<string,mixed> $data Query data.
+	 * @return string
+	 */
+	function sidrena_test_build_query( array $data ) {
+		$parts = array();
+
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $subkey => $subvalue ) {
+					$parts[] = $key . '[' . $subkey . ']=' . $subvalue;
+				}
+				continue;
+			}
+
+			$parts[] = $key . '=' . $value;
+		}
+
+		return implode( '&', $parts );
+	}
+}
+
 if ( ! function_exists( 'add_query_arg' ) ) {
 	/**
 	 * Append query arguments to a URL.
+	 *
+	 * Values are not URL-encoded, matching WordPress, so that placeholders
+	 * such as `%#%` survive for `paginate_links()`.
 	 *
 	 * @param mixed ...$args Arguments.
 	 * @return string
 	 */
 	function add_query_arg( ...$args ) {
 		if ( 1 === count( $args ) && is_array( $args[0] ) ) {
-			$qs  = http_build_query( $args[0] );
+			$qs  = sidrena_test_build_query( $args[0] );
 			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		} elseif ( 2 === count( $args ) && is_array( $args[0] ) ) {
-			$qs  = http_build_query( $args[0] );
+			$qs  = sidrena_test_build_query( $args[0] );
 			$url = (string) $args[1];
+		} elseif ( 2 === count( $args ) && ! is_array( $args[0] ) ) {
+			$qs  = sidrena_test_build_query( array( (string) $args[0] => $args[1] ) );
+			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		} elseif ( 3 === count( $args ) ) {
-			$qs  = http_build_query( array( (string) $args[0] => $args[1] ) );
+			$qs  = sidrena_test_build_query( array( (string) $args[0] => $args[1] ) );
 			$url = (string) $args[2];
 		} else {
 			return '';
@@ -1417,5 +1448,58 @@ if ( ! function_exists( 'submit_button' ) ) {
 		}
 		echo $html;
 		return $html;
+	}
+}
+
+if ( ! function_exists( 'number_format_i18n' ) ) {
+	/**
+	 * Stub for number_format_i18n.
+	 *
+	 * @param int|float $number Number.
+	 * @return string
+	 */
+	function number_format_i18n( $number ) {
+		return (string) $number;
+	}
+}
+
+if ( ! function_exists( 'paginate_links' ) ) {
+	/**
+	 * Stub for paginate_links.
+	 *
+	 * @param array|string $args Arguments.
+	 * @return string
+	 */
+	function paginate_links( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'base'               => '%_%',
+				'format'             => '',
+				'current'            => 1,
+				'total'              => 1,
+				'before_page_number' => '',
+			)
+		);
+
+		$total = (int) $args['total'];
+
+		if ( $total <= 1 ) {
+			return '';
+		}
+
+		$links = array();
+
+		for ( $page_number = 1; $page_number <= $total; $page_number++ ) {
+			$link = (string) $args['before_page_number'] . number_format_i18n( $page_number );
+
+			if ( $page_number === (int) $args['current'] ) {
+				$links[] = '<span class="page-numbers current">' . $link . '</span>';
+			} else {
+				$links[] = '<a class="page-numbers" href="' . esc_url( str_replace( '%#%', (string) $page_number, (string) $args['base'] ) ) . '">' . $link . '</a>';
+			}
+		}
+
+		return implode( "\n", $links );
 	}
 }

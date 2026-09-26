@@ -12,6 +12,7 @@ use SidrenaCijena\Catalog\StandalonePostType;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 use SidrenaCijena\Support\Settings;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
 
@@ -86,6 +87,7 @@ class SpecialSaleMetaBox {
 		<div class="sidrena-cijena-sale">
 			<?php if ( ! empty( $sales ) ) : ?>
 				<table class="widefat striped">
+					<caption class="screen-reader-text"><?php echo esc_html__( 'Recorded special sales', 'sidrena-cijena' ); ?></caption>
 					<thead>
 						<tr>
 							<th scope="col"><?php echo esc_html__( 'Type', 'sidrena-cijena' ); ?></th>
@@ -99,7 +101,7 @@ class SpecialSaleMetaBox {
 							<tr>
 								<td>
 									<?php
-									$name = ! empty( $sale['sale_name'] ) ? (string) $sale['sale_name'] : (string) $sale['sale_type'];
+									$name = ! empty( $sale['sale_name'] ) ? (string) $sale['sale_name'] : Labels::sale_type( (string) $sale['sale_type'] );
 									echo esc_html( $name );
 									?>
 								</td>
@@ -121,7 +123,7 @@ class SpecialSaleMetaBox {
 										: esc_html( Currency::format( (float) $sale['lowest_30_day_price'], $item->currency, array( 'display' => 'symbol' ) ) );
 									?>
 								</td>
-								<td><?php echo esc_html( (string) $sale['status'] ); ?></td>
+								<td><?php echo esc_html( Labels::sale_status( (string) $sale['status'] ) ); ?></td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
@@ -141,7 +143,7 @@ class SpecialSaleMetaBox {
 					<select id="sidrena-cijena-sale-type" name="sale_type" class="widefat" required>
 						<option value=""><?php echo esc_html__( '- select -', 'sidrena-cijena' ); ?></option>
 						<?php foreach ( self::sale_types() as $type ) : ?>
-							<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $type ); ?></option>
+							<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( Labels::sale_type( $type ) ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</p>

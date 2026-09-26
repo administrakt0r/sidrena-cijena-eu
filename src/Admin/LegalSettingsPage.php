@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -143,7 +144,9 @@ final class LegalSettingsPage {
 		}
 
 		echo '<h2>' . esc_html__( 'Recent rule changes', 'sidrena-cijena' ) . '</h2>';
-		echo '<table class="widefat striped"><thead><tr>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Recent legal rule changes', 'sidrena-cijena' ) . '</caption>';
+		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'When', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Setting', 'sidrena-cijena' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Old value', 'sidrena-cijena' ) . '</th>';
@@ -155,14 +158,30 @@ final class LegalSettingsPage {
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td><td>%4$s</td><td>%5$s</td></tr>',
 				esc_html( isset( $entry['timestamp'] ) ? (string) $entry['timestamp'] : '' ),
-				esc_html( isset( $entry['key'] ) ? (string) $entry['key'] : '' ),
+				esc_html( Labels::rule_setting( isset( $entry['key'] ) ? (string) $entry['key'] : '' ) ),
 				esc_html( self::format_value( isset( $entry['old'] ) ? $entry['old'] : null ) ),
 				esc_html( self::format_value( isset( $entry['new'] ) ? $entry['new'] : null ) ),
-				esc_html( isset( $entry['user_id'] ) ? (string) $entry['user_id'] : '' )
+				esc_html( self::user_label( isset( $entry['user_id'] ) ? (int) $entry['user_id'] : 0 ) )
 			);
 		}
 
 		echo '</tbody></table>';
+	}
+
+	/**
+	 * Display name for a user ID.
+	 *
+	 * @param int $user_id User ID.
+	 * @return string
+	 */
+	private static function user_label( $user_id ) {
+		if ( $user_id <= 0 ) {
+			return __( 'system', 'sidrena-cijena' );
+		}
+
+		$user = get_userdata( $user_id );
+
+		return $user ? $user->display_name : '#' . $user_id;
 	}
 
 	/**
@@ -174,6 +193,10 @@ final class LegalSettingsPage {
 	private static function format_value( $value ) {
 		if ( is_array( $value ) ) {
 			return implode( ', ', array_map( 'strval', $value ) );
+		}
+
+		if ( is_bool( $value ) ) {
+			return $value ? __( 'Yes', 'sidrena-cijena' ) : __( 'No', 'sidrena-cijena' );
 		}
 
 		return (string) $value;

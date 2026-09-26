@@ -11,6 +11,7 @@ use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Database\LogRepository;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,6 +35,13 @@ class AuditPage {
 	const PER_PAGE = 50;
 
 	/**
+	 * Rule-change rows per page.
+	 *
+	 * @var int
+	 */
+	const HISTORY_PER_PAGE = 20;
+
+	/**
 	 * Render the screen.
 	 *
 	 * @return void
@@ -47,13 +55,15 @@ class AuditPage {
 		$event = isset( $_GET['event'] ) ? sanitize_key( wp_unslash( $_GET['event'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
 		$page = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
+		$history_page = isset( $_GET['history_paged'] ) ? max( 1, absint( wp_unslash( $_GET['history_paged'] ) ) ) : 1;
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Audit trail', 'sidrena-cijena' ) . '</h1>';
 
 		echo '<p>' . esc_html__( 'Every legal-rule change and every recorded correction is kept here with the user and the timestamp.', 'sidrena-cijena' ) . '</p>';
 
-		self::render_rule_changes();
+		self::render_rule_changes( $history_page );
 		self::render_logs( $event, $page );
 
 		echo '</div>';
@@ -62,13 +72,17 @@ class AuditPage {
 	/**
 	 * Render the legal-rule change history.
 	 *
+	 * @param int $page Current history page.
 	 * @return void
 	 */
-	protected static function render_rule_changes() {
-		$history = RuleConfig::history();
+	protected static function render_rule_changes( $page ) {
+		$history = array_reverse( RuleConfig::history() );
+		$total   = count( $history );
+		$offset  = ( max( 1, (int) $page ) - 1 ) * self::HISTORY_PER_PAGE;
 
 		echo '<h2>' . esc_html__( 'Legal rule changes', 'sidrena-cijena' ) . '</h2>';
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Legal rule change history', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'When', 'sidrena-cijena' ),
@@ -86,12 +100,12 @@ class AuditPage {
 			echo '<tr><td colspan="6">' . esc_html__( 'No legal-rule changes have been recorded.', 'sidrena-cijena' ) . '</td></tr>';
 		}
 
-		foreach ( array_reverse( $history ) as $entry ) {
+		foreach ( array_slice( $history, $offset, self::HISTORY_PER_PAGE ) as $entry ) {
 			$timestamp = isset( $entry['timestamp'] ) ? (string) $entry['timestamp'] : '';
 
 			echo '<tr>';
 			echo '<td>' . esc_html( '' !== $timestamp ? self::site_time( $timestamp ) : '—' ) . '</td>';
-			echo '<td><code>' . esc_html( isset( $entry['key'] ) ? (string) $entry['key'] : '' ) . '</code></td>';
+			echo '<td>' . esc_html( Labels::rule_setting( isset( $entry['key'] ) ? (string) $entry['key'] : '' ) ) . '</td>';
 			echo '<td>' . esc_html( self::format_value( isset( $entry['old'] ) ? $entry['old'] : '' ) ) . '</td>';
 			echo '<td>' . esc_html( self::format_value( isset( $entry['new'] ) ? $entry['new'] : '' ) ) . '</td>';
 			echo '<td>' . esc_html( self::user_label( isset( $entry['user_id'] ) ? (int) $entry['user_id'] : 0 ) ) . '</td>';
@@ -100,6 +114,8 @@ class AuditPage {
 		}
 
 		echo '</tbody></table>';
+
+		Pagination::render( $page, $total, self::HISTORY_PER_PAGE, array( 'query_arg' => 'history_paged' ) );
 	}
 
 	/**
@@ -131,7 +147,7 @@ class AuditPage {
 		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $option ) {
-			echo '<option value="' . esc_attr( $option ) . '"' . selected( $event, $option, false ) . '>' . esc_html( $option ) . '</option>';
+			echo '<option value="' . esc_attr( $option ) . '"' . selected( $event, $option, false ) . '>' . esc_html( Labels::log_event( $option ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
@@ -139,6 +155,7 @@ class AuditPage {
 		echo '</p></form>';
 
 		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
 			__( 'When', 'sidrena-cijena' ),
@@ -161,14 +178,16 @@ class AuditPage {
 
 			echo '<tr>';
 			echo '<td>' . esc_html( Dates::from_utc( (string) $row['created_at'] )->format( 'Y-m-d H:i' ) ) . '</td>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['level'] ) . '">' . esc_html( (string) $row['level'] ) . '</span></td>';
-			echo '<td>' . esc_html( (string) $row['event'] ) . '</td>';
+			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['level'] ) . '">' . esc_html( Labels::log_level( (string) $row['level'] ) ) . '</span></td>';
+			echo '<td>' . esc_html( Labels::log_event( (string) $row['event'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['message'] ) . '</td>';
 			echo '<td>' . esc_html( self::user_label( $user_id ) ) . '</td>';
 			echo '</tr>';
 		}
 
 		echo '</tbody></table>';
+
+		Pagination::render( $page, (int) $result['total'], self::PER_PAGE );
 	}
 
 	/**
@@ -199,7 +218,7 @@ class AuditPage {
 		}
 
 		if ( is_bool( $value ) ) {
-			return $value ? 'true' : 'false';
+			return $value ? __( 'Yes', 'sidrena-cijena' ) : __( 'No', 'sidrena-cijena' );
 		}
 
 		return (string) $value;

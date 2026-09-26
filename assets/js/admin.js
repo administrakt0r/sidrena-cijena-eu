@@ -24,4 +24,25 @@
 			target = target.parentNode;
 		}
 	} );
+
+	function focusFeedback() {
+		var invalid = document.querySelector( '[aria-invalid="true"]' );
+
+		if ( invalid && invalid.focus ) {
+			invalid.focus();
+			return;
+		}
+
+		var notice = document.querySelector( '.sidrena-cijena-notice[data-sidrena-notice-focus]' );
+
+		if ( notice && notice.focus ) {
+			notice.focus();
+		}
+	}
+
+	if ( 'loading' === document.readyState ) {
+		document.addEventListener( 'DOMContentLoaded', focusFeedback );
+	} else {
+		focusFeedback();
+	}
 } )();

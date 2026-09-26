@@ -8,6 +8,7 @@
 namespace SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use SidrenaCijena\Admin\FormState;
 use SidrenaCijena\Admin\LocationsPage;
 
 /**
@@ -127,5 +128,46 @@ class LocationsPageTest extends TestCase {
 		$this->assertStringContainsString( 'value="kava"', $html );
 		$this->assertStringContainsString( 'sidrena_cijena_save_location', $html );
 		$this->assertStringContainsString( 'Save location', $html );
+	}
+
+	/**
+	 * A failed submission keeps every submitted value.
+	 *
+	 * @return void
+	 */
+	public function test_submitted_values_survive_a_validation_error() {
+		FormState::store(
+			'location-form',
+			array(
+				'name'       => 'Novi dućan',
+				'identifier' => 'ZG-9',
+				'address'    => 'Ilica 2',
+				'city'       => 'Zagreb',
+			),
+			array( 'identifier' => 'Another location already uses this facility identifier.' )
+		);
+
+		$html = LocationsPageProbe::form();
+
+		$this->assertStringContainsString( 'value="Novi dućan"', $html );
+		$this->assertStringContainsString( 'value="ZG-9"', $html );
+		$this->assertStringContainsString( 'value="Ilica 2"', $html );
+		$this->assertStringContainsString( 'value="Zagreb"', $html );
+		$this->assertStringContainsString( 'aria-invalid="true"', $html );
+		$this->assertStringContainsString( 'aria-describedby="sidrena-location-identifier-error"', $html );
+		$this->assertStringContainsString( 'id="sidrena-location-identifier-error"', $html );
+		$this->assertStringContainsString( 'Another location already uses this facility identifier.', $html );
+	}
+
+	/**
+	 * Clean forms carry no error markup.
+	 *
+	 * @return void
+	 */
+	public function test_form_without_errors_has_no_error_markup() {
+		$html = LocationsPageProbe::form();
+
+		$this->assertStringNotContainsString( 'aria-invalid', $html );
+		$this->assertStringNotContainsString( 'sidrena-cijena-field-error', $html );
 	}
 }
