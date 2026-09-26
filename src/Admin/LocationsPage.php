@@ -145,7 +145,8 @@ class LocationsPage {
 		}
 
 		echo '</select>';
-		echo '<p><input type="text" class="regular-text" id="sidrena-location-categories" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" aria-label="' . esc_attr__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '" />';
+		echo '<p><label class="screen-reader-text" for="sidrena-location-categories">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</label>';
+		echo '<input type="text" class="regular-text" id="sidrena-location-categories" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" /></p>';
 		echo '<p class="description">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Formats', 'sidrena-cijena' ) . '</th><td>';
