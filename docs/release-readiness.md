@@ -451,4 +451,7 @@ filename pattern and the append-only history contract are untouched.
   integration 81 tests / 371 assertions after `npx wp-env clean tests`; full
   `npm run test:e2e` 31/31 passed, including ordinary WooCommerce Update and the
   dedicated anchor evidence action; `./local.sh` completed and generated the demo
-  lists (3.24 s). Release archive build and integrity check pending.
+  lists (3.24 s).
+- **Archive**: `versions/1.0.16/sidrena-cijena.zip`, 298,762 bytes; `unzip -t`
+  reports no errors. SHA-256
+  `1e291101bf91cb9473ea76e7d4583a3366c3a0dfcaca8c88187204c10fb43f70`.
