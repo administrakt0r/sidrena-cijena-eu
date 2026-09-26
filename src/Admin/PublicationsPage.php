@@ -118,7 +118,7 @@ class PublicationsPage {
 			__( 'Checksum', 'sidrena-cijena' ),
 			__( 'Status', 'sidrena-cijena' ),
 		) as $heading ) {
-			echo '<th>' . esc_html( $heading ) . '</th>';
+			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 

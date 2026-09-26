@@ -138,11 +138,11 @@ class CompliancePage {
 		}
 
 		echo '<table class="widefat striped"><thead><tr>';
-		echo '<th>' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Entity', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Explanation', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Rule', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		$shown = 0;

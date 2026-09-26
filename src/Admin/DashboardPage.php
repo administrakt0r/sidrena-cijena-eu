@@ -291,10 +291,10 @@ class DashboardPage {
 		if ( ! empty( $data['publications'] ) ) {
 			echo '<h3>' . esc_html__( 'Recent publications', 'sidrena-cijena' ) . '</h3>';
 			echo '<table class="widefat striped"><thead><tr>';
-			echo '<th>' . esc_html__( 'File', 'sidrena-cijena' ) . '</th>';
-			echo '<th>' . esc_html__( 'Format', 'sidrena-cijena' ) . '</th>';
-			echo '<th>' . esc_html__( 'Published', 'sidrena-cijena' ) . '</th>';
-			echo '<th>' . esc_html__( 'Status', 'sidrena-cijena' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'File', 'sidrena-cijena' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Format', 'sidrena-cijena' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Published', 'sidrena-cijena' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Status', 'sidrena-cijena' ) . '</th>';
 			echo '</tr></thead><tbody>';
 
 			foreach ( $data['publications'] as $row ) {
@@ -332,10 +332,10 @@ class DashboardPage {
 		}
 
 		echo '<table class="widefat striped"><thead><tr>';
-		echo '<th>' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Explanation', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		$shown = 0;

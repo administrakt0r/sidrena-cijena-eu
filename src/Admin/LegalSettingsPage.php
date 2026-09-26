@@ -144,11 +144,11 @@ final class LegalSettingsPage {
 
 		echo '<h2>' . esc_html__( 'Recent rule changes', 'sidrena-cijena' ) . '</h2>';
 		echo '<table class="widefat striped"><thead><tr>';
-		echo '<th>' . esc_html__( 'When', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Setting', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Old value', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'New value', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'User', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'When', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Setting', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Old value', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'New value', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'User', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( array_slice( array_reverse( $history ), 0, 20 ) as $entry ) {

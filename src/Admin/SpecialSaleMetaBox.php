@@ -88,10 +88,10 @@ class SpecialSaleMetaBox {
 				<table class="widefat striped">
 					<thead>
 						<tr>
-							<th><?php echo esc_html__( 'Type', 'sidrena-cijena' ); ?></th>
-							<th><?php echo esc_html__( 'Period', 'sidrena-cijena' ); ?></th>
-							<th><?php echo esc_html__( '30 days', 'sidrena-cijena' ); ?></th>
-							<th><?php echo esc_html__( 'Status', 'sidrena-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Type', 'sidrena-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Period', 'sidrena-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( '30 days', 'sidrena-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Status', 'sidrena-cijena' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>

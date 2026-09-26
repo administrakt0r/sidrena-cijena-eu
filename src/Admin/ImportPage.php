@@ -355,9 +355,9 @@ class ImportPage {
 
 		echo '<h2>' . esc_html__( 'Existing price history sources', 'sidrena-cijena' ) . '</h2>';
 		echo '<table class="widefat striped" style="max-width:900px;"><thead><tr>';
-		echo '<th>' . esc_html__( 'Source', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Description', 'sidrena-cijena' ) . '</th>';
-		echo '<th>' . esc_html__( 'Records', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Source', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Description', 'sidrena-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Records', 'sidrena-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $sources as $source ) {

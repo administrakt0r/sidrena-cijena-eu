@@ -93,7 +93,7 @@ class LogsPage {
 			__( 'Message', 'sidrena-cijena' ),
 			__( 'User', 'sidrena-cijena' ),
 		) as $heading ) {
-			echo '<th>' . esc_html( $heading ) . '</th>';
+			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 

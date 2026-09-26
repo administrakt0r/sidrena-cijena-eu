@@ -78,7 +78,7 @@ class AuditPage {
 			__( 'User', 'sidrena-cijena' ),
 			__( 'Reason', 'sidrena-cijena' ),
 		) as $heading ) {
-			echo '<th>' . esc_html( $heading ) . '</th>';
+			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
@@ -147,7 +147,7 @@ class AuditPage {
 			__( 'Message', 'sidrena-cijena' ),
 			__( 'User', 'sidrena-cijena' ),
 		) as $heading ) {
-			echo '<th>' . esc_html( $heading ) . '</th>';
+			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 

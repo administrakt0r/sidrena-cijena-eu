@@ -54,7 +54,7 @@ class DocumentationPage {
 		echo '<h2>' . esc_html__( '1. Zakonski okvir i propisani referentni datumi', 'sidrena-cijena' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Zakon nalaže trgovcima prikaz cijene koja je vrijedila na točno propisane referentne datume, kao i najniže cijene u zadnjih 30 dana prilikom provođenja posebnih oblika prodaje.', 'sidrena-cijena' ) . '</p>';
 		echo '<table class="widefat striped" style="margin-top:15px;margin-bottom:15px;">';
-		echo '<thead><tr><th>' . esc_html__( 'Kategorija / Vrsta', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Referentni datum', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Opis i primjena', 'sidrena-cijena' ) . '</th></tr></thead>';
+		echo '<thead><tr><th scope="col">' . esc_html__( 'Kategorija / Vrsta', 'sidrena-cijena' ) . '</th><th scope="col">' . esc_html__( 'Referentni datum', 'sidrena-cijena' ) . '</th><th scope="col">' . esc_html__( 'Opis i primjena', 'sidrena-cijena' ) . '</th></tr></thead>';
 		echo '<tbody>';
 		echo '<tr><td><strong>' . esc_html__( 'Opći proizvodi i usluge', 'sidrena-cijena' ) . '</strong></td><td><code>' . esc_html( $general_date ) . '</code></td><td>' . esc_html__( 'Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama.', 'sidrena-cijena' ) . '</td></tr>';
 		echo '<tr><td><strong>' . esc_html__( 'Posebne (naslijeđene) kategorije', 'sidrena-cijena' ) . '</strong></td><td><code>' . esc_html( $legacy_date ) . '</code></td><td>' . esc_html__( 'Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila.', 'sidrena-cijena' ) . '</td></tr>';
@@ -120,7 +120,7 @@ class DocumentationPage {
 		echo '<h2>' . esc_html__( '6. WP-CLI naredbe za administratore', 'sidrena-cijena' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Za napredno upravljanje poslužiteljem i automatizaciju kroz sistemski crontab dostupne su sljedeće naredbe:', 'sidrena-cijena' ) . '</p>';
 		echo '<table class="widefat striped" style="margin-top:15px;margin-bottom:15px;">';
-		echo '<thead><tr><th>' . esc_html__( 'Naredba', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Opis djelovanja', 'sidrena-cijena' ) . '</th></tr></thead>';
+		echo '<thead><tr><th scope="col">' . esc_html__( 'Naredba', 'sidrena-cijena' ) . '</th><th scope="col">' . esc_html__( 'Opis djelovanja', 'sidrena-cijena' ) . '</th></tr></thead>';
 		echo '<tbody>';
 		echo '<tr><td><code>wp sidrena-cijena generate [--force]</code></td><td>' . esc_html__( 'Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta.', 'sidrena-cijena' ) . '</td></tr>';
 		echo '<tr><td><code>wp sidrena-cijena check [--export=&lt;putanja&gt;]</code></td><td>' . esc_html__( 'Pokreće provjeru usklađenosti i ispisuje pronađene GREŠKE i UPOZORENJA.', 'sidrena-cijena' ) . '</td></tr>';
@@ -135,7 +135,7 @@ class DocumentationPage {
 		echo '<h2>' . esc_html__( '7. Kuke za programere (Filters & Actions)', 'sidrena-cijena' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Programeri mogu prilagoditi ponašanje dodatka kroz standardne WordPress filtre i akcije:', 'sidrena-cijena' ) . '</p>';
 		echo '<table class="widefat striped" style="margin-top:15px;margin-bottom:15px;">';
-		echo '<thead><tr><th>' . esc_html__( 'Kuka', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Tip', 'sidrena-cijena' ) . '</th><th>' . esc_html__( 'Opis primjene', 'sidrena-cijena' ) . '</th></tr></thead>';
+		echo '<thead><tr><th scope="col">' . esc_html__( 'Kuka', 'sidrena-cijena' ) . '</th><th scope="col">' . esc_html__( 'Tip', 'sidrena-cijena' ) . '</th><th scope="col">' . esc_html__( 'Opis primjene', 'sidrena-cijena' ) . '</th></tr></thead>';
 		echo '<tbody>';
 		echo '<tr><td><code>sidrena_cijena_display_anchor</code></td><td>' . esc_html__( 'Filter', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Omogućuje programsku kontrolu treba li prikazati sidrenu cijenu na određenom proizvodu ili stranici.', 'sidrena-cijena' ) . '</td></tr>';
 		echo '<tr><td><code>sidrena_cijena_anchor_recorded</code></td><td>' . esc_html__( 'Action', 'sidrena-cijena' ) . '</td><td>' . esc_html__( 'Aktivira se nakon uspješnog evidentiranja nove sidrene cijene.', 'sidrena-cijena' ) . '</td></tr>';
