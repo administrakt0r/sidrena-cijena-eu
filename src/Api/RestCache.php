@@ -99,10 +99,15 @@ class RestCache {
 	/**
 	 * Flush every cached response.
 	 *
+	 * The generation is monotonic: two flushes inside the same second must
+	 * still invalidate entries written after the first flush.
+	 *
 	 * @return void
 	 */
 	public function flush() {
-		update_option( self::GENERATION_OPTION, time(), false );
+		$next = max( time(), $this->generation() + 1 );
+
+		update_option( self::GENERATION_OPTION, $next, false );
 
 		if ( function_exists( 'wp_cache_flush_group' ) ) {
 			wp_cache_flush_group( self::GROUP );

@@ -90,6 +90,27 @@ class RestCacheTest extends TestCase {
 	}
 
 	/**
+	 * Two flushes inside the same second still invalidate entries written between them.
+	 *
+	 * @return void
+	 */
+	public function test_back_to_back_flushes_bump_generation() {
+		$cache = new RestCache();
+		$args  = array( 'page' => 'cjenik' );
+
+		$cache->flush();
+
+		$key = $cache->key( $args );
+		$cache->set( $key, array( 'html' => 'between flushes' ) );
+
+		$this->assertSame( array( 'html' => 'between flushes' ), $cache->get( $key ) );
+
+		$cache->flush();
+
+		$this->assertNull( $cache->get( $cache->key( $args ) ) );
+	}
+
+	/**
 	 * Values survive a set/get round trip.
 	 *
 	 * @return void

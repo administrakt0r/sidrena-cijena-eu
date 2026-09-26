@@ -112,13 +112,18 @@ class AnchorCache {
 	/**
 	 * Invalidate every cached anchor.
 	 *
-	 * Uses a cache generation marker so no key enumeration is required.
+	 * Uses a cache generation marker so no key enumeration is required. The
+	 * generation is monotonic: two flushes inside the same second must still
+	 * invalidate entries written after the first flush.
 	 *
 	 * @return void
 	 */
 	public function flush() {
-		set_transient( 'sidrena_cijena_cache_generation', time(), 0 );
-		wp_cache_set( 'sidrena_cijena_cache_generation', time(), self::GROUP, self::TTL );
+		$current    = get_transient( 'sidrena_cijena_cache_generation' );
+		$generation = max( time(), (int) $current + 1 );
+
+		set_transient( 'sidrena_cijena_cache_generation', $generation, 0 );
+		wp_cache_set( 'sidrena_cijena_cache_generation', $generation, self::GROUP, self::TTL );
 	}
 
 	/**

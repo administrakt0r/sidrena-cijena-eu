@@ -141,4 +141,25 @@ class AnchorCacheTest extends TestCase {
 		$this->assertNull( $cache->get_anchor( 7, 0 ) );
 		$this->assertFalse( $cache->is_hit() );
 	}
+
+	/**
+	 * Two flushes inside the same second still invalidate entries written between them.
+	 *
+	 * @return void
+	 */
+	public function test_back_to_back_flushes_bump_generation() {
+		$cache = new AnchorCache();
+
+		$cache->flush();
+		$first = get_transient( 'sidrena_cijena_cache_generation' );
+
+		$cache->set_anchor( 7, 0, array( 'price' => '7.99' ) );
+		$this->assertSame( array( 'price' => '7.99' ), $cache->get_anchor( 7, 0 ) );
+
+		$cache->flush();
+
+		$this->assertGreaterThan( (int) $first, (int) get_transient( 'sidrena_cijena_cache_generation' ) );
+		$this->assertNull( $cache->get_anchor( 7, 0 ) );
+		$this->assertFalse( $cache->is_hit() );
+	}
 }
