@@ -1503,3 +1503,45 @@ if ( ! function_exists( 'paginate_links' ) ) {
 		return implode( "\n", $links );
 	}
 }
+
+if ( ! function_exists( 'post_type_exists' ) ) {
+	/**
+	 * Capability test stub: a post type exists when the test registers it.
+	 *
+	 * @param string $post_type Post type name.
+	 * @return bool
+	 */
+	function post_type_exists( $post_type ) {
+		$registered = isset( $GLOBALS['sidrena_test_post_types'] ) && is_array( $GLOBALS['sidrena_test_post_types'] ) ? $GLOBALS['sidrena_test_post_types'] : array();
+
+		return in_array( (string) $post_type, $registered, true );
+	}
+}
+
+if ( ! function_exists( 'add_meta_box' ) ) {
+	/**
+	 * Capability test stub: records registered meta boxes for assertions.
+	 *
+	 * @param string             $id       Meta box ID.
+	 * @param string             $title    Meta box title.
+	 * @param callable           $callback Render callback.
+	 * @param string|null        $screen   Screen or post type.
+	 * @param string             $context  Context.
+	 * @param string             $priority Priority.
+	 * @param array<mixed>       $args     Extra arguments.
+	 * @return void
+	 */
+	function add_meta_box( $id, $title, $callback, $screen = null, $context = 'side', $priority = 'default', $args = array() ) {
+		if ( ! isset( $GLOBALS['sidrena_test_meta_boxes'] ) || ! is_array( $GLOBALS['sidrena_test_meta_boxes'] ) ) {
+			$GLOBALS['sidrena_test_meta_boxes'] = array();
+		}
+
+		$GLOBALS['sidrena_test_meta_boxes'][] = array(
+			'id'      => (string) $id,
+			'title'   => (string) $title,
+			'callback'=> $callback,
+			'screen'  => (string) $screen,
+			'context' => (string) $context,
+		);
+	}
+}
