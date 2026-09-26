@@ -318,18 +318,22 @@ class PriceHistoryRepository {
 
 		$lower_bound = '' !== (string) $since_date ? (string) $since_date : (string) $until_date;
 
-		$sql = "SELECT * FROM %i
+		$params = array_merge( array( $this->table, (int) $product_id ), $variation_params, array( $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM %i
 			WHERE product_id = %d
 			AND {$variation_sql}
 			AND price_type IN ('regular','sale','historical','lowest_30_day')
 			AND ( valid_from IS NULL OR valid_from <= %s )
 			AND ( valid_to IS NULL OR valid_to >= %s )
-			ORDER BY COALESCE(valid_from, created_at) ASC, id ASC";
-
-		$params = array_merge( array( $this->table, (int) $product_id ), $variation_params, array( $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' ) );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A );
+			ORDER BY COALESCE(valid_from, created_at) ASC, id ASC",
+				$params
+			),
+			ARRAY_A
+		);
 
 		return is_array( $rows ) ? $rows : array();
 	}

@@ -144,7 +144,7 @@ class SpecialSaleRepository {
 		$variation_sql    = (int) $variation_id > 0 ? 'variation_id = %d' : 'variation_id IS NULL';
 		$variation_params = (int) $variation_id > 0 ? array( (int) $variation_id ) : array();
 		$params           = array_merge( array( $this->table, (int) $product_id ), $variation_params );
-		$sql              = "SELECT * FROM %i WHERE product_id = %d AND {$variation_sql}";
+		$status_sql       = '';
 
 		if ( ! empty( $statuses ) ) {
 			$statuses = array_values( array_intersect( $statuses, self::STATUSES ) );
@@ -153,14 +153,14 @@ class SpecialSaleRepository {
 				return array();
 			}
 
-			$placeholders = implode( ',', array_fill( 0, max( 1, count( $statuses ) ), '%s' ) );
-			$sql         .= " AND status IN ({$placeholders})";
+			$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+			$status_sql   = " AND status IN ({$placeholders})";
 
 			$params = array_merge( $params, $statuses );
 		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( $wpdb->prepare( $sql . ' ORDER BY start_date DESC', $params ), ARRAY_A );
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i WHERE product_id = %d AND {$variation_sql}{$status_sql} ORDER BY start_date DESC", $params ), ARRAY_A );
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}

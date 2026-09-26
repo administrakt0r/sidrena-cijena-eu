@@ -144,14 +144,18 @@ class PublicationRepository {
 
 		$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
 
-		$sql = "SELECT * FROM %i
-			WHERE location_id = %d AND format = %s AND status IN ({$placeholders})
-			ORDER BY id DESC LIMIT 1";
-
 		$params = array_merge( array( $this->table, (int) $location_id, (string) $format ), $statuses );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
-		$row = $wpdb->get_row( $wpdb->prepare( $sql, $params ), ARRAY_A );
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM %i
+			WHERE location_id = %d AND format = %s AND status IN ({$placeholders})
+			ORDER BY id DESC LIMIT 1",
+				$params
+			),
+			ARRAY_A
+		);
 
 		return $row ? $this->hydrate( $row ) : null;
 	}
