@@ -272,15 +272,10 @@ class PriceHistoryRepository {
 		$limit  = isset( $args['limit'] ) ? max( 1, (int) $args['limit'] ) : 100;
 		$offset = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
 
-		$sql      = "SELECT * FROM {$this->table} {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
-		$params[] = $limit;
-		$params[] = $offset;
+		$params = array_merge( array( $this->table ), $params, array( $limit, $offset ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$prepared = $wpdb->prepare( $sql, $params );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( $prepared, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $params ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -296,18 +291,10 @@ class PriceHistoryRepository {
 
 		list( $where, $params ) = $this->build_where( $args );
 
-		$sql = "SELECT COUNT(*) FROM {$this->table} {$where}";
+		$params = array_merge( array( $this->table ), $params );
 
-		if ( empty( $params ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-			return (int) $wpdb->get_var( $sql );
-		}
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$prepared = $wpdb->prepare( $sql, $params );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		return (int) $wpdb->get_var( $prepared );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
 	}
 
 	/**
@@ -326,13 +313,12 @@ class PriceHistoryRepository {
 	public function timeline( $product_id, $variation_id, $until_date, $since_date = '' ) {
 		global $wpdb;
 
-		$variation_sql = (int) $variation_id > 0
-			? $wpdb->prepare( 'variation_id = %d', (int) $variation_id )
-			: 'variation_id IS NULL';
+		$variation_sql    = (int) $variation_id > 0 ? 'variation_id = %d' : 'variation_id IS NULL';
+		$variation_params = (int) $variation_id > 0 ? array( (int) $variation_id ) : array();
 
 		$lower_bound = '' !== (string) $since_date ? (string) $since_date : (string) $until_date;
 
-		$sql = "SELECT * FROM {$this->table}
+		$sql = "SELECT * FROM %i
 			WHERE product_id = %d
 			AND {$variation_sql}
 			AND price_type IN ('regular','sale','historical','lowest_30_day')
@@ -340,11 +326,10 @@ class PriceHistoryRepository {
 			AND ( valid_to IS NULL OR valid_to >= %s )
 			ORDER BY COALESCE(valid_from, created_at) ASC, id ASC";
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$prepared = $wpdb->prepare( $sql, (int) $product_id, $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' );
+		$params = array_merge( array( $this->table, (int) $product_id ), $variation_params, array( $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( $prepared, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}

@@ -1,135 +1,108 @@
-# Sidrena cijena - Croatian Anchor Price Compliance
+<div align="center">
 
-A production-ready WordPress plugin that implements the Croatian additional
-("sidrena") price obligation, the daily machine-readable price-list obligation
-and the separate 30-day lowest-price rule for special forms of sale.
+<img src=".github/readme-banner.svg" alt="Sidrena Cijena EU — Croatian anchor price and price-list plugin for WordPress" width="100%">
 
-> **Disclaimer:** This plugin is a technical compliance aid, **not legal
-> advice**. It does not guarantee legal compliance. Merchants must obtain
-> professional legal and accounting advice for their specific situation.
+### Croatian anchor prices, 30-day sale history, and published price lists for WordPress
 
-## What it does
+An open-source WordPress plugin for `sidrena cijena`, Croatian price transparency,
+and WooCommerce price history.
 
-- **Anchor price records** - immutable historical records of the retail price
-  valid on the applicable reference date (general: 10 September 2026; legacy
-  categories: 2 May 2025), with source, currency, tax status, author and an
-  append-only correction trail.
-- **Frontend display** - current price and anchor price shown together on
-  product pages, archives and merchant-controlled placements (shortcode and
-  template functions), clearly labelled and configurable.
-- **30-day lowest price** - a separate engine that calculates the lowest
-  applicable price of the 30 calendar days before a classified special sale
-  (akcija, sniženje, sezonsko sniženje, rasprodaja, custom). Never a substitute
-  for the anchor price.
-- **Daily price list** - deterministic CSV and XML price lists per sales
-  location, with documented filenames, checksums, validation and a
-  retention archive of at least 30 days.
-- **Public machine-readable access** - unauthenticated JSON, CSV and XML
-  endpoints under `/wp-json/sidrena-cijena/v1/`, plus stable public URLs
-  `/sidrena-cijena.xml` and `/sidrena-cijena.csv`.
-- **Public price list and archive pages** - `/sidrena-cjenik/` (searchable
-  current list with the anchor price and its date) and
-  `/arhiva-sidrene-cijene/` (published files with checksums), also available
-  as the shortcodes `[sidrena-cjenik]` and `[sidrena-arhiva]`.
-- **Compliance dashboard and validator** - anchor coverage, missing data,
-  30-day warnings, export status and severity-based findings.
-- **Safe onboarding** - CSV import with preview, validation, dry run,
-  transactional commit/rollback and error report; bulk entry; migration
-  detection.
-- **Auditability** - price history per product/variation, correction records,
-  rule-configuration audit and structured logs.
-- **WP-CLI** - `status`, `validate`, `generate`, `history`, `import`,
-  `cleanup`, `seed-test-data` with meaningful exit codes.
-- **WooCommerce optional** - a dedicated adapter integrates through official
-  hooks; without WooCommerce the standalone catalog keeps the full workflow
-  available.
+[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download 2.0.0 for WordPress](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena.zip)
 
-## Requirements
+![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-1d6b55?style=flat-square)
+![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)
+![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?style=flat-square&logo=php&logoColor=white)
+![License GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-1d6b55?style=flat-square)
 
-Release 1.0.0 includes complete Croatian and English source catalogs (427 strings).
-Release verification and packaging evidence are tracked in
-[`docs/release-readiness.md`](docs/release-readiness.md).
-The retained filename profile and ministry-example differences are explained in
-[`docs/filename-profile.md`](docs/filename-profile.md); legal format review remains necessary.
+</div>
 
-- WordPress 6.8+ (tested through 7.1)
-- PHP 7.4+ (developed and tested on PHP 8.3)
-- WooCommerce 8.x+ (optional)
-- MySQL 5.7+ / MariaDB 10.4+
+## Sidrena Cijena EU for WordPress and WooCommerce
 
-## Development quickstart
+Sidrena Cijena EU helps Croatian merchants record and display the applicable
+anchor price, calculate the separate lowest price in the previous 30 days for
+special sales, and publish daily machine-readable CSV/XML price lists. It works
+with WooCommerce or its built-in standalone catalog.
+
+The plugin also provides a public HTML price-list archive, a searchable current
+price list, validation tools, audit history, and WP-CLI commands. Generated
+price lists and shop-location details are public by design; merchants choose
+what to publish and remain responsible for checking their catalog and locations.
+
+> **Legal notice:** Sidrena Cijena EU is a technical aid, not legal advice or a
+> guarantee of compliance. Requirements can depend on the merchant, product,
+> service, sales channel, and applicable law. Verify your setup with qualified
+> legal or accounting advisers.
+
+## Features
+
+- Append-only anchor-price records with reference dates, evidence, authorship,
+  and reasoned corrections.
+- Storefront display of current and anchor prices, including selected
+  WooCommerce variations.
+- A separate 30-day lowest-price calculation for classified special sales; it
+  is never substituted for the anchor price.
+- Per-location daily CSV and XML price-list generation, validation, checksums,
+  and retained publication history.
+- Public searchable price-list and archive pages, with optional footer and
+  WordPress XML sitemap links enabled by default.
+- JSON, CSV, and XML price endpoints, plus CSV import with preview and
+  transactional commit, compliance reports, and WP-CLI commands.
+- WooCommerce integration is optional; standalone catalog workflows remain
+  available without WooCommerce.
+
+## Download and install
+
+1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena.zip).
+2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**, choose the
+   ZIP, and install it.
+3. Activate **Sidrena Cijena EU** and follow the setup guide to configure
+   locations, legal reference dates, and price evidence.
+4. Generate a price list and verify the public current list and archive before
+   relying on scheduled publication.
+
+Requirements: WordPress 6.8 or later, PHP 7.4 or later, and MySQL 5.7 or
+MariaDB 10.4 or later. WooCommerce 8 or later is optional.
+
+## Relevant Croatian and EU rules
+
+These primary sources inform the plugin's documented behavior. Read the current
+rules for your circumstances; the plugin does not replace legal advice.
+
+- [NN 101/2026-1212 — Decision on displaying the additional price as a direct
+  price-control measure](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1212.html)
+- [NN 101/2026-1213 — Decision on publishing product and service price lists](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1213.html)
+- [Croatian Ministry of Economy clarification for the 1 October 2026 rules](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440)
+- [Directive (EU) 2019/2161 (Omnibus Directive)](https://eur-lex.europa.eu/eli/dir/2019/2161/oj/eng)
+- [Directive 2011/83/EU on consumer rights](https://eur-lex.europa.eu/eli/dir/2011/83/oj/eng)
+
+See [the implementation notes and legal assumptions](docs/legal-rules.md) for
+the reference dates, 30-day calculation, machine-readable price lists, and
+documented uncertainties.
+
+## Development
 
 ```bash
-git clone <repository-url> sidrena-cijena
-cd sidrena-cijena
-npm install
+git clone https://github.com/administrakt0r/sidrena-cijena-eu.git
+cd sidrena-cijena-eu
 composer install
+npm install
 npm run wp-env start
 ```
 
-- Development site: <http://localhost:8888> (`admin` / `password` - development only)
-- Test environment: <http://localhost:8889> via `npm run wp-env:test -- start`
-- Activate: `npx wp-env run cli wp plugin activate sidrena-cijena`
+Run the available checks with `tools/verify.sh`. The WordPress integration and
+Playwright browser suites require Docker and the local wp-env test environment.
+See [development and test instructions](docs/development.md) before running
+them.
 
-### Tests and quality gates
+## More information
 
-```bash
-composer test:unit          # pure domain unit tests
-composer test:integration   # WordPress/WooCommerce integration tests (inside wp-env)
-npm run wp-env:test -- start && npm run test:e2e   # Playwright, against the test site (8889)
-composer lint               # PHPCS: WordPress standards + PHPCompatibilityWP
-composer analyse            # PHPStan
-npm run lint:js             # ESLint
-```
-
-## Documentation
-
-| Document | Contents |
-|----------|----------|
-| [docs/development.md](docs/development.md) | Environment setup and tooling |
-| [docs/legal-rules.md](docs/legal-rules.md) | Legal sources, rules and documented uncertainties |
-| [docs/price-history.md](docs/price-history.md) | Price-history model, record types and corrections |
-| [docs/price-list-format.md](docs/price-list-format.md) | CSV/XML formats and filename structure |
-| [docs/woocommerce.md](docs/woocommerce.md) | WooCommerce integration and template API |
-| [docs/testing.md](docs/testing.md) | Test suites, fixtures and scenarios |
-| [docs/troubleshooting.md](docs/troubleshooting.md) | Common problems and resolutions |
-| [docs/operations.md](docs/operations.md) | Scheduling, WP-CLI reference, retention, uninstall |
-
-## Known limitations
-
-- Integration and E2E suites require Docker (`npm run wp-env start`); they
-  cannot run in environments without a Docker daemon.
-- The public REST endpoint exposes price data only - no customer or order data.
-- Block-theme product templates are covered through the standard
-  `woocommerce_get_price_html` filter; no dedicated block is shipped.
-- Barcode, brand and unit-of-measure values are read from common meta keys
-  and taxonomies; exotic providers may need the documented filters.
-- New first offers can receive an anchor from the price/date actually observed
-  at publication. Existing catalog gaps and imports still need historical evidence.
-  See [feature acceptance and setup requirements](docs/feature-acceptance.md).
-
-## Legal assumptions (see docs/legal-rules.md)
-
-- General anchor reference date: 10 September 2026; legacy categories:
-  2 May 2025. Both are configurable, and changes are audited - history is
-  never rewritten.
-- The 30-day lowest price is a separate concept from the anchor price and is
-  never substituted for it.
-- XML schema and CSV conventions follow the plugin contract where the
-  decisions leave the format unspecified; documented uncertainties are listed
-  in `docs/legal-rules.md` rather than silently decided.
-
-## Architecture
-
-The compliance core (`src/Pricing`, `src/Compliance`, `src/Database`,
-`src/Export`, `src/Import`) has no WooCommerce dependency. `src/Catalog/`
-provides the catalog abstraction and the standalone provider; `src/WooCommerce/`
-contains the adapter only. Admin, REST, CLI and cron layers depend on the core
-through interfaces.
-
-See `specs/001-sidrena-cijena-compliance/` for the full specification, plan,
-data model, contracts and task list.
+- [Croatian plugin website](https://sidrenacijena.eu/)
+- [Live WordPress demo shop](https://wordpress.sidrenacijena.eu/)
+- [Implementation and legal notes](docs/legal-rules.md)
+- [Price-list format](docs/price-list-format.md)
+- [WooCommerce integration](docs/woocommerce.md)
+- [Releases and WordPress upload ZIPs](https://github.com/administrakt0r/sidrena-cijena-eu/releases)
 
 ## License
 
-GPL-2.0-or-later.
+GPL-2.0-or-later. See [LICENSE](LICENSE).

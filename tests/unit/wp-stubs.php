@@ -810,6 +810,27 @@ if ( ! class_exists( 'wpdb' ) ) {
 				$args = $args[0];
 			}
 
+			$argument_index = 0;
+			$format_args    = array();
+			$query          = preg_replace_callback(
+				'/%[sdif]/',
+				function ( $matches ) use ( &$argument_index, &$args, &$format_args ) {
+					$value = isset( $args[ $argument_index ] ) ? $args[ $argument_index ] : '';
+					++$argument_index;
+
+					if ( '%i' === $matches[0] ) {
+					return '`' . str_replace( '`', '``', (string) $value ) . '`';
+				}
+
+				$format_args[] = $value;
+
+				return $matches[0];
+				},
+				$query
+			);
+
+			$args = $format_args;
+
 			$args = array_map(
 				function ( $value ) {
 					if ( is_int( $value ) || is_float( $value ) ) {

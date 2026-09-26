@@ -35,6 +35,18 @@ final class OperationsSettingsPage {
 		);
 
 		$fields = array(
+			'public_archive_enabled'   => array(
+				'label' => __( 'Public price-list archive', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'archive_footer_link'      => array(
+				'label' => __( 'Link from the site footer', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
+			'archive_sitemap_link'     => array(
+				'label' => __( 'Include in the WordPress sitemap', 'sidrena-cijena' ),
+				'type'  => 'checkbox',
+			),
 			'deadline'                 => array(
 				'label' => __( 'Daily publication deadline', 'sidrena-cijena' ),
 				'type'  => 'time',
@@ -129,12 +141,21 @@ final class OperationsSettingsPage {
 				);
 				break;
 			case 'checkbox':
+				if ( 'public_archive_enabled' === $key ) {
+					$label = __( 'Show the generated price-list archive at /arhiva-sidrene-cijene/', 'sidrena-cijena' );
+				} elseif ( 'archive_footer_link' === $key ) {
+					$label = __( 'Show a link to the archive in the site footer', 'sidrena-cijena' );
+				} elseif ( 'archive_sitemap_link' === $key ) {
+					$label = __( 'Add the archive URL to the WordPress XML sitemap', 'sidrena-cijena' );
+				} else {
+					$label = __( 'Yes, delete all plugin data on uninstall', 'sidrena-cijena' );
+				}
 				$fields->checkbox(
 					$key,
 					$value,
 					array(
-						'label'       => __( 'Yes, delete all plugin data on uninstall', 'sidrena-cijena' ),
-						'description' => __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data.', 'sidrena-cijena' ),
+						'label'       => $label,
+						'description' => 'delete_data_on_uninstall' === $key ? __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data.', 'sidrena-cijena' ) : '',
 					)
 				);
 				break;

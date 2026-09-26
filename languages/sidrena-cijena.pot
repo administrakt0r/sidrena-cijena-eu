@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 1.0.18\n"
+"Project-Id-Version: Sidrena cijena 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-26T16:04:17+00:00\n"
+"POT-Creation-Date: 2026-09-26T17:30:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -162,6 +162,9 @@ msgid "Add location"
 msgstr ""
 
 msgid "Address"
+msgstr ""
+
+msgid "Add the archive URL to the WordPress XML sitemap"
 msgstr ""
 
 msgid "Administrative disclaimer"
@@ -761,6 +764,9 @@ msgstr ""
 msgid "Import preview"
 msgstr ""
 
+msgid "Include in the WordPress sitemap"
+msgstr ""
+
 msgid "Info"
 msgstr ""
 
@@ -870,6 +876,9 @@ msgid "Legal rules"
 msgstr ""
 
 msgid "Level"
+msgstr ""
+
+msgid "Link from the site footer"
 msgstr ""
 
 msgid "Location"
@@ -1262,6 +1271,9 @@ msgstr ""
 msgid "Publication and lifecycle"
 msgstr ""
 
+msgid "Public price-list archive"
+msgstr ""
+
 msgid "Published"
 msgstr ""
 
@@ -1457,10 +1469,16 @@ msgstr ""
 msgid "Severity"
 msgstr ""
 
+msgid "Show a link to the archive in the site footer"
+msgstr ""
+
 msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
 msgstr ""
 
 msgid "Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible."
+msgstr ""
+
+msgid "Show the generated price-list archive at /arhiva-sidrene-cijene/"
 msgstr ""
 
 msgid "Side stripe"

@@ -37,6 +37,9 @@ final class Settings {
 			'display_priority'         => 20,
 			'display_product_pages'    => true,
 			'display_archives'         => true,
+			'public_archive_enabled'   => true,
+			'archive_footer_link'      => true,
+			'archive_sitemap_link'     => true,
 			'display_variations'       => true,
 			'only_when_different'      => false,
 			'disclaimer'               => '',
@@ -198,7 +201,7 @@ final class Settings {
 		// of the submitted tab must keep its stored value; the hidden companion
 		// input rendered by SettingsFields::checkbox() makes present flags
 		// always visible to the sanitizer, including an unchecked one.
-		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall' ) as $flag ) {
+		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall', 'public_archive_enabled', 'archive_footer_link', 'archive_sitemap_link' ) as $flag ) {
 			if ( array_key_exists( $flag, $input ) ) {
 				$output[ $flag ] = ! empty( $input[ $flag ] );
 			}

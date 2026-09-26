@@ -1,10 +1,10 @@
-=== Sidrena cijena - Croatian Anchor Price Compliance ===
+=== Sidrena Cijena EU ===
 Contributors: titanworks
 Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.18
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,8 @@ Main features:
 
 == Installation ==
 
-1. Upload the `sidrena-cijena` folder to `wp-content/plugins/`.
+1. Install **Sidrena Cijena EU** from **Plugins → Add New Plugin**, or upload
+   the ZIP from the [latest GitHub release](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest).
 2. Activate the plugin through the *Plugins* screen.
 3. Open *Sidrena cijena → Postavke* and review the reference dates and display settings.
 4. Record or import anchor prices for your catalog.
@@ -62,8 +63,8 @@ category slugs there before publishing; the plugin does not guess categories.
 
 Never. Newly created offers witnessed at publication can receive their actual
 first-offer price and observed date automatically. Existing catalog gaps and
-imports require evidenced historical prices. See docs/feature-acceptance.md for
-the first-offer boundaries, sale classification and setup requirements.
+imports require evidenced historical prices. Merchants must verify the price,
+date, product identity and applicable sale classification before publishing.
 
 == External services ==
 
@@ -86,12 +87,13 @@ uninstall retain data. Optional uninstall cleanup removes operational data and
 files but preserves anchor and 30-day evidence, including their audit attribution.
 Review retained records with your data-protection and legal advisers.
 
-== Screenshots ==
-
-1. Public price-list page with search, item types and downloads (local demo data).
-2. Administrative compliance dashboard (local demo data).
-
 == Changelog ==
+
+= 2.0.0 =
+* Rename the plugin to Sidrena Cijena EU.
+* Fix the Styling tab so it opens the styling settings screen.
+* Add a public HTML archive of generated price lists, with default-enabled footer and sitemap links and settings to control them.
+* Harden optional uninstall cleanup and complete Croatian translations for the archive settings.
 
 = 1.0.18 =
 * Fix Legal rules saves that could cause a WordPress error page.

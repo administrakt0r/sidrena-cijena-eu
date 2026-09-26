@@ -69,20 +69,20 @@ defined( 'ABSPATH' ) || exit;
 					<td colspan="12"><?php esc_html_e( 'No items match this filter.', 'sidrena-cijena' ); ?></td>
 				</tr>
 			<?php endif; ?>
-			<?php foreach ( $rows as $row ) : ?>
+			<?php foreach ( $rows as $sidrena_row ) : ?>
 				<tr>
-					<td><?php echo esc_html( (string) $row['type_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['naziv'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['sifra'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['marka'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['jedinica_mjere'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['unit_price_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['retail_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['sale_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['anchor_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['reference_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['barkod'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['availability_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['type_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['naziv'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['sifra'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['marka'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['jedinica_mjere'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['unit_price_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['retail_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['sale_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['anchor_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['reference_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['barkod'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['availability_display'] ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>

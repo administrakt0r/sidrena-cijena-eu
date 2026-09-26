@@ -123,7 +123,7 @@ final class SettingsPage {
 			<nav class="nav-tab-wrapper">
 				<?php foreach ( $tabs as $key => $definition ) : ?>
 					<a class="nav-tab <?php echo $key === $tab ? 'nav-tab-active' : ''; ?>"
-						href="<?php echo esc_url( AdminMenu::url( AdminMenu::PARENT, array( 'tab' => $key ) ) ); ?>">
+						href="<?php echo esc_url( AdminMenu::url( 'sidrena-cijena-settings', array( 'tab' => $key ) ) ); ?>">
 						<?php echo esc_html( $definition[1] ); ?>
 					</a>
 				<?php endforeach; ?>

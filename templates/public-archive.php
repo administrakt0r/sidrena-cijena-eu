@@ -47,15 +47,15 @@ defined( 'ABSPATH' ) || exit;
 					<td colspan="7"><?php esc_html_e( 'No price lists have been published yet.', 'sidrena-cijena' ); ?></td>
 				</tr>
 			<?php endif; ?>
-			<?php foreach ( $rows as $row ) : ?>
+			<?php foreach ( $rows as $sidrena_row ) : ?>
 				<tr>
-					<td><?php echo esc_html( (string) $row['published_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['filename'] ); ?></td>
-					<td><?php echo esc_html( (string) $row['format_display'] ); ?></td>
-					<td><?php echo (int) $row['item_count']; ?></td>
-					<td><?php echo esc_html( (string) $row['size_display'] ); ?></td>
-					<td><code><?php echo esc_html( (string) $row['checksum_short'] ); ?></code></td>
-					<td><a href="<?php echo esc_url( (string) $row['download_url'] ); ?>"><?php esc_html_e( 'Download', 'sidrena-cijena' ); ?></a></td>
+					<td><?php echo esc_html( (string) $sidrena_row['published_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['filename'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['format_display'] ); ?></td>
+					<td><?php echo (int) $sidrena_row['item_count']; ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['size_display'] ); ?></td>
+					<td><code><?php echo esc_html( (string) $sidrena_row['checksum_short'] ); ?></code></td>
+					<td><a href="<?php echo esc_url( (string) $sidrena_row['download_url'] ); ?>"><?php esc_html_e( 'Download', 'sidrena-cijena' ); ?></a></td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>

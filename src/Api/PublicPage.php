@@ -11,6 +11,7 @@ use SidrenaCijena\Export\PriceListBuilder;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -85,6 +86,8 @@ class PublicPage {
 
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'template_redirect', array( $this, 'serve' ), 0 );
+		add_action( 'wp_footer', array( $this, 'footer_link' ) );
+		add_action( 'wp_sitemaps_init', array( $this, 'register_sitemap_provider' ) );
 
 		add_shortcode( 'sidrena-cjenik', array( $this, 'shortcode_list' ) );
 		add_shortcode( 'sidrena_cjenik', array( $this, 'shortcode_list' ) );
@@ -135,6 +138,13 @@ class PublicPage {
 			return;
 		}
 
+		if ( self::PAGE_ARCHIVE === $page && ! Settings::get( 'public_archive_enabled', true ) ) {
+			global $wp_query;
+			$wp_query->set_404();
+			status_header( 404 );
+			return;
+		}
+
 		status_header( 200 );
 		nocache_headers();
 
@@ -146,6 +156,33 @@ class PublicPage {
 		get_footer();
 
 		exit;
+	}
+
+	/**
+	 * Show a link to the archive in the active theme footer.
+	 *
+	 * @return void
+	 */
+	public function footer_link() {
+		if ( ! Settings::get( 'public_archive_enabled', true ) || ! Settings::get( 'archive_footer_link', true ) ) {
+			return;
+		}
+
+		printf( '<p class="sidrena-cijena-archive-link"><a href="%1$s">%2$s</a></p>', esc_url( home_url( '/' . self::STEM_ARCHIVE . '/' ) ), esc_html__( 'Published price lists', 'sidrena-cijena' ) );
+	}
+
+	/**
+	 * Register the archive URL in the WordPress sitemap.
+	 *
+	 * @param \WP_Sitemaps $sitemaps Sitemap registry.
+	 * @return void
+	 */
+	public function register_sitemap_provider( $sitemaps ) {
+		if ( ! Settings::get( 'public_archive_enabled', true ) || ! Settings::get( 'archive_sitemap_link', true ) || ! class_exists( '\WP_Sitemaps_Provider' ) ) {
+			return;
+		}
+
+		$sitemaps->registry->add_provider( 'sidrena-cijena', new PublicArchiveSitemapProvider() );
 	}
 
 	/**

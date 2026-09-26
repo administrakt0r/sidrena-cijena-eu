@@ -181,11 +181,10 @@ final class Uninstaller {
 
 		$posts = get_posts(
 			array(
-				'post_type'        => 'sidrena_item',
-				'post_status'      => 'any',
-				'numberposts'      => -1,
-				'fields'           => 'ids',
-				'suppress_filters' => true,
+				'post_type'   => 'sidrena_item',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields'      => 'ids',
 			)
 		);
 
@@ -268,8 +267,19 @@ final class Uninstaller {
 			}
 		}
 
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-		@rmdir( $directory );
+		global $wp_filesystem;
+
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( ! is_object( $wp_filesystem ) && function_exists( 'WP_Filesystem' ) ) {
+			WP_Filesystem();
+		}
+
+		if ( is_object( $wp_filesystem ) && $wp_filesystem->is_dir( $directory ) ) {
+			$wp_filesystem->rmdir( $directory, false );
+		}
 
 		return $deleted;
 	}

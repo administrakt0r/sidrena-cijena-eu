@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">Sidrena Cijena EU</title>
+  <desc id="desc">Croatian anchor price and price-list tools for WordPress</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102337"/>
+      <stop offset="1" stop-color="#174e50"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0" stop-color="#f4c65d"/>
+      <stop offset="1" stop-color="#f2a64a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="1050" cy="115" r="190" fill="#fff" opacity=".035"/>
+  <circle cx="1035" cy="115" r="132" fill="none" stroke="#fff" stroke-width="2" opacity=".12"/>
+  <path d="M1015 48v111m-36-75h72m-72 75c0 42 72 42 72 0m-108 25h144" fill="none" stroke="url(#accent)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="84" y="61" width="68" height="8" rx="4" fill="#fff" opacity=".72"/>
+  <text x="84" y="137" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="53" font-weight="750" letter-spacing="-1.4">Sidrena Cijena EU</text>
+  <text x="87" y="184" fill="#d8e7e5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="450">Croatian price transparency for WordPress</text>
+  <rect x="87" y="218" width="224" height="38" rx="19" fill="#ffffff" opacity=".12"/>
+  <text x="106" y="244" fill="#f9d781" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="1.4">ANCHOR PRICE · CSV · XML</text>
+  <path d="M0 286h1200" stroke="#edc359" stroke-width="5" opacity=".9"/>
+</svg>

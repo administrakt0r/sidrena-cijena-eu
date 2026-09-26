@@ -1,7 +1,7 @@
 {
 	"name": "sidrena-cijena",
-	"version": "1.0.18",
-	"description": "Development tooling for the Sidrena cijena WordPress plugin.",
+	"version": "2.0.0",
+	"description": "Croatian anchor price, 30-day sale history, and price-list tools for WordPress and WooCommerce.",
 	"private": true,
 	"license": "GPL-2.0-or-later",
 	"devDependencies": {

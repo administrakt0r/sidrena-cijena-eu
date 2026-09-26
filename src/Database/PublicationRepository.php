@@ -136,20 +136,22 @@ class PublicationRepository {
 	public function latest( $location_id, $format, array $statuses = self::RETAINED_STATUSES ) {
 		global $wpdb;
 
-		$statuses     = array_values( array_intersect( $statuses, self::STATUSES ) );
-		$placeholders = implode( ',', array_fill( 0, max( 1, count( $statuses ) ), '%s' ) );
+		$statuses = array_values( array_intersect( $statuses, self::STATUSES ) );
 
-		$sql = "SELECT * FROM {$this->table}
+		if ( empty( $statuses ) ) {
+			return null;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
+
+		$sql = "SELECT * FROM %i
 			WHERE location_id = %d AND format = %s AND status IN ({$placeholders})
 			ORDER BY id DESC LIMIT 1";
 
-		$params = array_merge( array( (int) $location_id, (string) $format ), $statuses );
+		$params = array_merge( array( $this->table, (int) $location_id, (string) $format ), $statuses );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$prepared = $wpdb->prepare( $sql, $params );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$row = $wpdb->get_row( $prepared, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$row = $wpdb->get_row( $wpdb->prepare( $sql, $params ), ARRAY_A );
 
 		return $row ? $this->hydrate( $row ) : null;
 	}
@@ -222,23 +224,14 @@ class PublicationRepository {
 
 		$where = empty( $conditions ) ? '' : 'WHERE ' . implode( ' AND ', $conditions );
 
-		$count_sql = "SELECT COUNT(*) FROM {$this->table} {$where}";
-		$list_sql  = "SELECT * FROM {$this->table} {$where} ORDER BY published_at DESC, id DESC LIMIT %d OFFSET %d";
+		$query_params = array_merge( array( $this->table ), $params );
+		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
 
-		if ( empty( $params ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-			$total = (int) $wpdb->get_var( $count_sql );
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-			$rows = $wpdb->get_results( $wpdb->prepare( $list_sql, $per_page, $offset ), ARRAY_A );
-		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-			$total = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, $params ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
 
-			$list_params = array_merge( $params, array( $per_page, $offset ) );
-
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-			$rows = $wpdb->get_results( $wpdb->prepare( $list_sql, $list_params ), ARRAY_A );
-		}
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY published_at DESC, id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
 
 		$items = array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 
@@ -301,22 +294,12 @@ class PublicationRepository {
 	public function last_successful( $location_id = 0 ) {
 		global $wpdb;
 
-		$sql    = "SELECT * FROM {$this->table} WHERE published_at IS NOT NULL";
-		$params = array();
-
 		if ( $location_id ) {
-			$sql     .= ' AND location_id = %d';
-			$params[] = (int) $location_id;
-		}
-
-		$sql .= ' ORDER BY published_at DESC LIMIT 1';
-
-		if ( empty( $params ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-			$row = $wpdb->get_row( $sql, ARRAY_A );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE published_at IS NOT NULL AND location_id = %d ORDER BY published_at DESC LIMIT 1', $this->table, (int) $location_id ), ARRAY_A );
 		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$row = $wpdb->get_row( $wpdb->prepare( $sql, $params ), ARRAY_A );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE published_at IS NOT NULL ORDER BY published_at DESC LIMIT 1', $this->table ), ARRAY_A );
 		}
 
 		return $row ? $this->hydrate( $row ) : null;

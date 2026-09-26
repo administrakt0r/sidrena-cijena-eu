@@ -683,4 +683,10 @@ return array (
   'Underline' => 'Podcrtano',
   'Product cards' => 'Kartice proizvoda',
   'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.' => 'Prikaži sidrenu cijenu na karticama ovog proizvoda u trgovini. Na stranici proizvoda i u cjeniku podaci ostaju vidljivi.',
+  'Add the archive URL to the WordPress XML sitemap' => 'Dodaj URL arhive u WordPressov XML sitemap',
+  'Include in the WordPress sitemap' => 'Uključi u WordPressov sitemap',
+  'Link from the site footer' => 'Poveznica u podnožju stranice',
+  'Public price-list archive' => 'Javna arhiva cjenika',
+  'Show a link to the archive in the site footer' => 'Prikaži poveznicu na arhivu u podnožju stranice',
+  'Show the generated price-list archive at /arhiva-sidrene-cijene/' => 'Prikaži generiranu arhivu cjenika na /arhiva-sidrene-cijene/',
 );
