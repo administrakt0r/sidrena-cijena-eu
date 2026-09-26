@@ -28,6 +28,13 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 	protected $barcode_keys = array( '_barcode', '_wpm_gtin_code', '_alg_ean', '_ywbc_barcode_display_value', '_gtin', '_sidrena_barcode' );
 
 	/**
+	 * Resolved barcode values for items already hydrated in this request.
+	 *
+	 * @var array<int,string>
+	 */
+	protected $barcode_cache = array();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function get_source() {
@@ -146,10 +153,28 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		}
 
 		$products = wc_get_products( $query );
+		$products = is_array( $products ) ? $products : array();
+
+		// Prime WordPress's metadata and term caches once for the full batch.
+		// WooCommerce product getters and the fields below then share these caches.
+		$cache_ids = array();
+		foreach ( $products as $product ) {
+			$cache_ids[] = (int) $product->get_id();
+
+			if ( ! empty( $args['include_variations'] ) && $product->is_type( 'variable' ) ) {
+				$cache_ids = array_merge( $cache_ids, array_map( 'intval', $product->get_children() ) );
+			}
+		}
+
+		$cache_ids = array_values( array_unique( array_filter( $cache_ids ) ) );
+		if ( ! empty( $cache_ids ) ) {
+			update_meta_cache( 'post', $cache_ids );
+			update_object_term_cache( $cache_ids, 'product' );
+		}
 
 		$items = array();
 
-		foreach ( is_array( $products ) ? $products : array() as $product ) {
+		foreach ( $products as $product ) {
 			if ( ! $this->type_matches( $product, $args['type'] ) ) {
 				continue;
 			}
@@ -435,6 +460,9 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 	 */
 	protected function get_barcode( $product ) {
 		$id = (int) $product->get_id();
+		if ( array_key_exists( $id, $this->barcode_cache ) ) {
+			return $this->barcode_cache[ $id ];
+		}
 
 		/**
 		 * Filters the meta keys inspected for a barcode.
@@ -448,11 +476,13 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$value = get_post_meta( $id, $key, true );
 
 			if ( '' !== $value && null !== $value ) {
-				return (string) $value;
+				$this->barcode_cache[ $id ] = (string) $value;
+				return $this->barcode_cache[ $id ];
 			}
 		}
 
-		return '';
+		$this->barcode_cache[ $id ] = '';
+		return $this->barcode_cache[ $id ];
 	}
 
 	/**
