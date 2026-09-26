@@ -62,6 +62,32 @@ were defects in our own code, not competitor ideas.
 | REL-09 | Requested feature acceptance and version archives | `done` — 1.0.2 records witnessed new offers, including exact variation identity and services; excludes existing/imported catalog entries and preserves previous anchors. Prerequisites documented in feature-acceptance.md. Every version has a preserved installable ZIP/checksum in a numeric versions/ directory, committed and pushed. Unit 119/380, integration 76/342, E2E 28; PHPStan, PHPCS, ESLint, shell syntax and local.sh green. |
 | REL-10 | Performance, admin UX, accessibility and robustness pass | `done` (2026-09-26) — `PriceListBuilder` verified to use exactly one batched anchor and sale query per build (no per-item lookups); fixed the product/service `meta.counts` bug and skip the sale query for empty catalogs. Bulk anchor screen now checks anchors through `PriceHistoryRepository::exists_map()` in 200-item batches for rendering, missing counts and shop-wide setup, removing N+1 queries on large catalogs. Public page caching confirmed through `RestCache` with price/anchor/sale/settings wiring; added cache invalidation when sales locations are saved, deactivated or deleted. Setup Guide statuses extracted into testable `SetupGuidePage::statuses()` with anchor coverage badge (`(done: %1$d of %2$d recorded)`), and the checklist stays in sync across all five steps. Accessibility: visible labels for the import file input and public type filter, `scope="col"` admin/preview table headers, ARIA labels on bulk controls, and higher-contrast public disclaimers. New unit tests for `PriceListBuilder` batching, `RestCache`, `SetupGuidePage::statuses()` and bulk anchor batching; unit suite 184/571 → 196/633. All four static gates clean (PHPStan 107/107, PHPCS, ESLint); translations 569/569 Croatian, 0 untranslated. |
 
+## Correctness and reliability sweep (2026-09-26)
+
+Not derived from the MJDD comparison; a defect sweep over `src/` against
+`docs/legal-rules.md`, `docs/feature-acceptance.md` and
+`docs/price-list-format.md` ahead of the 1.0.8 release. All rows `done`
+(2026-09-26) and shipped in 1.0.8.
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SW-01 | `done` (2026-09-26) | Daily buffer window requeued a forced run every 30 s (`Scheduler::reschedule_daily(false)` after a run) | `SchedulerTest::test_prompt_window_queue_and_non_prompt_reschedule` |
+| SW-02 | `done` (2026-09-26) | Associative cron args crashed `run_service_regeneration()` on PHP 8; args wrapped positionally | `PublicFeedTest`, integration service regeneration |
+| SW-03 | `done` (2026-09-26) | `Scheduler::is_healthy()` reported a stale event as healthy; overdue beyond an hour is unhealthy | `SchedulerTest::test_is_healthy_reports_overdue_events` |
+| SW-04 | `done` (2026-09-26) | Special-sale end dates were midnight-inclusive (inactive on the last day, one-day sales impossible) | `test_sale_is_active_on_its_end_day()` (integration) |
+| SW-05 | `done` (2026-09-26) | Promo prices with comma decimals lost precision (`(float)` cast) | `SpecialSaleService` uses `Currency::to_storage()`; integration asserts `7.5` |
+| SW-06 | `done` (2026-09-26) | Open-ended price rows pinned the 30-day lowest price forever; UTC `created_at` mixed with site dates | `LowestPrice30DayCalculatorTest` supersession + UTC conversion tests |
+| SW-07 | `done` (2026-09-26) | Partial location address passed filename generation despite the documented block | `FilenameGenerator::generate()` returns `missing_location_address` |
+| SW-08 | `done` (2026-09-26) | Date-only anchor correction did not change the fingerprint (no republication) | `PriceListBuilder::fingerprint()` includes `anchor_reference_date` |
+| SW-09 | `done` (2026-09-26) | Imported CSV could not round-trip its own exports (multi-line fields, missing date alias, variations) | `CsvParserEncodingTest` multiline/alias tests; `RowValidator::index(include_variations)` |
+| SW-10 | `done` (2026-09-26) | `PriceHistoryRepository::insert()` ignored failures; import catches `\Throwable`; dry-run counters corrected | Unit/integration suites |
+| SW-11 | `done` (2026-09-26) | WooCommerce price changes never fired `sidrena_cijena_price_changed` (no cache flush/regeneration) | `PriceHistoryRecorderTest` + plugin hook wiring |
+| SW-12 | `done` (2026-09-26) | Variation anchors skipped tax display; builder markup borrowed other products' anchors | `PriceDisplay::display_price()` shared; `BuilderCompatTest` queried-product guards |
+| SW-13 | `done` (2026-09-26) | Saving one settings tab reset flags of other tabs; uninstall opt-in read a never-written option | `SettingsTest`, `UninstallerTest`, integration lifecycle |
+| SW-14 | `done` (2026-09-26) | Bulk anchor pagination derived pages from the unfiltered catalog (false all-clear) | `BulkAnchorEntryTest::test_bulk_anchor_paginates_the_filtered_missing_set` |
+| SW-15 | `done` (2026-09-26) | Failed file deletion marked rows expired; failed archive insert left orphan files; hardcoded warning counts | `CleanupJob`, `Publisher`, `GenerationService` edits |
+| SW-16 | `done` (2026-09-26) | Untranslated/unescaped admin strings (`Filter`/`Action`, `SKU`, notice URLs) | `DocumentationPage`, `BulkAnchorEntryPage`, `ImportPage`, `SpecialSaleMetaBox` |
+
 ## Preserved strengths
 
 Keep these when borrowing ideas from the competitor:

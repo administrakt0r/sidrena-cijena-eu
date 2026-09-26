@@ -128,4 +128,62 @@ touched; `docs/legal-rules.md` is unchanged.
   `unzip -t` reports no errors; 272K. SHA-256
   `01a687c2739c8a96ba146aa1fab5f787edb56e73ca22ff5c905647d0d6c6f2d5`.
 
+## Release 1.0.8 (2026-09-26)
+
+Correctness and reliability sweep across cron, sales, pricing, export, import,
+WooCommerce display and admin screens. No legal semantics were changed:
+reference dates, the 30-day window, the filename pattern, retention and the
+append-only history are untouched, and `docs/legal-rules.md` is unchanged.
+
+- **Scheduler / deadline (REL-06 follow-up)**: a run inside the 15-minute buffer
+  no longer requeues itself every 30 seconds, so the same location/format is not
+  force-published dozens of times before the deadline; reschedules after a run
+  pass `false` to `Scheduler::schedule_daily()`. Service price-change requests
+  now reach the cron callback as a single positional argument instead of an
+  associative array (`Unknown named parameter` on PHP 8). `is_healthy()` treats
+  an event overdue beyond one hour as unhealthy, so `wp sidrena-cijena status`
+  reports `NOT SCHEDULED OR OVERDUE` instead of a stale "healthy".
+- **Special sales**: end dates are stored inclusively (`23:59:59`), so sales are
+  active on their last day and one-day sales work; promo prices are parsed via
+  `Currency::to_storage()` (comma decimals like `7,50` no longer collapse to 7).
+  `refresh_statuses()` now runs as part of the daily generation.
+- **30-day lowest price**: an open-ended `regular`/`sale` row is bounded by the
+  next row of the same type, so a superseded cheaper price no longer pins every
+  later window; `created_at` fallbacks are converted from UTC to site time
+  before window comparisons.
+- **Export / publication**: locations with an incomplete street address or city
+  block filename generation (`missing_location_address`) as documented; date-only
+  anchor corrections change the content fingerprint; the published row records
+  the real warning count; `CleanupJob` only marks a file expired when deletion
+  succeeded, and `Publisher` removes an orphaned file if the archive insert
+  fails. The CLI `generate --dry-run` now runs the same compliance gate.
+- **Import**: re-importing the plugin's own CSV keeps `datum_sidrene_cijene`,
+  quoted multi-line fields parse as one record, variation rows resolve in the
+  catalog index (`include_variations`), failed inserts surface instead of a
+  stale id, dry-run counters match commit semantics, and rollback catches
+  `\Throwable`.
+- **WooCommerce display**: variation anchors use the same tax-aware
+  `PriceDisplay::display_price()` helper, stored `tax_inclusive` anchors are not
+  re-taxed, `BuilderCompat` only appends the queried product (no related/upsell
+  leakage), and price changes fire `sidrena_cijena_price_changed`.
+- **Admin / settings**: saving one settings tab preserves the flags of the other
+  tabs (hidden companion inputs), the uninstall data-deletion opt-in reads the
+  `Settings` option, the bulk anchor screen paginates the filtered missing set,
+  notices are URL-encoded, and remaining hardcoded admin strings are translated.
+- **Quality gates**: unit suite 196/633 → 207/664 passed; PHPStan 107/107 clean;
+  PHPCS 140/140 clean; ESLint clean. Integration on wp-env + MySQL: 77 tests,
+  349 assertions. E2E: 28 specs ran with one flaky login timeout in the import
+  spec (docker containers inspected concurrently); the spec passed on targeted
+  rerun (3/3). `./local.sh` exited 0 and `wp sidrena-cijena status` reports the
+  corrected overview.
+- **ZIP smoke**: archive extracted and activated on the wp-env WordPress with
+  WooCommerce active and again with WooCommerce deactivated: runtime constant
+  `SIDRENA_CIJENA_VERSION` is `1.0.8`, the five `wp_sidrena_*` tables exist, the
+  Croatian catalog loads (`Najniža cijena u zadnjih 30 dana`), and no dev
+  dependencies ship inside the archive.
+- **Translations**: 572/572 Croatian strings, 0 untranslated.
+- **Archive**: `tools/build-zip.sh 1.0.8` from source commit `f8a2abb`;
+  `unzip -t` reports no errors; 280,703 bytes (276K). SHA-256
+  `a9d262080b9b402d6920ed30cec9856e83a5facdae79d1130440429dabfe5593`.
+
 
