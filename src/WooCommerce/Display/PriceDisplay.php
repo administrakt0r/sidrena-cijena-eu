@@ -342,11 +342,14 @@ class PriceDisplay {
 			return '';
 		}
 
-		$sales = Plugin::instance()->special_sales();
-		$sale  = $sales->active_for_item( (int) $item->id, (int) $item->variation_id );
+		$sales  = Plugin::instance()->special_sales();
+		$active = $sales->active_map();
+		$key    = (int) $item->id . ':' . (int) $item->variation_id;
+		$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
 
 		if ( ( ! $sale || null === $sale['lowest_30_day_price'] ) && $item->is_variation() ) {
-			$sale = $sales->active_for_item( (int) $item->id, 0 );
+			$key  = (int) $item->id . ':0';
+			$sale = isset( $active[ $key ] ) ? $active[ $key ] : null;
 		}
 
 		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {

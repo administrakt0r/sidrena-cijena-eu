@@ -32,6 +32,13 @@ class SpecialSaleRepository {
 	protected $table;
 
 	/**
+	 * Request-local active-sale snapshot.
+	 *
+	 * @var array<string,array<mixed>>|null
+	 */
+	protected $active_map_cache;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -59,7 +66,8 @@ class SpecialSaleRepository {
 	public function insert( array $data ) {
 		global $wpdb;
 
-		$row = $this->normalize( $data );
+		$row                    = $this->normalize( $data );
+		$this->active_map_cache = null;
 
 		$wpdb->insert( $this->table, $row, $this->formats() );
 
@@ -82,7 +90,8 @@ class SpecialSaleRepository {
 			return false;
 		}
 
-		$row = $this->normalize( array_merge( $existing, $data ) );
+		$row                    = $this->normalize( array_merge( $existing, $data ) );
+		$this->active_map_cache = null;
 
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
 
@@ -188,6 +197,11 @@ class SpecialSaleRepository {
 	public function active_map( $at = '' ) {
 		global $wpdb;
 
+		$cache_result = ! $at;
+		if ( $cache_result && null !== $this->active_map_cache ) {
+			return $this->active_map_cache;
+		}
+
 		$at = $at ? $at : Dates::now_site()->format( 'Y-m-d H:i:s' );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -196,7 +210,7 @@ class SpecialSaleRepository {
 			WHERE status IN ('scheduled','active')
 			AND start_date <= %s
 			AND ( end_date IS NULL OR end_date >= %s )
-			ORDER BY id ASC",
+			ORDER BY start_date DESC",
 			$at,
 			$at
 		);
@@ -207,9 +221,15 @@ class SpecialSaleRepository {
 		$map = array();
 
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$row         = $this->hydrate( $row );
-			$key         = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
-			$map[ $key ] = $row;
+			$row = $this->hydrate( $row );
+			$key = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
+			if ( ! isset( $map[ $key ] ) ) {
+				$map[ $key ] = $row;
+			}
+		}
+
+		if ( $cache_result ) {
+			$this->active_map_cache = $map;
 		}
 
 		return $map;
@@ -223,6 +243,7 @@ class SpecialSaleRepository {
 	 */
 	public function refresh_statuses( $now = '' ) {
 		global $wpdb;
+		$this->active_map_cache = null;
 
 		$now = $now ? $now : Dates::now_site()->format( 'Y-m-d H:i:s' );
 

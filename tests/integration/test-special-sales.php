@@ -118,6 +118,40 @@ class Test_Special_Sales extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Batched storefront lookup preserves active_for_item's newest-start winner.
+	 *
+	 * @return void
+	 */
+	public function test_active_map_matches_item_lookup_when_sales_overlap() {
+		$item = $this->create_item( 'Overlapping sale item', 'SALE-OVERLAP', 10.00 );
+		$now  = Dates::now_site();
+		$this->sales->insert(
+			array(
+				'product_id'          => $item->id,
+				'sale_type'           => 'promo',
+				'start_date'          => $now->modify( '-2 hours' )->format( 'Y-m-d H:i:s' ),
+				'lowest_30_day_price' => 4.00,
+				'status'              => 'active',
+			)
+		);
+		$this->sales->insert(
+			array(
+				'product_id'          => $item->id,
+				'sale_type'           => 'promo',
+				'start_date'          => $now->modify( '-1 hour' )->format( 'Y-m-d H:i:s' ),
+				'lowest_30_day_price' => 5.00,
+				'status'              => 'active',
+			)
+		);
+
+		$expected = $this->sales->active_for_item( $item->id, 0 );
+		$actual   = $this->sales->active_map()[ $item->id . ':0' ];
+
+		$this->assertSame( (int) $expected['id'], (int) $actual['id'] );
+		$this->assertSame( 5.0, (float) $actual['lowest_30_day_price'] );
+	}
+
+	/**
 	 * Creating a sale stores the calculated window and lowest price.
 	 *
 	 * @return void

@@ -52,7 +52,9 @@ final class TemplateFunctions {
 	 * @return float|null
 	 */
 	public static function get_lowest_30_day_price( $product_id, $variation_id = 0 ) {
-		$sale = Plugin::instance()->special_sales()->active_for_item( (int) $product_id, (int) $variation_id );
+		$active = Plugin::instance()->special_sales()->active_map();
+		$key    = (int) $product_id . ':' . (int) $variation_id;
+		$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
 
 		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {
 			return null;
