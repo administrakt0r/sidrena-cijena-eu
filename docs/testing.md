@@ -8,7 +8,35 @@ composer test:integration   # PHPUnit integration suite — needs wp-env running
 npm run test:e2e            # Playwright E2E — needs the test environment running
 composer lint               # PHPCS (must be clean)
 composer analyse            # PHPStan level 6 (must report no errors)
+npm run lint:js             # ESLint over assets/js (must be clean)
+php tools/i18n/make-pot.php --locale=hr_HR   # regenerate catalogs; must report 0 untranslated
 ```
+
+## One-command verification
+
+`tools/verify.sh` runs every gate above and prints a PASS/FAIL summary with the
+test counts, so any AI agent can prove a change without rediscovering the
+command list:
+
+```sh
+tools/verify.sh                     # unit + PHPCS + PHPStan + ESLint + i18n
+tools/verify.sh --with-integration  # + PHPUnit integration suite (wp-env)
+tools/verify.sh --with-e2e          # + Playwright E2E (test env, port 8889)
+```
+
+The i18n gate re-runs `tools/i18n/make-pot.php --locale=hr_HR` and fails unless
+the Croatian catalogue reports **0 untranslated** strings. Timestamp-only churn
+in `languages/` is restored automatically so the tree stays release-clean;
+real catalogue changes are kept and flagged for commit. The E2E gate refuses to
+run when `WP_BASE_URL` points at port 8888 (the demo shop).
+
+## Current baselines (v1.0.13)
+
+Compare against these when judging whether a change regressed anything:
+
+* Unit: 301 tests / 1078 assertions · E2E: 28 specs · Integration: 77 tests / 349 assertions.
+* `languages/hr_HR.po`: 632 strings, 0 untranslated.
+* PHPStan level 6, PHPCS and ESLint: clean.
 
 Unit tests use `tests/unit/wp-stubs.php` (WordPress function stubs) and
 never touch a database. Integration tests extend `WP_UnitTestCase`,
@@ -20,9 +48,12 @@ uninstall lifecycle. E2E specs drive a real wp-env site (Croatian locale,
 ### E2E runs against the test environment
 
 ```sh
-npm run wp-env:test -- start   # test site on http://localhost:8889
+npx wp-env start                # test site on http://localhost:8889
 npm run test:e2e
 ```
+
+(Plain `npx wp-env` — do not use `npm run wp-env:test`/`--config`: wp-env 10.39
+silently no-ops every subcommand invoked with `--config`.)
 
 The specs create and delete products, prices, pages and locations, so they run
 against the **test** environment (`tests-cli`, port 8889) and never against the
@@ -34,7 +65,10 @@ visible store) before the first spec runs. Override with `WP_BASE_URL` and
 Docker is required for integration and E2E suites. Without a Docker
 daemon they cannot run; unit tests, lint and static analysis still run on
 the host. If your shell cannot reach the Docker socket, wrap the command in
-`sg docker -c '…'` (the Playwright specs shell out to `wp-env`).
+`sg docker -c '…'` (the Playwright specs shell out to `wp-env`). If
+`wp-env start` silently does nothing or E2E reports `tests-cli` is not
+running, the containers are stale — see `docs/troubleshooting.md`
+("wp-env will not start") for the one-line recovery.
 
 ## Fixtures
 

@@ -70,7 +70,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Start wp-env
-        run: npm run wp-env:test -- start
+        run: npx wp-env start
 
       - name: Run PHPUnit integration test suite in wp-env
-        run: npm run wp-env:test -- run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration
+        run: npx wp-env run tests-cli wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration

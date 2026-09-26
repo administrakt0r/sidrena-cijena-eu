@@ -21,15 +21,17 @@ UI/UX track; prompt 4 covers everything else. Performance work is logged as `PER
 UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventions: `FIX-`,
 `IMP-`, `REL-`).
 
-## Current green baseline (v1.0.12)
+## Current green baseline (v1.0.13)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
+`tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
+on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 268 tests / 869 assertions (`composer test:unit`).
-- Integration suite: 76+ tests / 342+ assertions (`composer test:integration` in wp-env).
-- E2E: 28+ Playwright tests against port 8889 (`npm run test:e2e`).
+- Unit suite: 301 tests / 1078 assertions (`composer test:unit`).
+- Integration suite: 77 tests / 349 assertions (`composer test:integration` in wp-env).
+- E2E: 28 Playwright tests against port 8889 (`npm run test:e2e`).
 - PHPStan level 6: 0 errors · PHPCS clean · ESLint clean · `./local.sh` exits 0.
-- Croatian catalog complete: 0 untranslated strings.
+- Croatian catalog complete: 632 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
 
 ## Hard rules for every prompt
 

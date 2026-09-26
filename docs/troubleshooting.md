@@ -56,3 +56,25 @@
 
 Run the check from `Dashboard → Run compliance check` or
 `wp sidrena-cijena validate`; reports export as CSV/JSON.
+
+## wp-env will not start / "tests-cli is not running"
+
+* Symptom: `npm run wp-env:test -- start` prints nothing and exits 0, or E2E
+  fails with `service "tests-cli" is not running`. The environment's containers
+  are usually stale after a host reboot or sleep.
+* Root cause of the silence: wp-env 10.39 silently no-ops every subcommand when
+  `--config` is passed (exit 0, no output). Use the plain forms instead —
+  `npx wp-env start`, `npx wp-env run tests-cli wp …` — which target the same
+  test site on 8889 that the Playwright helpers use.
+* The volumes still hold the installed WordPress, so bring the compose project
+  up directly:
+
+  ```sh
+  cd "$(grep -l 8889 ~/.wp-env/*/docker-compose.yml | xargs dirname)" && docker compose up -d
+  ```
+
+* If your shell cannot reach the Docker socket, wrap commands in
+  `sg docker -c '…'` (or use `sudo`).
+* Never point Playwright at port 8888 — that is the demo shop; the specs run on
+  8889 and delete their fixtures. Never run `wp plugin install --force` inside
+  the containers: the repository is bind-mounted and the upgrader deletes it.
