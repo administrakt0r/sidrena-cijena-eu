@@ -67,9 +67,9 @@ foreach ( $strings as $string => $unused ) {
 	$pot .= "msgstr \"\"\n\n";
 }
 
-file_put_contents( $root . '/languages/sidrena-cijena-eu.pot', $pot );
+$pot_changed = sidrena_write_catalog( $root . '/languages/sidrena-cijena-eu.pot', $pot );
 
-echo 'Wrote languages/sidrena-cijena-eu.pot with ' . count( $strings ) . " strings.\n";
+echo ( $pot_changed ? 'Wrote' : 'Unchanged' ) . ' languages/sidrena-cijena-eu.pot with ' . count( $strings ) . " strings.\n";
 
 if ( '' !== $locale ) {
 	$translations_file = $root . '/tools/i18n/' . $locale . '.php';
@@ -111,10 +111,10 @@ if ( '' !== $locale ) {
 		}
 	}
 
-	$po_file = $root . '/languages/' . $locale . '.po';
-	file_put_contents( $po_file, $po );
+	$po_file    = $root . '/languages/' . $locale . '.po';
+	$po_changed = sidrena_write_catalog( $po_file, $po );
 
-	echo 'Wrote languages/' . $locale . ".po ({$translated} translated, {$missing} untranslated).\n";
+	echo ( $po_changed ? 'Wrote' : 'Unchanged' ) . ' languages/' . $locale . ".po ({$translated} translated, {$missing} untranslated).\n";
 
 	if ( 'hr_HR' === $locale ) {
 		$mo = sidrena_compile_mo( $translations );
@@ -142,6 +142,41 @@ function sidrena_collect_php_files( $directory ) {
 	sort( $files );
 
 	return $files;
+}
+
+/**
+ * Write a catalog only when its contents changed, ignoring generated dates.
+ *
+ * @param string $path     Catalog path.
+ * @param string $contents New catalog contents.
+ * @return bool Whether the file changed.
+ */
+function sidrena_write_catalog( $path, $contents ) {
+	if ( is_file( $path ) ) {
+		$existing = file_get_contents( $path );
+
+		if ( false !== $existing ) {
+			$normalize_dates = static function ( $catalog ) {
+				return preg_replace_callback(
+					'/"(POT-Creation-Date|PO-Revision-Date): [^"\r\n]*/',
+					static function ( $matches ) {
+						return '"' . $matches[1] . ': <generated>';
+					},
+					$catalog
+				);
+			};
+
+			if ( $normalize_dates( $existing ) === $normalize_dates( $contents ) ) {
+				return false;
+			}
+		}
+	}
+
+	if ( false === file_put_contents( $path, $contents ) ) {
+		throw new RuntimeException( 'Could not write translation catalog: ' . $path );
+	}
+
+	return true;
 }
 
 /**
