@@ -53,6 +53,14 @@ async function login( page, username = 'admin', password = 'password' ) {
 	await page.goto( '/wp-login.php' );
 	await page.fill( '#user_login', username );
 	await page.fill( '#user_pass', password );
+
+	// The login form occasionally resets the focused password input while
+	// wp-login scripts initialize. Confirm both values before submitting.
+	if ( ( await page.locator( '#user_login' ).inputValue() ) !== username || ( await page.locator( '#user_pass' ).inputValue() ) !== password ) {
+		await page.locator( '#user_login' ).fill( username );
+		await page.locator( '#user_pass' ).fill( password );
+	}
+
 	await page.click( '#wp-submit' );
 
 	// A subscriber is not sent to wp-admin: WooCommerce lands them on their
