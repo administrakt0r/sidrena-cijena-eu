@@ -19,7 +19,7 @@ Steps:
      (PHPCompatibilityWP, testVersion 7.4-).
    - Static analysis: PHPStan level 6 via phpstan.neon.dist.
    - JS Lint: ESLint via .eslintrc.js (browser environment, ES6).
-   - Unit tests must stay green (268+ tests / 869+ assertions); if a test encodes a bug,
+   - Unit tests must stay green (301+ tests / 1078+ assertions); if a test encodes a bug,
      fix the implementation, not the test - unless the test contradicts docs/legal-rules.md,
      in which case stop and report it.
 3. Check translations:
@@ -39,7 +39,7 @@ Steps:
    Add a regression test for each gap found.
 5. Finish with clean static gates:
    `composer test:unit && composer lint && composer analyse && npm run lint:js`
-6. Packaging (mandatory after every completed run per AGENTARD/README.md):
+6. Packaging (mandatory after every completed run per AGENTARDS/README.md):
    - Bump version in all 4 places: sidrena-cijena.php (header Version and SIDRENA_CIJENA_VERSION constant),
      readme.txt (Stable tag and = X.Y.Z = changelog), and package.json.
    - Run `tools/build-zip.sh <version>`.

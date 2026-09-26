@@ -13,7 +13,7 @@ creates demo products with anchors and an `akcija` sale
 (`tools/local-seed.php`), seeds the 17 compliance scenarios, generates the
 price lists and prints the URLs that matter (shop, admin, REST, price-list
 files). AI agents working in this codebase must use `./local.sh` /
-`./stoplocal.sh` for any live WordPress work — see `AGENTARD/README.md`.
+`./stoplocal.sh` for any live WordPress work — see `AGENTARDS/README.md`.
 
 ## Prerequisites
 

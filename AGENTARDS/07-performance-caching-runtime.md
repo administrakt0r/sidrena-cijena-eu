@@ -12,7 +12,7 @@ publication gate are legal state — a cached compliance result must never hide 
 ERROR. Keep the plugin working with and without WooCommerce. Commit each item separately
 (perf: / fix:), with tests. PHP 7.4-8.4 only.
 
-Baseline (v1.0.12): 268 unit tests / 869 assertions green — keep green, grow the suite.
+Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in
@@ -71,7 +71,7 @@ Constraints:
 - Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
   with Docker also `npx wp-env clean tests && composer test:integration`.
 
-Release (mandatory per AGENTARD/README.md): bump the version in all 4 places, run
+Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
 `tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
 update docs/improvement-backlog.md (PERF-xx) and docs/release-readiness.md, commit and
 push to origin master.

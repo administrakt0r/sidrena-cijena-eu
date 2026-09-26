@@ -9,10 +9,10 @@ trivial), implement them well, cover every change with tests, and commit atomica
 themes or WooCommerce; price-history tables are append-only legal evidence.
 
 Specialised passes exist — use them instead of improvising when the work matches:
-- Performance: AGENTARD/06-performance-db-queries.md (queries, N+1, indexes),
-  AGENTARD/07-performance-caching-runtime.md (caching, per-request work, assets),
-  AGENTARD/08-performance-export-cron.md (generation pipeline, memory, cron).
-- UI/UX: AGENTARD/09-ui-ux-improvements.md (admin screens, public price list, a11y, i18n).
+- Performance: AGENTARDS/06-performance-db-queries.md (queries, N+1, indexes),
+  AGENTARDS/07-performance-caching-runtime.md (caching, per-request work, assets),
+  AGENTARDS/08-performance-export-cron.md (generation pipeline, memory, cron).
+- UI/UX: AGENTARDS/09-ui-ux-improvements.md (admin screens, public price list, a11y, i18n).
 If you touch those areas here, keep the change small and log the follow-up in
 docs/improvement-backlog.md as a PERF-xx or UX-xx item.
 
@@ -38,7 +38,7 @@ This pass focuses on robustness and compatibility:
      `composer test:unit && composer lint && composer analyse && npm run lint:js`
    - If translation strings were updated, regenerate catalogs:
      `php tools/i18n/make-pot.php --locale=hr_HR` (0 untranslated in languages/hr_HR.po).
-   - Follow the release procedure in AGENTARD/README.md:
+   - Follow the release procedure in AGENTARDS/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
      2. Run `tools/build-zip.sh <version>`.
      3. Verify with `unzip -t versions/<version>/sidrena-cijena.zip`.

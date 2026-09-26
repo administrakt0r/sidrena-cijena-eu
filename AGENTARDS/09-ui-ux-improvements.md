@@ -9,8 +9,12 @@ themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the 
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).
 
-Baseline (v1.0.12): 268 unit tests / 869 assertions green — keep green, grow the suite.
+Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
+
+Status (v1.0.13): work items 1–3 below have shipped as UX-01..UX-03 (see
+docs/improvement-backlog.md and the 1.0.13 entry in docs/release-readiness.md).
+Run this prompt for the remaining items 4–7.
 
 Work items (priority order — read the listed files first, fix what is really there):
 1. Kill raw slugs in the UI. Statuses, log levels, event names, finding severities, sale
@@ -20,7 +24,8 @@ Work items (priority order — read the listed files first, fix what is really t
    (preview table), LogsPage (level badge + event filter options), AuditPage,
    LocationsPage (type column has translated labels already in types()), SpecialSaleMetaBox
    (sale_type options + status) and LegalSettingsPage. Build one shared label resolver on
-   the existing Support\HistoryLabels pattern and use it everywhere. Add unit tests for the
+   the existing Support\Labels pattern (which replaced Support\HistoryLabels) and use it
+   everywhere. Add unit tests for the
    resolver.
 2. Tables and pagination. AuditPage renders log rows with PER_PAGE=50 but no paginate_links
    (older entries unreachable) and prints the whole rule-change history unbounded;
@@ -84,7 +89,7 @@ Gates: `composer test:unit && composer lint && composer analyse && npm run lint:
 with Docker also `npm run test:e2e` (port 8889 only — never point Playwright at 8888) and
 update specs when markup intentionally changes.
 
-Release (mandatory per AGENTARD/README.md): bump the version in all 4 places, run
+Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
 `tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
 update docs/improvement-backlog.md (UX-xx items) and docs/release-readiness.md, commit and
 push to origin master.

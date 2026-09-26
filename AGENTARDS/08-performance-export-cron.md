@@ -13,7 +13,7 @@ checksum/fingerprint reporting, the 30+ day archive retention (max(30, retention
 and the blocking publication gate (FR-007) all stay exactly as they are. Append-only
 price history. PHP 7.4-8.4. Commit each item separately (perf: / fix:), with tests.
 
-Baseline (v1.0.12): 268 unit tests / 869 assertions green — keep green, grow the suite.
+Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in
@@ -67,7 +67,7 @@ Constraints:
   with Docker also `npx wp-env clean tests && composer test:integration` and
   `npm run test:e2e` (port 8889 only).
 
-Release (mandatory per AGENTARD/README.md): bump the version in all 4 places, run
+Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
 `tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena.zip`,
 update docs/improvement-backlog.md (PERF-xx) and docs/release-readiness.md, commit and
 push to origin master.

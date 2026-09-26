@@ -2,14 +2,14 @@
 
 ## 1.0.4
 
-Setup Guide status badges, activation redirect hardening, documentation/spec references cleanup, full AGENTARD prompts refresh, and translation catalogs:
+Setup Guide status badges, activation redirect hardening, documentation/spec references cleanup, full AGENTARDS prompts refresh, and translation catalogs:
 - Unit: 175 tests, 525 assertions passed (`composer test:unit`).
 - Static analysis & linting: PHPStan 106/106 files clean (0 errors), PHPCS 133/133 files clean, ESLint clean (`npm run lint:js`).
 - Integration: 76 tests, 342 assertions passed on `wp-env` with MySQL (`composer test:integration`).
 - Local environment: `./local.sh` exited 0; seeded 17 compliance test scenarios, forced generation, status healthy.
 - Setup Guide checklist: Added dynamic status badges for all 5 steps: step 3 reports recorded anchor counts (`(done: %d recorded)` / `(none recorded)`), step 5 reports stored compliance report status (`(clean)`, `(errors found)`, or `(not run yet)`).
 - Welcome banner hardening: Enhanced `WelcomeBanner::maybe_redirect()` to guard against redirects during bulk activation (`$_GET['activate-multi']`), network admin (`is_network_admin()`), cron runs, and REST requests.
-- AGENTARD prompts refresh: Overhauled `AGENTARD/README.md` and prompts 01 through 05 with current quality gates (including `npm run lint:js`), strict isolation (E2E on port 8889), accurate documentation paths, and mandatory version release workflow.
+- AGENTARDS prompts refresh: Overhauled `AGENTARDS/README.md` and prompts 01 through 05 with current quality gates (including `npm run lint:js`), strict isolation (E2E on port 8889), accurate documentation paths, and mandatory version release workflow.
 - Cleaned up obsolete references to deleted `specs/001-sidrena-cijena-compliance/` and `contracts/` across `src/Database/Schema.php`, `src/Export/PriceListBuilder.php`, `src/Export/CsvWriter.php`, `src/Export/XmlWriter.php`, `docs/development.md`, and `docs/filename-profile.md`.
 - Translations: Full Croatian translation (479/479 strings translated, 0 untranslated in `hr_HR.po` / `sidrena-cijena-hr.mo`).
 - Release archive: Built via `tools/build-zip.sh 1.0.4`, checksum generated, `unzip -t` passed.
@@ -80,7 +80,7 @@ assets, templates, catalogs and documentation; development dependencies are excl
 - **Default Croatian Language**: Interface displays 100% in Croatian across all screens and sites by default.
 - **Bulk Anchor Entry Tools**: Added shop-wide batch setup card to set anchor prices from current catalog prices in one click; added "Select all on this page", "Deselect all", and master header checkbox for instant table selection.
 - **In-Dashboard Documentation**: Added rich Croatian reference screen (`sidrena-cijena-docs`) with direct links from Setup Guide, Welcome Banner, and Dashboard covering legal rules, 08:00 cron automation, CLI commands, developer hooks, and compliance gates.
-- **Packaging Hardening**: Excluded developer notes, internal documentation, AI prompt files (`PROMPT.md`, `AGENTARD/`), and temporary files from the distribution release archive.
+- **Packaging Hardening**: Excluded developer notes, internal documentation, AI prompt files (`PROMPT.md`, `AGENTARDS/`), and temporary files from the distribution release archive.
 - **Quality Gates**: All static gates pass cleanly (PHPUnit 180 tests / 546 assertions, PHPStan 0 errors, PHPCS clean, ESLint clean).
 
 ## Release 1.0.6 (2026-09-26)

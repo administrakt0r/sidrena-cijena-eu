@@ -7,7 +7,7 @@ obligation and the 30-day lowest-price rule for classified sales.
 * Repository: `/home/q/Desktop/wordpressprojects/plugins/sidrena-cijena`
 * Branch `master`, remote `origin https://github.com/administrakt0r/sidrena-cijena`
 * Git author: configured repo-locally as `administrakt0r <markoes3@gmail.com>`
-* Read `AGENTARD/README.md` first — it defines the mandatory workflow and rules.
+* Read `AGENTARDS/README.md` first — it defines the mandatory workflow and rules.
 
 ## Non-negotiable rules
 
@@ -34,7 +34,7 @@ obligation and the 30-day lowest-price rule for classified sales.
 * **CRITICAL:** NEVER run `wp plugin install <zip> --force` inside wp-env (it deletes the bind-mounted repository!).
 * **Clean test DB:** Before running integration tests, run `npx wp-env clean tests`.
 * **CI Workflow location:** CI workflow is maintained in `tools/ci/ci.yml` (ready to copy to `.github/workflows/` when pushing with a token possessing GitHub `workflow` scope).
-* **Current green baseline:** 268+ unit tests / 869+ assertions, 76+ integration tests / 342+ assertions, 28+ E2E tests, PHPStan level 6 clean (0 errors), PHPCS clean, ESLint clean, `./local.sh` exit 0.
+* **Current green baseline:** 301+ unit tests / 1078+ assertions, 77+ integration tests / 349+ assertions, 28 E2E tests, PHPStan level 6 clean (0 errors), PHPCS clean, ESLint clean, `./local.sh` exit 0.
 
 ## Quality Gates
 

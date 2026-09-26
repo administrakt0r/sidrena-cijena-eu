@@ -5,7 +5,7 @@ You are auditing the plugin in the current directory against Croatian legal requ
 and its documentation. Read `docs/legal-rules.md`, `docs/feature-acceptance.md`,
 `docs/price-list-format.md`, `docs/filename-profile.md`, `docs/price-history.md`,
 `docs/operations.md`, and the known-findings record `docs/compliance-audit-2026-09-24.md`
-first. Baseline: 268+ unit tests / 869+ assertions green before you start.
+first. Baseline: 301+ unit tests / 1078+ assertions green before you start.
 
 For each item below, verify the implementation and fix deviations (tests first
 where behaviour changes). Commit each fix separately.
@@ -40,7 +40,7 @@ where behaviour changes). Commit each fix separately.
 
 When deviations or gaps are fixed:
 - Run all static gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`.
-- Follow the release procedure in AGENTARD/README.md: bump version, build zip with `tools/build-zip.sh <version>`,
+- Follow the release procedure in AGENTARDS/README.md: bump version, build zip with `tools/build-zip.sh <version>`,
   verify with `unzip -t`, update docs, commit and push to origin master.
 
 Done when: every compliance rule is backed by passing test coverage, deviations

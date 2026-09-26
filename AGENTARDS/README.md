@@ -1,4 +1,4 @@
-# AGENTARD — AI agent prompt pack for `sidrena-cijena`
+# AGENTARDS — AI agent prompt pack for `sidrena-cijena`
 
 Copy-paste prompts you can run with any AI coding agent (Antigravity, OpenCode, Claude, etc.) to
 audit, cross-check, verify, improve and release this plugin. Run them **in order**; each prompt
@@ -15,11 +15,13 @@ is self-contained, completely up to date, and states its own done-criteria.
 | 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) |
 | 8 | [08-performance-export-cron.md](08-performance-export-cron.md) | Performance 3: generation pipeline, memory, cron/cleanup jobs | Optional (measurements) |
 | 9 | [09-ui-ux-improvements.md](09-ui-ux-improvements.md) | UI/UX: admin screens, public price list, accessibility, i18n consistency | No (E2E optional) |
+| 10 | [10-prompt-drift-check.md](10-prompt-drift-check.md) | Prompt-pack drift audit: keep every prompt file in sync with the codebase | No |
 
 Prompts 6–8 are the performance track (measure first, record the numbers), prompt 9 is the
 UI/UX track; prompt 4 covers everything else. Performance work is logged as `PERF-xx` and
 UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventions: `FIX-`,
-`IMP-`, `REL-`).
+`IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
+session that changes the codebase) to keep every prompt honest.
 
 ## Current green baseline (v1.0.13)
 

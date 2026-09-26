@@ -153,7 +153,7 @@ Review retained records with your data-protection and legal advisers.
 = 1.0.4 =
 * Setup Guide enhancements: dynamic status badges across all five checklist steps, showing recorded anchor counts and compliance scan health.
 * Welcome banner hardening: suppressed activation redirects during bulk plugin activation, network admin, cron, and REST requests.
-* Agentard prompts refresh: comprehensive overhaul of all AI agent workflow prompts in AGENTARD/ with up-to-date quality gates, documentation paths, and release policies.
+* Agentards prompts refresh: comprehensive overhaul of all AI agent workflow prompts in AGENTARDS/ with up-to-date quality gates, documentation paths, and release policies.
 * Cleaned up legacy specification and contract references throughout source code and documentation.
 * Rebuilt translation catalogs with 100% complete Croatian translations (479/479 strings).
 

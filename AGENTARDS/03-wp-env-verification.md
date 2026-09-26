@@ -47,7 +47,7 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    Plugin must continue operating without fatals using the standalone catalog. Re-activate WooCommerce after test.
 7. If any fixes were made:
    - Run all static quality gates (`composer test:unit && composer lint && composer analyse && npm run lint:js`).
-   - Package and release per AGENTARD/README.md (bump version, build zip, verify with unzip -t, commit and push).
+   - Package and release per AGENTARDS/README.md (bump version, build zip, verify with unzip -t, commit and push).
 
 Done when: integration suite passes, E2E suite passes on port 8889, all 7 verification steps pass,
 and any fixes are packaged, committed, and pushed.
