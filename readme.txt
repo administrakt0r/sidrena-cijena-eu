@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.11
+Stable tag: 1.0.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.12 =
+* Correctness: date-only values such as anchor reference dates no longer shift a day on sites west of UTC; the public price list and the price-history table render them in the Croatian `d.m.Y.` format (268 tests, 869 assertions).
+* Dashboard: variable products that inherit a parent-level sale are no longer reported as having no price history, and an empty catalog skips the sale lookup.
+* Accessibility: the applicable-categories field on the sales-location form now has a screen-reader label and well-formed markup.
 
 = 1.0.11 =
 * Robustness: trashing, deleting, or unpublishing a catalog item (standalone item, product, or variation) now flushes the cached price-list responses immediately instead of leaving the removed item visible until the cache expired.
