@@ -463,3 +463,4 @@ filename pattern and the append-only history contract are untouched.
 - Variable products: a parent price range does not display a single anchor; WooCommerce's selected variation HTML carries that variation's own price and dated anchor, including equal-price variations. The variation script updates only the selected product's markup.
 - Translations: 652 strings, 0 untranslated; no source strings changed.
 - Final static gates: `composer test:unit` 310 tests / 1091 assertions; `composer lint` clean (160 files); `composer analyse` no errors (111 files); `npm run lint:js` clean.
+- Archive: `versions/1.0.17/sidrena-cijena.zip`, 299,118 bytes; `unzip -t` reports no errors. SHA-256 `e3eccd3aba523386efbbb4a98b4d542daff6d02328d44a644e96c57daba997ad`.
