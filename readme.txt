@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.13
+Stable tag: 1.0.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.14 =
+* Security: the anchor-price and special-sale meta boxes are now registered only for users holding `manage_sidrena_cijena`. They were the only admin screens that displayed privileged compliance evidence (the recorded anchor price, the applicable reference date and the 30-day lowest price) and offered a submission form without the capability check every other screen applies; the admin-post handlers themselves already verified capability and nonce.
+* Audit: full static audit of the plugin. Every admin action pairs the capability check with a valid nonce, every echo is escaped, every query is parameterized, uploaded and imported paths are restricted to the uploads directory and the system temporary directory by `CsvParser::is_allowed_path()`, log contexts pass `Logger::sanitize_context()`, and the post-activation redirect keeps its bulk-activation, network-admin, cron, AJAX and REST guards.
+* Tests: new regression coverage for the meta box capability gate, plus the first unit tests pinning the `manage_sidrena_cijena` contract (306 tests, 1083 assertions).
 
 = 1.0.13 =
 * Usability: internal slugs are no longer printed in the admin screens; statuses, log levels, log events, finding severities, sale types and import row statuses show translated labels from one shared resolver (301 tests, 1078 assertions).
