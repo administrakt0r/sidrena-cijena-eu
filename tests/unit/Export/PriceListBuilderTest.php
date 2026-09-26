@@ -86,13 +86,19 @@ class BuilderFakeCatalog implements CatalogProvider {
 	}
 
 	/**
-	 * Iterate.
+	 * Iterate, honouring the provider type filter contract.
 	 *
 	 * @param array $args Query args.
 	 * @return \Generator<CatalogItem>
 	 */
 	public function iterate( array $args = array() ) {
+		$type = isset( $args['type'] ) ? (string) $args['type'] : 'all';
+
 		foreach ( $this->items as $item ) {
+			if ( 'all' !== $type && ( $item->is_service() ? 'service' : 'product' ) !== $type ) {
+				continue;
+			}
+
 			yield $item;
 		}
 	}
@@ -341,5 +347,183 @@ class PriceListBuilderTest extends TestCase {
 		$this->assertSame( 0, $result['meta']['count'] );
 		$this->assertSame( 0, $history->latest_map_calls );
 		$this->assertSame( 0, $sales->active_map_calls );
+	}
+
+	/**
+	 * Products sort before services, then by code.
+	 *
+	 * @return void
+	 */
+	public function test_rows_are_sorted_products_first_then_code() {
+		list( $builder ) = $this->builder();
+
+		$result = $builder->build( array( 'id' => 1 ) );
+
+		$this->assertSame(
+			array( 'CAJ-100', 'KAV-250', 'USL-1' ),
+			array_column( $result['items'], 'sifra' )
+		);
+	}
+
+	/**
+	 * The type argument narrows the catalog to services.
+	 *
+	 * @return void
+	 */
+	public function test_type_argument_limits_list_to_services() {
+		list( $builder ) = $this->builder();
+
+		$result = $builder->build(
+			array( 'id' => 1 ),
+			array( 'type' => 'service' )
+		);
+
+		$this->assertSame( array( 'USL-1' ), array_column( $result['items'], 'sifra' ) );
+		$this->assertSame(
+			array(
+				'product' => 0,
+				'service' => 1,
+			),
+			$result['meta']['counts']
+		);
+	}
+
+	/**
+	 * Include mode keeps only the selected categories.
+	 *
+	 * @return void
+	 */
+	public function test_include_mode_filters_categories() {
+		list( $builder ) = $this->builder();
+
+		$result = $builder->build(
+			array(
+				'id'         => 1,
+				'applies_to' => array(
+					'mode'       => 'include',
+					'categories' => array( 'kava' ),
+				),
+			)
+		);
+
+		$this->assertSame( array( 'KAV-250' ), array_column( $result['items'], 'sifra' ) );
+	}
+
+	/**
+	 * Exclude mode drops the selected categories.
+	 *
+	 * @return void
+	 */
+	public function test_exclude_mode_filters_categories() {
+		list( $builder ) = $this->builder();
+
+		$result = $builder->build(
+			array(
+				'id'         => 1,
+				'applies_to' => array(
+					'mode'       => 'exclude',
+					'categories' => array( 'kava' ),
+				),
+			)
+		);
+
+		$this->assertSame( array( 'CAJ-100', 'USL-1' ), array_column( $result['items'], 'sifra' ) );
+	}
+
+	/**
+	 * A variation without its own sale inherits the parent product's sale.
+	 *
+	 * @return void
+	 */
+	public function test_variation_inherits_parent_sale() {
+		$result = $this->variation_build(
+			array(
+				'201:0' => array(
+					'sale_type'   => 'akcija',
+					'sale_name'   => 'Tjedna akcija',
+					'promo_price' => '5.99',
+				),
+			)
+		);
+
+		$row = $result['items'][0];
+
+		$this->assertTrue( $row['poseban_oblik_prodaje'] );
+		$this->assertSame( 'Tjedna akcija', $row['naziv_posebnog_oblika_prodaje'] );
+		$this->assertSame( 11, $row['variation_id'] );
+	}
+
+	/**
+	 * A variation-level sale wins over the parent sale.
+	 *
+	 * @return void
+	 */
+	public function test_variation_sale_wins_over_parent_sale() {
+		$result = $this->variation_build(
+			array(
+				'201:0'  => array(
+					'sale_type'   => 'akcija',
+					'sale_name'   => 'Tjedna akcija',
+					'promo_price' => '5.99',
+				),
+				'201:11' => array(
+					'sale_type'   => 'akcija',
+					'sale_name'   => 'Vikend akcija',
+					'promo_price' => '4.99',
+				),
+			)
+		);
+
+		$this->assertSame( 'Vikend akcija', $result['items'][0]['naziv_posebnog_oblika_prodaje'] );
+	}
+
+	/**
+	 * The fingerprint is stable and tracks anchor reference dates and format.
+	 *
+	 * @return void
+	 */
+	public function test_fingerprint_is_stable_and_reacts_to_changes() {
+		list( $builder ) = $this->builder();
+
+		$result = $builder->build( array( 'id' => 9 ) );
+		$items  = $result['items'];
+		$first  = $builder->fingerprint( $items, array( 'id' => 9 ), 'csv', '2026-10-01' );
+
+		$this->assertSame( $first, $builder->fingerprint( $items, array( 'id' => 9 ), 'csv', '2026-10-01' ) );
+		$this->assertNotSame( $first, $builder->fingerprint( $items, array( 'id' => 9 ), 'xml', '2026-10-01' ) );
+
+		$changed                             = $items;
+		$changed[0]['anchor_reference_date'] = '2025-05-02';
+
+		$this->assertNotSame( $first, $builder->fingerprint( $changed, array( 'id' => 9 ), 'csv', '2026-10-01' ) );
+	}
+
+	/**
+	 * Build a list containing one parent variation item.
+	 *
+	 * @param array<string,array> $sales Sale rows keyed by `product:variation`.
+	 * @return array<mixed>
+	 */
+	protected function variation_build( array $sales ) {
+		$catalog             = new BuilderFakeCatalog();
+		$catalog->items[201] = new CatalogItem(
+			array(
+				'id'            => 201,
+				'variation_id'  => 11,
+				'parent_id'     => 201,
+				'name'          => 'Kava 250g – mljevena',
+				'sku'           => 'KAV-250-M',
+				'regular_price' => '7.49',
+				'sale_price'    => '5.99',
+				'categories'    => array( 'kava' ),
+			)
+		);
+
+		$history = new BuilderFakeHistory();
+
+		$sales_repo        = new BuilderFakeSales();
+		$sales_repo->sales = $sales;
+
+		return ( new PriceListBuilder( $catalog, $history, $sales_repo ) )->build( array( 'id' => 3 ) );
 	}
 }
