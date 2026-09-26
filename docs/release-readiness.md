@@ -464,3 +464,11 @@ filename pattern and the append-only history contract are untouched.
 - Translations: 652 strings, 0 untranslated; no source strings changed.
 - Final static gates: `composer test:unit` 310 tests / 1091 assertions; `composer lint` clean (160 files); `composer analyse` no errors (111 files); `npm run lint:js` clean.
 - Archive: `versions/1.0.17/sidrena-cijena.zip`, 299,118 bytes; `unzip -t` reports no errors. SHA-256 `e3eccd3aba523386efbbb4a98b4d542daff6d02328d44a644e96c57daba997ad`.
+
+## Release 1.0.18 (2026-09-26)
+
+- Fixed Legal rules saves that could re-enter WordPress option sanitization and show an error page. The same settings path handles malformed plugin option payloads without a PHP type error. A browser test changed and saved the legal rule version successfully.
+- Cjenik generation now permits optional catalog findings such as missing SKU and barcode. It still requires a positive current retail price, a dated anchor, and the location data needed for the required filename. Other findings remain in the compliance report and count toward publication warnings. Price-history tables remain append-only.
+- Added nine compact storefront presets with a live preview gallery and size control (40–160%, default 40% scale with a 12 px text floor). Replaced the missing sidebar Dashicon with an SVG anchor icon. WooCommerce product cards hide the anchor by default; each product can opt in through the native Sidrena product tab. Product pages remain visible by default.
+- WordPress.org profile `@titanworks` displays `administrakt0r`; corrected `readme.txt` Contributors to the account username and documented submission and SVN steps in `docs/wordpress-org-publishing.md`.
+- Verification: `composer test:unit` 315 tests / 1103 assertions; PHPCS 164 files clean; PHPStan 114 files with 0 errors; ESLint clean; WordPress integration 82 tests / 374 assertions; Playwright E2E 33/33 passed on the test site. Croatian catalog 663/663 strings translated, 0 untranslated.
