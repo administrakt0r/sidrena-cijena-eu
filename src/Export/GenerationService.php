@@ -287,15 +287,21 @@ class GenerationService {
 	}
 
 	/**
-	 * Only missing retail or anchor evidence prevents a cjenik publication.
-	 * Other compliance findings remain visible in the report and are counted
-	 * as publication warnings.
+	 * Missing retail/anchor evidence and unusable active-promotion references
+	 * prevent a cjenik publication. Other findings remain warnings.
 	 *
 	 * @param array<mixed> $errors Error findings.
 	 * @return array<mixed>
 	 */
 	public static function publication_blockers( array $errors ) {
-		$required = array( 'missing_anchor_price', 'invalid_anchor_date', 'invalid_retail_price' );
+		$required = array(
+			'missing_anchor_price',
+			'invalid_anchor_date',
+			'invalid_retail_price',
+			'missing_sale_type',
+			'missing_30_day_price',
+			'sale_price_not_below_reference',
+		);
 
 		return array_values(
 			array_filter(

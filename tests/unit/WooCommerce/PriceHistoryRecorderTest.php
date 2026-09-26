@@ -299,11 +299,11 @@ class PriceHistoryRecorderTest extends TestCase {
 	}
 
 	/**
-	 * An empty sale price adds no row and keeps previous sale rows valid.
+	 * An empty sale price does not add a closure marker when no sale was recorded.
 	 *
 	 * @return void
 	 */
-	public function test_empty_sale_price_adds_no_row() {
+	public function test_empty_sale_price_does_not_create_an_orphan_closure() {
 		$this->reset_state();
 
 		$GLOBALS['sidrena_test_wc_products'][10] = array(
@@ -343,6 +343,8 @@ class PriceHistoryRecorderTest extends TestCase {
 			'type'          => 'simple',
 			'regular_price' => '42.00',
 			'sale_price'    => '35.00',
+			'price'         => '35.00',
+			'on_sale'       => true,
 		);
 
 		$catalog        = new RecorderCatalogFake();
@@ -365,6 +367,203 @@ class PriceHistoryRecorderTest extends TestCase {
 		);
 		$this->assertContains( 'regular', $types );
 		$this->assertContains( 'sale', $types );
+	}
+
+	/**
+	 * Removing a recorded sale appends one null-price event and repeated saves dedupe it.
+	 *
+	 * @return void
+	 */
+	public function test_sale_removal_appends_one_closure_event() {
+		$this->reset_state();
+
+		$GLOBALS['sidrena_test_wc_products'][10] = array(
+			'id'            => 10,
+			'type'          => 'simple',
+			'regular_price' => '42.00',
+			'sale_price'    => '35.00',
+			'price'         => '35.00',
+			'on_sale'       => true,
+		);
+
+		$catalog        = new RecorderCatalogFake();
+		$catalog->items = array( new CatalogItem( array( 'id' => 10 ) ) );
+		PluginSwap::swap( 'catalog', $catalog );
+
+		$history = new RecorderHistoryFake();
+		PluginSwap::swap( 'history', $history );
+
+		$recorder = new PriceHistoryRecorder();
+		$recorder->capture( 10 );
+
+		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '';
+		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '42.00';
+		$GLOBALS['sidrena_test_wc_products'][10]['on_sale']    = false;
+		$recorder->capture( 10 );
+		$recorder->capture( 10 );
+
+		$sale_rows = array_values(
+			array_filter(
+				$history->rows,
+				static function ( $row ) {
+					return 'sale' === $row['price_type'];
+				}
+			)
+		);
+
+		$this->assertCount( 2, $sale_rows );
+		$this->assertSame( 35.0, $sale_rows[0]['price'] );
+		$this->assertNull( $sale_rows[1]['price'] );
+		$this->assertSame( 'price_interval_closed', $sale_rows[1]['metadata']['event'] );
+	}
+
+	/**
+	 * Scheduled sale boundaries are stored in site time, including DST and the inclusive end date.
+	 *
+	 * @return void
+	 */
+	public function test_scheduled_sale_boundaries_use_site_timezone() {
+		$this->reset_state();
+
+		$GLOBALS['sidrena_test_wc_products'][10] = array(
+			'id'                => 10,
+			'type'              => 'simple',
+			'regular_price'     => '42.00',
+			'sale_price'        => '35.00',
+			'price'             => '35.00',
+			'on_sale'           => true,
+			'date_on_sale_from' => new \DateTimeImmutable( '2026-03-29 01:00:00', new \DateTimeZone( 'UTC' ) ),
+		);
+
+		$catalog        = new RecorderCatalogFake();
+		$catalog->items = array( new CatalogItem( array( 'id' => 10 ) ) );
+		PluginSwap::swap( 'catalog', $catalog );
+
+		$history = new RecorderHistoryFake();
+		PluginSwap::swap( 'history', $history );
+
+		$recorder = new PriceHistoryRecorder();
+		$recorder->begin_scheduled_sale_start( 10 );
+		$recorder->capture( 10 );
+		$recorder->end_scheduled_sale_transition( 10 );
+
+		$sale_row = $history->latest( 10, 0, 'sale' );
+		$this->assertSame( '2026-03-29 03:00:00', $sale_row['valid_from'] );
+
+		$GLOBALS['sidrena_test_wc_products'][10]['on_sale']         = false;
+		$GLOBALS['sidrena_test_wc_products'][10]['price']           = '42.00';
+		$GLOBALS['sidrena_test_wc_products'][10]['date_on_sale_to'] = new \DateTimeImmutable( '2026-03-29 21:59:59', new \DateTimeZone( 'UTC' ) );
+		$recorder->begin_scheduled_sale_end( 10 );
+		$recorder->capture( 10 );
+
+		$closed_row = $history->latest( 10, 0, 'sale' );
+		$this->assertNull( $closed_row['price'] );
+		$this->assertSame( '2026-03-30 00:00:00', $closed_row['valid_from'] );
+	}
+
+	/**
+	 * A scheduled start save does not close the previous sale before WooCommerce updates the active price.
+	 *
+	 * @return void
+	 */
+	public function test_scheduled_start_waits_for_applied_active_price() {
+		$this->reset_state();
+
+		$GLOBALS['sidrena_test_wc_products'][10] = array(
+			'id'                => 10,
+			'type'              => 'simple',
+			'regular_price'     => '42.00',
+			'sale_price'        => '35.00',
+			'price'             => '35.00',
+			'on_sale'           => true,
+			'date_on_sale_from' => new \DateTimeImmutable( '2026-09-01 10:00:00', new \DateTimeZone( 'UTC' ) ),
+		);
+
+		$catalog        = new RecorderCatalogFake();
+		$catalog->items = array( new CatalogItem( array( 'id' => 10 ) ) );
+		PluginSwap::swap( 'catalog', $catalog );
+
+		$history = new RecorderHistoryFake();
+		PluginSwap::swap( 'history', $history );
+
+		$recorder = new PriceHistoryRecorder();
+		$recorder->capture( 10 );
+
+		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '30.00';
+		$recorder->begin_scheduled_sale_start( 10 );
+		$recorder->capture( 10 );
+
+		$sale_rows = array_values(
+			array_filter(
+				$history->rows,
+				static function ( $row ) {
+					return 'sale' === $row['price_type'];
+				}
+			)
+		);
+		$this->assertCount( 1, $sale_rows );
+
+		$GLOBALS['sidrena_test_wc_products'][10]['price'] = '30.00';
+		$recorder->capture( 10 );
+		$recorder->end_scheduled_sale_transition( 10 );
+
+		$sale_rows = array_values(
+			array_filter(
+				$history->rows,
+				static function ( $row ) {
+					return 'sale' === $row['price_type'];
+				}
+			)
+		);
+		$this->assertCount( 2, $sale_rows );
+		$this->assertSame( 30.0, $sale_rows[1]['price'] );
+		$this->assertSame( '2026-09-01 12:00:00', $sale_rows[1]['valid_from'] );
+	}
+
+	/**
+	 * Successive sale reductions on one local day are retained as separate witnessed prices.
+	 *
+	 * @return void
+	 */
+	public function test_records_successive_same_day_sale_reductions() {
+		$this->reset_state();
+
+		$GLOBALS['sidrena_test_wc_products'][10] = array(
+			'id'            => 10,
+			'type'          => 'simple',
+			'regular_price' => '42.00',
+			'sale_price'    => '35.00',
+			'price'         => '35.00',
+			'on_sale'       => true,
+		);
+
+		$catalog        = new RecorderCatalogFake();
+		$catalog->items = array( new CatalogItem( array( 'id' => 10 ) ) );
+		PluginSwap::swap( 'catalog', $catalog );
+
+		$history = new RecorderHistoryFake();
+		PluginSwap::swap( 'history', $history );
+
+		$recorder = new PriceHistoryRecorder();
+		$recorder->capture( 10 );
+		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '30.00';
+		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '30.00';
+		$recorder->capture( 10 );
+		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '25.00';
+		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '25.00';
+		$recorder->capture( 10 );
+
+		$sale_rows = array_values(
+			array_filter(
+				$history->rows,
+				static function ( $row ) {
+					return 'sale' === $row['price_type'];
+				}
+			)
+		);
+
+		$this->assertCount( 3, $sale_rows );
+		$this->assertSame( array( 35.0, 30.0, 25.0 ), array_column( $sale_rows, 'price' ) );
 	}
 
 	/**

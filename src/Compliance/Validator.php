@@ -287,9 +287,14 @@ class Validator {
 	 */
 	public function build_item_context( array $items, array $args = array() ) {
 		$product_ids = array();
+		$woo_ids     = array();
 
 		foreach ( $items as $item ) {
 			$product_ids[] = (int) $item->id;
+
+			if ( 'woocommerce' === $item->source ) {
+				$woo_ids[] = (int) $item->id;
+			}
 		}
 
 		$anchors = $this->history->latest_map( $product_ids, 'anchor' );
@@ -300,12 +305,15 @@ class Validator {
 			$reference_dates[ $item->key() ] = ReferenceDateResolver::resolve( $item );
 		}
 
+		$sale_periods = empty( $woo_ids ) ? array() : $this->history->active_sale_period_map( $woo_ids );
+
 		return array(
 			'args'              => $args,
 			'items'             => $items,
 			'anchors'           => $anchors,
 			'reference_dates'   => $reference_dates,
 			'sales'             => $this->special_sales->active_map(),
+			'sale_periods'      => $sale_periods,
 			'expected_currency' => $this->expected_currency(),
 			'now'               => Dates::now_site()->format( 'Y-m-d H:i:s' ),
 			'today'             => Dates::today(),

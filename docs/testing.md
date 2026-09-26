@@ -70,6 +70,15 @@ the host. If your shell cannot reach the Docker socket, wrap the command in
 running, the containers are stale — see `docs/troubleshooting.md`
 ("wp-env will not start") for the one-line recovery.
 
+The WooCommerce CRUD recorder integration test loads WooCommerce explicitly
+in the WordPress test bootstrap without changing the active plugins for the
+rest of the suite. It also checks open-offer interval identity across sale
+start and closure:
+
+```sh
+SIDRENA_TEST_WOOCOMMERCE=1 composer test:integration -- --filter Test_WooCommerce_Price_History
+```
+
 ## Fixtures
 
 * `tests/fixtures/anchor-import.csv` — import preview/dry-run/commit

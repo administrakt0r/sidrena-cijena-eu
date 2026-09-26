@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-26T18:19:14+00:00\n"
+"POT-Creation-Date: 2026-09-26T22:24:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -258,9 +258,6 @@ msgid "Applicable products"
 msgstr ""
 
 msgid "Applicable reference date"
-msgstr ""
-
-msgid "A promotional price is set without a classified special form of sale. Classify the promotion (for example akcija or sniženje)."
 msgstr ""
 
 msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
@@ -1652,6 +1649,12 @@ msgstr ""
 msgid "The correction could not be stored."
 msgstr ""
 
+msgid "The current promotional price has no matching classified special form of sale. Classify this offer before publishing."
+msgstr ""
+
+msgid "The current promotional price is not below the applicable lowest price from the preceding 30 days. Review the offer and its reference price before publishing."
+msgstr ""
+
 msgid "The default is 40% of the former display size. Text stays at least 12 pixels for readability; increase the size here when needed."
 msgstr ""
 
@@ -1802,7 +1805,7 @@ msgstr ""
 msgid "The selected file cannot be read by the plugin."
 msgstr ""
 
-msgid "The special form of sale has no calculated lowest price of the last 30 days. Recalculate the sale before publishing."
+msgid "The special form of sale has no usable lowest price for the 30-day period before its start. Recalculate the sale and review any applicable legal exception before publishing."
 msgstr ""
 
 msgid "The special sale could not be found."

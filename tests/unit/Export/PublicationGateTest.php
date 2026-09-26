@@ -23,7 +23,6 @@ class PublicationGateTest extends TestCase {
 		$findings = array(
 			array( 'code' => 'missing_sku' ),
 			array( 'code' => 'missing_barcode' ),
-			array( 'code' => 'missing_sale_type' ),
 		);
 
 		$this->assertSame( array(), GenerationService::publication_blockers( $findings ) );
@@ -43,5 +42,21 @@ class PublicationGateTest extends TestCase {
 		);
 
 		$this->assertSame( array_slice( $findings, 1 ), GenerationService::publication_blockers( $findings ) );
+	}
+
+	/**
+	 * An active offer without a usable reference cannot be published.
+	 *
+	 * @return void
+	 */
+	public function test_discounted_offer_reference_findings_block_publication() {
+		$findings = array(
+			array( 'code' => 'missing_sale_type' ),
+			array( 'code' => 'missing_30_day_price' ),
+			array( 'code' => 'sale_price_not_below_reference' ),
+			array( 'code' => 'missing_sku' ),
+		);
+
+		$this->assertSame( array_slice( $findings, 0, 3 ), GenerationService::publication_blockers( $findings ) );
 	}
 }

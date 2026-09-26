@@ -12,7 +12,9 @@ use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
 use SidrenaCijena\Support\Dates;
+use SidrenaCijena\Support\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -81,19 +83,25 @@ class PriceListBuilder {
 			$items[] = $item;
 		}
 
-		$ids = array();
+		$ids     = array();
+		$woo_ids = array();
 
 		foreach ( $items as $item ) {
 			$ids[] = (int) $item->id;
+
+			if ( 'woocommerce' === $item->source ) {
+				$woo_ids[] = (int) $item->id;
+			}
 		}
 
-		$anchors = empty( $ids ) ? array() : $this->history->latest_map( $ids, 'anchor' );
-		$sales   = empty( $items ) ? array() : $this->sales->active_map();
+		$anchors      = empty( $ids ) ? array() : $this->history->latest_map( $ids, 'anchor' );
+		$sales        = empty( $items ) ? array() : $this->sales->active_map();
+		$sale_periods = empty( $woo_ids ) ? array() : $this->history->active_sale_period_map( $woo_ids );
 
 		$rows = array();
 
 		foreach ( $items as $item ) {
-			$rows[] = $this->row( $item, $anchors, $sales );
+			$rows[] = $this->row( $item, $anchors, $sales, $sale_periods );
 		}
 
 		usort( $rows, array( $this, 'compare' ) );
@@ -125,11 +133,12 @@ class PriceListBuilder {
 	 * @param CatalogItem         $item    Item.
 	 * @param array<string,array> $anchors Anchor rows keyed by `product:variation`.
 	 * @param array<string,array> $sales   Active sale rows keyed by `product:variation`.
+	 * @param array<string,array> $periods Active WooCommerce sale periods keyed by `product:variation`.
 	 * @return array<mixed>
 	 */
-	protected function row( CatalogItem $item, array $anchors, array $sales ) {
+	protected function row( CatalogItem $item, array $anchors, array $sales, array $periods = array() ) {
 		$key    = $item->key();
-		$sale   = $this->sale_for( $item, $sales );
+		$sale   = $this->sale_for( $item, $sales, $periods );
 		$anchor = isset( $anchors[ $key ] ) ? $anchors[ $key ] : null;
 
 		$retail = $item->effective_price();
@@ -168,24 +177,45 @@ class PriceListBuilder {
 	 *
 	 * @param CatalogItem         $item  Item.
 	 * @param array<string,array> $sales Sale rows keyed by `product:variation`.
+	 * @param array<string,array> $periods Active WooCommerce sale periods.
 	 * @return array|null
 	 */
-	protected function sale_for( CatalogItem $item, array $sales ) {
-		$key = $item->key();
+	protected function sale_for( CatalogItem $item, array $sales, array $periods = array() ) {
+		$key  = $item->key();
+		$sale = null;
 
 		if ( isset( $sales[ $key ] ) ) {
-			return $sales[ $key ];
-		}
-
-		if ( $item->is_variation() ) {
+			$sale = $sales[ $key ];
+		} elseif ( $item->is_variation() ) {
 			$parent_key = (int) $item->parent_id . ':0';
 
 			if ( isset( $sales[ $parent_key ] ) ) {
-				return $sales[ $parent_key ];
+				$sale = $sales[ $parent_key ];
 			}
 		}
 
-		return null;
+		if ( ! $sale ) {
+			return null;
+		}
+
+		$current = Currency::to_storage( $item->effective_price() );
+
+		$regular     = Currency::to_storage( $item->regular_price );
+		$sale_price  = Currency::to_storage( $item->sale_price );
+		$promotional = null !== $current && null !== $regular && $regular > 0 && $current < $regular;
+
+		if ( ! $promotional && 'woocommerce' === $item->source && null !== $item->current_price && null !== $current && null !== $sale_price ) {
+			$promotional = $current === $sale_price;
+		}
+
+		if ( ! $promotional ) {
+			return null;
+		}
+
+		$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $item->key();
+		$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
+
+		return SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ? $sale : null;
 	}
 
 	/**

@@ -99,6 +99,54 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 			return isset( $this->data['sale_price'] ) ? (string) $this->data['sale_price'] : '';
 		}
+
+		/**
+		 * Current product price.
+		 *
+		 * @param string $context Price context.
+		 * @return string
+		 */
+		public function get_price( $context = 'view' ) {
+			unset( $context );
+
+			return isset( $this->data['price'] ) ? (string) $this->data['price'] : $this->get_regular_price( 'edit' );
+		}
+
+		/**
+		 * Whether WooCommerce currently applies the sale price.
+		 *
+		 * @param string $context Price context.
+		 * @return bool
+		 */
+		public function is_on_sale( $context = 'view' ) {
+			unset( $context );
+
+			return ! empty( $this->data['on_sale'] );
+		}
+
+		/**
+		 * Sale start date.
+		 *
+		 * @param string $context Price context.
+		 * @return mixed
+		 */
+		public function get_date_on_sale_from( $context = 'view' ) {
+			unset( $context );
+
+			return isset( $this->data['date_on_sale_from'] ) ? $this->data['date_on_sale_from'] : null;
+		}
+
+		/**
+		 * Sale end date.
+		 *
+		 * @param string $context Price context.
+		 * @return mixed
+		 */
+		public function get_date_on_sale_to( $context = 'view' ) {
+			unset( $context );
+
+			return isset( $this->data['date_on_sale_to'] ) ? $this->data['date_on_sale_to'] : null;
+		}
 	}
 }
 

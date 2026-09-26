@@ -29,10 +29,32 @@ shipping or coupons.
   summary-block display.
 * `woocommerce_available_variation` — per-variation anchor payload.
 * `woocommerce_store_api_product_data` — block-template coverage.
-* `save_post_product` / variation save hooks — price-change capture into
-  history (`sidrena_cijena_price_changed`).
+* `woocommerce_new_product` / `woocommerce_update_product` and variation
+  equivalents — regular and active sale price observations and the
+  `sidrena_cijena_price_changed` signal. WooCommerce scheduled-sale callbacks
+  and legacy batch hooks record effective start/end boundaries after the
+  price state is applied.
 * `wp_enqueue_scripts` — `assets/css/frontend.css`,
   `assets/js/frontend.js` (variation-price swapping).
+
+The standard WooCommerce admin editor, REST controllers, built-in importer,
+bulk editor and programmatic `WC_Product::save()` path use these CRUD hooks.
+Integrations that change product prices with direct SQL or direct post-meta
+writes bypass WooCommerce CRUD and are unsupported for automatic history
+capture. A sale removal appends a null-price closure observation; prior history
+rows are retained.
+
+An active WooCommerce offer is determined from its current effective price,
+not merely from a saved future sale price. Sale classifications are matched to
+the first captured sale price after the last sale-closure event, including the
+offer start date and starting promotional price. Progressive reductions remain
+part of that offer and keep its original 30-day reference snapshot. After a
+sale ends, the price-list builder stops marking the restored regular price as a
+special sale; a later sale cannot reuse the earlier classification. If a
+discounted item has no matching classification, no positive reference for the
+30 days before that offer, or a current price that is not below the reference,
+cjenik publication is blocked. The plugin does not infer legal exceptions;
+unclear eligibility needs human review.
 
 ## Template functions, shortcode, blocks
 

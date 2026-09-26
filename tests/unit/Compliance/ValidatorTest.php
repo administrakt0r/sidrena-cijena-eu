@@ -214,6 +214,7 @@ class ValidatorTest extends TestCase {
 				'id'            => 30,
 				'regular_price' => 20.0,
 				'sale_price'    => 15.0,
+				'current_price' => 15.0,
 			)
 		);
 		$findings = $this->sale_rules()->missing_sale_type( $this->item_context( array( $item ) ) );
@@ -234,11 +235,15 @@ class ValidatorTest extends TestCase {
 				'id'            => 31,
 				'regular_price' => 20.0,
 				'sale_price'    => 15.0,
+				'current_price' => 15.0,
 			)
 		);
 		$context                          = $this->item_context( array( $item ) );
 		$context['sales'][ $item->key() ] = array(
 			'id'                  => 9,
+			'start_date'          => '2026-09-20',
+			'window_start'        => '2026-08-21',
+			'window_end'          => '2026-09-19',
 			'sale_type'           => 'akcija',
 			'lowest_30_day_price' => null,
 		);
@@ -248,8 +253,106 @@ class ValidatorTest extends TestCase {
 		$this->assertCount( 1, $findings );
 		$this->assertSame( 'missing_30_day_price', $findings[0]->code );
 
-		$context['sales'][ $item->key() ]['lowest_30_day_price'] = 12.5;
+		$context['sales'][ $item->key() ]['lowest_30_day_price'] = 16.0;
 
+		$this->assertSame( array(), $this->sale_rules()->missing_30_day_price( $context ) );
+
+		$context['sales'][ $item->key() ]['window_end'] = '2026-09-18';
+		$this->assertSame( 'missing_30_day_price', $this->sale_rules()->missing_30_day_price( $context )[0]->code );
+	}
+
+	/**
+	 * A scheduled WooCommerce sale is ignored until the effective price changes.
+	 *
+	 * @return void
+	 */
+	public function test_scheduled_sale_metadata_is_not_an_active_promotion() {
+		$item = $this->item(
+			array(
+				'id'            => 32,
+				'source'        => 'woocommerce',
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+				'current_price' => 20.0,
+			)
+		);
+
+		$this->assertSame( array(), $this->sale_rules()->missing_sale_type( $this->item_context( array( $item ) ) ) );
+	}
+
+	/**
+	 * Progressive reductions keep their original classification; a new period does not.
+	 *
+	 * @return void
+	 */
+	public function test_progressive_sale_keeps_reference_but_new_nearby_offer_needs_classification() {
+		$item                             = $this->item(
+			array(
+				'id'            => 33,
+				'source'        => 'woocommerce',
+				'regular_price' => 20.0,
+				'sale_price'    => 12.0,
+				'current_price' => 12.0,
+			)
+		);
+		$context                          = $this->item_context( array( $item ) );
+		$context['sales'][ $item->key() ] = array(
+			'id'                  => 40,
+			'product_id'          => 33,
+			'variation_id'        => null,
+			'start_date'          => '2026-09-20',
+			'window_start'        => '2026-08-21',
+			'window_end'          => '2026-09-19',
+			'promo_price'         => '15.00',
+			'sale_type'           => 'akcija',
+			'lowest_30_day_price' => '16.00',
+		);
+		$context['sale_periods']          = array(
+			'33:0' => array(
+				'valid_from' => '2026-09-20 10:00:00',
+				'price'      => '15.000000',
+			),
+		);
+
+		$rules = $this->sale_rules();
+		$this->assertSame( array(), $rules->missing_sale_type( $context ) );
+		$this->assertSame( array(), $rules->missing_30_day_price( $context ) );
+		$this->assertSame( array(), $rules->sale_price_not_below_reference( $context ) );
+
+		$context['sales'][ $item->key() ]['lowest_30_day_price'] = '12.00';
+		$this->assertSame( 'sale_price_not_below_reference', $rules->sale_price_not_below_reference( $context )[0]->code );
+
+		$context['sale_periods']['33:0'] = array(
+			'valid_from' => '2026-09-25 09:00:00',
+			'price'      => '12.000000',
+		);
+		$this->assertSame( 'missing_sale_type', $rules->missing_sale_type( $context )[0]->code );
+
+		$context['sales'][ $item->key() ]['start_date']      = '2026-09-25';
+		$context['sales'][ $item->key() ]['promo_price']     = '12.00';
+		$context['sale_periods']['33:0']['prior_closure_at'] = '2026-09-25 08:59:59';
+		$this->assertSame( 'missing_sale_type', $rules->missing_sale_type( $context )[0]->code );
+	}
+
+	/**
+	 * A restored regular price ends the active-promotion validation lifecycle.
+	 *
+	 * @return void
+	 */
+	public function test_sale_end_is_not_validated_as_an_active_promotion() {
+		$item                             = $this->item(
+			array(
+				'id'            => 34,
+				'source'        => 'woocommerce',
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+				'current_price' => 20.0,
+			)
+		);
+		$context                          = $this->item_context( array( $item ) );
+		$context['sales'][ $item->key() ] = array( 'lowest_30_day_price' => null );
+
+		$this->assertSame( array(), $this->sale_rules()->missing_sale_type( $context ) );
 		$this->assertSame( array(), $this->sale_rules()->missing_30_day_price( $context ) );
 	}
 

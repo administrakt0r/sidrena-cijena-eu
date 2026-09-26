@@ -25,6 +25,16 @@ require_once $_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'muplugins_loaded',
 	function () {
+		if ( '1' === getenv( 'SIDRENA_TEST_WOOCOMMERCE' ) ) {
+			$woocommerce_plugin = WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
+
+			if ( ! file_exists( $woocommerce_plugin ) ) {
+				throw new RuntimeException( 'WooCommerce is not installed in the integration-test environment.' );
+			}
+
+			require_once $woocommerce_plugin;
+		}
+
 		require dirname( __DIR__, 2 ) . '/sidrena-cijena.php';
 	}
 );

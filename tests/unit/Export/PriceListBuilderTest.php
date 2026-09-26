@@ -150,6 +150,13 @@ class BuilderFakeHistory extends PriceHistoryRepository {
 	public $anchors = array();
 
 	/**
+	 * Open WooCommerce sale periods keyed by `product:variation`.
+	 *
+	 * @var array<string,array>
+	 */
+	public $sale_periods = array();
+
+	/**
 	 * Batched latest lookup.
 	 *
 	 * @param int[]  $product_ids Item IDs.
@@ -185,6 +192,16 @@ class BuilderFakeHistory extends PriceHistoryRepository {
 		++$this->latest_calls;
 
 		return null;
+	}
+
+	/**
+	 * Current open WooCommerce sale periods.
+	 *
+	 * @param int[] $product_ids Product IDs.
+	 * @return array<string,array>
+	 */
+	public function active_sale_period_map( array $product_ids ) {
+		return $this->sale_periods;
 	}
 }
 
@@ -258,6 +275,8 @@ class PriceListBuilderTest extends TestCase {
 				'name'          => 'Čaj 100g',
 				'sku'           => 'CAJ-100',
 				'regular_price' => '4.00',
+				'sale_price'    => '3.20',
+				'current_price' => '3.20',
 				'categories'    => array( 'caj' ),
 			)
 		);
@@ -329,6 +348,78 @@ class PriceListBuilderTest extends TestCase {
 			),
 			$result['meta']['counts']
 		);
+	}
+
+	/**
+	 * Progressive discounts keep their original offer; ended and new offers do not reuse it.
+	 *
+	 * @return void
+	 */
+	public function test_woocommerce_sale_marker_tracks_the_open_offer_lifecycle() {
+		$catalog               = new BuilderFakeCatalog();
+		$catalog->items[102]   = new CatalogItem(
+			array(
+				'id'            => 102,
+				'name'          => 'Čaj 100g',
+				'sku'           => 'CAJ-100',
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+				'current_price' => 12.0,
+				'source'        => 'woocommerce',
+			)
+		);
+		$history               = new BuilderFakeHistory();
+		$history->sale_periods = array(
+			'102:0' => array(
+				'valid_from' => '2026-09-20 10:00:00',
+				'price'      => '15.000000',
+			),
+		);
+		$sales                 = new BuilderFakeSales();
+		$sales->sales          = array(
+			'102:0' => array(
+				'product_id'          => 102,
+				'variation_id'        => null,
+				'sale_type'           => 'akcija',
+				'sale_name'           => 'Akcija',
+				'start_date'          => '2026-09-20',
+				'promo_price'         => '15.00',
+				'lowest_30_day_price' => '16.00',
+			),
+		);
+		$builder               = new PriceListBuilder( $catalog, $history, $sales );
+
+		$result = $builder->build( array( 'id' => 1 ) );
+		$this->assertTrue( $result['items'][0]['poseban_oblik_prodaje'] );
+		$this->assertSame( '16.00', $result['items'][0]['special_sale']['lowest_30_day_price'] );
+
+		$catalog->items[102] = new CatalogItem(
+			array(
+				'id'            => 102,
+				'regular_price' => 20.0,
+				'sale_price'    => 15.0,
+				'current_price' => 20.0,
+				'source'        => 'woocommerce',
+			)
+		);
+		$result              = $builder->build( array( 'id' => 1 ) );
+		$this->assertFalse( $result['items'][0]['poseban_oblik_prodaje'] );
+
+		$catalog->items[102]            = new CatalogItem(
+			array(
+				'id'            => 102,
+				'regular_price' => 20.0,
+				'sale_price'    => 12.0,
+				'current_price' => 12.0,
+				'source'        => 'woocommerce',
+			)
+		);
+		$history->sale_periods['102:0'] = array(
+			'valid_from' => '2026-09-25 09:00:00',
+			'price'      => '12.000000',
+		);
+		$result                         = $builder->build( array( 'id' => 1 ) );
+		$this->assertFalse( $result['items'][0]['poseban_oblik_prodaje'] );
 	}
 
 	/**

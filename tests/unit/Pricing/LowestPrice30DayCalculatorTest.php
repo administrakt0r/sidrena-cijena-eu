@@ -122,6 +122,51 @@ class LowestPrice30DayCalculatorTest extends TestCase {
 	}
 
 	/**
+	 * A null-price closure observation prevents an ended sale from leaking into later windows.
+	 *
+	 * @return void
+	 */
+	public function test_closed_sale_is_not_carried_into_a_later_window() {
+		$history = array(
+			$this->row( 5.00, '2026-08-10', null, 'sale' ),
+			$this->row( null, '2026-08-20', null, 'sale' ),
+			$this->row( 10.00, '2026-08-10', null, 'regular' ),
+		);
+
+		$this->assertSame( 10.0, $this->calculator->calculate( $history, '2026-09-20' ) );
+	}
+
+	/**
+	 * Every price observed on a calendar day remains eligible, including successive reductions.
+	 *
+	 * @return void
+	 */
+	public function test_same_day_sale_reductions_are_all_considered() {
+		$history = array(
+			$this->row( 12.00, '2026-09-10', null, 'regular' ),
+			$this->row( 9.00, '2026-09-10 09:00:00', null, 'sale' ),
+			$this->row( 7.00, '2026-09-10 13:00:00', null, 'sale' ),
+			$this->row( 5.00, '2026-09-10 17:00:00', null, 'sale' ),
+		);
+
+		$this->assertSame( 5.0, $this->calculator->calculate( $history, '2026-10-01' ) );
+	}
+
+	/**
+	 * An earlier same-day price remains eligible when the window begins on the transition day.
+	 *
+	 * @return void
+	 */
+	public function test_price_applied_before_an_intraday_increase_counts_on_that_day() {
+		$history = array(
+			$this->row( 5.00, '2026-09-01 08:00:00', null, 'sale' ),
+			$this->row( 9.00, '2026-09-01 13:00:00', null, 'sale' ),
+		);
+
+		$this->assertSame( 5.0, $this->calculator->calculate( $history, '2026-10-01' ) );
+	}
+
+	/**
 	 * Windows crossing a daylight-saving transition keep 30 calendar days.
 	 *
 	 * @return void
