@@ -85,3 +85,10 @@ sale.
   delimiters with comma decimals (Croatian convention), documented in
   `docs/price-list-format.md`.
 * New items require the merchant to record the price applied on first offer and the first-offer date from business records. The catalog creation date is only a suggestion, not proof. The plugin blocks publication when an anchor is missing, and for post-reference items it accepts a verified first-offer date on or after the statutory baseline; the law does not permit publishing a blank anchor for these items.
+
+The publication gate requires a positive current retail price and a dated
+anchor for each item. Missing catalog identifiers such as SKU or barcode and
+other compliance findings remain visible in the validator but do not prevent
+file generation. A location still needs the components required to form its
+publication filename. Merchants must review the full compliance report before
+using a generated cjenik.

@@ -153,7 +153,7 @@ class GenerationService {
 		}
 
 		$validation = $this->catalog_report( $location_id );
-		$findings   = $validation['errors'];
+		$findings   = self::publication_blockers( $validation['errors'] );
 
 		if ( ! empty( $findings ) ) {
 			$this->record_failure( $location_id, $format, $findings );
@@ -182,7 +182,7 @@ class GenerationService {
 				'rule_version'       => (string) $meta['rule_version'],
 				'validation_summary' => array(
 					'errors'   => 0,
-					'warnings' => (int) $validation['warnings'],
+					'warnings' => (int) $validation['warnings'] + count( $validation['errors'] ) - count( $findings ),
 				),
 				'force'              => ! empty( $args['force'] ),
 			)
@@ -283,6 +283,27 @@ class GenerationService {
 		return array(
 			'errors'   => $errors,
 			'warnings' => $warnings,
+		);
+	}
+
+	/**
+	 * Only missing retail or anchor evidence prevents a cjenik publication.
+	 * Other compliance findings remain visible in the report and are counted
+	 * as publication warnings.
+	 *
+	 * @param array<mixed> $errors Error findings.
+	 * @return array<mixed>
+	 */
+	public static function publication_blockers( array $errors ) {
+		$required = array( 'missing_anchor_price', 'invalid_anchor_date', 'invalid_retail_price' );
+
+		return array_values(
+			array_filter(
+				$errors,
+				static function ( $finding ) use ( $required ) {
+					return isset( $finding['code'] ) && in_array( $finding['code'], $required, true );
+				}
+			)
 		);
 	}
 

@@ -161,6 +161,22 @@ class Test_Publication extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Missing optional catalog identifiers do not block a priced, anchored list.
+	 *
+	 * @return void
+	 */
+	public function test_generation_allows_missing_sku_and_barcode() {
+		$this->create_item( 'Proizvod bez barkoda', '', 6.99 );
+
+		$result = Plugin::instance()->generation()->generate( $this->location_id, 'csv', array( 'force' => true ) );
+
+		$this->assertIsArray( $result );
+		$this->assertSame( 'published', $result['publication']['status'] );
+		$this->assertSame( 1, $result['item_count'] );
+		wp_delete_file( (string) $result['publication']['path'] );
+	}
+
+	/**
 	 * Unchanged content is not republished; the current file stays available.
 	 *
 	 * @return void

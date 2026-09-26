@@ -12,6 +12,9 @@
 
 ## Price list is stale or missing
 
+* Missing barcode or SKU is reported by the compliance check but no longer
+  stops cjenik generation. A missing current price or dated anchor still
+  blocks publication. Review other findings even when a file is generated.
 * Check `Price lists`: last published time, next scheduled run and the
   per-file validation summary.
 * A warning notice appears on all admin screens when daily generation is
