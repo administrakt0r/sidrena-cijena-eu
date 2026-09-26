@@ -410,6 +410,10 @@ if ( ! function_exists( 'update_option' ) ) {
 	 * @return bool
 	 */
 	function update_option( $option, $value ) {
+		if ( isset( $GLOBALS['sidrena_test_option_sanitizers'][ $option ] ) ) {
+			$value = call_user_func( $GLOBALS['sidrena_test_option_sanitizers'][ $option ], $value );
+		}
+
 		$GLOBALS['sidrena_test_options'][ $option ] = $value;
 		return true;
 	}

@@ -138,6 +138,27 @@ class ReferenceDateResolverTest extends TestCase {
 	}
 
 	/**
+	 * Settings API sanitization must leave the option write to WordPress.
+	 *
+	 * @return void
+	 */
+	public function test_rule_sanitizer_does_not_recursively_save_the_option() {
+		$GLOBALS['sidrena_test_option_sanitizers'][ RuleConfig::OPTION ] = array( RuleConfig::class, 'sanitize' );
+
+		try {
+			$sanitized = RuleConfig::sanitize( array( 'general_reference_date' => '2027-01-01' ) );
+			$this->assertSame( RuleConfig::DEFAULT_GENERAL_DATE, RuleConfig::get( 'general_reference_date' ) );
+			$this->assertSame( '2027-01-01', $sanitized['general_reference_date'] );
+			$this->assertCount( 1, RuleConfig::history() );
+
+			RuleConfig::update( array( 'legacy_enabled' => false ), 7, 'Test change' );
+			$this->assertFalse( RuleConfig::get( 'legacy_enabled' ) );
+		} finally {
+			unset( $GLOBALS['sidrena_test_option_sanitizers'][ RuleConfig::OPTION ] );
+		}
+	}
+
+	/**
 	 * The rule identifier helper matches resolve().
 	 *
 	 * @return void

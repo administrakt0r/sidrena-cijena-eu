@@ -33,6 +33,7 @@ final class Settings {
 			'currency_display'         => 'symbol',
 			'display_location'         => 'price_html',
 			'product_display_style'    => 'plain',
+			'display_size'             => 40,
 			'display_priority'         => 20,
 			'display_product_pages'    => true,
 			'display_archives'         => true,
@@ -154,12 +155,16 @@ final class Settings {
 	/**
 	 * Sanitize a settings array submitted through the Settings API.
 	 *
-	 * @param array<mixed> $input Raw input.
+	 * @param mixed $input Raw input.
 	 * @return array<mixed>
 	 */
-	public static function sanitize( array $input ) {
+	public static function sanitize( $input ) {
 		$old    = self::all();
 		$output = $old;
+
+		if ( ! is_array( $input ) ) {
+			return $old;
+		}
 
 		if ( isset( $input['anchor_label'] ) ) {
 			$output['anchor_label'] = sanitize_text_field( (string) $input['anchor_label'] );
@@ -177,8 +182,12 @@ final class Settings {
 			$output['display_location'] = $input['display_location'];
 		}
 
-		if ( isset( $input['product_display_style'] ) && in_array( $input['product_display_style'], array( 'plain', 'badge', 'card' ), true ) ) {
+		if ( isset( $input['product_display_style'] ) && is_string( $input['product_display_style'] ) && array_key_exists( $input['product_display_style'], DisplayStyles::presets() ) ) {
 			$output['product_display_style'] = $input['product_display_style'];
+		}
+
+		if ( isset( $input['display_size'] ) ) {
+			$output['display_size'] = min( 160, max( 40, (int) $input['display_size'] ) );
 		}
 
 		if ( isset( $input['display_priority'] ) ) {

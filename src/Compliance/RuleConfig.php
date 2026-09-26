@@ -18,6 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * Reads and writes the `sidrena_cijena_rule_config` option.
  */
 final class RuleConfig {
+	/**
+	 * Guard the Settings API callback during an explicit update.
+	 *
+	 * @var bool
+	 */
+	private static $updating = false;
 
 	/**
 	 * Option name.
@@ -97,7 +103,16 @@ final class RuleConfig {
 	 * @return array Updated configuration.
 	 */
 	public static function update( array $values, $user_id = null, $reason = '' ) {
-		return self::apply( $values, $user_id, $reason );
+		$new            = self::apply( $values, $user_id, $reason );
+		self::$updating = true;
+
+		try {
+			update_option( self::OPTION, $new, false );
+		} finally {
+			self::$updating = false;
+		}
+
+		return $new;
 	}
 
 	/**
@@ -107,6 +122,10 @@ final class RuleConfig {
 	 * @return array<mixed>
 	 */
 	public static function sanitize( $input ) {
+		if ( self::$updating ) {
+			return (array) $input;
+		}
+
 		return self::apply( (array) $input, null, '' );
 	}
 
@@ -163,8 +182,6 @@ final class RuleConfig {
 		if ( null === $user_id ) {
 			$user_id = function_exists( 'get_current_user_id' ) ? get_current_user_id() : 0;
 		}
-
-		update_option( self::OPTION, $new, false );
 
 		foreach ( $changed as $key ) {
 			self::append_history(

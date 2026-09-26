@@ -93,6 +93,28 @@ class SettingsTest extends TestCase {
 	}
 
 	/**
+	 * Malformed settings payloads keep the last safe values.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_handles_non_array_payload() {
+		$this->assertSame( Settings::all(), Settings::sanitize( 'invalid' ) );
+	}
+
+	/**
+	 * Presets and size remain in their supported ranges.
+	 *
+	 * @return void
+	 */
+	public function test_styling_sanitization() {
+		$this->assertSame( 40, Settings::defaults()['display_size'] );
+		$this->assertSame( 'pill', Settings::sanitize( array( 'product_display_style' => 'pill' ) )['product_display_style'] );
+		$this->assertSame( 160, Settings::sanitize( array( 'display_size' => 300 ) )['display_size'] );
+		$this->assertSame( 40, Settings::sanitize( array( 'display_size' => 0 ) )['display_size'] );
+		$this->assertSame( 'plain', Settings::sanitize( array( 'product_display_style' => array( 'evil' ) ) )['product_display_style'] );
+	}
+
+	/**
 	 * Sanitization rejects invalid deadline values.
 	 *
 	 * @return void
