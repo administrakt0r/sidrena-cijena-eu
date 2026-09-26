@@ -145,7 +145,7 @@ class LocationsPage {
 		}
 
 		echo '</select>';
-		echo '<p><input type="text" class="regular-text" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" />';
+		echo '<p><input type="text" class="regular-text" id="sidrena-location-categories" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" aria-label="' . esc_attr__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Formats', 'sidrena-cijena' ) . '</th><td>';
@@ -210,7 +210,7 @@ class LocationsPage {
 			__( 'Last published', 'sidrena-cijena' ),
 			__( 'Actions', 'sidrena-cijena' ),
 		) as $heading ) {
-			echo '<th>' . esc_html( $heading ) . '</th>';
+			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
@@ -309,6 +309,8 @@ class LocationsPage {
 			self::redirect( 'error', __( 'The location could not be saved.', 'sidrena-cijena' ) );
 		}
 
+		Plugin::instance()->flush_caches();
+
 		self::redirect( 'success', __( 'Location saved.', 'sidrena-cijena' ) );
 	}
 
@@ -338,10 +340,13 @@ class LocationsPage {
 
 		if ( ! empty( $retained ) ) {
 			$locations->update( $id, array( 'active' => 0 ) );
+			Plugin::instance()->flush_caches();
 			self::redirect( 'success', __( 'The location has published price lists, so it was deactivated instead of deleted.', 'sidrena-cijena' ) );
 		}
 
 		$locations->delete( $id );
+
+		Plugin::instance()->flush_caches();
 
 		self::redirect( 'success', __( 'Location deleted.', 'sidrena-cijena' ) );
 	}

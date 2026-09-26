@@ -88,7 +88,7 @@ class PriceListBuilder {
 		}
 
 		$anchors = empty( $ids ) ? array() : $this->history->latest_map( $ids, 'anchor' );
-		$sales   = $this->sales->active_map();
+		$sales   = empty( $items ) ? array() : $this->sales->active_map();
 
 		$rows = array();
 
@@ -103,10 +103,8 @@ class PriceListBuilder {
 			'service' => 0,
 		);
 
-		foreach ( $rows as $row ) {
-			if ( isset( $counts[ $row['vrsta'] ] ) ) {
-				++$counts[ $row['vrsta'] ];
-			}
+		foreach ( $items as $item ) {
+			++$counts[ $item->is_service() ? 'service' : 'product' ];
 		}
 
 		return array(

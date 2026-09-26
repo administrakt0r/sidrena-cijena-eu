@@ -200,6 +200,46 @@ class PriceHistoryRepository {
 	}
 
 	/**
+	 * Which of several items already have a record of a type.
+	 *
+	 * One query for the whole batch, keyed by `product:variation`, to avoid an
+	 * existence check per catalog item on large shops.
+	 *
+	 * @param int[]  $product_ids Item IDs.
+	 * @param string $price_type  Price type.
+	 * @return array<string,bool> Map of `product:variation` => true.
+	 */
+	public function exists_map( array $product_ids, $price_type ) {
+		global $wpdb;
+
+		$product_ids = array_values( array_unique( array_filter( array_map( 'intval', $product_ids ) ) ) );
+
+		if ( empty( $product_ids ) ) {
+			return array();
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
+		$params       = array_merge( array( $price_type ), $product_ids );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
+		$sql = $wpdb->prepare(
+			"SELECT DISTINCT product_id, variation_id FROM {$this->table} WHERE price_type = %s AND product_id IN ({$placeholders})",
+			$params
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results( $sql, ARRAY_A );
+
+		$map = array();
+
+		foreach ( (array) $rows as $row ) {
+			$map[ (int) $row['product_id'] . ':' . (int) $row['variation_id'] ] = true;
+		}
+
+		return $map;
+	}
+
+	/**
 	 * Query records.
 	 *
 	 * Supported args: `product_id`, `variation_id`, `price_type`, `source`,
