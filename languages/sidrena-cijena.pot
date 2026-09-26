@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 1.0.10\n"
+"Project-Id-Version: Sidrena cijena 1.0.13\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-26T02:14:40+00:00\n"
+"POT-Creation-Date: 2026-09-26T11:36:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,6 +33,9 @@ msgid "%d row(s) would overwrite existing anchor records. Confirm overwriting to
 msgstr ""
 
 msgid "%s - Sidrena cijena"
+msgstr ""
+
+msgid "%s item(s)"
 msgstr ""
 
 msgid "(clean)"
@@ -317,6 +320,9 @@ msgstr ""
 msgid "Cancel editing"
 msgstr ""
 
+msgid "Cancelled"
+msgstr ""
+
 msgid "Catalog item"
 msgstr ""
 
@@ -341,6 +347,9 @@ msgstr ""
 msgid "Choose a CSV file to import."
 msgstr ""
 
+msgid "Choose a price type."
+msgstr ""
+
 msgid "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
 msgstr ""
 
@@ -356,6 +365,12 @@ msgstr ""
 msgid "Cjenici se moraju objaviti prije 08:00 sati svakog dana:"
 msgstr ""
 
+msgid "Cleanup"
+msgstr ""
+
+msgid "Clearance (rasprodaja)"
+msgstr ""
+
 msgid "Code"
 msgstr ""
 
@@ -366,6 +381,9 @@ msgid "Compliance check"
 msgstr ""
 
 msgid "Compliance check finished: %1$d errors and %2$d warnings."
+msgstr ""
+
+msgid "Compliance findings"
 msgstr ""
 
 msgid "Control when daily price lists are generated, how long publications and logs are kept, and what happens to compliance data when the plugin is uninstalled. Deactivation never deletes data."
@@ -485,6 +503,9 @@ msgstr ""
 msgid "Dry run finished. %d row(s) would be imported; nothing was written."
 msgstr ""
 
+msgid "Duplicate"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -503,13 +524,34 @@ msgstr ""
 msgid "End date (optional)"
 msgstr ""
 
+msgid "Ended"
+msgstr ""
+
+msgid "Enter a correction reason."
+msgstr ""
+
+msgid "Enter a facility identifier."
+msgstr ""
+
+msgid "Enter a name."
+msgstr ""
+
 msgid "Enter anchors"
+msgstr ""
+
+msgid "Enter a product ID."
 msgstr ""
 
 msgid "Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically."
 msgstr ""
 
+msgid "Enter the new price."
+msgstr ""
+
 msgid "Entity"
+msgstr ""
+
+msgid "Error"
 msgstr ""
 
 msgid "Event"
@@ -528,6 +570,9 @@ msgid "Existing anchor records are never overwritten silently: rows that would r
 msgstr ""
 
 msgid "Existing price history sources"
+msgstr ""
+
+msgid "Expired"
 msgstr ""
 
 msgid "Expires"
@@ -558,6 +603,9 @@ msgid "Facility identifier"
 msgstr ""
 
 msgid "Failed"
+msgstr ""
+
+msgid "Failed generation"
 msgstr ""
 
 msgid "Failed publications"
@@ -623,6 +671,9 @@ msgstr ""
 msgid "Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately."
 msgstr ""
 
+msgid "Generated"
+msgstr ""
+
 msgid "Generate now"
 msgstr ""
 
@@ -633,6 +684,9 @@ msgid "Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta."
 msgstr ""
 
 msgid "Historical price"
+msgstr ""
+
+msgid "History correction"
 msgstr ""
 
 msgid "Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila."
@@ -656,7 +710,16 @@ msgstr ""
 msgid "Import finished: %1$d inserted, %2$d overwritten, %3$d skipped."
 msgstr ""
 
+msgid "Import preview"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
 msgid "Inline, next to the price"
+msgstr ""
+
+msgid "Invalid"
 msgstr ""
 
 msgid "Ispisuje status dodatka: broj artikala, sidrenih cijena, lokacija i zadnju objavu."
@@ -669,6 +732,9 @@ msgid "Items"
 msgstr ""
 
 msgid "Items with no price history"
+msgstr ""
+
+msgid "Items without an anchor price"
 msgstr ""
 
 msgid "Item type"
@@ -710,6 +776,9 @@ msgstr ""
 msgid "Kuka sidrena_cijena_daily_event planira se u vremenskoj zoni Europe/Zagreb tako da generira i objavi cjenik prije 08:00 sati ujutro."
 msgstr ""
 
+msgid "Kuke za programere"
+msgstr ""
+
 msgid "Last generation failed:"
 msgstr ""
 
@@ -740,6 +809,9 @@ msgstr ""
 msgid "Legal-rule version"
 msgstr ""
 
+msgid "Legal rule change history"
+msgstr ""
+
 msgid "Legal rule changes"
 msgstr ""
 
@@ -767,6 +839,9 @@ msgstr ""
 msgid "Location saved."
 msgstr ""
 
+msgid "Log entries"
+msgstr ""
+
 msgid "Log retention (days)"
 msgstr ""
 
@@ -786,6 +861,12 @@ msgid "Manage locations"
 msgstr ""
 
 msgid "Manual entry"
+msgstr ""
+
+msgid "Manual generation"
+msgstr ""
+
+msgid "Manual run"
 msgstr ""
 
 msgid "Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id."
@@ -995,6 +1076,12 @@ msgstr ""
 msgid "Otvori unos sidrenih cijena"
 msgstr ""
 
+msgid "Page"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
 msgid "Period"
 msgstr ""
 
@@ -1043,6 +1130,9 @@ msgstr ""
 msgid "Price history is append-only. Corrections add a new record that references the original; nothing is overwritten or deleted."
 msgstr ""
 
+msgid "Price history records"
+msgstr ""
+
 msgid "Price lists"
 msgstr ""
 
@@ -1053,6 +1143,9 @@ msgid "Price list with the anchor price"
 msgstr ""
 
 msgid "Price per unit of measure"
+msgstr ""
+
+msgid "Price reduction (snizenje)"
 msgstr ""
 
 msgid "Prices include tax"
@@ -1091,7 +1184,13 @@ msgstr ""
 msgid "Proizvodi koji se prvi put objave dok je dodatak aktivan automatski bilježe cijenu prve ponude i taj datum kao svoju sidrenu cijenu."
 msgstr ""
 
+msgid "Promotion (akcija)"
+msgstr ""
+
 msgid "Promotional price"
+msgstr ""
+
+msgid "Publication"
 msgstr ""
 
 msgid "Publication and lifecycle"
@@ -1100,10 +1199,16 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
+msgid "Published price lists"
+msgstr ""
+
 msgid "Published price lists for %s."
 msgstr ""
 
 msgid "Reason"
+msgstr ""
+
+msgid "Recent legal rule changes"
 msgstr ""
 
 msgid "Recent publications"
@@ -1130,6 +1235,9 @@ msgstr ""
 msgid "Recorded for"
 msgstr ""
 
+msgid "Recorded special sales"
+msgstr ""
+
 msgid "Records"
 msgstr ""
 
@@ -1146,6 +1254,9 @@ msgid "Reference dates and legal rules"
 msgstr ""
 
 msgid "Referentni datum"
+msgstr ""
+
+msgid "Referentni datumi po kategorijama"
 msgstr ""
 
 msgid "Regular price"
@@ -1187,6 +1298,9 @@ msgstr ""
 msgid "Sale price"
 msgstr ""
 
+msgid "Sales location"
+msgstr ""
+
 msgid "Sales location: %1$s. Rule version: %2$s. Generated: %3$s."
 msgstr ""
 
@@ -1202,10 +1316,22 @@ msgstr ""
 msgid "Save location"
 msgstr ""
 
+msgid "Scheduled"
+msgstr ""
+
+msgid "Scheduled generation"
+msgstr ""
+
+msgid "Scheduled run"
+msgstr ""
+
 msgid "Search"
 msgstr ""
 
 msgid "Search catalog items"
+msgstr ""
+
+msgid "Seasonal reduction (sezonsko_snizenje)"
 msgstr ""
 
 msgid "Select %s"
@@ -1244,10 +1370,19 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Settings change"
+msgstr ""
+
 msgid "Setup Guide"
 msgstr ""
 
 msgid "Setup is marked complete. Reopen it any time you add locations or categories."
+msgstr ""
+
+msgid "Setup marked as complete."
+msgstr ""
+
+msgid "Setup reopened."
 msgstr ""
 
 msgid "Severity"
@@ -1370,10 +1505,16 @@ msgstr ""
 msgid "Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored."
 msgstr ""
 
+msgid "Superseded"
+msgstr ""
+
 msgid "system"
 msgstr ""
 
 msgid "System"
+msgstr ""
+
+msgid "Table pagination"
 msgstr ""
 
 msgid "Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes."
@@ -1613,6 +1754,9 @@ msgstr ""
 msgid "Unavailable"
 msgstr ""
 
+msgid "Unchanged"
+msgstr ""
+
 msgid "Unclassified promotions"
 msgstr ""
 
@@ -1652,7 +1796,13 @@ msgstr ""
 msgid "Valid"
 msgstr ""
 
+msgid "Validated"
+msgstr ""
+
 msgid "Validation errors"
+msgstr ""
+
+msgid "Validation failure"
 msgstr ""
 
 msgid "Validation findings"
@@ -1679,6 +1829,9 @@ msgstr ""
 msgid "View the full price history"
 msgstr ""
 
+msgid "Warning"
+msgstr ""
+
 msgid "Webshop"
 msgstr ""
 
@@ -1691,10 +1844,16 @@ msgstr ""
 msgid "When"
 msgstr ""
 
+msgid "Will overwrite"
+msgstr ""
+
 msgid "WordPress in Europe — premium WordPress hosting, start free."
 msgstr ""
 
 msgid "Working-day deadline in 24-hour site time (default 08:00)."
+msgstr ""
+
+msgid "WP-CLI naredbe"
 msgstr ""
 
 msgid "XML"
