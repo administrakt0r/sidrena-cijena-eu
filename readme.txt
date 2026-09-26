@@ -1,5 +1,5 @@
 === Sidrena cijena - Croatian Anchor Price Compliance ===
-Contributors: administrakt0r
+Contributors: titanworks
 Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1

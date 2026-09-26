@@ -61,6 +61,6 @@ test.describe('WooCommerce product editor integration', () => {
 		const menu = page.locator('#toplevel_page_sidrena-cijena > a');
 		await expect(menu).toBeVisible();
 		await expect(menu).toContainText('Sidrena cijena');
-		await expect(menu.locator('.dashicons-anchor')).toBeAttached();
+		await expect(menu.locator('.wp-menu-image')).toHaveAttribute('style', /data:image\/svg\+xml;base64,/);
 	});
 });
