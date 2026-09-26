@@ -284,3 +284,38 @@ untouched, and `docs/legal-rules.md` is unchanged.
   `5f49169de618df4defce6c96ea692bb8d7af41b267d298c41367ee5d78146b3d`.
 
 
+## Release 1.0.12 (2026-09-26)
+
+Improvement pass: timezone-safe date-only rendering, dashboard accuracy for
+variable products, and an accessible location-form fix. No legal semantics
+were changed: reference dates, the 30-day window, the filename pattern,
+retention and the append-only history are untouched, and
+`docs/legal-rules.md` is unchanged. No translatable strings were added or
+changed, so the Croatian catalogs were not regenerated.
+
+- **Correctness**: new `Dates::format_date_display()` renders date-only values
+  (`Y-m-d`) as the Croatian `d.m.Y.` format without a timestamp conversion.
+  Previously the public price list passed the reference date through
+  `strtotime()` and `wp_date()`, so sites west of UTC displayed the previous
+  calendar day; the price-history table now uses the same helper. The unit
+  `wp_timezone()` stub honours an overridable `$GLOBALS['sidrena_test_timezone']`
+  so the regression is pinned with an `America/New_York` case.
+- **Dashboard**: `DashboardPage::aggregate()` resolves a variation's inherited
+  parent sale before counting "Items with no price history", so variable
+  products with a parent-level sale are no longer reported as missing history;
+  an empty catalog now skips the sale lookup entirely. New
+  `DashboardPageTest` pins the two batched `latest_map()` calls and the single
+  `active_map()` call plus the classification counters.
+- **Accessibility (Croatian-first)**: the applicable-categories field on the
+  sales-location form uses a screen-reader label and well-formed markup
+  instead of an unclosed element with an inline `aria-label`; a new
+  `LocationsPageTest` asserts every control has a matching label.
+- **Tests**: `PriceListBuilderTest` also covers the `type` argument,
+  include/exclude category modes, variation sale inheritance and precedence,
+  row ordering and fingerprint stability. Unit suite 253/807 → 268/869.
+- **Quality gates**: PHPStan 108/108 clean; PHPCS 150/150 clean; ESLint clean.
+- **Archive**: `tools/build-zip.sh 1.0.12` from source commit `66df7f1`;
+  `unzip -t` reports no errors; 284,421 bytes (278K). SHA-256
+  `fc24a6a380ee5ed974bcdfbb0b036c837f4e219e23a295e784f4a570a0ecb560`.
+
+
