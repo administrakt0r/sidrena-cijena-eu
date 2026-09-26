@@ -24,10 +24,20 @@
 - Live smoke checks: the demo shop and archive returned HTTP 200; the archive
   showed dates and CSV/XML links; the footer contained the archive link; the
   WordPress sitemap index contained the archive provider URL.
-- Release archive and final package-only Plugin Check evidence will be recorded
-  here after building the committed 2.0.0 package. See the private owner note at
-  `docs/wordpress-org-upload-2.0.0.md` for submission steps; it is excluded
-  from Git and from the ZIP.
+- Built `versions/2.0.0/sidrena-cijena-eu.zip` from committed files with
+  `tools/build-zip.sh 2.0.0`. The archive has the `sidrena-cijena-eu/` root;
+  `unzip -t` and `SHA256SUMS.txt` verification passed. The package excludes
+  development and owner-only documentation.
+- Plugin Check 2.1.0 scanned the exact ZIP contents in WordPress 7.1.2 with
+  `--slug=sidrena-cijena-eu`: **0 errors, 63 warnings**. There are no
+  text-domain or package-slug mismatch findings. Remaining warnings are
+  advisory custom-table query/cache notices, prepared-query analyzer warnings
+  for parameter arrays and internal SQL fragments, and WordPress VIP caution
+  notices for intentional catalog exclusions. The private owner note records
+  the counts and review basis for each category.
+- See the locally excluded owner note at `docs/wordpress-org-upload-2.0.0.md`
+  for submission steps. It and the Plugin Check CSV are excluded from Git and
+  from the ZIP.
 
 ## 1.0.4
 
