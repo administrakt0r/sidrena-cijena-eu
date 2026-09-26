@@ -34,7 +34,7 @@ obligation and the 30-day lowest-price rule for classified sales.
 * **CRITICAL:** NEVER run `wp plugin install <zip> --force` inside wp-env (it deletes the bind-mounted repository!).
 * **Clean test DB:** Before running integration tests, run `npx wp-env clean tests`.
 * **CI Workflow location:** CI workflow is maintained in `tools/ci/ci.yml` (ready to copy to `.github/workflows/` when pushing with a token possessing GitHub `workflow` scope).
-* **Current green baseline:** 175+ unit tests, 76 integration tests, PHPStan level 6 clean (0 errors), PHPCS clean, ESLint clean, `./local.sh` exit 0.
+* **Current green baseline:** 268+ unit tests / 869+ assertions, 76+ integration tests / 342+ assertions, 28+ E2E tests, PHPStan level 6 clean (0 errors), PHPCS clean, ESLint clean, `./local.sh` exit 0.
 
 ## Quality Gates
 
@@ -56,11 +56,16 @@ npm run test:e2e            # Playwright E2E on port 8889
 
 ## Where the work is tracked
 
-* `docs/improvement-backlog.md` — tracks completed compliance fixes (FIX-01..12), competitor improvements (IMP-01..12), and public release items (REL-01..09).
+* `docs/improvement-backlog.md` — tracks completed compliance fixes (FIX-01..12), competitor improvements (IMP-01..12), public release items (REL-01..14), performance items (PERF-xx) and UI/UX items (UX-xx).
 * `docs/release-readiness.md` — records verification notes and gate results for every shipped version.
 * `completion.md` — completion plan and release status.
 
 ## Work queue
+
+For focused passes use the dedicated prompts instead of improvising:
+performance — [06](06-performance-db-queries.md) (queries/indexes), [07](07-performance-caching-runtime.md)
+(caching/runtime/assets), [08](08-performance-export-cron.md) (generation/memory/cron);
+UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and their own done-criteria.
 
 1. **REL-03 — WordPress.org submission readiness:**
    - Review `readme.txt` against WordPress.org plugin directory requirements.

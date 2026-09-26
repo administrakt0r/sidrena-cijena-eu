@@ -21,12 +21,12 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    Then run the integration suite:
    `composer test:integration`
    (or `npx wp-env run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration`)
-   Must pass 100% (76+ tests, 340+ assertions).
+   Must pass 100% (76+ tests, 342+ assertions).
 4. End-to-End testing:
    Run Playwright tests exclusively against the port 8889 test instance:
    `npm run test:e2e`
    (Do NOT point Playwright at the 8888 demo shop).
-5. 7-point live verification checklist (per PROMPT.md):
+5. 7-point live verification checklist:
    - 1. Install & Onboarding flow: Activation redirects to Setup Guide (wp-admin/admin.php?page=sidrena-cijena-setup).
         Welcome banner shows once with author project links and is dismissible. "Mark setup complete" dismisses it.
    - 2. Anchor price display: Open product page; reference date price and label render next to price

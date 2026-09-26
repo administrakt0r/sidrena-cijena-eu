@@ -4,7 +4,8 @@
 You are auditing the plugin in the current directory against Croatian legal requirements
 and its documentation. Read `docs/legal-rules.md`, `docs/feature-acceptance.md`,
 `docs/price-list-format.md`, `docs/filename-profile.md`, `docs/price-history.md`,
-and `docs/operations.md` first.
+`docs/operations.md`, and the known-findings record `docs/compliance-audit-2026-09-24.md`
+first. Baseline: 268+ unit tests / 869+ assertions green before you start.
 
 For each item below, verify the implementation and fix deviations (tests first
 where behaviour changes). Commit each fix separately.

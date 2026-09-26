@@ -1,42 +1,50 @@
-# Prompt 4 — Improvement pass (no Docker needed)
+# Prompt 4 — General improvement pass (no Docker needed)
 
 ```
-You are improving the WordPress plugin in the current directory. Improve/Enhance or fix anything you stumble upon while analyzing, do 2 3 fixes in session if not too large to do, also Keep every
-change covered by tests, and committed atomically (feat:/fix:/test:/docs:).
-Do not change legal semantics without reviewing `docs/legal-rules.md`.
+You are improving the WordPress plugin in the current directory (sidrena-cijena.php is
+the bootstrap). Pick a small number of high-value items (2-3 per session, not more unless
+trivial), implement them well, cover every change with tests, and commit atomically
+(feat:/fix:/test:/docs:). Do not change legal semantics without reviewing
+`docs/legal-rules.md` first. Work only inside this plugin; never touch WordPress core,
+themes or WooCommerce; price-history tables are append-only legal evidence.
 
-Pick items in priority order; implement improvements, add tests, and release:
+Specialised passes exist — use them instead of improvising when the work matches:
+- Performance: AGENTARD/06-performance-db-queries.md (queries, N+1, indexes),
+  AGENTARD/07-performance-caching-runtime.md (caching, per-request work, assets),
+  AGENTARD/08-performance-export-cron.md (generation pipeline, memory, cron).
+- UI/UX: AGENTARD/09-ui-ux-improvements.md (admin screens, public price list, a11y, i18n).
+If you touch those areas here, keep the change small and log the follow-up in
+docs/improvement-backlog.md as a PERF-xx or UX-xx item.
 
-1. Performance:
-   - Verify PriceListBuilder queries are batched; eliminate N+1 queries.
-   - Public price-list page (/sidrena-cjenik/) uses RestCache to avoid recalculating
-     catalog tables on every visit. Ensure cache invalidation triggers on price, anchor,
-     sale, or settings updates.
-2. Admin UX (Croatian-first):
-   - Review admin screens under the Sidrena cijena menu: Setup Guide, Dashboard, Price lists,
-     Anchor prices, Import, Sales locations, Price history, Compliance check, Settings, Logs, Audit.
-   - Ensure clear labels, helpful descriptions, and consistent formatting (via Currency and Dates helpers).
-   - Ensure Setup Guide checklist dynamically reflects current status across all 5 steps.
-3. Accessibility:
-   - Ensure form controls have visible labels, buttons have descriptive text, and ARIA attributes
-     are used where appropriate.
-   - Maintain color contrast in admin.css and frontend templates.
-4. Robustness and Compatibility:
-   - Add unit tests for uncovered branches in src/ (aim for growing, real behavior coverage).
-   - Maintain strict PHP 7.4 to 8.4 compatibility (no PHP 8-only syntax in src/).
-   - Ensure clean operation both with and without WooCommerce.
-5. Quality Gates & Release:
+This pass focuses on robustness and compatibility:
+1. Robustness:
+   - Add unit tests for uncovered branches in src/ (aim for real behavior coverage).
+   - Sweep error paths: validation failures, empty catalogs, missing tables/options after
+     migration, malformed CSV rows, corrupt published files, permission-denied admin posts.
+   - Verify transient/option cleanup on deactivation and uninstall (Support\Deactivator,
+     Support\Uninstaller) still leaves the anchor/lowest_30_day evidence intact (IMP-09).
+2. Compatibility:
+   - Strict PHP 7.4 to 8.4 compatibility: no PHP 8-only syntax in src/ (static scan).
+   - Clean operation both with and without WooCommerce (standalone catalog provider).
+   - Classic and block themes render the anchor/30-day lines (PriceDisplay,
+     BuilderCompat, render_block path).
+3. Consistency with docs:
+   - Keep `docs/` in sync with behaviour you touch (legal-rules, feature-acceptance,
+     operations, testing, troubleshooting as applicable).
+   - Log completed items in `docs/improvement-backlog.md` (FIX-xx/IMP-xx/REL-xx) and add
+     verification notes to `docs/release-readiness.md`.
+4. Quality gates & release:
    - Run all four static gates:
      `composer test:unit && composer lint && composer analyse && npm run lint:js`
    - If translation strings were updated, regenerate catalogs:
-     `php tools/i18n/make-pot.php --locale=hr_HR`
-   - Follow release procedure in AGENTARD/README.md:
+     `php tools/i18n/make-pot.php --locale=hr_HR` (0 untranslated in languages/hr_HR.po).
+   - Follow the release procedure in AGENTARD/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
      2. Run `tools/build-zip.sh <version>`.
      3. Verify with `unzip -t versions/<version>/sidrena-cijena.zip`.
      4. Append release notes to docs/release-readiness.md and update docs/improvement-backlog.md.
      5. Commit all changes including versions/<version>/ and push to origin master.
 
-Done when: improvements and tests are committed, all gates pass cleanly, and a new
-version archive is built, verified, and pushed.
+Done when: improvements and tests are committed, all gates pass cleanly, translations are
+complete if strings changed, and a new version archive is built, verified, and pushed.
 ```

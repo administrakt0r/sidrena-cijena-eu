@@ -19,8 +19,8 @@ Steps:
      (PHPCompatibilityWP, testVersion 7.4-).
    - Static analysis: PHPStan level 6 via phpstan.neon.dist.
    - JS Lint: ESLint via .eslintrc.js (browser environment, ES6).
-   - Unit tests must stay green (170+ tests); if a test encodes a bug, fix the
-     implementation, not the test - unless the test contradicts docs/legal-rules.md,
+   - Unit tests must stay green (268+ tests / 869+ assertions); if a test encodes a bug,
+     fix the implementation, not the test - unless the test contradicts docs/legal-rules.md,
      in which case stop and report it.
 3. Check translations:
    Run `php tools/i18n/make-pot.php`. If translatable strings were added or changed:
