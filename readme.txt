@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,10 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.15 =
+* Reduce price-history batch reads and batch storefront sale and catalog lookups.
+* Add indexes for price history, active sales and publication lookups.
 
 = 1.0.14 =
 * Security: the anchor-price and special-sale meta boxes are now registered only for users holding `manage_sidrena_cijena`. They were the only admin screens that displayed privileged compliance evidence (the recorded anchor price, the applicable reference date and the 30-day lowest price) and offered a submission form without the capability check every other screen applies; the admin-post handlers themselves already verified capability and nonce.

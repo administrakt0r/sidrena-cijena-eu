@@ -1,5 +1,24 @@
 # Improvement backlog
 
+## Data-layer performance (2026-09-26)
+
+The prompt's expected 200+ item shop was not present: local wp-env had 6 published
+WooCommerce products (8 hydrated catalog rows), 111 price-history rows and 110 log
+rows. Keep these measurements as the actual demo baseline; do not extrapolate timings
+to a large shop. `timeline()` and exact counts were measured but not changed because
+their repeated local timings were about 0.30 ms and 0.10 ms respectively, and count
+caching would risk stale admin pagination without a robust invalidation contract.
+
+| ID | Change / evidence | Status |
+|----|-------------------|--------|
+| PERF-01 | `latest_map()` uses grouped greatest-ID selection. Probe: 58 historical rows read by legacy SQL vs 56 latest map keys; one query either way. At this size grouped query was slower (1.30 ms vs 0.55 ms), so this is a row-volume bound, not a measured latency win. | done |
+| PERF-02 | Storefront 30-day lookups use one request-local batch sale map, with winner ordering aligned to `active_for_item()`. Variation fallback is a map lookup. Demo page returned HTTP 200 in 0.843 s; one provider call hydrated 8 rows. | done |
+| PERF-03 | Catalog batches prime meta/term caches and memoize barcode resolution. `get_items(per_page=100, include_variations=true)` hydrated 8 rows in 21.75 ms and 22 total DB queries on the small demo. | done |
+| PERF-04 | Additive indexes for history filters/latest selection, active sale filtering and publication lookup. Upgrade/index/idempotence integration test added. | done |
+| PERF-05 | Exact counts intentionally unchanged: 100 repeated history counts averaged 0.098 ms at 111 rows; log counts averaged 0.111 ms at 110 rows. Dataset is too small to justify a potentially stale cache; remeasure with the intended large seed before changing pagination behavior. | measured; deferred |
+| PERF-06 | Publication update avoids duplicate `get()` and expiration is now one direct update rather than get+full-row update. `next_sequence()` remains atomic read-after-write (two queries) to preserve sequence correctness under concurrent publishers; no collision benchmark justified a change. | done / retained |
+| PERF-07 | `timeline()` left unchanged: 100 calls measured 29.5 ms (~0.30 ms/call) on this dataset; COALESCE ordering index work is not justified by this measurement. | measured-irrelevant |
+
 Tracked gaps and competitor findings for **Sidrena Cijena**. Items are worked one at a
 time; every item gets a status, the date it was closed and (where applicable) a test.
 

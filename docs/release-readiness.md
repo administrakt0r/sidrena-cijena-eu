@@ -415,3 +415,20 @@ filename pattern and the append-only history contract are untouched.
 - **Archive**: `tools/build-zip.sh 1.0.14` from source commit `e4aa6da`;
   `unzip -t` reports no errors, 154 files; 292,396 bytes (286K). SHA-256
   `a931403390ec6bfb2f55ba29d2bc777b3a01236788c1e19616d06d3bfc661644`.
+
+## Release 1.0.15 (2026-09-26)
+
+- **Data-layer performance**: see `docs/improvement-backlog.md` PERF-01–PERF-07.
+  Demo measurement was limited to 6 published WooCommerce products / 8 hydrated
+  catalog rows (not the prompt's expected 200+); observed query and timing values
+  are recorded there without extrapolating or claiming unsupported latency gains.
+- **Schema**: additive schema version 1.1.0 adds indexes only; no price-history
+  rows were rewritten and `docs/legal-rules.md` was not changed.
+- **Tests and gates**: unit 306/1083; integration 80/363 after `npx wp-env clean tests`;
+  PHPCS 159/159 clean; PHPStan 111/111 clean; ESLint clean. Integration was run
+  inside `tests-cli` with the repository's PHPUnit 9.6 (`composer test:integration`
+  on the host cannot locate `/wordpress-phpunit`).
+- **Demo measurements**: forced generation was 2.44 s at end vs 4.31 s initially,
+  but publication/catalog state changed, so this is not attributed to the patch.
+  Public page measured HTTP 200 / 0.843 s at end; no valid before value was captured.
+- **Archive**: `tools/build-zip.sh 1.0.15`; ZIP integrity verified with `unzip -t`.
