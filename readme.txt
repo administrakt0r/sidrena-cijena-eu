@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.10
+Stable tag: 1.0.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.11 =
+* Robustness: trashing, deleting, or unpublishing a catalog item (standalone item, product, or variation) now flushes the cached price-list responses immediately instead of leaving the removed item visible until the cache expired.
+* Usability: price history filters, table rows, the correction form, and the anchor meta box show translated labels (for example "Anchor price", "CSV import") instead of raw internal slugs.
+* Tests: new unit coverage for catalog lifecycle cache invalidation, the compliance report (grouping, CSV quoting, meta derivation), the finding severity fallback, and history labels (253 tests, 807 assertions).
 
 = 1.0.10 =
 * Performance: the REST price endpoints (`/prices`, CSV and XML downloads) now serve canonical builds from the shared response cache instead of rebuilding the whole catalog on every request; invalidation triggers on price, anchor, sale, publication, location and settings changes are unchanged.
