@@ -249,4 +249,38 @@ pattern, retention and the append-only history are untouched, and
   `unzip -t` reports no errors; 281,028 bytes (276K). SHA-256
   `89391821e8878cbaa3d558d2fd915a6ec26ab444ca6504527920e6b21aad67dd`.
 
+## Release 1.0.11 (2026-09-26)
+
+Improvement pass: catalog lifecycle cache invalidation, localized price
+history labels, and new unit coverage for the compliance report value
+objects. No legal semantics were changed: reference dates, the 30-day
+window, the filename pattern, retention and the append-only history are
+untouched, and `docs/legal-rules.md` is unchanged.
+
+- **Robustness**: trashing, deleting, or unpublishing a catalog item
+  (`sidrena_item`, `product`, `product_variation`) now flushes the shared
+  anchor and REST cache generations immediately (`transition_post_status`
+  and `before_delete_post` in `Plugin`). Previously the public price-list
+  page and the REST `/prices`, CSV and XML endpoints kept serving removed
+  items until the 300 s cache TTL expired. Content edits of published items
+  do not change catalog membership and keep the cache warm.
+- **Usability (Croatian-first)**: price history filters, table rows, the
+  correction form, and the anchor meta box now show translated labels
+  ("Sidrena cijena", "Najniža cijena u zadnjih 30 dana", "CSV uvoz",
+  "Automatski zabilježena prva ponuda", …) through the new
+  `Support\HistoryLabels` helper instead of raw slugs such as
+  `lowest_30_day` or `observed_first_offer`; stored values are unchanged.
+- **Tests**: new `PluginLifecycleCacheTest` (trash/delete/publish flushes,
+  warm-cache on content edits and non-catalog types), `ComplianceReportTest`
+  (finding severity fallback and defaults, entity grouping, descending code
+  counts, CSV quoting of separator-containing fields, `from_result` meta
+  derivation) and `HistoryLabelsTest`; unit suite 231/722 → 253/807 passed.
+- **Quality gates**: PHPStan 108/108 clean; PHPCS 148/148 clean; ESLint
+  clean. Translation catalogs regenerated with
+  `php tools/i18n/make-pot.php --locale=hr_HR`: 579 strings, 579 Croatian
+  translations, 0 untranslated.
+- **Archive**: `tools/build-zip.sh 1.0.11` from source commit `105fc27`;
+  `unzip -t` reports no errors; 283,940 bytes (280K). SHA-256
+  `5f49169de618df4defce6c96ea692bb8d7af41b267d298c41367ee5d78146b3d`.
+
 
