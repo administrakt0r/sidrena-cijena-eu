@@ -431,4 +431,6 @@ filename pattern and the append-only history contract are untouched.
 - **Demo measurements**: forced generation was 2.44 s at end vs 4.31 s initially,
   but publication/catalog state changed, so this is not attributed to the patch.
   Public page measured HTTP 200 / 0.843 s at end; no valid before value was captured.
-- **Archive**: `tools/build-zip.sh 1.0.15`; ZIP integrity verified with `unzip -t`.
+- **Archive**: `versions/1.0.15/sidrena-cijena.zip`, 293,153 bytes (288K), 154
+  files; `unzip -t` reports no errors. SHA-256
+  `e5e13ed936f4f794ec49cf1cffc947a28ef0f1b9f80df30fe41ff11e386b90e3`.
