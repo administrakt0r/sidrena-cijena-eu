@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.12
+Stable tag: 1.0.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.13 =
+* Usability: internal slugs are no longer printed in the admin screens; statuses, log levels, log events, finding severities, sale types and import row statuses show translated labels from one shared resolver (301 tests, 1078 assertions).
+* Tables: admin tables are captioned and paginate consistently; the operational log, the legal rule-change history and the import preview are capped and paginated, so a 5,000-row CSV no longer renders 5,000 table rows.
+* Forms: validation errors keep the submitted values, mark the offending field (`aria-invalid`, `aria-describedby`) and move focus to the notice or the field; "Mark setup complete" now confirms the action and every notice is dismissible.
 
 = 1.0.12 =
 * Correctness: date-only values such as anchor reference dates no longer shift a day on sites west of UTC; the public price list and the price-history table render them in the Croatian `d.m.Y.` format (268 tests, 869 assertions).
