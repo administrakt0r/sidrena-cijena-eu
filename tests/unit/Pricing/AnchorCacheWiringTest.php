@@ -198,7 +198,7 @@ class AnchorCacheWiringTest extends TestCase {
 			$this->item(),
 			'6.99',
 			array(
-				'reference_date'   => '2026-09-12',
+				'reference_date'    => '2026-09-12',
 				'correction_reason' => 'Supplier correction',
 			)
 		);

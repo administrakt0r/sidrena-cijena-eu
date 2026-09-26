@@ -338,7 +338,7 @@ class PriceListController {
 			'type' => (string) $request->get_param( 'type' ),
 		);
 
-		$build = self::builder()->build( $location, $args );
+		$build = self::cached_build( $location, $args );
 		$items = $build['items'];
 		$meta  = $build['meta'];
 
@@ -365,6 +365,44 @@ class PriceListController {
 	}
 
 	/**
+	 * Canonical rows for a location, cached across requests.
+	 *
+	 * Builds walk the whole catalog, so the result is kept in the shared
+	 * public-response cache instead of being rebuilt on every request. The
+	 * cache is invalidated on price, anchor, sale, publication, location and
+	 * settings changes; request filters (`sale_only`, `updated_since`) are
+	 * applied afterwards and are not part of the key.
+	 *
+	 * @param array<mixed> $location Location row (empty for all locations).
+	 * @param array<mixed> $args     Builder arguments (`type`).
+	 * @return array{items:array<int,array<mixed>>,meta:array<mixed>}
+	 */
+	protected static function cached_build( array $location, array $args = array() ) {
+		$type = isset( $args['type'] ) ? (string) $args['type'] : 'all';
+
+		$cache = Plugin::instance()->rest_cache();
+		$key   = $cache->key(
+			array(
+				'build'    => 'prices',
+				'location' => isset( $location['id'] ) ? (int) $location['id'] : 0,
+				'type'     => $type,
+			)
+		);
+
+		$cached = $cache->get( $key );
+
+		if ( is_array( $cached ) && isset( $cached['items'], $cached['meta'] ) ) {
+			return $cached;
+		}
+
+		$build = self::builder()->build( $location, array( 'type' => $type ) );
+
+		$cache->set( $key, $build );
+
+		return $build;
+	}
+
+	/**
 	 * Current price rows for the request arguments.
 	 *
 	 * @param array<mixed> $args Normalized arguments.
@@ -381,7 +419,7 @@ class PriceListController {
 			}
 		}
 
-		$build = self::builder()->build(
+		$build = self::cached_build(
 			$location ? $location : array(),
 			array( 'type' => (string) $args['type'] )
 		);
