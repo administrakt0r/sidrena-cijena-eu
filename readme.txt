@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,14 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.7 =
+* Performance: batched anchor lookups in the bulk anchor setup screen and the price-list builder, eliminating N+1 queries on large catalogs.
+* Fixed price-list metadata item counts for products and services.
+* Cache invalidation now also runs when sales locations are saved, deactivated, or deleted.
+* Setup Guide checklist badges show anchor coverage (recorded versus catalog total) and stay in sync with the current shop state.
+* Accessibility: visible labels for the import file and public type filter, scoped admin table headers, ARIA labels on bulk controls, and higher-contrast disclaimers.
+* Rebuilt translation catalogs with 100% Croatian coverage (569 strings).
 
 = 1.0.6 =
 * Hardened opt-in uninstaller options cleanup to purge REST cache generation, feed queue timestamps, and standalone terms flags.
