@@ -123,7 +123,7 @@ final class Logger {
 			return array();
 		}
 
-		$sensitive = '/(pass|secret|token|api[_-]?key|authorization|card|cvv|iban|email|phone|mobile|customer|session|cookie)/i';
+		$sensitive = '/(pass|secret|token|api[_-]?key|authorization|card|cvv|iban|email|phone|mobile|customer|session|cookie|(?:first|last|full)[_-]?name|address|ip[_-]?address)/i';
 
 		$clean = array();
 

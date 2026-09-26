@@ -49,6 +49,25 @@ class LoggerTest extends TestCase {
 	}
 
 	/**
+	 * Personal data under common field names must not enter log context.
+	 *
+	 * @return void
+	 */
+	public function test_personal_identity_fields_are_stripped() {
+		$clean = Logger::sanitize_context(
+			array(
+				'first_name' => 'Iva',
+				'last_name'  => 'Horvat',
+				'address'    => 'Main Street 1',
+				'ip_address' => '192.0.2.1',
+				'product_id' => 12,
+			)
+		);
+
+		$this->assertSame( array( 'product_id' => 12 ), $clean );
+	}
+
+	/**
 	 * Long strings are truncated and objects are neutralized.
 	 *
 	 * @return void
