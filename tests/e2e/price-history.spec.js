@@ -40,7 +40,8 @@ test.describe('Price history and audit', () => {
 
     await expect(page.locator('h1')).toContainText(/Price history|Povijest cijena/i);
     await expect(page.locator('table.widefat')).toContainText('E2E-HIST-1');
-    await expect(page.locator('table.widefat')).toContainText('anchor');
+    await expect(page.locator('table.widefat')).toContainText(/Anchor price|Sidrena cijena/i);
+    await expect(page.locator('table.widefat')).toContainText(/Manual entry|Ručni unos/i);
     await expect(page.locator('table.widefat')).toContainText('12,00');
   });
 
