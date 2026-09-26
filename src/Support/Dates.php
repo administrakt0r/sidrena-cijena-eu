@@ -130,6 +130,28 @@ final class Dates {
 	}
 
 	/**
+	 * Format a date-only value for display without converting time zones.
+	 *
+	 * Reference dates are legal date-only values (`Y-m-d`). Passing them through
+	 * a timestamp would shift the calendar day on sites west of UTC, so the
+	 * components are formatted directly (`02.05.2025.`).
+	 *
+	 * @param mixed $value Date (`Y-m-d`) or datetime string.
+	 * @return string Display date, or an empty string when the value is not a date.
+	 */
+	public static function format_date_display( $value ) {
+		$value = self::date_only( $value );
+
+		if ( ! self::is_valid_date( $value ) ) {
+			return '';
+		}
+
+		$parts = explode( '-', (string) $value );
+
+		return sprintf( '%s.%s.%s.', $parts[2], $parts[1], $parts[0] );
+	}
+
+	/**
 	 * The `Y-m-d` portion of a date or datetime string.
 	 *
 	 * Values read back from `datetime` columns arrive as `Y-m-d H:i:s` and must

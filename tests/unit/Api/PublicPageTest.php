@@ -363,6 +363,8 @@ class PublicPageTest extends TestCase {
 		PluginSwap::swap( 'special_sales', null );
 		PublicPageProbe::reset_styles();
 
+		unset( $GLOBALS['sidrena_test_timezone'] );
+
 		$GLOBALS['sidrena_test_options']    = array();
 		$GLOBALS['sidrena_test_transients'] = array();
 		$_GET                               = array();
@@ -433,10 +435,29 @@ class PublicPageTest extends TestCase {
 		$this->assertSame( '1,33 €', $out['unit_price_display'] );
 		$this->assertSame( '1,99 €', $out['retail_display'] );
 		$this->assertSame( '1,75 €', $out['anchor_display'] );
-		$this->assertSame( wp_date( 'd.m.Y.', (int) strtotime( '2025-05-02' ) ), $out['reference_display'] );
+		$this->assertSame( '02.05.2025.', $out['reference_display'] );
 		$this->assertSame( 'Product', $out['type_display'] );
 		$this->assertSame( 'Akcija', $out['sale_display'] );
 		$this->assertSame( 'Available', $out['availability_display'] );
+	}
+
+	/**
+	 * Reference dates are legal date-only values and never shift across time zones.
+	 *
+	 * @return void
+	 */
+	public function test_display_row_reference_date_ignores_site_timezone() {
+		$this->reset_state();
+
+		$GLOBALS['sidrena_test_timezone'] = new \DateTimeZone( 'America/New_York' );
+
+		try {
+			$out = ( new PublicPageProbe() )->decorate( $this->row() );
+
+			$this->assertSame( '02.05.2025.', $out['reference_display'] );
+		} finally {
+			unset( $GLOBALS['sidrena_test_timezone'] );
+		}
 	}
 
 	/**

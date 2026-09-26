@@ -182,7 +182,8 @@ class PriceHistoryPage {
 			echo '<td>' . esc_html( Currency::format_decimal( (float) $row['price'] ) . ' ' . (string) $row['currency'] ) . '</td>';
 			echo '<td>' . esc_html( HistoryLabels::source( (string) $row['source'] ) ) . '</td>';
 			echo '<td>' . esc_html( $user ) . '</td>';
-			echo '<td>' . esc_html( ! empty( $row['reference_date'] ) ? (string) $row['reference_date'] : '—' ) . '</td>';
+			$reference = Dates::format_date_display( isset( $row['reference_date'] ) ? $row['reference_date'] : '' );
+			echo '<td>' . esc_html( '' !== $reference ? $reference : '—' ) . '</td>';
 			echo '<td>';
 			echo esc_html( $note );
 

@@ -30,6 +30,21 @@ class DatesTest extends TestCase {
 	}
 
 	/**
+	 * Date-only values are formatted without a time-zone conversion.
+	 *
+	 * @return void
+	 */
+	public function test_format_date_display() {
+		$this->assertSame( '10.09.2026.', Dates::format_date_display( '2026-09-10' ) );
+		$this->assertSame( '02.05.2025.', Dates::format_date_display( '2025-05-02' ) );
+		$this->assertSame( '01.01.2026.', Dates::format_date_display( '2026-01-01 00:30:00' ) );
+		$this->assertSame( '', Dates::format_date_display( '' ) );
+		$this->assertSame( '', Dates::format_date_display( null ) );
+		$this->assertSame( '', Dates::format_date_display( '2026-02-30' ) );
+		$this->assertSame( '', Dates::format_date_display( 'not-a-date' ) );
+	}
+
+	/**
 	 * Calendar arithmetic crosses month boundaries.
 	 *
 	 * @return void

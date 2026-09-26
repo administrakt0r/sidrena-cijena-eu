@@ -509,6 +509,10 @@ if ( ! function_exists( 'wp_timezone' ) ) {
 	 * @return DateTimeZone
 	 */
 	function wp_timezone() {
+		if ( isset( $GLOBALS['sidrena_test_timezone'] ) && $GLOBALS['sidrena_test_timezone'] instanceof DateTimeZone ) {
+			return $GLOBALS['sidrena_test_timezone'];
+		}
+
 		return new DateTimeZone( 'Europe/Zagreb' );
 	}
 }

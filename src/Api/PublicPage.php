@@ -10,6 +10,7 @@ namespace SidrenaCijena\Api;
 use SidrenaCijena\Export\PriceListBuilder;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -371,7 +372,7 @@ class PublicPage {
 		$row['unit_price_display']   = null === $row['cijena_za_jedinicu_mjere'] ? '' : Currency::format( (float) $row['cijena_za_jedinicu_mjere'] );
 		$row['retail_display']       = Currency::format( (float) $row['maloprodajna_cijena'] );
 		$row['anchor_display']       = null === $row['sidrena_cijena'] ? '' : Currency::format( (float) $row['sidrena_cijena'] );
-		$row['reference_display']    = empty( $row['anchor_reference_date'] ) ? '' : wp_date( 'd.m.Y.', (int) strtotime( (string) $row['anchor_reference_date'] ) );
+		$row['reference_display']    = Dates::format_date_display( isset( $row['anchor_reference_date'] ) ? $row['anchor_reference_date'] : '' );
 		$row['type_display']         = 'usluga' === $row['vrsta'] ? __( 'Service', 'sidrena-cijena' ) : __( 'Product', 'sidrena-cijena' );
 		$row['sale_display']         = empty( $row['poseban_oblik_prodaje'] ) ? '' : (string) $row['naziv_posebnog_oblika_prodaje'];
 		$row['availability_display'] = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'sidrena-cijena' ) : __( 'Unavailable', 'sidrena-cijena' );
