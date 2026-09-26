@@ -154,3 +154,14 @@ Keep these when borrowing ideas from the competitor:
 - REST API, WP-CLI with meaningful exit codes, dry-run + transactional imports, audit logs.
 - Standalone (non-WooCommerce) catalog support.
 - The 30-day lowest price as a first-class engine instead of a read-only bridge to another plugin.
+
+## Static audit follow-up (2026-09-26)
+
+AUD-04 is closed: log context retained first and last names, addresses and IP
+addresses under generic field keys. `LoggerTest::test_personal_identity_fields_are_stripped`
+covers the corrected filter.
+
+AUD-05 is closed: selected WooCommerce variations now show their own dated
+anchor beside their selected price, including when WooCommerce omits variation
+price HTML for equal prices. Variable parent ranges do not show one variation's
+anchor. `VariationDisplayTest` covers the parent and selected variation paths.

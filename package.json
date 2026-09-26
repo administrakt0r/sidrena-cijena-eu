@@ -1,6 +1,6 @@
 {
 	"name": "sidrena-cijena",
-	"version": "1.0.16",
+	"version": "1.0.17",
 	"description": "Development tooling for the Sidrena cijena WordPress plugin.",
 	"private": true,
 	"license": "GPL-2.0-or-later",

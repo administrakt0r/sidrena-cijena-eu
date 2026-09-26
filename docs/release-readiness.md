@@ -455,3 +455,11 @@ filename pattern and the append-only history contract are untouched.
 - **Archive**: `versions/1.0.16/sidrena-cijena.zip`, 298,762 bytes; `unzip -t`
   reports no errors. SHA-256
   `1e291101bf91cb9473ea76e7d4583a3366c3a0dfcaca8c88187204c10fb43f70`.
+
+## Release 1.0.17 (2026-09-26)
+
+- Static audit: baseline unit suite 307 tests / 1085 assertions; PHPCS, PHPStan and ESLint clean. Admin action capability and nonce checks, output escaping, SQL parameterization, import path containment and activation redirect guards reviewed.
+- Privacy fix: structured log context now drops personal name, address and IP address fields; regression test added. Price history was not modified.
+- Variable products: a parent price range does not display a single anchor; WooCommerce's selected variation HTML carries that variation's own price and dated anchor, including equal-price variations. The variation script updates only the selected product's markup.
+- Translations: 652 strings, 0 untranslated; no source strings changed.
+- Final static gates: `composer test:unit` 310 tests / 1091 assertions; `composer lint` clean (160 files); `composer analyse` no errors (111 files); `npm run lint:js` clean.
