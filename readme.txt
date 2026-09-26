@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.10 =
+* Performance: the REST price endpoints (`/prices`, CSV and XML downloads) now serve canonical builds from the shared response cache instead of rebuilding the whole catalog on every request; invalidation triggers on price, anchor, sale, publication, location and settings changes are unchanged.
+* Performance: the anchor price service shares the plugin anchor cache, so storefront lookups reuse a record until the next anchor invalidation or flush.
+* Robustness: cache generations are monotonic, so two flushes inside the same second can no longer leave entries written between them visible.
+* Tests: new unit coverage for cached REST builds (reuse, flush rebuild, per-location/type keys), anchor-cache wiring (shared lookups, recorded-item invalidation) and back-to-back flush behavior (231 tests, 722 assertions).
 
 = 1.0.9 =
 * Accessibility: every remaining admin table header (dashboard, compliance, publications, logs, audit, legal settings, documentation, import sources, sale history) now carries `scope="col"` so screen readers announce column context.

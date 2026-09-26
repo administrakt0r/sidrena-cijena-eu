@@ -1,8 +1,8 @@
 # Prompt 4 — Improvement pass (no Docker needed)
 
 ```
-You are improving the WordPress plugin in the current directory. Keep every
-change small, covered by tests, and committed atomically (feat:/fix:/test:/docs:).
+You are improving the WordPress plugin in the current directory. Improve/Enhance or fix anything you stumble upon while analyzing, do 2 3 fixes in session if not too large to do, also Keep every
+change covered by tests, and committed atomically (feat:/fix:/test:/docs:).
 Do not change legal semantics without reviewing `docs/legal-rules.md`.
 
 Pick items in priority order; implement improvements, add tests, and release:

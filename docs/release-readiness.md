@@ -186,6 +186,40 @@ append-only history are untouched, and `docs/legal-rules.md` is unchanged.
   `unzip -t` reports no errors; 280,703 bytes (276K). SHA-256
   `a9d262080b9b402d6920ed30cec9856e83a5facdae79d1130440429dabfe5593`.
 
+## Release 1.0.10 (2026-09-26)
+
+Improvement pass: public REST price lists are now served from the shared
+response cache, the anchor price service shares the anchor cache, and both
+cache generations are monotonic. No legal semantics were changed: reference
+dates, the 30-day window, the filename pattern, retention and the append-only
+history are untouched, and `docs/legal-rules.md` is unchanged.
+
+- **Performance**: `PriceListController::cached_build()` keeps canonical
+  builds per location and item type in `RestCache`, so `/prices` and the CSV /
+  XML downloads no longer walk the whole catalog on every request. Request
+  filters (`sale_only`, `updated_since`, pagination) apply afterwards and are
+  not part of the key. Invalidation triggers are unchanged (price, anchor,
+  sale, publication, location and settings changes).
+- **Performance**: `Plugin::anchors()` now constructs `AnchorPriceService`
+  with the shared `AnchorCache`, so storefront lookups reuse a record until
+  the next invalidation or flush. `sidrena_cijena_anchor_recorded`
+  additionally forgets the recorded item via
+  `Plugin::invalidate_anchor_cache()`, covering anchor writes that reach the
+  history table through any path.
+- **Robustness**: `RestCache::flush()` and `AnchorCache::flush()` use
+  `max( time(), previous + 1 )`, so two flushes inside the same second can no
+  longer leave entries written between them visible.
+- **Tests**: new `PriceListControllerCacheTest` (cache reuse, rebuild after
+  flush, per-location/type keys), `AnchorCacheWiringTest` (shared lookups,
+  recorded-item invalidation through the hook and through `record()`), and
+  back-to-back flush tests for both caches; unit suite 223/698 → 231/722.
+- **Quality gates**: unit tests pass; PHPStan 107/107 clean; PHPCS clean;
+  ESLint clean. No translatable strings were added or changed, so the
+  Croatian catalogs were not regenerated.
+- **Archive**: `tools/build-zip.sh 1.0.10` from source commit `9ab5d62`;
+  `unzip -t` reports no errors; 281,361 bytes (275K). SHA-256
+  `REPLACE_WITH_CHECKSUM`.
+
 ## Release 1.0.9 (2026-09-26)
 
 Improvement pass: accessibility completion, new unit coverage for the anchor
