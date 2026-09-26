@@ -82,7 +82,12 @@ class PriceDisplay {
 			return $content;
 		}
 
-		return $content . $this->render( $product, $this->context() );
+		$context = $this->context();
+		if ( 'single' === $context && function_exists( 'get_queried_object_id' ) && (int) get_queried_object_id() !== (int) $product->get_id() ) {
+			$context = 'archive';
+		}
+
+		return $content . $this->render( $product, $context );
 	}
 
 	/**
@@ -219,6 +224,14 @@ class PriceDisplay {
 	 */
 	public function render( $product, $context = 'single', array $args = array() ) {
 		if ( ! Settings::get( 'display_enabled' ) ) {
+			return '';
+		}
+
+		if ( ( 'archive' === $context && ! Settings::get( 'display_archives' ) ) || ( 'single' === $context && ! Settings::get( 'display_product_pages' ) ) ) {
+			return '';
+		}
+
+		if ( 'archive' === $context && ! CardVisibility::is_visible( $product->get_id() ) ) {
 			return '';
 		}
 
@@ -449,6 +462,10 @@ class PriceDisplay {
 	 * @return string
 	 */
 	protected function context() {
+		if ( function_exists( 'wc_get_loop_prop' ) && wc_get_loop_prop( 'name' ) ) {
+			return 'archive';
+		}
+
 		if ( function_exists( 'is_product' ) && is_product() ) {
 			return 'single';
 		}

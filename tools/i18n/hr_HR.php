@@ -681,4 +681,6 @@ return array (
   'Styling' => 'Stil prikaza',
   'The default is 40% of the former display size. Text stays at least 12 pixels for readability; increase the size here when needed.' => 'Zadana veličina iznosi 40 % prethodne veličine prikaza. Tekst ostaje visok najmanje 12 piksela radi čitljivosti; po potrebi povećajte veličinu.',
   'Underline' => 'Podcrtano',
+  'Product cards' => 'Kartice proizvoda',
+  'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.' => 'Prikaži sidrenu cijenu na karticama ovog proizvoda u trgovini. Na stranici proizvoda i u cjeniku podaci ostaju vidljivi.',
 );

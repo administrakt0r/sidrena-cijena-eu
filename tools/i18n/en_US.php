@@ -649,4 +649,6 @@ return array (
   'Styling' => 'Styling',
   'The default is 40% of the former display size. Text stays at least 12 pixels for readability; increase the size here when needed.' => 'The default is 40% of the former display size. Text stays at least 12 pixels for readability; increase the size here when needed.',
   'Underline' => 'Underline',
+  'Product cards' => 'Product cards',
+  'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.' => 'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.',
 );

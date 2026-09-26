@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 1.0.17\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena/issues\n"
-"POT-Creation-Date: 2026-09-26T15:47:16+00:00\n"
-"PO-Revision-Date: 2026-09-26T15:47:16+00:00\n"
+"POT-Creation-Date: 2026-09-26T16:01:16+00:00\n"
+"PO-Revision-Date: 2026-09-26T16:01:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1231,6 +1231,9 @@ msgstr "Primjer: PRODAVAONICA_ILICA-1_POSL-01_1_26092026_0800.csv"
 msgid "Product"
 msgstr "Proizvod"
 
+msgid "Product cards"
+msgstr "Kartice proizvoda"
+
 msgid "Product ID"
 msgstr "ID proizvoda"
 
@@ -1458,6 +1461,9 @@ msgstr "Ozbiljnost"
 
 msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
 msgstr "Prikazuju se zbrojevi za prvih %1$d od %2$d stavki kataloga. Za potpuno izvješće pokrenite provjeru usklađenosti."
+
+msgid "Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible."
+msgstr "Prikaži sidrenu cijenu na karticama ovog proizvoda u trgovini. Na stranici proizvoda i u cjeniku podaci ostaju vidljivi."
 
 msgid "Side stripe"
 msgstr "Bočna crta"

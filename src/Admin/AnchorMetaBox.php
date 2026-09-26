@@ -12,6 +12,7 @@ use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Labels;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use SidrenaCijena\WooCommerce\Display\CardVisibility;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -95,6 +96,7 @@ final class AnchorMetaBox {
 		echo '<div class="sidrena-cijena-product-panel">';
 		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena' ) . '</h2>';
 		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena' ) . '</p>';
+		CardVisibility::render_control( $post->ID );
 		echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</h3>';
 		self::render( $post );
 		echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena' ) . '</h3>';

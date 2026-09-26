@@ -43,6 +43,7 @@ use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
 use SidrenaCijena\WooCommerce\Display\BuilderCompat;
 use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use SidrenaCijena\WooCommerce\Display\CardVisibility;
 use SidrenaCijena\WooCommerce\Display\VariationDisplay;
 
 defined( 'ABSPATH' ) || exit;
@@ -265,6 +266,7 @@ final class Plugin {
 
 		$display = new PriceDisplay( $this->anchors() );
 		$display->register();
+		add_action( 'woocommerce_admin_process_product_object', array( CardVisibility::class, 'save' ) );
 		( new VariationDisplay( $this->anchors() ) )->register();
 		( new BuilderCompat( $display ) )->register();
 		( new PriceHistoryRecorder() )->register();
