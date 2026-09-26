@@ -207,6 +207,7 @@ final class Plugin {
 		add_action( 'sidrena_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
 		add_action( 'sidrena_cijena_price_changed', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_price_changed', array( $this, 'queue_service_regeneration' ), 10, 2 );
+		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'invalidate_anchor_cache' ), 5, 3 );
 		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'flush_rest_cache' ) );
 		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
@@ -282,6 +283,24 @@ final class Plugin {
 	 */
 	public function flush_rest_cache() {
 		$this->rest_cache()->flush();
+	}
+
+	/**
+	 * Forget one cached anchor after it was (re)recorded.
+	 *
+	 * AnchorPriceService::record() already invalidates through its own cache
+	 * handle; this hook covers anchor writes that reach the history table
+	 * through any other path.
+	 *
+	 * @param int $record_id    Record ID.
+	 * @param int $product_id   Product ID.
+	 * @param int $variation_id Variation ID.
+	 * @return void
+	 */
+	public function invalidate_anchor_cache( $record_id, $product_id, $variation_id = 0 ) {
+		unset( $record_id );
+
+		$this->anchor_cache()->invalidate( (int) $product_id, (int) $variation_id );
 	}
 
 	/**
@@ -414,11 +433,14 @@ final class Plugin {
 	/**
 	 * Anchor price service.
 	 *
+	 * Shares the anchor cache so storefront lookups reuse a record until the
+	 * next anchor invalidation or flush.
+	 *
 	 * @return \SidrenaCijena\Pricing\AnchorPriceService
 	 */
 	public function anchors() {
 		if ( null === $this->anchors ) {
-			$this->anchors = new \SidrenaCijena\Pricing\AnchorPriceService( $this->history() );
+			$this->anchors = new \SidrenaCijena\Pricing\AnchorPriceService( $this->history(), $this->anchor_cache() );
 		}
 
 		return $this->anchors;
