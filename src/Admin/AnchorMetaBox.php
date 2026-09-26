@@ -36,6 +36,10 @@ final class AnchorMetaBox {
 	 * @return void
 	 */
 	public static function register() {
+		if ( ! Capabilities::current_user_can() ) {
+			return;
+		}
+
 		$screens = array();
 
 		if ( WooCommerceDetector::is_active() ) {
