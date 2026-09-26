@@ -174,4 +174,14 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | FIX-15 | `done` | Nonessential catalog findings stopped cjenik generation even with a current price and dated anchor | `PublicationGateTest` and WordPress publication integration test |
 | UX-09 | `done` | Missing admin anchor icon; three large display styles with no previews or size control | SVG menu icon, nine compact previews, browser styling test |
 | UX-10 | `done` | No per-product choice for Sidrena cijena on shop cards; default cards were too busy | WooCommerce editor opt-in checkbox and browser card/product-page test |
+
+## WordPress.org 2.0.0 release (2026-09-26)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| FIX-16 | `done` | The Styling tab linked to the dashboard instead of the registered settings screen | Styling tab now uses `sidrena-cijena-settings`; settings navigation reviewed |
+| UX-11 | `done` | Merchants needed a clear public page of generated cjenici and simple ways to expose it | Styled archive lists current publications and dates with CSV/XML links; archive, footer link and sitemap entry are enabled by default and configurable; integration and live HTTP checks passed |
+| FIX-17 | `done` | WordPress sitemap initialization happened before the archive provider registered, omitting its URL from the sitemap index | Public page hooks register at `init` priority 0; integration test verifies the provider entry |
+| REL-11 | `done` | The release needed a distinctive public-facing name, accurate directory metadata and owner-only submission steps | Version 2.0.0 uses “Sidrena Cijena EU”; metadata and SEO README updated; private submission instructions are locally excluded and omitted from the release ZIP |
+| REL-12 | `in progress` | Final committed 2.0.0 archive and package-only Plugin Check scan | Build the clean committed ZIP, review and record every remaining Plugin Check finding, then publish the source and ZIP release asset |
 | REL-09 | `done` | `Contributors:` used display name instead of WordPress.org username | Profile checked; changed to `titanworks`; publishing steps documented |

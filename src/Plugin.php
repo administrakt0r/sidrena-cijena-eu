@@ -197,7 +197,7 @@ final class Plugin {
 		add_action( 'add_meta_boxes', array( StandalonePostType::class, 'register_meta_box' ) );
 		add_action( 'init', array( TemplateFunctions::class, 'register' ) );
 		add_action( 'init', array( $this, 'register_public_feed' ) );
-		add_action( 'init', array( $this, 'register_public_pages' ) );
+		add_action( 'init', array( $this, 'register_public_pages' ), 0 );
 		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
 		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
 		add_action( 'add_meta_boxes', array( SpecialSaleMetaBox::class, 'register' ) );

@@ -5,6 +5,7 @@
  * @package SidrenaCijena\Tests\Integration
  */
 
+use SidrenaCijena\Api\PublicArchiveSitemapProvider;
 use SidrenaCijena\Api\PublicPage;
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
 use SidrenaCijena\Catalog\StandalonePostType;
@@ -142,6 +143,22 @@ class Test_Public_Page extends WP_UnitTestCase {
 
 		$this->assertTrue( shortcode_exists( 'sidrena-cjenik' ) );
 		$this->assertTrue( shortcode_exists( 'sidrena-arhiva' ) );
+	}
+
+	/**
+	 * The archive is included in WordPress's sitemap index by default.
+	 *
+	 * @return void
+	 */
+	public function test_archive_is_registered_in_sitemap() {
+		$server   = wp_sitemaps_get_server();
+		$provider = $server->registry->get_provider( 'sidrena-cijena' );
+
+		$this->assertInstanceOf( PublicArchiveSitemapProvider::class, $provider );
+		$this->assertSame(
+			array( array( 'loc' => home_url( '/' . PublicPage::STEM_ARCHIVE . '/' ) ) ),
+			$provider->get_url_list( 1 )
+		);
 	}
 
 	/**

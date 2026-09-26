@@ -1,5 +1,33 @@
 # Release verification
 
+## Release 2.0.0 — Sidrena Cijena EU (2026-09-26)
+
+- Renamed the public-facing plugin to **Sidrena Cijena EU** and synchronized the
+  plugin header, runtime version, `readme.txt`, npm metadata and lockfile at
+  2.0.0. The source folder and text domain remain `sidrena-cijena`; the
+  WordPress.org submission should request slug `sidrena-cijena-eu`.
+- Fixed the Styling tab destination to the registered settings page. Added a
+  public archive page with publication dates and CSV/XML links, plus
+  default-enabled controls for archive visibility, a footer link and a sitemap
+  entry. Sitemap registration now runs at `init` priority 0 so WordPress has
+  rewrite state ready before core initializes its sitemap registry.
+- Reworked repository queries to expose `$wpdb->prepare()` calls inline and
+  use `%i` for internal table identifiers. The unit-test WordPress stub now
+  supports `%i`. Uninstaller cleanup uses the WordPress filesystem API.
+- Quality gates: unit tests 315/315 (1,103 assertions); PHPCS, PHPStan and ESLint
+  clean; Croatian catalog 669 translated, 0 untranslated. WordPress integration
+  tests: 83/83 (376 assertions). The complete Playwright suite passed 33 tests;
+  after the sitemap registration change, the focused publication suite passed
+  4/4. Its fixture now creates an active store when the default webshop is the
+  only configured location.
+- Live smoke checks: the demo shop and archive returned HTTP 200; the archive
+  showed dates and CSV/XML links; the footer contained the archive link; the
+  WordPress sitemap index contained the archive provider URL.
+- Release archive and final package-only Plugin Check evidence will be recorded
+  here after building the committed 2.0.0 package. See the private owner note at
+  `docs/wordpress-org-upload-2.0.0.md` for submission steps; it is excluded
+  from Git and from the ZIP.
+
 ## 1.0.4
 
 Setup Guide status badges, activation redirect hardening, documentation/spec references cleanup, full AGENTARDS prompts refresh, and translation catalogs:

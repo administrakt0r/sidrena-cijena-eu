@@ -19,9 +19,15 @@ test.describe('Price-list publication', () => {
         \\SidrenaCijena\\Plugin::instance()->anchors()->record($item, 12.50, array('source' => 'manual'));
       }
       $locations = new \\SidrenaCijena\\Database\\LocationRepository();
-      $existing = $locations->all();
-      if (empty($existing)) {
-        $locations->insert(array('name' => 'Prodavaonica E2E', 'type' => 'prodavaonica', 'address' => 'Vlaška 68', 'city' => 'Zagreb', 'identifier' => 'P1', 'active' => true));
+      $has_store = false;
+      foreach ($locations->all(true) as $location) {
+        if ('prodavaonica' === $location['type']) {
+          $has_store = true;
+          break;
+        }
+      }
+      if (!$has_store) {
+        $locations->insert(array('name' => 'Prodavaonica E2E', 'type' => 'prodavaonica', 'address' => 'Vlaška 68', 'city' => 'Zagreb', 'identifier' => 'E2E1', 'active' => true));
       }
       echo $product->get_id();
     `);
