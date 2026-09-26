@@ -1,24 +1,75 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
-  <title id="title">Sidrena Cijena EU</title>
-  <desc id="desc">Croatian anchor price and price-list tools for WordPress</desc>
+  <title id="title">Sidrena Cijena EU — referentne cijene i javni cjenici</title>
+  <desc id="desc">Hrvatski WordPress dodatak za prikaz referentnih cijena, izračun najniže cijene u 30 dana i objavu cjenika.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#102337"/>
-      <stop offset="1" stop-color="#174e50"/>
+      <stop offset=".58" stop-color="#123c46"/>
+      <stop offset="1" stop-color="#17615c"/>
     </linearGradient>
-    <linearGradient id="accent" x1="0" x2="1">
-      <stop offset="0" stop-color="#f4c65d"/>
-      <stop offset="1" stop-color="#f2a64a"/>
+    <linearGradient id="gold" x1="0" x2="1">
+      <stop offset="0" stop-color="#f6d77c"/>
+      <stop offset="1" stop-color="#f2ad56"/>
     </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffefb"/>
+      <stop offset="1" stop-color="#edf6f2"/>
+    </linearGradient>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="#fff" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-.2" y="-.2" width="1.4" height="1.5">
+      <feDropShadow dx="0" dy="12" stdDeviation="13" flood-color="#071a25" flood-opacity=".25"/>
+    </filter>
   </defs>
-  <rect width="1200" height="300" rx="28" fill="url(#bg)"/>
-  <circle cx="1050" cy="115" r="190" fill="#fff" opacity=".035"/>
-  <circle cx="1035" cy="115" r="132" fill="none" stroke="#fff" stroke-width="2" opacity=".12"/>
-  <path d="M1015 48v111m-36-75h72m-72 75c0 42 72 42 72 0m-108 25h144" fill="none" stroke="url(#accent)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="84" y="61" width="68" height="8" rx="4" fill="#fff" opacity=".72"/>
-  <text x="84" y="137" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="53" font-weight="750" letter-spacing="-1.4">Sidrena Cijena EU</text>
-  <text x="87" y="184" fill="#d8e7e5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="450">Croatian price transparency for WordPress</text>
-  <rect x="87" y="218" width="224" height="38" rx="19" fill="#ffffff" opacity=".12"/>
-  <text x="106" y="244" fill="#f9d781" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="1.4">ANCHOR PRICE · CSV · XML</text>
-  <path d="M0 286h1200" stroke="#edc359" stroke-width="5" opacity=".9"/>
+
+  <rect width="1200" height="300" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="300" rx="28" fill="url(#grid)"/>
+  <circle cx="1102" cy="34" r="214" fill="#fff" opacity=".035"/>
+  <circle cx="1078" cy="43" r="160" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="1.5"/>
+  <path d="M0 277C231 244 427 305 669 275s357-14 531-61v86H0Z" fill="#081d2b" opacity=".2"/>
+
+  <rect x="78" y="43" width="290" height="34" rx="17" fill="#fff" fill-opacity=".1" stroke="#fff" stroke-opacity=".17"/>
+  <g transform="translate(94 54)">
+    <path d="M0 0h18v4H0z" fill="#e5484d"/>
+    <path d="M0 4h18v4H0z" fill="#fff"/>
+    <path d="M0 8h18v4H0z" fill="#4e76c8"/>
+  </g>
+  <text x="122" y="65" fill="#e8f1ef" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.2">HRVATSKI WORDPRESS DODATAK</text>
+
+  <text x="78" y="142" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="51" font-weight="760" letter-spacing="-1.7">Sidrena Cijena EU</text>
+  <text x="81" y="181" fill="#dcebe7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="500">Referentne cijene i javni cjenici</text>
+  <text x="82" y="211" fill="#b9d2cf" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="450">Za WordPress i WooCommerce trgovine</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing=".7">
+    <rect x="80" y="231" width="157" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
+    <text x="96" y="250" fill="#f6d77c">REFERENTNE CIJENE</text>
+    <rect x="246" y="231" width="161" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
+    <text x="262" y="250" fill="#f6d77c">NAJNIŽA U 30 DANA</text>
+    <rect x="416" y="231" width="118" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
+    <text x="434" y="250" fill="#f6d77c">CSV · XML</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="804" y="37" width="322" height="226" rx="20" fill="url(#card)"/>
+    <path d="M824 37h282a20 20 0 0 1 20 20v3H804v-3a20 20 0 0 1 20-20Z" fill="url(#gold)"/>
+    <circle cx="838" cy="83" r="19" fill="#17615c"/>
+    <path d="M838 70v21m-8-14h16m-16 14c0 9 16 9 16 0m-24 8h32" fill="none" stroke="#f6d77c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="869" y="80" fill="#17454a" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="750" letter-spacing="1.2">JAVNI CJENIK</text>
+    <text x="869" y="98" fill="#66817d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="500">Pregled cijena na jednom mjestu</text>
+    <path d="M827 117h276" stroke="#dce8e3" stroke-width="1.4"/>
+    <text x="831" y="140" fill="#819791" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1">PROIZVOD</text>
+    <text x="1030" y="140" fill="#819791" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1">CIJENA</text>
+    <text x="831" y="164" fill="#193a3e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="650">Primjer proizvoda</text>
+    <text x="1030" y="164" fill="#193a3e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700">12,50 €</text>
+    <path d="M827 177h276" stroke="#e2ebe7" stroke-width="1.2"/>
+    <text x="831" y="199" fill="#66817d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="500">Referentna cijena</text>
+    <text x="1030" y="199" fill="#b45a3b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">10,00 €</text>
+    <rect x="831" y="216" width="82" height="24" rx="12" fill="#e2f0e9"/>
+    <circle cx="844" cy="228" r="3" fill="#228064"/>
+    <text x="853" y="232" fill="#26705c" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing=".5">CSV · XML</text>
+    <text x="1027" y="232" fill="#829792" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="600">PRIMJER PRIKAZA</text>
+  </g>
+
+  <path d="M0 293h1200" stroke="url(#gold)" stroke-width="5"/>
 </svg>
