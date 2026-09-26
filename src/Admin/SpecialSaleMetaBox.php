@@ -14,7 +14,6 @@ use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Labels;
 use SidrenaCijena\Support\Settings;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,10 +47,6 @@ class SpecialSaleMetaBox {
 		}
 
 		$screens = array();
-
-		if ( WooCommerceDetector::is_active() ) {
-			$screens[] = 'product';
-		}
 
 		if ( post_type_exists( StandalonePostType::POST_TYPE ) ) {
 			$screens[] = StandalonePostType::POST_TYPE;
@@ -136,48 +131,54 @@ class SpecialSaleMetaBox {
 				<p><?php echo esc_html__( 'No special sale is recorded for this item.', 'sidrena-cijena' ); ?></p>
 			<?php endif; ?>
 
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<div class="sidrena-cijena-sale-form">
 				<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_sale_nonce' ); ?>
-				<input type="hidden" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" />
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $item->id ); ?>" />
 				<input type="hidden" name="variation_id" value="<?php echo esc_attr( (string) $item->variation_id ); ?>" />
 
 				<p>
 					<label for="sidrena-cijena-sale-type"><?php echo esc_html__( 'Sale type', 'sidrena-cijena' ); ?></label>
-					<select id="sidrena-cijena-sale-type" name="sale_type" class="widefat" required>
+					<select id="sidrena-cijena-sale-type" name="sale_type" class="widefat">
 						<option value=""><?php echo esc_html__( '- select -', 'sidrena-cijena' ); ?></option>
 						<?php foreach ( self::sale_types() as $type ) : ?>
 							<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( Labels::sale_type( $type ) ); ?></option>
 						<?php endforeach; ?>
 					</select>
+					<span class="description"><?php echo esc_html__( 'Choose the configured category that describes this promotion; add available categories in Sidrena cijena → Settings → Special sales.', 'sidrena-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-name"><?php echo esc_html__( 'Sale name', 'sidrena-cijena' ); ?></label>
 					<input type="text" id="sidrena-cijena-sale-name" name="sale_name" class="widefat" />
+					<span class="description"><?php echo esc_html__( 'Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign.', 'sidrena-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-start"><?php echo esc_html__( 'Start date', 'sidrena-cijena' ); ?></label>
-					<input type="date" id="sidrena-cijena-sale-start" name="start_date" value="<?php echo esc_attr( $today ); ?>" required />
+					<input type="date" id="sidrena-cijena-sale-start" name="start_date" value="<?php echo esc_attr( $today ); ?>" />
+					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'sidrena-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-end"><?php echo esc_html__( 'End date (optional)', 'sidrena-cijena' ); ?></label>
 					<input type="date" id="sidrena-cijena-sale-end" name="end_date" />
+					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty.', 'sidrena-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-promo"><?php echo esc_html__( 'Promotional price', 'sidrena-cijena' ); ?></label>
 					<input type="text" id="sidrena-cijena-sale-promo" name="promo_price" class="widefat" inputmode="decimal" />
+					<span class="description"><?php echo esc_html__( 'Enter the actual selling price during this promotion, using a decimal comma or point.', 'sidrena-cijena' ); ?></span>
 				</p>
 
 				<p class="description">
 					<?php echo esc_html__( 'The lowest price of the 30 days before the start date is calculated and stored automatically.', 'sidrena-cijena' ); ?>
 				</p>
 
-				<?php submit_button( __( 'Record special sale', 'sidrena-cijena' ), 'secondary', 'submit', false ); ?>
-			</form>
+				<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post">
+					<?php echo esc_html__( 'Record special sale', 'sidrena-cijena' ); ?>
+				</button>
+			</div>
 		</div>
 		<?php
 	}

@@ -13,7 +13,8 @@ defined( 'ABSPATH' ) || exit;
 
 /* translators: %s: date of the reference price. */
 $sidrena_date_template = __( 'Cijena na dan %s', 'sidrena-cijena' );
-$sidrena_classes       = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context );
+$sidrena_style         = isset( $style ) && in_array( $style, array( 'plain', 'badge', 'card' ), true ) ? $style : 'plain';
+$sidrena_classes       = 'sidrena-cijena sidrena-cijena--' . sanitize_html_class( $context ) . ' sidrena-cijena--style-' . $sidrena_style;
 ?>
 <div class="<?php echo esc_attr( $sidrena_classes ); ?>"
 	title="<?php echo esc_attr( $anchor_title ); ?>"

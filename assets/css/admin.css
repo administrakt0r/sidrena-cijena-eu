@@ -91,3 +91,42 @@
 	margin-bottom: 12px;
 	list-style: none;
 }
+
+/* Keep the plugin easy to spot without changing WordPress' other menu items. */
+#toplevel_page_sidrena-cijena > a {
+	background: #135e96 !important;
+	color: #fff !important;
+}
+
+#toplevel_page_sidrena-cijena > a:hover,
+#toplevel_page_sidrena-cijena > a:focus {
+	background: #0a4b78 !important;
+	color: #fff !important;
+}
+
+#toplevel_page_sidrena-cijena .wp-menu-image:before {
+	color: #fff !important;
+}
+
+#toplevel_page_sidrena-cijena > a:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: -4px;
+}
+
+.sidrena-cijena-product-panel {
+	padding: 12px 16px 18px;
+}
+
+.sidrena-cijena-product-panel > h2 {
+	margin: 0 0 8px;
+	font-size: 16px;
+}
+
+.sidrena-cijena-product-panel > h3 {
+	margin: 20px 0 10px;
+	font-size: 14px;
+}
+
+.sidrena-cijena-product-panel > hr {
+	margin-top: 20px;
+}

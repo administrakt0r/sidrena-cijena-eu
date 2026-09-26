@@ -434,3 +434,21 @@ filename pattern and the append-only history contract are untouched.
 - **Archive**: `versions/1.0.15/sidrena-cijena.zip`, 293,153 bytes (288K), 154
   files; `unzip -t` reports no errors. SHA-256
   `e5e13ed936f4f794ec49cf1cffc947a28ef0f1b9f80df30fe41ff11e386b90e3`.
+
+## Release 1.0.16 (2026-09-26)
+
+- **Robustness**: fixed WooCommerce product editor submission by removing nested forms,
+  separating plugin actions/nonces from normal Update, and removing browser-required sale
+  fields that blocked unrelated product saves. Anchor and sale controls now use the native
+  Product data editor tab.
+- **Admin/storefront UX**: added the blue top-level Sidrena cijena menu with anchor icon,
+  translated setup and entry guidance, and plain/badge/card product display presets.
+- **Prompt 4 regression scope**: prompt now directs future passes to proactively reproduce
+  admin-save workflows beyond known backlog items and fix discovered form/nonce/action failures.
+- **Translations**: regenerated Croatian catalogs; 652 strings translated, 0 untranslated.
+- **Verification**: `composer test:unit` 307 tests / 1085 assertions; `composer lint`
+  clean (159 files); `composer analyse` clean (111 files); `npm run lint:js` clean;
+  integration 81 tests / 371 assertions after `npx wp-env clean tests`; full
+  `npm run test:e2e` 31/31 passed, including ordinary WooCommerce Update and the
+  dedicated anchor evidence action; `./local.sh` completed and generated the demo
+  lists (3.24 s). Release archive build and integrity check pending.

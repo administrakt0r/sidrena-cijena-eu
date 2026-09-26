@@ -42,3 +42,40 @@
 	display: inline-block;
 	margin-left: 0.5em;
 }
+
+/* Presets alter only the plugin's evidence labels, not the theme's prices. */
+.sidrena-cijena--style-badge {
+	width: fit-content;
+	padding: 0.2em 0.55em;
+	border: 1px solid #b6d4ea;
+	border-left: 3px solid #2271b1;
+	border-radius: 4px;
+	background: #f0f6fb;
+	color: #1d3c54;
+}
+
+.sidrena-cijena--style-badge .sidrena-cijena__label {
+	color: #38566d;
+}
+
+.sidrena-cijena--style-card {
+	box-sizing: border-box;
+	width: fit-content;
+	max-width: 100%;
+	padding: 0.65em 0.8em;
+	border: 1px solid #dcdcde;
+	border-left: 3px solid #2271b1;
+	border-radius: 5px;
+	background: #f6f7f7;
+}
+
+.sidrena-cijena--style-card .sidrena-cijena__anchor,
+.sidrena-cijena--style-card .sidrena-cijena__30-day {
+	display: block;
+}
+
+.sidrena-cijena--style-card .sidrena-cijena__label {
+	display: block;
+	margin: 0 0 0.15em;
+	font-size: 0.85em;
+}

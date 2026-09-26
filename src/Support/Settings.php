@@ -32,6 +32,7 @@ final class Settings {
 			'anchor_label'             => __( 'Sidrena cijena', 'sidrena-cijena' ),
 			'currency_display'         => 'symbol',
 			'display_location'         => 'price_html',
+			'product_display_style'    => 'plain',
 			'display_priority'         => 20,
 			'display_product_pages'    => true,
 			'display_archives'         => true,
@@ -174,6 +175,10 @@ final class Settings {
 
 		if ( isset( $input['display_location'] ) && in_array( $input['display_location'], array( 'price_html', 'summary' ), true ) ) {
 			$output['display_location'] = $input['display_location'];
+		}
+
+		if ( isset( $input['product_display_style'] ) && in_array( $input['product_display_style'], array( 'plain', 'badge', 'card' ), true ) ) {
+			$output['product_display_style'] = $input['product_display_style'];
 		}
 
 		if ( isset( $input['display_priority'] ) ) {

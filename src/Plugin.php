@@ -200,6 +200,8 @@ final class Plugin {
 		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
 		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
 		add_action( 'add_meta_boxes', array( SpecialSaleMetaBox::class, 'register' ) );
+		add_filter( 'woocommerce_product_data_tabs', array( AnchorMetaBox::class, 'product_data_tab' ) );
+		add_action( 'woocommerce_product_data_panels', array( AnchorMetaBox::class, 'render_product_data_panel' ) );
 		add_action( 'admin_post_' . AnchorMetaBox::ACTION, array( AnchorMetaBox::class, 'handle_record' ) );
 		add_action( 'admin_post_' . SpecialSaleMetaBox::ACTION, array( SpecialSaleMetaBox::class, 'handle_save' ) );
 		add_action( 'admin_notices', array( AnchorMetaBox::class, 'maybe_notice' ) );

@@ -137,6 +137,13 @@ so the run closed one gap.
 | AUD-02 | `pending` | The unit suite asserts the capability/nonce contract for the meta boxes only; the other `admin_post_` handlers, the REST `permission_callback`s, the menu registrations and the settings capability are verified by the integration suite and by manual review, not by a unit test | — |
 | AUD-03 | `pending` | `SettingsPage::register_settings()` registers both option groups without a `capability` argument, so `wp-admin/options.php` enforces core's `manage_options` instead of `manage_sidrena_cijena`. That is stricter than the plugin capability today, but the capability model is split across two names; if `manage_sidrena_cijena` is ever granted to a non-administrator role the settings screen will stay view-only for them | `option_page_capability_{group}` filters once a decision is made |
 
+## Product editor robustness and setup guidance (2026-09-26)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| FIX-13 | `done` | WooCommerce product saves could be disrupted by nested plugin forms, colliding `_wpnonce` fields, and sale inputs marked required during unrelated product updates. Evidence controls now live in a dedicated Product data tab and submit their own admin-post action/nonce without overriding normal Update | `test_product_evidence_actions_do_not_nest_or_override_editor_form`; Playwright product Update and anchor action regression |
+| UX-08 | `done` | Product editing controls were cramped in side meta boxes, the plugin menu lacked prominence, and setup/product/sale fields lacked source-of-truth guidance. Added full-width native tab, blue anchor menu entry, translated setup helpers, and plain/badge/card storefront presets | Product editor Playwright tests; style sanitizer unit test; Croatian catalog regenerated |
+
 ## Preserved strengths
 
 Keep these when borrowing ideas from the competitor:

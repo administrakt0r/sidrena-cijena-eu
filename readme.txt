@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.15
+Stable tag: 1.0.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,10 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.16 =
+* Fix WooCommerce product editor saves and move anchor/sale controls into a dedicated Product data tab.
+* Add admin setup guidance, a prominent Sidrena cijena menu, and product display presets.
 
 = 1.0.15 =
 * Reduce price-history batch reads and batch storefront sale and catalog lookups.

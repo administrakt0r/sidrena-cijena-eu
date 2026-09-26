@@ -21,11 +21,25 @@ This pass focuses on robustness and compatibility:
    - Add unit tests for uncovered branches in src/ (aim for real behavior coverage).
    - Sweep error paths: validation failures, empty catalogs, missing tables/options after
      migration, malformed CSV rows, corrupt published files, permission-denied admin posts.
+   - Actively inspect and reproduce admin save workflows (do not limit the pass to known
+     backlog items), especially WooCommerce product editing: trace the editor form, plugin
+     controls, submit buttons, nonces, and POST handlers. Fix discovered defects and catch invalid
+     nested forms, duplicate/shared `_wpnonce` fields, plugin `action` values that override the
+     normal Update action, and browser `required` fields that block unrelated saves. Check that
+     ordinary product edits still save and return to the editor, while dedicated plugin actions
+     still reach their own handler; add a regression test for each discovered failure.
+   - Check setup, store/location, product, and sale forms for fields whose expected value is
+     unclear. Add concise, translated helper text with a format/example or source-of-truth hint;
+     do not invent legal guidance.
    - Verify transient/option cleanup on deactivation and uninstall (Support\Deactivator,
      Support\Uninstaller) still leaves the anchor/lowest_30_day evidence intact (IMP-09).
 2. Compatibility:
    - Strict PHP 7.4 to 8.4 compatibility: no PHP 8-only syntax in src/ (static scan).
    - Clean operation both with and without WooCommerce (standalone catalog provider).
+   - When WooCommerce is active, verify the anchor-price and special-sale controls fit the
+     native Product data editor (not a cramped Gutenberg block or competing meta box), and
+     that the product editor's normal Update action remains independent of plugin evidence
+     actions. Prefer a focused Playwright regression test when wp-env is available.
    - Classic and block themes render the anchor/30-day lines (PriceDisplay,
      BuilderCompat, render_block path).
 3. Consistency with docs:

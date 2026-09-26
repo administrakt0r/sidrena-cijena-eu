@@ -115,6 +115,16 @@ class SettingsTest extends TestCase {
 	}
 
 	/**
+	 * Product presentation presets accept only the built-in styles.
+	 *
+	 * @return void
+	 */
+	public function test_product_display_style_accepts_presets_and_rejects_unknown_values() {
+		$this->assertSame( 'badge', Settings::sanitize( array( 'product_display_style' => 'badge' ) )['product_display_style'] );
+		$this->assertSame( 'plain', Settings::sanitize( array( 'product_display_style' => 'custom-css' ) )['product_display_style'] );
+	}
+
+	/**
 	 * Checkbox-style settings are booleanized when they are submitted.
 	 *
 	 * @return void

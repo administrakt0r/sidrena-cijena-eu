@@ -42,10 +42,6 @@ final class AnchorMetaBox {
 
 		$screens = array();
 
-		if ( WooCommerceDetector::is_active() ) {
-			$screens[] = 'product';
-		}
-
 		if ( post_type_exists( StandalonePostType::POST_TYPE ) ) {
 			$screens[] = StandalonePostType::POST_TYPE;
 		}
@@ -60,6 +56,50 @@ final class AnchorMetaBox {
 				'high'
 			);
 		}
+	}
+
+	/**
+	 * Add a dedicated tab to WooCommerce's native Product data panel.
+	 *
+	 * @param array<string,array<mixed>> $tabs Product data tabs.
+	 * @return array<string,array<mixed>>
+	 */
+	public static function product_data_tab( $tabs ) {
+		if ( ! Capabilities::current_user_can() || ! WooCommerceDetector::is_active() ) {
+			return $tabs;
+		}
+
+		$tabs['sidrena_cijena'] = array(
+			'label'    => __( 'Sidrena cijena', 'sidrena-cijena' ),
+			'target'   => 'sidrena_cijena_product_data',
+			'class'    => array( 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ),
+			'priority' => 80,
+		);
+
+		return $tabs;
+	}
+
+	/**
+	 * Render the full-width Sidrena panel inside WooCommerce Product data.
+	 *
+	 * @return void
+	 */
+	public static function render_product_data_panel() {
+		global $post;
+
+		if ( ! $post instanceof \WP_Post || 'product' !== $post->post_type || ! Capabilities::current_user_can() ) {
+			return;
+		}
+
+		echo '<div id="sidrena_cijena_product_data" class="panel woocommerce_options_panel">';
+		echo '<div class="sidrena-cijena-product-panel">';
+		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena' ) . '</h2>';
+		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena' ) . '</p>';
+		echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena' ) . '</h3>';
+		self::render( $post );
+		echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena' ) . '</h3>';
+		SpecialSaleMetaBox::render( $post );
+		echo '</div></div>';
 	}
 
 	/**
@@ -120,20 +160,21 @@ final class AnchorMetaBox {
 		}
 
 		?>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:1em">
-			<?php wp_nonce_field( self::ACTION ); ?>
-			<input type="hidden" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" />
+		<div class="sidrena-cijena-anchor-form" style="margin-top:1em">
+			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce' ); ?>
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $post->ID ); ?>" />
 
 			<p>
 				<label for="sidrena-anchor-price"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena' ); ?></label>
 				<input type="text" class="regular-text" id="sidrena-anchor-price" name="anchor_price"
 					value="<?php echo $status['anchor'] && null !== $status['anchor']['price'] ? esc_attr( (string) $status['anchor']['price'] ) : ''; ?>" />
+				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena' ); ?></span>
 			</p>
 
 			<p>
 				<label for="sidrena-anchor-date"><?php echo esc_html__( 'Reference date', 'sidrena-cijena' ); ?></label>
 				<input type="date" id="sidrena-anchor-date" name="reference_date" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
+				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'sidrena-cijena' ); ?></span>
 			</p>
 
 			<?php if ( $status['anchor'] ) : ?>
@@ -143,8 +184,10 @@ final class AnchorMetaBox {
 				</p>
 			<?php endif; ?>
 
-			<?php submit_button( __( 'Record anchor price', 'sidrena-cijena' ), 'secondary', 'submit', false ); ?>
-		</form>
+			<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post">
+				<?php echo esc_html__( 'Record anchor price', 'sidrena-cijena' ); ?>
+			</button>
+		</div>
 		<?php
 
 		printf(
@@ -164,7 +207,7 @@ final class AnchorMetaBox {
 			wp_die( esc_html__( 'You are not allowed to record anchor prices.', 'sidrena-cijena' ) );
 		}
 
-		check_admin_referer( self::ACTION );
+		check_admin_referer( self::ACTION, 'sidrena_cijena_anchor_nonce' );
 
 		$product_id = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
 		$item       = $product_id ? Plugin::instance()->catalog()->get_item( $product_id ) : null;

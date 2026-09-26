@@ -7,8 +7,11 @@
 
 use SidrenaCijena\Catalog\StandaloneCatalogProvider;
 use SidrenaCijena\Catalog\StandalonePostType;
+use SidrenaCijena\Admin\AnchorMetaBox;
+use SidrenaCijena\Admin\SpecialSaleMetaBox;
 use SidrenaCijena\Database\LocationRepository;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 /**
  * US2 integration coverage.
@@ -87,6 +90,39 @@ class Test_Publication extends WP_UnitTestCase {
 		Plugin::instance()->anchors()->record( $item, $price, array( 'source' => 'test' ) );
 
 		return (int) $post_id;
+	}
+
+	/**
+	 * Product editor controls must not emit nested forms or hijack Update.
+	 *
+	 * @return void
+	 */
+	public function test_product_evidence_actions_do_not_nest_or_override_editor_form() {
+		$id   = $this->create_item( 'Editor form regression', 'EDITOR-1', 3.99 );
+		$post = get_post( $id );
+
+		ob_start();
+		AnchorMetaBox::render( $post );
+		$anchor_html = (string) ob_get_clean();
+
+		ob_start();
+		SpecialSaleMetaBox::render( $post );
+		$sale_html = (string) ob_get_clean();
+
+		foreach ( array( $anchor_html, $sale_html ) as $html ) {
+			$this->assertStringNotContainsString( '<form', $html, 'Meta-box controls must not create invalid nested product-editor forms.' );
+			$this->assertStringContainsString( 'formaction="' . esc_url( admin_url( 'admin-post.php' ) ) . '"', $html );
+			$this->assertStringNotContainsString( 'type="hidden" name="action"', $html, 'Normal Update must retain the editor action.' );
+		}
+		$this->assertStringContainsString( 'name="sidrena_cijena_anchor_nonce"', $anchor_html );
+		$this->assertStringNotContainsString( 'name="_wpnonce"', $anchor_html, 'The meta-box nonce must not overwrite the product editor nonce.' );
+
+		if ( WooCommerceDetector::is_active() ) {
+			wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+			$tabs = AnchorMetaBox::product_data_tab( array() );
+			$this->assertArrayHasKey( 'sidrena_cijena', $tabs );
+			$this->assertSame( 'sidrena_cijena_product_data', $tabs['sidrena_cijena']['target'] );
+		}
 	}
 
 	/**

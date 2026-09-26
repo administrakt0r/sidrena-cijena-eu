@@ -18,8 +18,10 @@ defined( 'ABSPATH' ) || exit;
 if ( ! isset( $display ) ) {
 	return;
 }
+
+$sidrena_style = isset( $style ) && in_array( $style, array( 'plain', 'badge', 'card' ), true ) ? $style : 'plain';
 ?>
-<div class="sidrena-cijena sidrena-cijena--30-day" data-product-id="<?php echo esc_attr( (string) $item->id ); ?>" data-variation-id="<?php echo esc_attr( (string) $item->variation_id ); ?>">
+<div class="sidrena-cijena sidrena-cijena--30-day sidrena-cijena--style-<?php echo esc_attr( $sidrena_style ); ?>" data-product-id="<?php echo esc_attr( (string) $item->id ); ?>" data-variation-id="<?php echo esc_attr( (string) $item->variation_id ); ?>">
 	<span class="sidrena-cijena__30-day">
 		<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
 		<span class="sidrena-cijena__30-day-value" data-sidrena-cijena-30-day><?php echo esc_html( $display ); ?></span>

@@ -51,6 +51,11 @@ final class DisplaySettingsPage {
 				'label' => __( 'Display position', 'sidrena-cijena' ),
 				'type'  => 'select',
 			),
+			'product_display_style' => array(
+				'label'       => __( 'Product display style', 'sidrena-cijena' ),
+				'type'        => 'select',
+				'description' => __( 'Choose a presentation for the anchor and 30-day price on product pages and lists. Your theme’s price typography remains in control.', 'sidrena-cijena' ),
+			),
 			'display_priority'      => array(
 				'label' => __( 'Display priority', 'sidrena-cijena' ),
 				'type'  => 'number',
@@ -85,8 +90,9 @@ final class DisplaySettingsPage {
 				self::PAGE,
 				'sidrena_cijena_display',
 				array(
-					'key'  => $key,
-					'type' => $field['type'],
+					'key'         => $key,
+					'type'        => $field['type'],
+					'description' => isset( $field['description'] ) ? $field['description'] : '',
 				)
 			);
 		}
@@ -127,16 +133,24 @@ final class DisplaySettingsPage {
 				);
 				break;
 			case 'select':
-				$choices = 'currency_display' === $key
-					? array(
+				if ( 'currency_display' === $key ) {
+					$choices = array(
 						'symbol' => __( 'Currency symbol (6,99 EUR)', 'sidrena-cijena' ),
 						'code'   => __( 'Currency code (6,99 EUR)', 'sidrena-cijena' ),
 						'none'   => __( 'Amount only (6,99)', 'sidrena-cijena' ),
-					)
-					: array(
+					);
+				} elseif ( 'product_display_style' === $key ) {
+					$choices = array(
+						'plain' => __( 'Plain — minimal text, blends with the theme', 'sidrena-cijena' ),
+						'badge' => __( 'Badge — compact blue highlight', 'sidrena-cijena' ),
+						'card'  => __( 'Card — separated panel with more breathing room', 'sidrena-cijena' ),
+					);
+				} else {
+					$choices = array(
 						'price_html' => __( 'Inline, next to the price', 'sidrena-cijena' ),
 						'summary'    => __( 'Separate block below the price', 'sidrena-cijena' ),
 					);
+				}
 
 				$fields->select( $key, $value, $choices );
 				break;
@@ -146,6 +160,10 @@ final class DisplaySettingsPage {
 			default:
 				$fields->text( $key, $value );
 				break;
+		}
+
+		if ( ! empty( $args['description'] ) ) {
+			echo '<p class="description">' . esc_html( $args['description'] ) . '</p>';
 		}
 	}
 

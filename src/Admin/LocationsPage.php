@@ -120,6 +120,7 @@ class LocationsPage {
 
 		echo '<tr><th scope="row"><label for="sidrena-location-name">' . esc_html__( 'Name', 'sidrena-cijena' ) . '</label></th>';
 		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $name ) . '"' . FormState::error_attributes( $errors, 'name', 'sidrena-location-name' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'A staff-facing name to recognize this shop, for example “Zagreb — Vlaška 68”.', 'sidrena-cijena' ) . '</p>';
 		FormState::render_error( $errors, 'name', 'sidrena-location-name' );
 		echo '</td></tr>';
 
@@ -130,13 +131,15 @@ class LocationsPage {
 			echo '<option value="' . esc_attr( $value ) . '"' . selected( $current_type, $value, false ) . '>' . esc_html( $label ) . '</option>';
 		}
 
-		echo '</select></td></tr>';
+		echo '</select><p class="description">' . esc_html__( 'Select the facility form that matches this sales location’s legal/store classification.', 'sidrena-cijena' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-address">' . esc_html__( 'Address', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $address ) . '" /></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $address ) . '" />';
+		echo '<p class="description">' . esc_html__( 'Enter the official street address and house number; this is used in the generated price-list filename.', 'sidrena-cijena' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-city">' . esc_html__( 'City', 'sidrena-cijena' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $city ) . '" /></td></tr>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $city ) . '" />';
+		echo '<p class="description">' . esc_html__( 'Enter the city name as it should appear in the published filename.', 'sidrena-cijena' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-identifier">' . esc_html__( 'Facility identifier', 'sidrena-cijena' ) . '</label></th>';
 		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $identifier ) . '"' . FormState::error_attributes( $errors, 'identifier', 'sidrena-location-identifier' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
@@ -159,6 +162,7 @@ class LocationsPage {
 		}
 
 		echo '</select>';
+		echo '<p class="description">' . esc_html__( 'Choose whether this location receives every catalog item, only selected categories, or all except selected categories.', 'sidrena-cijena' ) . '</p>';
 		echo '<p><label class="screen-reader-text" for="sidrena-location-categories">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</label>';
 		echo '<input type="text" class="regular-text" id="sidrena-location-categories" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena' ) . '" /></p>';
 		echo '<p class="description">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena' ) . '</p></td></tr>';
@@ -167,6 +171,7 @@ class LocationsPage {
 		foreach ( array( 'csv', 'xml' ) as $format ) {
 			echo '<label style="margin-right:1em;"><input type="checkbox" name="formats[]" value="' . esc_attr( $format ) . '"' . checked( in_array( $format, $formats, true ), true, false ) . ' /> ' . esc_html( strtoupper( $format ) ) . '</label>';
 		}
+		echo '<p class="description">' . esc_html__( 'Choose the file formats accepted by this location. The generated files remain available in the publication archive.', 'sidrena-cijena' ) . '</p>';
 		echo '</td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-separator">' . esc_html__( 'Filename separator', 'sidrena-cijena' ) . '</label></th>';

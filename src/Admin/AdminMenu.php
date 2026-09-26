@@ -7,8 +7,6 @@
 
 namespace SidrenaCijena\Admin;
 
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,28 +22,25 @@ final class AdminMenu {
 	/**
 	 * Register menus and submenus.
 	 *
-	 * The menu lives under WooCommerce when WooCommerce is active and under
-	 * Settings otherwise (contract `wordpress-integration.md`).
+	 * The menu is always a dedicated top-level section for discoverability.
 	 *
 	 * @return void
 	 */
 	public static function register() {
 		$capability = Capabilities::capability();
-		$parent     = self::parent_slug();
-
 		add_menu_page(
 			__( 'Sidrena cijena', 'sidrena-cijena' ),
 			__( 'Sidrena cijena', 'sidrena-cijena' ),
 			$capability,
 			self::PARENT,
 			array( DashboardPage::class, 'render' ),
-			'dashicons-tag',
+			'dashicons-anchor',
 			56
 		);
 
 		foreach ( self::pages() as $slug => $page ) {
 			add_submenu_page(
-				$parent,
+				self::PARENT,
 				/* translators: %s: screen title. */
 				sprintf( __( '%s - Sidrena cijena', 'sidrena-cijena' ), $page[1] ),
 				$page[1],
@@ -79,15 +74,6 @@ final class AdminMenu {
 	}
 
 	/**
-	 * Parent menu slug.
-	 *
-	 * @return string
-	 */
-	public static function parent_slug() {
-		return WooCommerceDetector::is_active() ? 'woocommerce' : 'options-general.php';
-	}
-
-	/**
 	 * URL of a plugin screen.
 	 *
 	 * @param string $slug Screen slug.
@@ -111,16 +97,16 @@ final class AdminMenu {
 	 * @return void
 	 */
 	public static function enqueue_assets( $hook_suffix ) {
-		if ( false === strpos( (string) $hook_suffix, 'sidrena-cijena' ) && false === strpos( (string) $hook_suffix, 'sidrena_item' ) ) {
-			return;
-		}
-
 		wp_enqueue_style(
 			'sidrena-cijena-admin',
 			SIDRENA_CIJENA_URL . 'assets/css/admin.css',
 			array(),
 			SIDRENA_CIJENA_VERSION
 		);
+
+		if ( false === strpos( (string) $hook_suffix, 'sidrena-cijena' ) && false === strpos( (string) $hook_suffix, 'sidrena_item' ) ) {
+			return;
+		}
 
 		wp_enqueue_script(
 			'sidrena-cijena-admin',
