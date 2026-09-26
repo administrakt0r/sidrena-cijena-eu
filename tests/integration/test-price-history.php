@@ -124,6 +124,50 @@ class Test_Price_History extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The batch lookup returns the greatest ledger ID for each variation key.
+	 *
+	 * @return void
+	 */
+	public function test_latest_map_returns_latest_correction_and_keeps_variations_separate() {
+		$post_id = $this->create_item( 'Batch history item', 'BATCH-1', 9.99 );
+		$base    = array(
+			'product_id'     => $post_id,
+			'price_type'     => 'anchor',
+			'price'          => 10.00,
+			'reference_date' => '2026-09-10',
+			'source'         => 'manual',
+		);
+
+		$original = $this->history->insert( array_merge( $base, array( 'variation_id' => 0 ) ) );
+		$this->history->insert_correction(
+			array_merge(
+				$base,
+				array(
+					'price'             => 11.00,
+					'variation_id'      => 0,
+					'correction_of'     => $original,
+					'correction_reason' => 'Verified against invoice.',
+				)
+			)
+		);
+		$this->history->insert(
+			array_merge(
+				$base,
+				array(
+					'variation_id' => 10101,
+					'price'        => 12.00,
+				)
+			)
+		);
+
+		$map = $this->history->latest_map( array( $post_id ), 'anchor' );
+
+		$this->assertCount( 2, $map );
+		$this->assertSame( 11.0, (float) $map[ $post_id . ':0' ]['price'] );
+		$this->assertSame( 12.0, (float) $map[ $post_id . ':10101' ]['price'] );
+	}
+
+	/**
 	 * Direct insert_correction rejects missing metadata.
 	 *
 	 * @return void

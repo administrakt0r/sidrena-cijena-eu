@@ -185,9 +185,18 @@ class PriceHistoryRepository {
 		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
 		$params       = array_merge( array( $price_type ), $product_ids );
 
+		// Select only each item's greatest ledger ID. Corrections are appended,
+		// so this preserves the existing latest-by-ID rule without loading history.
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
 		$sql = $wpdb->prepare(
-			"SELECT * FROM {$this->table} WHERE price_type = %s AND product_id IN ({$placeholders}) ORDER BY id ASC",
+			"SELECT history.* FROM {$this->table} AS history
+			INNER JOIN (
+				SELECT product_id, variation_id, MAX(id) AS latest_id
+				FROM {$this->table}
+				WHERE price_type = %s AND product_id IN ({$placeholders})
+				GROUP BY product_id, variation_id
+			) AS latest ON latest.latest_id = history.id
+			ORDER BY history.id ASC",
 			$params
 		);
 
