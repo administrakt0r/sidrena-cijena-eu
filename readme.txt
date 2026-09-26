@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ Review retained records with your data-protection and legal advisers.
 2. Administrative compliance dashboard (local demo data).
 
 == Changelog ==
+
+= 1.0.9 =
+* Accessibility: every remaining admin table header (dashboard, compliance, publications, logs, audit, legal settings, documentation, import sources, sale history) now carries `scope="col"` so screen readers announce column context.
+* Tests: new unit coverage for the anchor cache (get/set round trips, cached nulls, per-item and variation invalidation, generation flushes) and the special-sale service (FR-023 sale-type gate, date validation, not-found paths).
+* Compatibility: static scan confirms no PHP 8-only syntax in `src/` (PHP 7.4 to 8.4 supported).
 
 = 1.0.8 =
 * Reliability: the daily 08:00 run no longer force-publishes duplicate price lists when a run happens just before the deadline, and service price changes queue the correct regeneration request.

@@ -3,7 +3,7 @@
  * Plugin Name:       Sidrena cijena - Croatian Anchor Price Compliance
  * Plugin URI:        https://github.com/administrakt0r/sidrena-cijena
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), the daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
- * Version:           1.0.8
+ * Version:           1.0.9
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            administrakt0r
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIDRENA_CIJENA_VERSION', '1.0.8' );
+define( 'SIDRENA_CIJENA_VERSION', '1.0.9' );
 define( 'SIDRENA_CIJENA_FILE', __FILE__ );
 define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
