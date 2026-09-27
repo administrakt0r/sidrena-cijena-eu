@@ -274,8 +274,9 @@ class CustomerWordingTest extends TestCase {
 			require_once dirname( __DIR__, 3 ) . '/sidrena-cijena.php';
 		}
 
-		// 1. By default, loads Croatian catalog.
+		// 1. With Croatian locale, loads Croatian catalog.
 		unload_textdomain( 'sidrena-cijena-eu' );
+		$GLOBALS['sidrena_test_locale'] = 'hr_HR';
 		sidrena_cijena_load_textdomain();
 		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
 		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
@@ -285,13 +286,20 @@ class CustomerWordingTest extends TestCase {
 		sidrena_cijena_load_textdomain();
 		$this->assertSame( $first_loaded, $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
 
-		// 3. Filter out Croatian default in en_US locale -> loads plugin textdomain for fallback.
+		// 3. In en_US locale, respects locale and loads standard plugin textdomain.
 		unload_textdomain( 'sidrena-cijena-eu' );
-		add_filter( 'sidrena_cijena_load_croatian_catalog', '__return_false' );
+		$GLOBALS['sidrena_test_locale'] = 'en_US';
 		sidrena_cijena_load_textdomain();
-
 		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
 		$this->assertStringNotContainsString( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+
+		// 4. In en_US locale with filter forcing Croatian -> loads Croatian catalog.
+		unload_textdomain( 'sidrena-cijena-eu' );
+		add_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
+		sidrena_cijena_load_textdomain();
+		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
+		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+		remove_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
 	}
 
 	/**

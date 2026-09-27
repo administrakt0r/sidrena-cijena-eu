@@ -35,9 +35,9 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
 /**
  * Load the plugin translations.
  *
- * Always loads the Croatian translation catalogue by default so the plugin
- * interface is 100% in Croatian on all sites, even if WordPress runs in English.
- * Supports filtering to allow English fallback or standard textdomain resolution.
+ * Loads the bundled Croatian translation catalogue for Croatian locales,
+ * and falls back to standard WordPress textdomain resolution for other
+ * locales. Supports filtering to allow forcing or skipping Croatian catalog.
  *
  * @return void
  */
@@ -49,16 +49,14 @@ function sidrena_cijena_load_textdomain() {
 	$locale = function_exists( 'determine_locale' ) ? determine_locale() : ( function_exists( 'get_locale' ) ? get_locale() : 'hr_HR' );
 
 	/**
-	 * Filters whether to load the bundled Croatian translation catalog by default.
+	 * Filters whether to load the bundled Croatian translation catalog.
 	 *
-	 * Enabled by default so Croatian legal wording renders consistently even if
-	 * WordPress is installed in English. Return false to use English fallback or
-	 * standard WordPress textdomain resolution.
+	 * Defaults to true for Croatian locales (hr, hr_HR, hr_BA), false otherwise.
 	 *
 	 * @param bool   $load   Whether to load the Croatian catalog.
 	 * @param string $locale Active locale.
 	 */
-	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', true, $locale );
+	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', 0 === strpos( (string) $locale, 'hr' ), $locale );
 
 	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
 		load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
@@ -67,7 +65,6 @@ function sidrena_cijena_load_textdomain() {
 
 	load_plugin_textdomain( 'sidrena-cijena-eu', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
 }
-add_action( 'plugins_loaded', 'sidrena_cijena_load_textdomain', 5 );
 add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );
 
 /**
