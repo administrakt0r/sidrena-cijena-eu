@@ -1,0 +1,145 @@
+version: 2.1
+
+commands:
+  restore_tool_caches:
+    description: "Restore Composer and NPM caches"
+    steps:
+      - restore_cache:
+          name: Restore Composer cache
+          keys:
+            - v1-composer-{{ checksum "composer.json" }}
+            - v1-composer-
+      - restore_cache:
+          name: Restore NPM cache
+          keys:
+            - v1-npm-{{ checksum "package.json" }}
+            - v1-npm-
+
+  save_tool_caches:
+    description: "Save Composer and NPM caches"
+    steps:
+      - save_cache:
+          name: Save Composer cache
+          key: v1-composer-{{ checksum "composer.json" }}
+          paths:
+            - ~/.cache/composer
+            - vendor
+      - save_cache:
+          name: Save NPM cache
+          key: v1-npm-{{ checksum "package.json" }}
+          paths:
+            - ~/.npm
+            - node_modules
+
+jobs:
+  verify:
+    description: "Run static quality gates (unit tests, PHPCS, PHPStan, ESLint, translations completeness)"
+    docker:
+      - image: cimg/php:8.2-node
+    resource_class: medium
+    steps:
+      - checkout
+      - restore_tool_caches
+      - run:
+          name: Install Composer Dependencies
+          command: composer install --prefer-dist --no-progress
+      - run:
+          name: Install NPM Dependencies
+          command: npm ci || npm install
+      - save_tool_caches
+      - run:
+          name: PHPUnit Unit Tests
+          command: composer test:unit
+      - run:
+          name: PHPCS WordPress Coding Standards
+          command: composer lint
+      - run:
+          name: PHPStan Static Analysis (Level 6)
+          command: composer analyse
+      - run:
+          name: ESLint JavaScript Check
+          command: npm run lint:js
+      - run:
+          name: Croatian Catalog Completeness Check
+          command: |
+            OUT=$(php tools/i18n/make-pot.php --locale=hr_HR 2>&1)
+            echo "$OUT"
+            echo "$OUT" | grep -q "0 untranslated" || (echo "Untranslated strings found in catalog!" && exit 1)
+
+  build_package:
+    description: "Build release zip package, verify checksums and archive integrity"
+    docker:
+      - image: cimg/php:8.2-node
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install Zip and Utilities
+          command: sudo apt-get update && sudo apt-get install -y zip unzip
+      - run:
+          name: Extract current plugin version
+          command: |
+            VERSION=$(grep -m1 "SIDRENA_CIJENA_VERSION" sidrena-cijena.php | grep -o "'[0-9][^']*'" | tr -d "'")
+            echo "Building package for version: $VERSION"
+            echo "export PLUGIN_VERSION=$VERSION" >> "$BASH_ENV"
+      - run:
+          name: Build and Verify Zip Archive
+          command: |
+            tools/build-zip.sh "$PLUGIN_VERSION" --no-upload --force
+            unzip -t "versions/$PLUGIN_VERSION/sidrena-cijena-eu.zip"
+            cd "versions/$PLUGIN_VERSION"
+            sha256sum -c SHA256SUMS.txt
+      - store_artifacts:
+          path: versions/
+          destination: release-packages
+
+  integration_and_e2e:
+    description: "Run WordPress integration tests and Playwright E2E tests using wp-env"
+    machine:
+      image: ubuntu-2404:current
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Setup PHP and Node
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y php-cli php-mbstring php-xml php-curl php-zip composer
+            nvm install 20
+            nvm use 20
+            echo 'nvm use 20' >> "$BASH_ENV"
+      - run:
+          name: Install Dependencies
+          command: |
+            composer install --prefer-dist --no-progress
+            npm ci || npm install
+            npx playwright install --with-deps chromium
+      - run:
+          name: Start wp-env
+          command: npx wp-env start
+      - run:
+          name: Run PHPUnit Integration Tests in wp-env
+          command: |
+            npx wp-env run tests-cli wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration
+      - run:
+          name: Run Playwright E2E Tests on Port 8889
+          command: |
+            npm run test:e2e
+      - store_artifacts:
+          path: playwright-report
+          destination: playwright-report
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - verify
+      - build_package:
+          requires:
+            - verify
+      - integration_and_e2e:
+          requires:
+            - verify
