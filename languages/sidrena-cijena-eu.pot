@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 2.0.3\n"
+"Project-Id-Version: Sidrena cijena 2.0.4\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-27T15:26:09+00:00\n"
+"POT-Creation-Date: 2026-09-27T16:40:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,9 +15,6 @@ msgid "%1$d rows: %2$d valid, %3$d invalid, %4$d duplicate, %5$d would overwrite
 msgstr ""
 
 msgid "%1$s (%2$s) — %3$s"
-msgstr ""
-
-msgid "%d further findings are not shown. Export the report to see all of them."
 msgstr ""
 
 msgid "%d further findings are not shown; run the compliance check for the full report."
@@ -282,6 +279,9 @@ msgid "Archive"
 msgstr ""
 
 msgid "Archive of published price lists"
+msgstr ""
+
+msgid "Archive pagination"
 msgstr ""
 
 msgid "Archives and lists"
@@ -573,6 +573,9 @@ msgid "Do not delete the original data source until the imported anchors have be
 msgstr ""
 
 msgid "Dopušta registraciju samostalnog kataloga (CPT) čak i ako je WooCommerce aktivan."
+msgstr ""
+
+msgid "Dostupni su unaprijed definirani stilovi: interaktivni tooltip s ikonom (?), minimalistički, bedž, kartica, obrub, meka pozadina, monokromatski, pilula, oznaka, naglašena traka i suptilni prikaz. U postavkama možete odabrati i način prikaza datuma (tooltip, u retku, podtekst ili skriveno) te debljinu fonta."
 msgstr ""
 
 msgid "Download"
@@ -1361,6 +1364,12 @@ msgstr ""
 msgid "Prikazuje se tekstom „Cijena na dan DD.MM.GGGG: X,XX €” (npr. 10.09.2026. ili 02.05.2025. ovisno o kategoriji). Mjesto prikaza možete podesiti u Postavke → Prikaz (ispod cijene, u istom retku ili zasebnom bloku)."
 msgstr ""
 
+msgid "Prilagođava tekst oznake najniže 30-dnevne cijene po artiklu i kontekstu prikaza."
+msgstr ""
+
+msgid "Prilagođava tekst poveznice na arhivu cjenika u podnožju stranice."
+msgstr ""
+
 msgid "Primjer: PRODAVAONICA_ILICA-1_POSL-01_1_26092026_0800.csv"
 msgstr ""
 
@@ -1625,6 +1634,9 @@ msgstr ""
 msgid "Showing %1$d–%2$d of %3$d items."
 msgstr ""
 
+msgid "Showing %1$d–%2$d of %3$d published price lists."
+msgstr ""
+
 msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
 msgstr ""
 
@@ -1740,6 +1752,9 @@ msgid "Start date"
 msgstr ""
 
 msgid "Status"
+msgstr ""
+
+msgid "Stilovi i interaktivni tooltip:"
 msgstr ""
 
 msgid "Struktura naziva datoteke:"

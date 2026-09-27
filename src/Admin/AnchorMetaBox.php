@@ -10,6 +10,7 @@ namespace SidrenaCijena\Admin;
 use SidrenaCijena\Catalog\StandalonePostType;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Labels;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
 use SidrenaCijena\WooCommerce\Display\CardVisibility;
@@ -178,17 +179,23 @@ final class AnchorMetaBox {
 				: '<em>' . esc_html__( 'Not recorded', 'sidrena-cijena-eu' ) . '</em>'
 		);
 
+		$ref_date = Dates::format_date_display( (string) $status['reference_date'] );
+		$ref_date = '' !== $ref_date ? $ref_date : (string) $status['reference_date'];
+
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
 			esc_html__( 'Applicable reference date', 'sidrena-cijena-eu' ),
-			esc_html( $status['reference_date'] . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'sidrena-cijena-eu' ) . ')' : '' ) )
+			esc_html( $ref_date . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'sidrena-cijena-eu' ) . ')' : '' ) )
 		);
 
 		if ( $status['anchor'] ) {
+			$anchor_ref = Dates::format_date_display( (string) $status['anchor']['reference_date'] );
+			$anchor_ref = '' !== $anchor_ref ? $anchor_ref : (string) $status['anchor']['reference_date'];
+
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td></tr>',
 				esc_html__( 'Recorded for', 'sidrena-cijena-eu' ),
-				esc_html( (string) $status['anchor']['reference_date'] . ' / ' . Labels::source( (string) $status['anchor']['source'] ) )
+				esc_html( $anchor_ref . ' / ' . Labels::source( (string) $status['anchor']['source'] ) )
 			);
 		}
 

@@ -393,24 +393,31 @@ class PublicPage {
 	/**
 	 * Render the publication archive table.
 	 *
-	 * @param array<mixed> $args Unused.
+	 * @param array<mixed> $args Optional. Arguments including `paged`.
 	 * @return string
 	 */
 	public function render_archive( array $args = array() ) {
-		unset( $args );
+		$paged = isset( $args['paged'] ) ? max( 1, (int) $args['paged'] ) : 1;
+		if ( 1 === $paged && isset( $_GET['paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public pagination.
+			$paged = max( 1, absint( wp_unslash( $_GET['paged'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public pagination.
+		}
 
 		$location = PublicFeed::public_location();
 		$items    = array();
+		$total    = 0;
+		$per_page = self::ARCHIVE_LIMIT;
 
 		if ( $location ) {
 			$index = Plugin::instance()->publications()->index(
 				array(
 					'location' => (int) $location['id'],
-					'per_page' => self::ARCHIVE_LIMIT,
+					'page'     => $paged,
+					'per_page' => $per_page,
 				)
 			);
 
-			$items = $index['items'];
+			$items = (array) $index['items'];
+			$total = (int) $index['total'];
 		}
 
 		$rows = array();
@@ -419,14 +426,20 @@ class PublicPage {
 			$rows[] = $this->display_publication( $item );
 		}
 
+		$total_pages = $total > 0 ? (int) ceil( $total / $per_page ) : 1;
+
 		return $this->style() . $this->partial(
 			'public-archive.php',
 			array(
-				'rows'     => $rows,
-				'location' => $location,
-				'list_url' => home_url( '/' . self::STEM_LIST . '/' ),
-				'feed_xml' => home_url( '/' . PublicFeed::STEM . '.xml' ),
-				'feed_csv' => home_url( '/' . PublicFeed::STEM . '.csv' ),
+				'rows'        => $rows,
+				'location'    => $location,
+				'paged'       => $paged,
+				'per_page'    => $per_page,
+				'total_items' => $total,
+				'total_pages' => $total_pages,
+				'list_url'    => home_url( '/' . self::STEM_LIST . '/' ),
+				'feed_xml'    => home_url( '/' . PublicFeed::STEM . '.xml' ),
+				'feed_csv'    => home_url( '/' . PublicFeed::STEM . '.csv' ),
 			)
 		);
 	}
@@ -472,9 +485,23 @@ class PublicPage {
 	 * @return string
 	 */
 	public function shortcode_archive( $atts ) {
-		unset( $atts );
+		$atts = shortcode_atts(
+			array(
+				'paged' => 0,
+			),
+			$atts,
+			'sidrena-arhiva'
+		);
 
-		return $this->render_archive();
+		$paged = (int) $atts['paged'];
+		if ( $paged <= 0 && isset( $_GET['paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
+			$paged = max( 1, absint( wp_unslash( $_GET['paged'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
+		}
+		if ( $paged <= 0 ) {
+			$paged = 1;
+		}
+
+		return $this->render_archive( array( 'paged' => $paged ) );
 	}
 
 	/**

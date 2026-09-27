@@ -273,9 +273,16 @@ class PagePublicationFake {
 	 * @return array<mixed>
 	 */
 	public function index( array $args = array() ) {
-		unset( $args );
+		$page     = isset( $args['page'] ) ? max( 1, (int) $args['page'] ) : 1;
+		$per_page = isset( $args['per_page'] ) ? max( 1, (int) $args['per_page'] ) : 50;
+		$offset   = ( $page - 1 ) * $per_page;
+		$total    = count( $this->rows );
+		$items    = array_slice( $this->rows, $offset, $per_page );
 
-		return array( 'items' => $this->rows );
+		return array(
+			'items' => $items,
+			'total' => $total,
+		);
 	}
 }
 
@@ -994,6 +1001,95 @@ class PublicPageTest extends TestCase {
 		$this->assertStringContainsString( 'aria-label="Download cjenik-2026-09-25.csv"', $out );
 		$this->assertStringContainsString( 'XML Feed', $out );
 		$this->assertStringContainsString( 'CSV Feed', $out );
+		$this->assertStringContainsString( 'Showing 1–1 of 1 published price lists.', $out );
+	}
+
+	/**
+	 * Archive renders pagination links and count when results exceed per-page limit.
+	 *
+	 * @return void
+	 */
+	public function test_render_archive_pagination_and_count() {
+		$this->reset_state();
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 7,
+				'type' => 'webshop',
+				'name' => 'Webshop Zagreb',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$pub = new PagePublicationFake();
+		for ( $i = 1; $i <= 55; ++$i ) {
+			$pub->rows[] = array(
+				'id'           => $i,
+				'location_id'  => 7,
+				'format'       => 'csv',
+				'filename'     => sprintf( 'cjenik-2026-09-%02d.csv', ( $i % 30 ) + 1 ),
+				'file_size'    => 1024,
+				'checksum'     => '1234567890abcdef',
+				'item_count'   => 10,
+				'published_at' => '2026-09-25 12:00:00',
+				'created_at'   => '2026-09-25 12:00:00',
+				'url'          => 'https://example.com/cjenik.csv',
+			);
+		}
+		PluginSwap::swap( 'publications', $pub );
+
+		$probe = new PublicPageProbe();
+
+		// Page 1: 50 items of 55.
+		$out1 = $probe->render_archive();
+		$this->assertStringContainsString( 'Showing 1–50 of 55 published price lists.', $out1 );
+		$this->assertStringContainsString( 'sidrena-cijena-pagination', $out1 );
+		$this->assertStringContainsString( 'aria-label="Archive pagination"', $out1 );
+
+		// Page 2: remaining 5 items.
+		$out2 = $probe->render_archive( array( 'paged' => 2 ) );
+		$this->assertStringContainsString( 'Showing 51–55 of 55 published price lists.', $out2 );
+	}
+
+	/**
+	 * Shortcode sidrena-arhiva accepts paged attribute.
+	 *
+	 * @return void
+	 */
+	public function test_shortcode_archive_supports_paged() {
+		$this->reset_state();
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 7,
+				'type' => 'webshop',
+				'name' => 'Webshop Zagreb',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$pub = new PagePublicationFake();
+		for ( $i = 1; $i <= 55; ++$i ) {
+			$pub->rows[] = array(
+				'id'           => $i,
+				'location_id'  => 7,
+				'format'       => 'csv',
+				'filename'     => 'cjenik.csv',
+				'file_size'    => 1024,
+				'checksum'     => '1234567890abcdef',
+				'item_count'   => 10,
+				'published_at' => '2026-09-25 12:00:00',
+				'created_at'   => '2026-09-25 12:00:00',
+				'url'          => 'https://example.com/cjenik.csv',
+			);
+		}
+		PluginSwap::swap( 'publications', $pub );
+
+		$page = new PublicPage();
+		$out  = $page->shortcode_archive( array( 'paged' => 2 ) );
+		$this->assertStringContainsString( 'Showing 51–55 of 55 published price lists.', $out );
 	}
 
 	/**

@@ -1,5 +1,16 @@
 # Release verification
 
+## Release 2.0.4 — Public Archive Pagination, Compliance Findings Pagination & Editor Formatting Pass (2026-09-27)
+
+- UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (UX-13).
+- Public archive pagination (`templates/public-archive.php`, `src/Api/PublicPage.php`): added pagination support (`paged`, `per_page`, `total_items`, `total_pages`), "showing X–Y of Z published price lists" count, accessible `<nav class="sidrena-cijena-pagination">` wrapper with `paginate_links()`, and `paged` parameter support in `[sidrena-arhiva]` shortcode.
+- Compliance findings pagination (`src/Admin/CompliancePage.php`): replaced hardcoded 200 cutoff with `FINDINGS_PER_PAGE = 50` and `Pagination::render()` screen-reader navigation.
+- WooCommerce editor date formatting (`src/Admin/SpecialSaleMetaBox.php`, `src/Admin/AnchorMetaBox.php`): formatted sale periods, 30-day calculation explanation start dates, applicable reference dates, and recorded-for dates with Croatian date display (`d.m.Y.`).
+- Admin value and notice formatting (`src/Admin/LegalSettingsPage.php`, `src/Admin/PublicationsPage.php`): formatted string boolean values `'true'`/`'false'` as translated `Yes`/`No` (`Da`/`Ne`) in legal settings change logs, and added `is-dismissible` to generation failure notice.
+- In-dashboard documentation expansion (`src/Admin/DocumentationPage.php`): updated Section 3 (Prikaz na trgovini) to explain storefront presets (tooltip `(?)`, minimal, tag, accent, subtle), date display modes, and font weights; updated Section 7 (Kuke za programere) to document `sidrena_cijena_thirty_day_label` and `sidrena_cijena_footer_link_text`.
+- Quality gates: 384 unit tests (1,393 assertions), 0 failures; PHPCS clean across 175 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (741 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.4/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.4` and verified with `unzip -t`.
+
 ## Release 2.0.3 — Storefront Presentation & Customer Wording Pass (2026-09-27)
 
 - Storefront presentation & Croatian-first wording pass (UX-12).

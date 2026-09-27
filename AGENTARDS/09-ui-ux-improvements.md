@@ -1,6 +1,6 @@
 # Prompt 9 — UI/UX pass: admin screens, public price list, accessibility (no Docker needed, optional for E2E)
 
-> **Status (v2.0.3):** COMPLETED. All UI/UX passes (UX-01 through UX-12, UX-04..UX-07) implemented, tested, and shipped.
+> **Status (v2.0.4):** COMPLETED. All UI/UX passes (UX-01 through UX-13) implemented, tested, and shipped.
 
 ```
 You are improving the user experience of the WordPress plugin in the current directory

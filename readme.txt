@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,14 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.4 =
+* Public archive pagination: add pagination support, "showing X–Y of Z published price lists" count, and [sidrena-arhiva] paged parameter support to public price-list archive.
+* Compliance findings pagination: paginate compliance report table (50 items per page) with full screen-reader navigation and accessible label.
+* Date formatting: format sale periods, 30-day calculation explanation start dates, applicable reference dates, and recorded-for dates in WooCommerce product meta boxes using Croatian display format (d.m.Y.).
+* Admin notice and value formatting: add dismissibility to publications failure notice and properly map string boolean values ('true'/'false') in legal settings change logs.
+* In-dashboard documentation: document display presets (tooltip, minimal, tag, accent, subtle), date display modes, font weights, and statutory reference/footer developer hooks.
+* Quality gates: 384 unit tests (1,393 assertions) green, PHPCS and PHPStan clean, 741 translated Croatian strings with 0 untranslated.
 
 = 2.0.3 =
 * Storefront presentation: introduce interactive tooltip preset with unobtrusive help trigger (?) and accessible explanation popup, customizable date display modes (tooltip, inline, subtext, hidden), font-weight controls (normal, semi-bold, bold), and new minimalist display presets (tooltip, minimal, tag, accent, subtle).

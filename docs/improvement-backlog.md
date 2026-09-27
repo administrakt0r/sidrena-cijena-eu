@@ -210,4 +210,11 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | UX-12 | `done` | Storefront presentation & Croatian-first wording: add interactive tooltip preset with (?) popup and configurable date modes (tooltip, inline, subtext, hidden), font-weight controls, minimalist display presets (tooltip, minimal, tag, accent, subtle), migrate default 30-day reference label to Croatian ("Najniža cijena u zadnjih 30 dana") with legacy migration, and add flexible time input normalization | 382 unit tests (1,387 assertions) in `CustomerWordingTest`, `SettingsTest`, `PublicPageTest`, and `PublicFeedTest`; clean PHPCS/PHPStan/ESLint; 736 translated Croatian strings with 0 untranslated |
 | REL-15 | `done` | Package and verify release 2.0.3 archive | `tools/build-zip.sh 2.0.3` built `versions/2.0.3/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Archive pagination, compliance pagination and editor formatting pass (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| UX-13 | `done` | Public archive pagination & counts, compliance report table pagination (50 items/page), WooCommerce editor Croatian date formatting (`d.m.Y.`), legal settings boolean string formatting, publications dismissible notice, and documentation expansion | 384 unit tests (1,393 assertions) green; PHPCS/PHPStan/ESLint clean; 741 translated Croatian strings with 0 untranslated |
+| REL-16 | `done` | Package and verify release 2.0.4 archive | `tools/build-zip.sh 2.0.4` built `versions/2.0.4/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
 

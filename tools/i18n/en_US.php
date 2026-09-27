@@ -716,4 +716,10 @@ return array (
   'Cjenici' => 'Price lists',
   '24-hour format (HH:MM, e.g. 08:00 or 14:30) in site local time.' => '24-hour format (HH:MM, e.g. 08:00 or 14:30) in site local time.',
   'Najniža cijena u zadnjih 30 dana' => 'Lowest price in the last 30 days',
+  'Showing %1$d–%2$d of %3$d published price lists.' => 'Showing %1$d–%2$d of %3$d published price lists.',
+  'Archive pagination' => 'Archive pagination',
+  'Stilovi i interaktivni tooltip:' => 'Styles and interactive tooltip:',
+  'Dostupni su unaprijed definirani stilovi: interaktivni tooltip s ikonom (?), minimalistički, bedž, kartica, obrub, meka pozadina, monokromatski, pilula, oznaka, naglašena traka i suptilni prikaz. U postavkama možete odabrati i način prikaza datuma (tooltip, u retku, podtekst ili skriveno) te debljinu fonta.' => 'Predefined styles available: interactive tooltip with (?) icon, minimal, badge, card, outline, soft background, monochrome, pill, tag, accent stripe, and subtle. Settings also allow choosing date display mode (tooltip, inline, subtext, or hidden) and font weight.',
+  'Prilagođava tekst oznake najniže 30-dnevne cijene po artiklu i kontekstu prikaza.' => 'Adjusts the label of the 30-day lowest price per item and display context.',
+  'Prilagođava tekst poveznice na arhivu cjenika u podnožju stranice.' => 'Adjusts the footer link text for the price lists archive.',
 );

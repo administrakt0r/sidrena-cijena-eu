@@ -42,6 +42,11 @@ class CompliancePage {
 	const REPORT_LIMIT = 1000;
 
 	/**
+	 * Findings per page in the report table.
+	 */
+	const FINDINGS_PER_PAGE = 50;
+
+	/**
 	 * Render the screen.
 	 *
 	 * @return void
@@ -138,6 +143,12 @@ class CompliancePage {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
+		$page   = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1;
+		$total  = count( $filtered );
+		$offset = ( $page - 1 ) * self::FINDINGS_PER_PAGE;
+		$slice  = array_slice( $filtered, $offset, self::FINDINGS_PER_PAGE );
+
 		echo '<table class="widefat striped">';
 		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
@@ -148,15 +159,7 @@ class CompliancePage {
 		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
-		$shown = 0;
-
-		foreach ( $filtered as $finding ) {
-			if ( $shown >= 200 ) {
-				break;
-			}
-
-			++$shown;
-
+		foreach ( $slice as $finding ) {
 			echo '<tr>';
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( (string) $finding['severity'] ) ) . '">' . esc_html( Labels::severity( (string) $finding['severity'] ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( (string) $finding['code'] ) . '</code></td>';
@@ -168,18 +171,7 @@ class CompliancePage {
 
 		echo '</tbody></table>';
 
-		if ( count( $filtered ) > $shown ) {
-			printf(
-				'<p class="description">%s</p>',
-				esc_html(
-					sprintf(
-						/* translators: %d: number of findings not shown. */
-						__( '%d further findings are not shown. Export the report to see all of them.', 'sidrena-cijena-eu' ),
-						count( $filtered ) - $shown
-					)
-				)
-			);
-		}
+		Pagination::render( $page, $total, self::FINDINGS_PER_PAGE );
 
 		echo '</div>';
 	}

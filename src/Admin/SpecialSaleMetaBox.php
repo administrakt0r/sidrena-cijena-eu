@@ -120,10 +120,12 @@ class SpecialSaleMetaBox {
 								</td>
 								<td>
 									<?php
-									$period = (string) $sale['start_date'];
+									$start  = Dates::format_date_display( (string) $sale['start_date'] );
+									$period = '' !== $start ? $start : (string) $sale['start_date'];
 
 									if ( ! empty( $sale['end_date'] ) ) {
-										$period .= ' - ' . (string) $sale['end_date'];
+										$end     = Dates::format_date_display( (string) $sale['end_date'] );
+										$period .= ' - ' . ( '' !== $end ? $end : (string) $sale['end_date'] );
 									}
 
 									echo esc_html( $period );
@@ -136,8 +138,10 @@ class SpecialSaleMetaBox {
 										: esc_html( Currency::format( (float) $sale['lowest_30_day_price'], $item->currency, array( 'display' => 'symbol' ) ) );
 
 									if ( ! empty( $sale['window_start'] ) && ! empty( $sale['window_end'] ) ) {
+										$w_start = Dates::format_date_display( (string) $sale['window_start'] );
+										$w_end   = Dates::format_date_display( (string) $sale['window_end'] );
 										/* translators: 1: window start date, 2: window end date */
-										echo '<br /><span class="description">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'sidrena-cijena-eu' ), (string) $sale['window_start'], (string) $sale['window_end'] ) ) . '</span>';
+										echo '<br /><span class="description">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'sidrena-cijena-eu' ), '' !== $w_start ? $w_start : (string) $sale['window_start'], '' !== $w_end ? $w_end : (string) $sale['window_end'] ) ) . '</span>';
 									}
 									?>
 								</td>
@@ -152,12 +156,13 @@ class SpecialSaleMetaBox {
 						<?php
 						$explanation = $explainer->explain( $item, $sale );
 						$sale_name   = ! empty( $sale['sale_name'] ) ? (string) $sale['sale_name'] : Labels::sale_type( (string) $sale['sale_type'] );
+						$start_disp  = Dates::format_date_display( (string) $sale['start_date'] );
 						?>
 						<details class="sidrena-cijena-explanation-details">
 							<summary class="sidrena-cijena-explanation-summary">
 								<?php
 								/* translators: 1: sale name, 2: sale start date */
-								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'sidrena-cijena-eu' ), $sale_name, (string) $sale['start_date'] ) );
+								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'sidrena-cijena-eu' ), $sale_name, '' !== $start_disp ? $start_disp : (string) $sale['start_date'] ) );
 								?>
 							</summary>
 							<?php echo $explainer->render_html( $explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

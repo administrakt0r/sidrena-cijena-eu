@@ -87,10 +87,10 @@ class PublicationsPage {
 		$last_gen = get_option( DailyGeneration::RESULT_OPTION, null );
 
 		if ( $last_gen && is_array( $last_gen ) && ! empty( $last_gen['summary']['failed'] ) ) {
-			$gen_time = ! empty( $last_gen['timestamp'] ) ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $last_gen['timestamp'] ) ) : '';
+			$gen_time = ! empty( $last_gen['timestamp'] ) ? self::site_time( (int) $last_gen['timestamp'] ) : '';
 			$source   = isset( $last_gen['source'] ) ? (string) $last_gen['source'] : 'scheduled';
 
-			echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena-eu' ) . '</strong> ';
+			echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena-eu' ) . '</strong> ';
 			printf(
 				/* translators: 1: generation time, 2: run source, 3: error details */
 				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena-eu' ),

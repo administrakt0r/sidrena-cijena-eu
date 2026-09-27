@@ -204,8 +204,9 @@ final class LegalSettingsPage {
 			return implode( ', ', array_map( 'strval', $value ) );
 		}
 
-		if ( is_bool( $value ) ) {
-			return $value ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
+		if ( is_bool( $value ) || 'true' === $value || 'false' === $value ) {
+			$bool = is_bool( $value ) ? $value : ( 'true' === $value );
+			return $bool ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
 		}
 
 		return (string) $value;
