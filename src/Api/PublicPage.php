@@ -339,38 +339,37 @@ class PublicPage {
 
 		$location = PublicFeed::public_location();
 
-		// Building the rows walks the whole catalog on every request, so the
-		// rendered table is kept in the shared public-response cache and is
-		// invalidated whenever price data, settings or publications change.
-		$cache  = Plugin::instance()->rest_cache();
-		$key    = $cache->key(
-			array(
-				'page'     => 'cjenik',
-				'location' => $location ? (int) $location['id'] : 0,
-				'q'        => $query,
-				'type'     => $type,
-				'paged'    => $paged,
-			)
-		);
-		$cached = $cache->get( $key );
-
-		if ( null !== $cached ) {
-			return $this->style() . (string) $cached;
-		}
-
 		$rows = array();
 		$meta = array();
 
 		if ( $location ) {
-			$builder = new PriceListBuilder(
-				Plugin::instance()->catalog(),
-				Plugin::instance()->history(),
-				Plugin::instance()->special_sales()
+			// Cache the canonical row set once per location per generation.
+			// Filtering by query, type and pagination is done in PHP per request,
+			// preventing cache fragmentation and avoiding redundant catalog walks.
+			$cache     = Plugin::instance()->rest_cache();
+			$build_key = $cache->key(
+				array(
+					'build'    => 'public_list',
+					'location' => (int) $location['id'],
+				)
 			);
+			$cached    = $cache->get( $build_key );
 
-			$build = $builder->build( $location );
-			$rows  = $build['items'];
-			$meta  = $build['meta'];
+			if ( is_array( $cached ) && isset( $cached['items'], $cached['meta'] ) ) {
+				$build = $cached;
+			} else {
+				$builder = new PriceListBuilder(
+					Plugin::instance()->catalog(),
+					Plugin::instance()->history(),
+					Plugin::instance()->special_sales()
+				);
+
+				$build = $builder->build( $location );
+				$cache->set( $build_key, $build );
+			}
+
+			$rows = $build['items'];
+			$meta = $build['meta'];
 		}
 
 		$filtered = array();
@@ -411,8 +410,6 @@ class PublicPage {
 				'archive_url' => home_url( '/' . self::STEM_ARCHIVE . '/' ),
 			)
 		);
-
-		$cache->set( $key, $html );
 
 		return $this->style() . $html;
 	}

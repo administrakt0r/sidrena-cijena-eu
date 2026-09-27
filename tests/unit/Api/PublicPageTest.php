@@ -866,21 +866,25 @@ class PublicPageTest extends TestCase {
 	}
 
 	/**
-	 * Different search or type arguments use different cache entries.
+	 * Distinct search, type, and pagination arguments reuse the canonical build without rebuilding.
 	 *
 	 * @return void
 	 */
-	public function test_distinct_arguments_use_distinct_cache_entries() {
+	public function test_distinct_arguments_reuse_canonical_build() {
 		$this->reset_state();
 		$catalog = $this->wire_catalog();
 
 		$probe = new PublicPageProbe();
-		$probe->render_list( array() );
-		$probe->render_list( array( 'q' => 'klime' ) );
-		$probe->render_list( array( 'type' => 'usluga' ) );
-		$probe->render_list( array( 'paged' => 2 ) );
+		$base  = $probe->render_list( array() );
+		$query = $probe->render_list( array( 'q' => 'klime' ) );
+		$type  = $probe->render_list( array( 'type' => 'usluga' ) );
+		$page  = $probe->render_list( array( 'paged' => 2 ) );
 
-		$this->assertSame( 4, $catalog->iterate_calls );
+		$this->assertSame( 1, $catalog->iterate_calls );
+		$this->assertStringContainsString( 'Mlijeko 1L', $base );
+		$this->assertStringContainsString( 'Servis klime', $query );
+		$this->assertStringNotContainsString( 'Mlijeko 1L', $query );
+		$this->assertStringContainsString( 'Servis klime', $type );
 	}
 
 	/**
