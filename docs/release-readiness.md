@@ -1,5 +1,19 @@
 # Release verification
 
+## Release 2.0.6 — Performance Pass 2: Caching, Request-Time Work & Asset Loading (2026-09-27)
+
+- Performance pass 2 per `AGENTARDS/07-performance-caching-runtime.md` (PERF-08..PERF-15).
+- Cron catch-up decoupling (`src/Cron/Scheduler.php`): `maybe_catchup()` now gates execution to admin, cron, and CLI requests with a fast-fail transient lock check; heavy catch-up generation is offloaded to an asynchronous background queue event (`sidrena_cijena_catchup_event` via `Scheduler::handle_catchup_event()`), keeping front-end visitor page loads light and responsive while preserving REL-06 missed-run detection, failure recording and CLI diagnostics.
+- Canonical page caching (`src/Api/PublicPage.php`): `render_list()` caches the canonical row set once per location per generation via `RestCache`, delegating query string (`q`), type (`type`), and pagination filtering to PHP in-memory. Eliminates options-table cache proliferation across arbitrary search terms.
+- Generation-keyed hot paths (`src/Admin/DashboardPage.php`, `src/Api/PublicPage.php`, `src/Api/PriceListController.php`): added short-TTL generation-keyed caching to dashboard aggregate stats (with compliance ERROR bypass and manual force bypass), publication archive HTML (`render_archive`), and REST `/publications` and `/status` endpoints; automatically invalidated via `Plugin::flush_rest_cache()` on publication, price change, anchor record, or settings change.
+- AnchorCache write optimization (`src/Pricing/AnchorCache.php`): `flush()` stores the generation marker using `update_option(..., false)` so no cache bookkeeping row is added to autoloaded options; on hosts with a persistent object cache (`wp_using_ext_object_cache()`), individual transient DB options writes are bypassed entirely in favor of direct object cache.
+- Textdomain consolidation (`sidrena-cijena.php`): consolidated translation catalog registration from duplicate `plugins_loaded` and `init` hooks to a single `init` hook, respecting the active user locale and loading the bundled Croatian MO catalog for Croatian requests without redundant filesystem hits on other locales.
+- Context-restricted asset loading & admin dependency cleanup (`src/WooCommerce/Display/PriceDisplay.php`, `src/Admin/AdminMenu.php`): `PriceDisplay::enqueue_assets()` restricts frontend styles and scripts to single product pages and shop/product archives while preserving builder compatibility; removed unused `wp-i18n` script dependency from `admin.js`.
+- Settings per-request memoization (`src/Support/Settings.php`): `Settings::get()` memoizes parsed settings in a static request cache, eliminating redundant `wp_parse_args()` and defaults processing across repeated product card renders (~10 calls per product). Invalidated automatically on `sidrena_cijena_settings_changed`, `Settings::update()`, and in tests via `Settings::reset()`.
+- REST per-IP throttle object caching (`src/Api/PriceListController.php`): `throttle()` leverages `wp_cache_get()`/`wp_cache_set()` when an external persistent object cache is present, eliminating repeated options-table round-trips for API rate limiting.
+- Quality gates: 420 unit tests (1,509 assertions), 0 failures; PHPCS clean across 179 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.6/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.6` and verified with `unzip -t`.
+
 ## Release 2.0.5 — Robustness, Lifecycle Cleanup & Compatibility Pass (2026-09-27)
 
 - General improvement pass per `AGENTARDS/04-improve.md` (ROB-01..ROB-03).

@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,16 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.6 =
+* Cron catch-up optimization: offloaded catch-up price-list generation to an asynchronous background event, and restricted front-end catch-up checks to administrative and CLI requests with a fast-fail flag.
+* Canonical page caching: cached canonical row set per location in public price list, performing query filtering and pagination in PHP to eliminate cache fragmentation across search terms and filter variations.
+* Generation-keyed hot paths: added short-TTL generation-keyed caching to compliance dashboard aggregates, public publication archive, and REST /publications and /status endpoints, strictly bypassing caching on compliance ERRORs or publication gate decisions.
+* AnchorCache write optimization: eliminated autoloading of the anchor cache generation marker option, and bypassed transient DB round-trips entirely when an external persistent object cache is active.
+* Textdomain consolidation: consolidated textdomain loading to a single init hook respecting active user locale.
+* Targeted asset loading: restricted front-end styles and scripts to product pages and shop/product archives, and dropped unused wp-i18n script dependency from admin scripts.
+* Settings memoization: memoized settings per-request to eliminate redundant options-table decodes across repeated product displays.
+* REST throttle optimization: leveraged persistent object cache for REST per-IP rate-limiting counters when available.
 
 = 2.0.5 =
 * Lifecycle cleanup: opt-in uninstall cleanup now purges all plugin transients from options while strictly preserving the append-only anchor and 30-day legal evidence; plugin deactivation clears catch-up locks while retaining all data.
