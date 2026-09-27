@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.7 =
+* Static security audit & regression coverage: verified capability and nonce checks across all admin action endpoints, prepared SQL parameterized queries, and output escaping.
+* Path traversal hardening: added regression coverage verifying import file path containment within allowed directories and rejecting directory traversal patterns.
+* Welcome banner activation redirect guards: added regression test ensuring REST request contexts suppress one-time activation redirection while preserving the option.
 
 = 2.0.6 =
 * Cron catch-up optimization: offloaded catch-up price-list generation to an asynchronous background event, and restricted front-end catch-up checks to administrative and CLI requests with a fast-fail flag.

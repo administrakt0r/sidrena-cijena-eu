@@ -240,6 +240,9 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | PERF-15 | `done` | REST per-IP throttle object caching (`src/Api/PriceListController.php`): `throttle()` leverages `wp_cache_get()`/`wp_cache_set()` when an external persistent object cache is present, eliminating repeated options-table round-trips for API rate limiting. | `PriceListControllerThrottleTest::test_throttle_uses_wp_cache_when_available` |
 | REL-18 | `done` | Package and verify release 2.0.6 archive | `tools/build-zip.sh 2.0.6` built `versions/2.0.6/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Static audit & security sweep (2026-09-27)
 
-
-
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SEC-02 | `done` | Static audit & security sweep: audited administrative action authorization (`Capabilities::current_user_can()`) and nonce authentication across all plugin endpoints; audited prepared SQL and output escaping; added regression tests for import path directory traversal rejection and REST request suppression of welcome banner activation redirect | `CsvParserEncodingTest::test_parse_file_rejects_temp_dir_path_traversal` and `WelcomeTest::test_maybe_redirect_guards_against_rest_request`; 422 unit tests passing |
+| REL-19 | `done` | Package and verify release 2.0.7 archive | `tools/build-zip.sh 2.0.7` built `versions/2.0.7/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |

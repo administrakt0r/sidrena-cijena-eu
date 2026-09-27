@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.7 — Static Audit, Path Hardening & Security Sweep (2026-09-27)
+
+- Full static audit and security sweep per `AGENTARDS/01-audit-and-fix.md` (SEC-02).
+- Security audit & capability verification: verified that every administrative action (`admin_post_*`) strictly verifies `manage_sidrena_cijena` capability via `Capabilities::current_user_can()` and authenticates valid nonces via `check_admin_referer()`.
+- Output escaping & query preparation: audited direct and template echoes to ensure strict output escaping (`esc_html`, `esc_attr`, `esc_url`); verified dynamic SQL queries are prepared via `$wpdb->prepare()`.
+- Allowed import path validation & directory traversal hardening (`src/Import/CsvParser.php`): audited `CsvParser::is_allowed_path()` directory containment against allowed roots (temporary upload directory and WordPress uploads directory); added unit test verifying paths containing directory traversal (`../`) are cleanly rejected (`CsvParserEncodingTest::test_parse_file_rejects_temp_dir_path_traversal`).
+- Welcome banner activation redirect guards (`src/Admin/WelcomeBanner.php`): verified that `WelcomeBanner::maybe_redirect()` suppresses redirection on bulk activations, AJAX, WP-CLI, WP-Cron, network admin, and REST requests; added unit test verifying `REST_REQUEST` context prevents redirection while retaining the pending option (`WelcomeTest::test_maybe_redirect_guards_against_rest_request`).
+- Quality gates: 422 unit tests (1,512 assertions), 0 failures; PHPCS clean across 179 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.7/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.7` and verified with `unzip -t`.
+
 ## Release 2.0.6 — Performance Pass 2: Caching, Request-Time Work & Asset Loading (2026-09-27)
 
 - Performance pass 2 per `AGENTARDS/07-performance-caching-runtime.md` (PERF-08..PERF-15).
