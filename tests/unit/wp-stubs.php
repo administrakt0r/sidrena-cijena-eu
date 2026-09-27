@@ -1217,7 +1217,9 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return mixed
 	 */
 	function wp_cache_get( $key, $group = '' ) {
-		unset( $key, $group );
+		if ( wp_using_ext_object_cache() && isset( $GLOBALS['sidrena_test_cache'][ $group ][ $key ] ) ) {
+			return $GLOBALS['sidrena_test_cache'][ $group ][ $key ];
+		}
 
 		return false;
 	}
@@ -1225,18 +1227,38 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	/**
 	 * Object cache set stub.
 	 *
+	 * @param string      $key    Cache key.
+	 * @param mixed       $data   Data to store.
+	 * @param string      $group  Cache group.
+	 * @param int         $expire Expiration.
 	 * @return bool
 	 */
-	function wp_cache_set() {
+	function wp_cache_set( $key, $data, $group = '', $expire = 0 ) {
+		unset( $expire );
+
+		if ( wp_using_ext_object_cache() ) {
+			if ( ! isset( $GLOBALS['sidrena_test_cache'][ $group ] ) ) {
+				$GLOBALS['sidrena_test_cache'][ $group ] = array();
+			}
+
+			$GLOBALS['sidrena_test_cache'][ $group ][ $key ] = $data;
+		}
+
 		return true;
 	}
 
 	/**
 	 * Object cache delete stub.
 	 *
+	 * @param string $key   Cache key.
+	 * @param string $group Cache group.
 	 * @return bool
 	 */
-	function wp_cache_delete() {
+	function wp_cache_delete( $key, $group = '' ) {
+		if ( wp_using_ext_object_cache() ) {
+			unset( $GLOBALS['sidrena_test_cache'][ $group ][ $key ] );
+		}
+
 		return true;
 	}
 
@@ -2059,6 +2081,22 @@ if ( ! function_exists( 'wp_script_is' ) ) {
 		}
 
 		return ! empty( $GLOBALS['sidrena_test_enqueued_scripts'][ $handle ] );
+	}
+}
+
+if ( ! function_exists( 'wp_using_ext_object_cache' ) ) {
+	/**
+	 * Whether external object cache is in use.
+	 *
+	 * @param bool|null $using New state, or null to check.
+	 * @return bool
+	 */
+	function wp_using_ext_object_cache( $using = null ) {
+		if ( null !== $using ) {
+			$GLOBALS['sidrena_test_ext_object_cache'] = (bool) $using;
+		}
+
+		return ! empty( $GLOBALS['sidrena_test_ext_object_cache'] );
 	}
 }
 

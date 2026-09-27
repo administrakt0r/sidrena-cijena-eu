@@ -620,6 +620,9 @@ class PriceListController {
 	/**
 	 * Basic per-IP throttling.
 	 *
+	 * Uses wp_cache on persistent object cache hosts to avoid options-table round
+	 * trips, falling back to transients.
+	 *
 	 * @return true|\WP_Error
 	 */
 	protected static function throttle() {
@@ -629,7 +632,28 @@ class PriceListController {
 			return true;
 		}
 
-		$key   = 'sidrena_cijena_throttle_' . md5( $ip );
+		$key = 'sidrena_cijena_throttle_' . md5( $ip );
+
+		if ( function_exists( 'wp_using_ext_object_cache' ) && wp_using_ext_object_cache() ) {
+			$cached = wp_cache_get( $key, 'sidrena_cijena_throttle' );
+			$count  = false !== $cached ? (int) $cached : 0;
+
+			if ( $count >= self::THROTTLE_LIMIT ) {
+				return new \WP_Error(
+					'sidrena_cijena_throttled',
+					__( 'Too many requests. Please retry shortly.', 'sidrena-cijena-eu' ),
+					array(
+						'status'  => 429,
+						'headers' => array( 'Retry-After' => 60 ),
+					)
+				);
+			}
+
+			wp_cache_set( $key, $count + 1, 'sidrena_cijena_throttle', MINUTE_IN_SECONDS );
+
+			return true;
+		}
+
 		$count = (int) get_transient( $key );
 
 		if ( $count >= self::THROTTLE_LIMIT ) {
