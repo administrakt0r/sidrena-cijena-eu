@@ -267,12 +267,21 @@ class PagePublicationFake {
 	public $rows = array();
 
 	/**
+	 * Number of index() calls.
+	 *
+	 * @var int
+	 */
+	public $index_calls = 0;
+
+	/**
 	 * Publication index.
 	 *
 	 * @param array<mixed> $args Arguments.
 	 * @return array<mixed>
 	 */
 	public function index( array $args = array() ) {
+		++$this->index_calls;
+
 		$page     = isset( $args['page'] ) ? max( 1, (int) $args['page'] ) : 1;
 		$per_page = isset( $args['per_page'] ) ? max( 1, (int) $args['per_page'] ) : 50;
 		$offset   = ( $page - 1 ) * $per_page;
@@ -1237,5 +1246,55 @@ class PublicPageTest extends TestCase {
 		$page->add_rewrites();
 
 		$this->assertGreaterThan( 0, $GLOBALS['sidrena_test_flushed_rules'] );
+	}
+
+	/**
+	 * Method render_archive reuses cached HTML and refreshes on rest_cache flush.
+	 *
+	 * @return void
+	 */
+	public function test_render_archive_reuses_cache_and_invalidates_on_flush() {
+		$this->reset_state();
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 7,
+				'type' => 'webshop',
+				'name' => 'Webshop Zagreb',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$pub       = new PagePublicationFake();
+		$pub->rows = array(
+			array(
+				'id'           => 1,
+				'location_id'  => 7,
+				'format'       => 'csv',
+				'filename'     => 'cjenik-2026-09-25.csv',
+				'file_size'    => 1024,
+				'checksum'     => '1234567890abcdef',
+				'item_count'   => 10,
+				'published_at' => '2026-09-25 12:00:00',
+				'created_at'   => '2026-09-25 12:00:00',
+				'url'          => 'https://example.com/cjenik-2026-09-25.csv',
+			),
+		);
+		PluginSwap::swap( 'publications', $pub );
+
+		$probe = new PublicPageProbe();
+
+		$first = $probe->render_archive();
+		$this->assertSame( 1, $pub->index_calls );
+
+		$second = $probe->render_archive();
+		$this->assertSame( $first, $second );
+		$this->assertSame( 1, $pub->index_calls, 'Repeat render_archive calls must be served from cache.' );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$third = $probe->render_archive();
+		$this->assertSame( 2, $pub->index_calls, 'Flushing cache must cause render_archive to rebuild.' );
 	}
 }

@@ -202,13 +202,31 @@ class PriceListController {
 
 		$page     = max( 1, (int) $request->get_param( 'page' ) );
 		$per_page = max( 1, min( 200, (int) $request->get_param( 'per_page' ) ) );
+		$location = (int) $request->get_param( 'location' );
+		$format   = (string) $request->get_param( 'format' );
+
+		$cache     = Plugin::instance()->rest_cache();
+		$cache_key = $cache->key(
+			array(
+				'endpoint' => 'publications',
+				'page'     => $page,
+				'per_page' => $per_page,
+				'location' => $location,
+				'format'   => $format,
+			)
+		);
+
+		$cached = $cache->get( $cache_key );
+		if ( is_array( $cached ) ) {
+			return new \WP_REST_Response( $cached, 200 );
+		}
 
 		$result = Plugin::instance()->publications()->index(
 			array(
 				'page'     => $page,
 				'per_page' => $per_page,
-				'location' => (int) $request->get_param( 'location' ),
-				'format'   => (string) $request->get_param( 'format' ),
+				'location' => $location,
+				'format'   => $format,
 			)
 		);
 
@@ -230,17 +248,18 @@ class PriceListController {
 			);
 		}
 
-		return new \WP_REST_Response(
-			array(
-				'data' => $data,
-				'meta' => array(
-					'page'     => $page,
-					'per_page' => $per_page,
-					'total'    => (int) $result['total'],
-				),
+		$payload = array(
+			'data' => $data,
+			'meta' => array(
+				'page'     => $page,
+				'per_page' => $per_page,
+				'total'    => (int) $result['total'],
 			),
-			200
 		);
+
+		$cache->set( $cache_key, $payload, 60 );
+
+		return new \WP_REST_Response( $payload, 200 );
 	}
 
 	/**
@@ -251,6 +270,18 @@ class PriceListController {
 	 */
 	public static function get_status( $request ) {
 		unset( $request );
+
+		$cache     = Plugin::instance()->rest_cache();
+		$cache_key = $cache->key(
+			array(
+				'endpoint' => 'status',
+			)
+		);
+
+		$cached = $cache->get( $cache_key );
+		if ( is_array( $cached ) ) {
+			return new \WP_REST_Response( $cached, 200 );
+		}
 
 		$locations = array();
 
@@ -267,18 +298,19 @@ class PriceListController {
 			);
 		}
 
-		return new \WP_REST_Response(
-			array(
-				'schema_version' => \SidrenaCijena\Database\Schema::DB_VERSION,
-				'rule'           => RuleConfig::all(),
-				'locations'      => $locations,
-				'cron'           => array(
-					'healthy'  => Scheduler::is_healthy(),
-					'next_run' => Scheduler::next_run() ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) Scheduler::next_run() ) ) : null,
-				),
+		$payload = array(
+			'schema_version' => \SidrenaCijena\Database\Schema::DB_VERSION,
+			'rule'           => RuleConfig::all(),
+			'locations'      => $locations,
+			'cron'           => array(
+				'healthy'  => Scheduler::is_healthy(),
+				'next_run' => Scheduler::next_run() ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) Scheduler::next_run() ) ) : null,
 			),
-			200
 		);
+
+		$cache->set( $cache_key, $payload, 60 );
+
+		return new \WP_REST_Response( $payload, 200 );
 	}
 
 	/**

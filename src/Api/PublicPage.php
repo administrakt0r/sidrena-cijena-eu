@@ -427,6 +427,21 @@ class PublicPage {
 		}
 
 		$location = PublicFeed::public_location();
+
+		$cache     = Plugin::instance()->rest_cache();
+		$cache_key = $cache->key(
+			array(
+				'page'     => 'public_archive',
+				'location' => $location ? (int) $location['id'] : 0,
+				'paged'    => $paged,
+			)
+		);
+
+		$cached = $cache->get( $cache_key );
+		if ( is_string( $cached ) && '' !== $cached ) {
+			return $cached;
+		}
+
 		$items    = array();
 		$total    = 0;
 		$per_page = self::ARCHIVE_LIMIT;
@@ -452,7 +467,7 @@ class PublicPage {
 
 		$total_pages = $total > 0 ? (int) ceil( $total / $per_page ) : 1;
 
-		return $this->style() . $this->partial(
+		$html = $this->style() . $this->partial(
 			'public-archive.php',
 			array(
 				'rows'        => $rows,
@@ -466,6 +481,10 @@ class PublicPage {
 				'feed_csv'    => home_url( '/' . PublicFeed::STEM . '.csv' ),
 			)
 		);
+
+		$cache->set( $cache_key, $html );
+
+		return $html;
 	}
 
 	/**

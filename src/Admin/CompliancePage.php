@@ -189,7 +189,7 @@ class CompliancePage {
 		check_admin_referer( self::ACTION_RUN );
 
 		$plugin  = Plugin::instance();
-		$data    = DashboardPage::aggregate( self::REPORT_LIMIT );
+		$data    = DashboardPage::aggregate( self::REPORT_LIMIT, true );
 		$report  = new ComplianceReport( $data['findings'] );
 		$payload = $report->to_array();
 		$payload = array_merge(

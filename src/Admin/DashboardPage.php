@@ -70,17 +70,34 @@ class DashboardPage {
 	/**
 	 * Compute dashboard aggregates.
 	 *
-	 * @param int $limit Maximum items to scan.
+	 * @param int  $limit Maximum items to scan.
+	 * @param bool $force Whether to bypass the aggregate cache.
 	 * @return array<mixed>
 	 */
-	public static function aggregate( $limit = self::SCAN_LIMIT ) {
+	public static function aggregate( $limit = self::SCAN_LIMIT, $force = false ) {
 		$plugin    = Plugin::instance();
 		$catalog   = $plugin->catalog();
 		$history   = $plugin->history();
 		$sales     = $plugin->special_sales();
 		$validator = $plugin->validator();
 		$limit     = max( 1, (int) $limit );
-		$total     = (int) $catalog->count_items();
+
+		$cache     = $plugin->rest_cache();
+		$cache_key = $cache->key(
+			array(
+				'aggregate' => 'dashboard',
+				'limit'     => $limit,
+			)
+		);
+
+		if ( ! $force ) {
+			$cached = $cache->get( $cache_key );
+			if ( is_array( $cached ) && isset( $cached['total'], $cached['findings'] ) ) {
+				return $cached;
+			}
+		}
+
+		$total = (int) $catalog->count_items();
 
 		$items = array();
 
@@ -175,7 +192,9 @@ class DashboardPage {
 		$failed       = $publications->count_by_status();
 		$next_run     = Scheduler::next_run();
 
-		return array(
+		$counts = Validator::counts( $findings );
+
+		$result = array(
 			'total'                   => $total,
 			'scanned'                 => count( $items ),
 			'anchor_states'           => $anchor_states,
@@ -184,12 +203,19 @@ class DashboardPage {
 			'thirty_day_warnings'     => $thirty_day_warnings,
 			'unclassified_promotions' => $unclassified_promotions,
 			'findings'                => $findings,
-			'counts'                  => Validator::counts( $findings ),
+			'counts'                  => $counts,
 			'last_successful'         => $publications->last_successful(),
 			'next_run'                => $next_run,
 			'publications'            => $index['items'],
 			'failed_publications'     => isset( $failed['failed'] ) ? (int) $failed['failed'] : 0,
 		);
+
+		// Never cache away a compliance ERROR: only cache when free of compliance errors.
+		if ( empty( $counts[ Finding::ERROR ] ) ) {
+			$cache->set( $cache_key, $result, 60 );
+		}
+
+		return $result;
 	}
 
 	/**

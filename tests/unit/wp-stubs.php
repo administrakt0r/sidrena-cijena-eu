@@ -2100,3 +2100,74 @@ if ( ! function_exists( 'wp_using_ext_object_cache' ) ) {
 	}
 }
 
+if ( ! class_exists( 'WP_REST_Request' ) ) {
+	/**
+	 * WP_REST_Request stub for unit tests.
+	 */
+	class WP_REST_Request {
+		protected $method;
+		protected $route;
+		protected $params = array();
+
+		public function __construct( $method = '', $route = '', $attributes = array() ) {
+			unset( $attributes );
+			$this->method = $method;
+			$this->route  = $route;
+		}
+
+		public function get_param( $key ) {
+			return isset( $this->params[ $key ] ) ? $this->params[ $key ] : null;
+		}
+
+		public function set_param( $key, $value ) {
+			$this->params[ $key ] = $value;
+		}
+
+		public function get_params() {
+			return $this->params;
+		}
+	}
+}
+
+if ( ! class_exists( 'WP_REST_Response' ) ) {
+	/**
+	 * WP_REST_Response stub for unit tests.
+	 */
+	class WP_REST_Response {
+		protected $data;
+		protected $status;
+		protected $headers = array();
+
+		public function __construct( $data = null, $status = 200, $headers = array() ) {
+			$this->data    = $data;
+			$this->status  = (int) $status;
+			$this->headers = (array) $headers;
+		}
+
+		public function get_data() {
+			return $this->data;
+		}
+
+		public function set_data( $data ) {
+			$this->data = $data;
+		}
+
+		public function get_status() {
+			return $this->status;
+		}
+
+		public function set_status( $status ) {
+			$this->status = (int) $status;
+		}
+
+		public function header( $key, $value, $replace = true ) {
+			unset( $replace );
+			$this->headers[ $key ] = $value;
+		}
+
+		public function get_headers() {
+			return $this->headers;
+		}
+	}
+}
+

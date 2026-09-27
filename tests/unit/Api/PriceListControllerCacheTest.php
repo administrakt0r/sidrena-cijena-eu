@@ -12,7 +12,9 @@ use SidrenaCijena\Api\PriceListController;
 use SidrenaCijena\Api\RestCache;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
+use SidrenaCijena\Database\LocationRepository;
 use SidrenaCijena\Database\PriceHistoryRepository;
+use SidrenaCijena\Database\PublicationRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Tests\Support\PluginSwap;
@@ -225,6 +227,101 @@ class BuildCacheFakeSales extends SpecialSaleRepository {
 }
 
 /**
+ * In-memory publication repository double for caching tests.
+ */
+class BuildCacheFakePublications extends PublicationRepository {
+
+	/**
+	 * Number of index() calls.
+	 *
+	 * @var int
+	 */
+	public $index_calls = 0;
+
+	/**
+	 * Rows returned by index.
+	 *
+	 * @var array<int,array<mixed>>
+	 */
+	public $rows = array();
+
+	/**
+	 * Avoid hitting the database in unit tests.
+	 */
+	public function __construct() {
+	}
+
+	/**
+	 * Publication index.
+	 *
+	 * @param array<mixed> $args Arguments.
+	 * @return array{items:array<int,array<mixed>>,total:int}
+	 */
+	public function index( array $args = array() ) {
+		unset( $args );
+
+		++$this->index_calls;
+
+		return array(
+			'items' => $this->rows,
+			'total' => count( $this->rows ),
+		);
+	}
+
+	/**
+	 * Last successful.
+	 *
+	 * @param int $location_id Location ID.
+	 * @return array<mixed>|null
+	 */
+	public function last_successful( $location_id = 0 ) {
+		unset( $location_id );
+
+		return null;
+	}
+}
+
+/**
+ * In-memory location repository double for caching tests.
+ */
+class BuildCacheFakeLocations extends LocationRepository {
+
+	/**
+	 * Number of all() calls.
+	 *
+	 * @var int
+	 */
+	public $all_calls = 0;
+
+	/**
+	 * Rows returned by all.
+	 *
+	 * @var array<int,array<mixed>>
+	 */
+	public $rows = array();
+
+	/**
+	 * Avoid hitting the database in unit tests.
+	 */
+	public function __construct() {
+	}
+
+	/**
+	 * Locations.
+	 *
+	 * @param bool $active_only Active only.
+	 * @return array<int,array<mixed>>
+	 */
+	public function all( $active_only = false ) {
+		unset( $active_only );
+
+		++$this->all_calls;
+
+		return $this->rows;
+	}
+}
+
+/**
  * @covers \SidrenaCijena\Api\PriceListController::cached_build
  */
 class PriceListControllerCacheTest extends TestCase {
@@ -389,5 +486,84 @@ class PriceListControllerCacheTest extends TestCase {
 		);
 
 		$this->assertSame( 3, $this->catalog->iterate_calls );
+	}
+
+	/**
+	 * Endpoint get_publications reuses cached responses and refreshes on rest_cache flush.
+	 *
+	 * @return void
+	 */
+	public function test_get_publications_reuses_cached_response_and_refreshes_on_flush() {
+		$pubs       = new BuildCacheFakePublications();
+		$pubs->rows = array(
+			array(
+				'id'           => 1,
+				'location_id'  => 1,
+				'format'       => 'csv',
+				'filename'     => 'test.csv',
+				'url'          => 'https://example.com/test.csv',
+				'checksum'     => 'abc',
+				'rule_version' => '1.0',
+				'status'       => 'published',
+				'item_count'   => 5,
+				'published_at' => '2026-09-27 12:00:00',
+				'expires_at'   => '2026-10-27 12:00:00',
+			),
+		);
+		PluginSwap::swap( 'publications', $pubs );
+
+		$request = new \WP_REST_Request( 'GET', '/sidrena-cijena/v1/publications' );
+
+		$res1 = PriceListController::get_publications( $request );
+		$this->assertSame( 1, $pubs->index_calls );
+		$this->assertInstanceOf( \WP_REST_Response::class, $res1 );
+
+		$res2 = PriceListController::get_publications( $request );
+		$this->assertSame( 1, $pubs->index_calls, 'Repeat get_publications calls must be served from cache.' );
+		$this->assertSame( $res1->get_data(), $res2->get_data() );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$res3 = PriceListController::get_publications( $request );
+		$this->assertSame( 2, $pubs->index_calls, 'Cache flush must trigger a re-query for get_publications.' );
+
+		PluginSwap::swap( 'publications', null );
+	}
+
+	/**
+	 * Endpoint get_status reuses cached responses and refreshes on rest_cache flush.
+	 *
+	 * @return void
+	 */
+	public function test_get_status_reuses_cached_response_and_refreshes_on_flush() {
+		$locs       = new BuildCacheFakeLocations();
+		$locs->rows = array(
+			array(
+				'id'         => 1,
+				'name'       => 'Zagreb',
+				'identifier' => 'ZG-01',
+				'active'     => true,
+			),
+		);
+		PluginSwap::swap( 'locations', $locs );
+		PluginSwap::swap( 'publications', new BuildCacheFakePublications() );
+
+		$request = new \WP_REST_Request( 'GET', '/sidrena-cijena/v1/status' );
+
+		$res1 = PriceListController::get_status( $request );
+		$this->assertSame( 1, $locs->all_calls );
+		$this->assertInstanceOf( \WP_REST_Response::class, $res1 );
+
+		$res2 = PriceListController::get_status( $request );
+		$this->assertSame( 1, $locs->all_calls, 'Repeat get_status calls must be served from cache.' );
+		$this->assertSame( $res1->get_data(), $res2->get_data() );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$res3 = PriceListController::get_status( $request );
+		$this->assertSame( 2, $locs->all_calls, 'Cache flush must trigger a re-query for get_status.' );
+
+		PluginSwap::swap( 'locations', null );
+		PluginSwap::swap( 'publications', null );
 	}
 }

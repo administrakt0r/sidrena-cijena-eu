@@ -14,6 +14,7 @@ use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Compliance\Validator;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\Plugin;
 use SidrenaCijena\Tests\Support\PluginSwap;
 
 /**
@@ -235,13 +236,20 @@ class DashboardSalesFake extends SpecialSaleRepository {
 class DashboardValidatorFake extends Validator {
 
 	/**
+	 * Findings to return.
+	 *
+	 * @var array<mixed>
+	 */
+	public $findings = array();
+
+	/**
 	 * Skip the production constructor.
 	 */
 	public function __construct() {
 	}
 
 	/**
-	 * No item findings.
+	 * Item findings.
 	 *
 	 * @param array $items Items.
 	 * @param array $args  Arguments.
@@ -250,7 +258,7 @@ class DashboardValidatorFake extends Validator {
 	public function validate_items( array $items, array $args = array() ) {
 		unset( $items, $args );
 
-		return array();
+		return $this->findings;
 	}
 
 	/**
@@ -324,7 +332,9 @@ class DashboardPageTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['sidrena_test_options']    = array();
+		$GLOBALS['sidrena_test_transients'] = array();
+		Plugin::instance()->rest_cache()->flush();
 
 		$this->services = array(
 			'catalog'       => new DashboardCatalogFake(),
@@ -345,6 +355,8 @@ class DashboardPageTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
+		Plugin::instance()->rest_cache()->flush();
+
 		foreach ( array_keys( $this->services ) as $name ) {
 			PluginSwap::swap( $name, null );
 		}
@@ -465,5 +477,89 @@ class DashboardPageTest extends TestCase {
 		$this->assertSame( 0, $data['scanned'] );
 		$this->assertSame( 0, $history->latest_map_calls );
 		$this->assertSame( 0, $sales->active_map_calls );
+	}
+
+	/**
+	 * Aggregate caches results on clean catalogs and reuses them on repeat calls.
+	 *
+	 * @return void
+	 */
+	public function test_aggregate_caches_clean_runs() {
+		$catalog = $this->services['catalog'];
+		$history = $this->services['history'];
+
+		$catalog->items[10] = new CatalogItem(
+			array(
+				'id'            => 10,
+				'name'          => 'Kruh',
+				'sku'           => 'KRU-1',
+				'regular_price' => '2.00',
+			)
+		);
+
+		$history->anchors = array(
+			'10:0' => array(
+				'price'          => '2.00',
+				'reference_date' => '2026-09-10',
+				'created_at'     => '2026-09-10 08:00:00',
+			),
+		);
+
+		$history->regular = array(
+			'10:0' => array(
+				'price' => '2.00',
+				'date'  => '2026-09-10',
+			),
+		);
+
+		$first = DashboardPage::aggregate();
+		$this->assertSame( 1, $first['total'] );
+		$this->assertSame( 2, $history->latest_map_calls );
+
+		$second = DashboardPage::aggregate();
+		$this->assertSame( 1, $second['total'] );
+		$this->assertSame( 2, $history->latest_map_calls, 'Cached aggregate must not repeat latest_map pricing queries.' );
+
+		// Force bypass should re-run.
+		$third = DashboardPage::aggregate( DashboardPage::SCAN_LIMIT, true );
+		$this->assertSame( 1, $third['total'] );
+		$this->assertSame( 4, $history->latest_map_calls, 'Force bypass must re-run pricing queries.' );
+	}
+
+	/**
+	 * Compliance errors are never cached so that legal issues are never masked.
+	 *
+	 * @return void
+	 */
+	public function test_aggregate_never_caches_when_compliance_errors_exist() {
+		$catalog   = $this->services['catalog'];
+		$history   = $this->services['history'];
+		$validator = $this->services['validator'];
+
+		// Item without anchor price generates compliance ERROR.
+		$catalog->items[20] = new CatalogItem(
+			array(
+				'id'            => 20,
+				'name'          => 'Mlijeko',
+				'sku'           => 'MLI-1',
+				'regular_price' => '1.50',
+			)
+		);
+
+		$validator->findings = array(
+			new \SidrenaCijena\Compliance\Finding(
+				\SidrenaCijena\Compliance\Finding::ERROR,
+				'missing_anchor',
+				'Anchor is missing.'
+			),
+		);
+
+		$first = DashboardPage::aggregate();
+		$this->assertNotEmpty( $first['findings'] );
+		$this->assertGreaterThan( 0, $first['counts'][ \SidrenaCijena\Compliance\Finding::ERROR ] );
+		$this->assertSame( 2, $history->latest_map_calls );
+
+		$second = DashboardPage::aggregate();
+		$this->assertSame( 4, $history->latest_map_calls, 'Compliance errors must prevent caching and force recalculation.' );
 	}
 }
