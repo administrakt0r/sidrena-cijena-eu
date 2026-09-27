@@ -13,11 +13,15 @@ namespace SidrenaCijena\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Admin\AnchorMetaBox;
 use SidrenaCijena\Admin\BulkAnchorEntryPage;
+use SidrenaCijena\Admin\CompliancePage;
+use SidrenaCijena\Admin\ImportPage;
 use SidrenaCijena\Admin\LocationsPage;
 use SidrenaCijena\Admin\PriceHistoryPage;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SetupGuidePage;
 use SidrenaCijena\Admin\SpecialSaleMetaBox;
+use SidrenaCijena\Admin\WelcomeBanner;
+use SidrenaCijena\Cron\Scheduler;
 
 /**
  * @covers \SidrenaCijena\Admin\AnchorMetaBox::handle_record
@@ -30,6 +34,13 @@ use SidrenaCijena\Admin\SpecialSaleMetaBox;
  * @covers \SidrenaCijena\Admin\BulkAnchorEntryPage::handle_set_all_current
  * @covers \SidrenaCijena\Admin\SetupGuidePage::handle_complete
  * @covers \SidrenaCijena\Admin\SetupGuidePage::handle_reopen
+ * @covers \SidrenaCijena\Admin\ImportPage::handle_preview
+ * @covers \SidrenaCijena\Admin\ImportPage::handle_commit
+ * @covers \SidrenaCijena\Admin\ImportPage::handle_report
+ * @covers \SidrenaCijena\Admin\CompliancePage::handle_run
+ * @covers \SidrenaCijena\Admin\CompliancePage::handle_export
+ * @covers \SidrenaCijena\Admin\WelcomeBanner::handle_dismiss
+ * @covers \SidrenaCijena\Cron\Scheduler::handle_dismiss_failure
  */
 class AdminPostCapabilityTest extends TestCase {
 
@@ -173,5 +184,89 @@ class AdminPostCapabilityTest extends TestCase {
 		$this->expectExceptionMessage( 'You do not have permission to perform this action.' );
 
 		SetupGuidePage::handle_reopen();
+	}
+
+	/**
+	 * Import preview rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_import_preview_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to import anchor data.' );
+
+		ImportPage::handle_preview();
+	}
+
+	/**
+	 * Import commit rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_import_commit_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to import anchor data.' );
+
+		ImportPage::handle_commit();
+	}
+
+	/**
+	 * Import report rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_import_report_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to download the report.' );
+
+		ImportPage::handle_report();
+	}
+
+	/**
+	 * Compliance run rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_compliance_run_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to run the compliance check.' );
+
+		CompliancePage::handle_run();
+	}
+
+	/**
+	 * Compliance export rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_compliance_export_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to export the compliance report.' );
+
+		CompliancePage::handle_export();
+	}
+
+	/**
+	 * Welcome banner dismiss rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_welcome_banner_dismiss_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to perform this action.' );
+
+		WelcomeBanner::handle_dismiss();
+	}
+
+	/**
+	 * Scheduler dismiss failure notice rejects unauthorized users.
+	 *
+	 * @return void
+	 */
+	public function test_scheduler_dismiss_failure_rejects_unauthorized_user() {
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'You do not have permission to perform this action.' );
+
+		Scheduler::handle_dismiss_failure();
 	}
 }
