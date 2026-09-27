@@ -282,5 +282,13 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | ROB-04 | `done` | Hardened WooCommerce product editor save workflows and form ergonomics: eliminated duplicate `_wp_http_referer` nonces in meta box forms (`AnchorMetaBox`, `SpecialSaleMetaBox`, `CardVisibility`); bound explicit `action` query parameters to `$action_url`; hardened `SpecialSaleMetaBox::redirect_back()` using `get_edit_post_link()`; prevented accidental Enter submission in evidence sub-forms in `admin.js`; added ergonomic placeholders and descriptions in locations, standalone types, and meta boxes; authored comprehensive unit tests covering regular product saves, variable products, and dedicated evidence recording | `ProductEditorSaveTest` (13 tests, 49 assertions); 451 unit tests passing (1,606 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (182 files); ESLint clean; Croatian translations 100% complete (768 translated / 0 untranslated) |
 | REL-24 | `done` | Package and verify release 2.0.12 archive | `tools/build-zip.sh 2.0.12` built `versions/2.0.12/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## UI/UX improvements, busy states & formatting consistency pass (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| UX-14 | `done` | UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md`: added busy form state handling (`sidrena-busy-form` and `sidrena-btn-busy`) to long-running actions ("Run compliance check", "Generate now", and shop-wide bulk anchor setting) to prevent double clicks and provide clear feedback; unified datetime and date presentation using Croatian-first display helpers (`Dates::format_datetime_display()` and `Dates::format_date_display()`) across compliance report generated timestamp, public price list generation metadata, Setup Guide legal reference dates, Documentation guide tables, and CSV import preview rows; added `inputmode="decimal"` and placeholder to bulk anchor inputs; standardized `LogsPage::PER_PAGE = 50`; added unit test suites for `CompliancePage` and `PublicationsPage` | `CompliancePageTest` (3 tests, 11 assertions), `PublicationsPageTest` (2 tests, 6 assertions); 456 unit tests passing (1,623 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (184 files); ESLint clean; Croatian translations 100% complete (768 translated / 0 untranslated) |
+| REL-25 | `done` | Package and verify release 2.0.13 archive | `tools/build-zip.sh 2.0.13` built `versions/2.0.13/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+
 
 

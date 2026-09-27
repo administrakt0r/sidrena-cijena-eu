@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.12
+Stable tag: 2.0.13
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.13 =
+* UI/UX improvements & button busy states: added busy form handling (`sidrena-busy-form` and `sidrena-btn-busy`) to long-running administrative submit actions ("Run compliance check", "Generate now", and shop-wide bulk anchor setting), preventing duplicate submissions and giving clear visual feedback.
+* Datetime and date formatting consistency: unified datetime and date presentation across screens using Croatian-first display helpers (`Dates::format_datetime_display()` and `Dates::format_date_display()`) for compliance report generation timestamps, public price list generation metadata, Setup Guide legal reference dates, Documentation guide tables, and CSV import preview rows.
+* Form ergonomics & standard constants: added `inputmode="decimal"` and placeholder hints to bulk anchor price inputs, standardized pagination on `LogsPage` via class constant `PER_PAGE = 50`.
+* Test coverage & quality gates: added unit test suites covering `CompliancePage` and `PublicationsPage` HTML rendering, empty states, and severity filtering (456 unit tests / 1623 assertions, 0 errors); PHPCS, PHPStan, and ESLint clean; Croatian translations 100% complete (768 translated / 0 untranslated).
 
 = 2.0.12 =
 * Robustness & WooCommerce product editor workflows: hardened anchor price and special sale meta boxes by binding dedicated actions via action query parameters and eliminating redundant `_wp_http_referer` nonce fields that could collide with main product editor saves.

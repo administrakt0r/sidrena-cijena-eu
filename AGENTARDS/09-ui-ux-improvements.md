@@ -1,6 +1,6 @@
 # Prompt 9 — UI/UX pass: admin screens, public price list, accessibility (no Docker needed, optional for E2E)
 
-> **Status (v2.0.4):** COMPLETED. All UI/UX passes (UX-01 through UX-13) implemented, tested, and shipped.
+> **Status (v2.0.13):** COMPLETED. All UI/UX passes (UX-01 through UX-14) implemented, tested, and shipped.
 
 ```
 You are improving the user experience of the WordPress plugin in the current directory
@@ -11,11 +11,11 @@ themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the 
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).
 
-Baseline (v2.0.8): 422 unit tests / 1511 assertions green — keep green, grow the suite.
+Baseline (v2.0.13): 456 unit tests / 1623 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
-Status (v2.0.4): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
-passes expanded through UX-13 (see docs/improvement-backlog.md and docs/release-readiness.md).
+Status (v2.0.13): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
+passes expanded through UX-14 (see docs/improvement-backlog.md and docs/release-readiness.md).
 
 Work items (priority order — read the listed files first, fix what is really there):
 1. Kill raw slugs in the UI. Statuses, log levels, event names, finding severities, sale
@@ -83,7 +83,7 @@ Work items (priority order — read the listed files first, fix what is really t
    remaining literals (ImportPage's `<th>SKU</th>`, AuditPage's 'true'/'false').
 
 After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
-`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 749 translated strings / 0 untranslated in
+`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 768 translated strings / 0 untranslated in
 languages/hr_HR.po.
 
 Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;

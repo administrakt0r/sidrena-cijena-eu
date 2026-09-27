@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.13 — UI/UX Improvements, Button Busy States & Formatting Consistency Pass (2026-09-28)
+
+- UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (UX-14).
+- Button busy states & long-running form handling: added `sidrena-busy-form` class and `sidrena-btn-busy` styling to "Run compliance check" (`src/Admin/CompliancePage.php`), "Generate now" (`src/Admin/PublicationsPage.php`), and shop-wide bulk anchor setting (`src/Admin/BulkAnchorEntryPage.php`), preventing duplicate accidental submissions and providing immediate visual feedback during long operations.
+- Datetime & date display consistency: formatted compliance report generation timestamps (`src/Admin/CompliancePage.php`) and public price list metadata (`templates/public-price-list.php`) using `Dates::format_datetime_display()`; formatted statutory reference dates in Setup Guide Step 2 (`src/Admin/SetupGuidePage.php`), Documentation guide tables (`src/Admin/DocumentationPage.php`), and CSV import preview rows (`src/Admin/ImportPage.php`) using `Dates::format_date_display()`.
+- Form ergonomics & clean pagination constants: added `inputmode="decimal"` and placeholder hints to bulk anchor inputs in `BulkAnchorEntryPage.php`; replaced magic number pagination in `LogsPage.php` with `PER_PAGE = 50`.
+- Regression test coverage: authored unit test suites `tests/unit/Admin/CompliancePageTest.php` (3 tests, 11 assertions) and `tests/unit/Admin/PublicationsPageTest.php` (2 tests, 6 assertions) covering HTML table rendering, empty states, and severity filtering.
+- Quality gates: 456 unit tests (1,623 assertions), 0 failures; PHPCS clean across 184 files; PHPStan level 6 clean (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (768 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.13/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.13` and verified with `unzip -t`.
+
 ## Release 2.0.12 — Product Editor Save Workflows, Robustness & Regression Coverage (2026-09-28)
 
 - Robustness & compatibility pass per `AGENTARDS/04-improve.md` (ROB-04).
