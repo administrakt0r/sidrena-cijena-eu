@@ -1,5 +1,13 @@
 # Release verification
 
+## Release 2.0.9 — Static Audit, Attribute Escaping & Permission Rejection Coverage (2026-09-27)
+
+- Full static audit and security pass per `AGENTARDS/01-audit-and-fix.md` (SEC-04).
+- Attribute escaping hardening (`src/Admin/SettingsPage.php`): escaped active navigation tab CSS class attribute using `esc_attr()`.
+- Complete admin-post capability regression test coverage (`tests/unit/Admin/AdminPostCapabilityTest.php`): added unit regression tests for all remaining `admin_post_*` endpoints (`ImportPage::handle_preview`, `handle_commit`, `handle_report`, `CompliancePage::handle_run`, `handle_export`, `WelcomeBanner::handle_dismiss`, and `Scheduler::handle_dismiss_failure`), ensuring 100% of admin action handlers are tested for capability denial via `wp_die`.
+- Quality gates: 429 unit tests (1,525 assertions), 0 failures; PHPCS clean across 179 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.9/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.9` and verified with `unzip -t`.
+
 ## Release 2.0.8 — WordPress.org Plugin Check (PCP) Compliance & Modern Database Placeholders (2026-09-27)
 
 - Full compliance with WordPress.org automated review ruleset (Plugin Check / PCP): 0 errors and 0 warnings across all files.

@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.9 =
+* Static audit & security hardening: escaped active navigation tab CSS class attribute in settings page.
+* Permission denial regression coverage: added unit regression tests verifying strict capability rejection (`manage_sidrena_cijena`) across all admin-post handlers (including import preview/commit/report, compliance run/export, welcome banner dismiss, and scheduler notice dismiss).
+* Quality gates verified clean: 429 unit tests (1,525 assertions), PHPCS clean (179 files), PHPStan level 6 (0 errors across 117 files), ESLint clean, and complete Croatian translation catalog (749 translated strings / 0 untranslated).
 
 = 2.0.8 =
 * WordPress.org Plugin Check (PCP) compliance: verified 0 errors and 0 warnings against the official WordPress.org automated review ruleset.

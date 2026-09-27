@@ -254,3 +254,11 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | SEC-03 | `done` | WordPress.org Plugin Check compliance: resolved all 71 static issues flagged by WordPress.org submission check (PCP); migrated database queries to `%i` identifier placeholders across all repositories; resolved unescaped DB parameter false positives; resolved VIPCS `PostNotIn_exclude` warnings; modernized translation loading to core JIT | `./vendor/bin/phpcs` across custom ruleset and full PCP ruleset: 0 errors, 0 warnings; 422 unit tests passing |
 | REL-20 | `done` | Package and verify release 2.0.8 archive | `tools/build-zip.sh 2.0.8` built `versions/2.0.8/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Static audit pass & capability regression hardening (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SEC-04 | `done` | Static audit pass: verified capability checks, nonces, output escaping, and prepared queries; escaped active nav tab class in settings page (`esc_attr()`); added regression tests covering 100% of admin action endpoints for capability denial via `wp_die` | `AdminPostCapabilityTest` (17 tests, 34 assertions covering all 17 admin handlers); 429 unit tests passing; clean PHPCS, PHPStan, ESLint |
+| REL-21 | `done` | Package and verify release 2.0.9 archive | `tools/build-zip.sh 2.0.9` built `versions/2.0.9/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+
