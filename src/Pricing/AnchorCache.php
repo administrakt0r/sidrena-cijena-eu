@@ -58,7 +58,7 @@ class AnchorCache {
 
 		$cached = wp_cache_get( $key, self::GROUP );
 
-		if ( false === $cached ) {
+		if ( false === $cached && ! ( function_exists( 'wp_using_ext_object_cache' ) && wp_using_ext_object_cache() ) ) {
 			$cached = get_transient( $key );
 
 			if ( false !== $cached ) {
@@ -88,7 +88,22 @@ class AnchorCache {
 		$value = array( 'anchor' => $anchor );
 
 		wp_cache_set( $key, $value, self::GROUP, self::TTL );
-		set_transient( $key, $value, self::TTL );
+
+		if ( ! ( function_exists( 'wp_using_ext_object_cache' ) && wp_using_ext_object_cache() ) ) {
+			set_transient( $key, $value, self::TTL );
+		}
+	}
+
+	/**
+	 * Store multiple anchor records in batch.
+	 *
+	 * @param array<int,array{product_id:int,variation_id:int,anchor:array|null}> $entries Entries to store.
+	 * @return void
+	 */
+	public function set_anchors_batch( array $entries ) {
+		foreach ( $entries as $entry ) {
+			$this->set_anchor( $entry['product_id'], $entry['variation_id'], $entry['anchor'] );
+		}
 	}
 
 	/**
@@ -116,13 +131,18 @@ class AnchorCache {
 	 * generation is monotonic: two flushes inside the same second must still
 	 * invalidate entries written after the first flush.
 	 *
+	 * Uses an explicit positive TTL so WordPress creates the bookkeeping
+	 * row as non-autoloaded (autoload = 'no') in wp_options.
+	 *
 	 * @return void
 	 */
 	public function flush() {
 		$current    = get_transient( 'sidrena_cijena_cache_generation' );
 		$generation = max( time(), (int) $current + 1 );
 
-		set_transient( 'sidrena_cijena_cache_generation', $generation, 0 );
+		$ttl = defined( 'YEAR_IN_SECONDS' ) ? YEAR_IN_SECONDS : 31536000;
+		set_transient( 'sidrena_cijena_cache_generation', $generation, $ttl );
+		update_option( '_transient_sidrena_cijena_cache_generation', $generation, false );
 		wp_cache_set( 'sidrena_cijena_cache_generation', $generation, self::GROUP, self::TTL );
 	}
 

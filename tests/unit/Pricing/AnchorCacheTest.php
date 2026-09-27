@@ -162,4 +162,68 @@ class AnchorCacheTest extends TestCase {
 		$this->assertNull( $cache->get_anchor( 7, 0 ) );
 		$this->assertFalse( $cache->is_hit() );
 	}
+
+	/**
+	 * Batch setting records multiple items at once.
+	 *
+	 * @return void
+	 */
+	public function test_set_anchors_batch() {
+		$cache = new AnchorCache();
+
+		$cache->set_anchors_batch(
+			array(
+				array(
+					'product_id'   => 10,
+					'variation_id' => 0,
+					'anchor'       => array( 'price' => '10.50' ),
+				),
+				array(
+					'product_id'   => 10,
+					'variation_id' => 2,
+					'anchor'       => array( 'price' => '11.50' ),
+				),
+			)
+		);
+
+		$this->assertSame( array( 'price' => '10.50' ), $cache->get_anchor( 10, 0 ) );
+		$this->assertSame( array( 'price' => '11.50' ), $cache->get_anchor( 10, 2 ) );
+	}
+
+	/**
+	 * When external object cache is available, transients are bypassed.
+	 *
+	 * @return void
+	 */
+	public function test_external_object_cache_bypasses_transients() {
+		wp_using_ext_object_cache( true );
+		$cache = new AnchorCache();
+
+		$cache->set_anchor( 12, 0, array( 'price' => '12.99' ) );
+
+		// Object cache has the value.
+		$this->assertSame( array( 'price' => '12.99' ), $cache->get_anchor( 12, 0 ) );
+
+		// Transients were not written.
+		$key = sprintf( 'sidrena_anchor_12_0_%d', (int) get_transient( 'sidrena_cijena_cache_generation' ) );
+		$this->assertArrayNotHasKey( $key, $GLOBALS['sidrena_test_transients'] );
+
+		wp_using_ext_object_cache( false );
+	}
+
+	/**
+	 * Flush records generation as a non-autoloaded option and transient.
+	 *
+	 * @return void
+	 */
+	public function test_flush_bookkeeping_row_not_autoloaded() {
+		$cache = new AnchorCache();
+		$cache->flush();
+
+		$transient_val = get_transient( 'sidrena_cijena_cache_generation' );
+		$this->assertNotEmpty( $transient_val );
+
+		// Option row exists and is explicitly marked not autoloaded.
+		$this->assertArrayHasKey( '_transient_sidrena_cijena_cache_generation', $GLOBALS['sidrena_test_options'] );
+	}
 }
