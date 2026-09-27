@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,8 +58,8 @@ class DocumentationPage {
 		echo '<caption class="screen-reader-text">' . esc_html__( 'Referentni datumi po kategorijama', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr><th scope="col">' . esc_html__( 'Kategorija / Vrsta', 'sidrena-cijena-eu' ) . '</th><th scope="col">' . esc_html__( 'Referentni datum', 'sidrena-cijena-eu' ) . '</th><th scope="col">' . esc_html__( 'Opis i primjena', 'sidrena-cijena-eu' ) . '</th></tr></thead>';
 		echo '<tbody>';
-		echo '<tr><td><strong>' . esc_html__( 'Opći proizvodi i usluge', 'sidrena-cijena-eu' ) . '</strong></td><td><code>' . esc_html( $general_date ) . '</code></td><td>' . esc_html__( 'Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama.', 'sidrena-cijena-eu' ) . '</td></tr>';
-		echo '<tr><td><strong>' . esc_html__( 'Posebne (naslijeđene) kategorije', 'sidrena-cijena-eu' ) . '</strong></td><td><code>' . esc_html( $legacy_date ) . '</code></td><td>' . esc_html__( 'Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila.', 'sidrena-cijena-eu' ) . '</td></tr>';
+		echo '<tr><td><strong>' . esc_html__( 'Opći proizvodi i usluge', 'sidrena-cijena-eu' ) . '</strong></td><td><code>' . esc_html( Dates::format_date_display( $general_date ) ) . '</code></td><td>' . esc_html__( 'Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama.', 'sidrena-cijena-eu' ) . '</td></tr>';
+		echo '<tr><td><strong>' . esc_html__( 'Posebne (naslijeđene) kategorije', 'sidrena-cijena-eu' ) . '</strong></td><td><code>' . esc_html( Dates::format_date_display( $legacy_date ) ) . '</code></td><td>' . esc_html__( 'Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		echo '<tr><td><strong>' . esc_html__( 'Novi proizvodi (prva ponuda)', 'sidrena-cijena-eu' ) . '</strong></td><td><em>' . esc_html__( 'Datum objave', 'sidrena-cijena-eu' ) . '</em></td><td>' . esc_html__( 'Proizvodi koji se prvi put objave dok je dodatak aktivan automatski bilježe cijenu prve ponude i taj datum kao svoju sidrenu cijenu.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		echo '</tbody></table>';
 		echo '<p><strong>' . esc_html__( 'Važna pravna napomena o nepromjenjivosti dokaza:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Zapisi sidrenih cijena i povijest promjena cijena čine zakonski dokaz. Svaka izmjena evidentira se kao ispravak s obaveznim obrazloženjem i korisničkim tragom (audit trail). Izvorne vrijednosti se nikada ne brišu tiho.', 'sidrena-cijena-eu' ) . '</p>';

@@ -12,6 +12,7 @@ use SidrenaCijena\Import\MigrationDetector;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
@@ -457,7 +458,7 @@ class ImportPage {
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( $row['status'] ) . '">' . esc_html( Labels::import_status( (string) $row['status'] ) ) . '</span></td>';
 			echo '<td>' . esc_html( $name ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['values']['sku'] ) . '</td>';
-			echo '<td>' . esc_html( (string) $row['values']['reference_date'] ) . '</td>';
+			echo '<td>' . esc_html( Dates::format_date_display( (string) $row['values']['reference_date'] ) ) . '</td>';
 			echo '<td>' . esc_html( null === $row['values']['price'] ? '' : Currency::format_decimal( $row['values']['price'] ) ) . '</td>';
 			echo '<td>';
 

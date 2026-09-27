@@ -63,10 +63,10 @@ class CompliancePage {
 
 		self::notice();
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RUN ) . '" />';
 		wp_nonce_field( self::ACTION_RUN );
-		submit_button( __( 'Run compliance check', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
+		submit_button( __( 'Run compliance check', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		if ( ! $report ) {
@@ -78,6 +78,7 @@ class CompliancePage {
 
 		$counts   = isset( $report['counts'] ) ? (array) $report['counts'] : array();
 		$findings = isset( $report['findings'] ) ? (array) $report['findings'] : array();
+		$gen_at   = isset( $report['generated_at'] ) ? Dates::format_datetime_display( (string) $report['generated_at'] ) : '';
 
 		printf(
 			'<p class="description">%s</p>',
@@ -85,7 +86,7 @@ class CompliancePage {
 				sprintf(
 					/* translators: 1: generation timestamp, 2: scanned items, 3: total items. */
 					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'sidrena-cijena-eu' ),
-					isset( $report['generated_at'] ) ? (string) $report['generated_at'] : '',
+					$gen_at,
 					isset( $report['scanned'] ) ? (int) $report['scanned'] : 0,
 					isset( $report['total'] ) ? (int) $report['total'] : 0
 				)

@@ -101,10 +101,10 @@ class PublicationsPage {
 			echo '</p></div>';
 		}
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		wp_nonce_field( self::ACTION );
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
-		submit_button( __( 'Generate now', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
+		submit_button( __( 'Generate now', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';

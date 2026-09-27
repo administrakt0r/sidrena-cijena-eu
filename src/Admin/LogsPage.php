@@ -27,6 +27,13 @@ class LogsPage {
 	const SLUG = 'sidrena-cijena-logs';
 
 	/**
+	 * Rows per page.
+	 *
+	 * @var int
+	 */
+	const PER_PAGE = 50;
+
+	/**
 	 * Render the screen.
 	 *
 	 * @return void
@@ -45,7 +52,7 @@ class LogsPage {
 
 		$args = array(
 			'page'     => $page,
-			'per_page' => 50,
+			'per_page' => self::PER_PAGE,
 		);
 
 		if ( in_array( $level, LogRepository::LEVELS, true ) ) {
@@ -115,7 +122,7 @@ class LogsPage {
 
 		echo '</tbody></table>';
 
-		Pagination::render( $page, (int) $result['total'], 50 );
+		Pagination::render( $page, (int) $result['total'], self::PER_PAGE );
 
 		echo '</div>';
 	}

@@ -53,14 +53,14 @@ class BulkAnchorEntryPage {
 		echo '<div class="card sidrena-bulk-all-card">';
 		echo '<h2>' . esc_html__( 'Set anchor prices for all products at once (from current price)', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>' . esc_html__( 'This option automatically sets the anchor price for products and variations in your shop based on their current active price and prescribed legal reference date (2 May 2025 for legacy categories, 10 September 2026 for all others).', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_ALL_CURRENT ) . '" />';
 		wp_nonce_field( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
 		echo '<p>';
 		echo '<label class="sidrena-label-inline-wide"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena-eu' ) . '</label>';
 		echo '<label><input type="radio" name="scope" value="all" /> ' . esc_html__( 'For all products in catalog (including overwriting existing)', 'sidrena-cijena-eu' ) . '</label>';
 		echo '</p>';
-		echo '<p><button type="submit" class="button button-primary" data-sidrena-confirm="' . esc_attr__( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena-eu' ) . '">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena-eu' ) . '</button></p>';
+		echo '<p><button type="submit" class="button button-primary sidrena-btn-busy" data-sidrena-confirm="' . esc_attr__( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena-eu' ) . '">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena-eu' ) . '</button></p>';
 		echo '</form>';
 		echo '</div>';
 
@@ -119,7 +119,7 @@ class BulkAnchorEntryPage {
 			echo '<td>' . esc_html( $item->name ) . ( $item->is_variation() ? ' (' . esc_html__( 'variation', 'sidrena-cijena-eu' ) . ' #' . (int) $item->variation_id . ')' : '' ) . '</td>';
 			echo '<td>' . esc_html( (string) $item->sku ) . '</td>';
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
-			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'sidrena-cijena-eu' ) . '" /></td>';
+			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" inputmode="decimal" placeholder="' . esc_attr__( 'e.g. 19.99', 'sidrena-cijena-eu' ) . '" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'sidrena-cijena-eu' ) . '" /></td>';
 			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'sidrena-cijena-eu' ) . '" /></td>';
 			echo '</tr>';
 		}

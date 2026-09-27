@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -208,8 +209,8 @@ final class SetupGuidePage {
 			esc_html( (string) $statuses['rules']['badge'] ),
 			esc_html__( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'sidrena-cijena-eu' ),
 			esc_html__( 'Reference dates', 'sidrena-cijena-eu' ),
-			esc_html( (string) $statuses['rules']['general_reference_date'] ),
-			esc_html( (string) $statuses['rules']['legacy_reference_date'] ),
+			esc_html( Dates::format_date_display( (string) $statuses['rules']['general_reference_date'] ) ),
+			esc_html( Dates::format_date_display( (string) $statuses['rules']['legacy_reference_date'] ) ),
 			esc_html__( 'Legacy slugs', 'sidrena-cijena-eu' ),
 			esc_html( $legacy_slugs ? implode( ', ', $legacy_slugs ) : __( 'none mapped yet', 'sidrena-cijena-eu' ) ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-settings', array( 'tab' => 'legal' ) ) ),

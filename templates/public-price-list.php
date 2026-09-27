@@ -31,12 +31,13 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 	<?php if ( ! empty( $location ) ) : ?>
 		<p class="sidrena-cijena-cjenik__meta">
 			<?php
+			$sidrena_generated_at = isset( $meta['generated_at'] ) ? \SidrenaCijena\Support\Dates::format_datetime_display( (string) $meta['generated_at'] ) : '';
 			printf(
 				/* translators: 1: sales location name, 2: legal rule version, 3: generation timestamp. */
 				esc_html__( 'Sales location: %1$s. Rule version: %2$s. Generated: %3$s.', 'sidrena-cijena-eu' ),
 				esc_html( (string) $location['name'] ),
 				esc_html( isset( $meta['rule_version'] ) ? (string) $meta['rule_version'] : '' ),
-				esc_html( isset( $meta['generated_at'] ) ? (string) $meta['generated_at'] : '' )
+				esc_html( $sidrena_generated_at )
 			);
 			?>
 		</p>
