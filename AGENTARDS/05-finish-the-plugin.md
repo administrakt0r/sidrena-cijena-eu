@@ -1,5 +1,7 @@
 # Sidrena Cijena — finish the plugin (agent handoff prompt)
 
+> **Status (v2.0.0):** COMPLETED. Release 2.0.0 (Sidrena Cijena EU) finalized, quality gates verified, and package created.
+
 You are the coding agent for **Sidrena Cijena**, a WordPress plugin that implements the
 Croatian "sidrena cijena" (anchor price) obligation, the daily machine-readable price-list
 obligation and the 30-day lowest-price rule for classified sales.
@@ -30,11 +32,11 @@ obligation and the 30-day lowest-price rule for classified sales.
 * Docker, PHP 8.4 + Composer, Node 24 + npm, Playwright Chromium.
 * If user `q` lacks active docker permissions in the current subshell, wrap docker/wp-env commands in `sg docker -c '…'`.
 * **Dev webshop:** `./local.sh` → <http://localhost:8888> (`admin` / `password`). Stop with `./stoplocal.sh`.
-* **Test webshop:** `npm run wp-env:test -- start` → <http://localhost:8889> (the exclusive E2E target; Playwright must never touch 8888).
+* **Test webshop:** `npx wp-env start` → <http://localhost:8889> (the exclusive E2E target; Playwright must never touch 8888).
 * **CRITICAL:** NEVER run `wp plugin install <zip> --force` inside wp-env (it deletes the bind-mounted repository!).
 * **Clean test DB:** Before running integration tests, run `npx wp-env clean tests`.
 * **CI Workflow location:** CI workflow is maintained in `tools/ci/ci.yml` (ready to copy to `.github/workflows/` when pushing with a token possessing GitHub `workflow` scope).
-* **Current green baseline:** 301+ unit tests / 1078+ assertions, 77+ integration tests / 349+ assertions, 28 E2E tests, PHPStan level 6 clean (0 errors), PHPCS clean, ESLint clean, `./local.sh` exit 0.
+* **Current green baseline:** 361+ unit tests / 1296+ assertions, 96+ integration tests / 454+ assertions, 42 E2E specs, PHPStan level 6 clean (0 errors, 117 files), PHPCS clean (175 files), ESLint clean, `./local.sh` exit 0.
 
 ## Quality Gates
 
@@ -49,7 +51,7 @@ When Docker is available:
 ```bash
 npx wp-env clean tests
 composer test:integration   # PHPUnit integration suite in wp-env
-npm run wp-env:test -- start
+npx wp-env start
 npm run test:e2e            # Playwright E2E on port 8889
 ./local.sh                  # One-command local setup, must exit 0
 ```
@@ -58,7 +60,7 @@ npm run test:e2e            # Playwright E2E on port 8889
 
 * `docs/improvement-backlog.md` — tracks completed compliance fixes (FIX-01..12), competitor improvements (IMP-01..12), public release items (REL-01..14), performance items (PERF-xx) and UI/UX items (UX-xx).
 * `docs/release-readiness.md` — records verification notes and gate results for every shipped version.
-* `completion.md` — completion plan and release status.
+* `completion-steps.md` — compliance remediation plan and release status.
 
 ## Work queue
 
@@ -79,7 +81,7 @@ UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and thei
 3. **Translations:**
    - If strings are added or edited, update `tools/i18n/en_US.php` and `tools/i18n/hr_HR.php`, then run:
      `php tools/i18n/make-pot.php --locale=hr_HR`
-   - Confirm 0 untranslated strings in `languages/hr_HR.po`.
+   - Confirm 0 untranslated strings in `languages/hr_HR.po` (baseline: 705 translated strings / 0 untranslated).
 4. **Mandatory Release Procedure:**
    - Bump version in all 4 places:
      - `sidrena-cijena.php` (header `Version:` and `SIDRENA_CIJENA_VERSION`)

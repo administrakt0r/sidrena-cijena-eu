@@ -15,12 +15,11 @@
 - Reworked repository queries to expose `$wpdb->prepare()` calls inline and
   use `%i` for internal table identifiers. The unit-test WordPress stub now
   supports `%i`. Uninstaller cleanup uses the WordPress filesystem API.
-- Quality gates: unit tests 315/315 (1,103 assertions); PHPCS, PHPStan and ESLint
-  clean; Croatian catalog 669 translated, 0 untranslated. WordPress integration
-  tests: 83/83 (376 assertions). The complete Playwright suite passed 33 tests;
-  after the sitemap registration change, the focused publication suite passed
-  4/4. Its fixture now creates an active store when the default webshop is the
-  only configured location.
+- Quality gates: unit tests 361/361 (1,296 assertions); integration 96/96 (454 assertions);
+  Playwright E2E 42/42 specs; PHPCS 175 files clean; PHPStan level 6, 0 errors across 117 files;
+  ESLint clean; Croatian catalog 705 translated, 0 untranslated.
+- Compliance remediation roadmap (completion-steps.md, Tasks 1–10) fully implemented
+  and verified green across all test layers.
 - Live smoke checks: the demo shop and archive returned HTTP 200; the archive
   showed dates and CSV/XML links; the footer contained the archive link; the
   WordPress sitemap index contained the archive provider URL.

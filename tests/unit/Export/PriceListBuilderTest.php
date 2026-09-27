@@ -522,11 +522,11 @@ class PriceListBuilderTest extends TestCase {
 	}
 
 	/**
-	 * A variation without its own sale inherits the parent product's sale.
+	 * A variation without its own sale does not inherit the parent classification.
 	 *
 	 * @return void
 	 */
-	public function test_variation_inherits_parent_sale() {
+	public function test_variation_does_not_inherit_parent_sale() {
 		$result = $this->variation_build(
 			array(
 				'201:0' => array(
@@ -539,13 +539,13 @@ class PriceListBuilderTest extends TestCase {
 
 		$row = $result['items'][0];
 
-		$this->assertTrue( $row['poseban_oblik_prodaje'] );
-		$this->assertSame( 'Tjedna akcija', $row['naziv_posebnog_oblika_prodaje'] );
+		$this->assertFalse( $row['poseban_oblik_prodaje'] );
+		$this->assertSame( '', $row['naziv_posebnog_oblika_prodaje'] );
 		$this->assertSame( 11, $row['variation_id'] );
 	}
 
 	/**
-	 * A variation-level sale wins over the parent sale.
+	 * An exact variation sale is selected when both parent and variation data exist.
 	 *
 	 * @return void
 	 */
@@ -566,6 +566,54 @@ class PriceListBuilderTest extends TestCase {
 		);
 
 		$this->assertSame( 'Vikend akcija', $result['items'][0]['naziv_posebnog_oblika_prodaje'] );
+	}
+
+	/**
+	 * The feed puts only the variation's own anchor beside its offer price.
+	 *
+	 * @return void
+	 */
+	public function test_variation_feed_uses_its_own_anchor_reference() {
+		$result = $this->variation_build(
+			array(),
+			array(
+				'201:0'  => array(
+					'price'          => 99.0,
+					'reference_date' => '2026-09-01',
+				),
+				'201:12' => array(
+					'price'          => 88.0,
+					'reference_date' => '2026-09-02',
+				),
+				'201:11' => array(
+					'price'          => 7.0,
+					'reference_date' => '2026-09-03',
+				),
+			)
+		);
+
+		$this->assertSame( 7.0, $result['items'][0]['sidrena_cijena'] );
+		$this->assertSame( '2026-09-03', $result['items'][0]['anchor_reference_date'] );
+	}
+
+	/**
+	 * Parent anchor data cannot fill a variation feed row.
+	 *
+	 * @return void
+	 */
+	public function test_variation_feed_does_not_fall_back_to_parent_anchor() {
+		$result = $this->variation_build(
+			array(),
+			array(
+				'201:0' => array(
+					'price'          => 99.0,
+					'reference_date' => '2026-09-01',
+				),
+			)
+		);
+
+		$this->assertNull( $result['items'][0]['sidrena_cijena'] );
+		$this->assertNull( $result['items'][0]['anchor_reference_date'] );
 	}
 
 	/**
@@ -592,10 +640,11 @@ class PriceListBuilderTest extends TestCase {
 	/**
 	 * Build a list containing one parent variation item.
 	 *
-	 * @param array<string,array> $sales Sale rows keyed by `product:variation`.
+	 * @param array<string,array> $sales   Sale rows keyed by `product:variation`.
+	 * @param array<string,array> $anchors Anchor rows keyed by `product:variation`.
 	 * @return array<mixed>
 	 */
-	protected function variation_build( array $sales ) {
+	protected function variation_build( array $sales, array $anchors = array() ) {
 		$catalog             = new BuilderFakeCatalog();
 		$catalog->items[201] = new CatalogItem(
 			array(
@@ -610,7 +659,8 @@ class PriceListBuilderTest extends TestCase {
 			)
 		);
 
-		$history = new BuilderFakeHistory();
+		$history          = new BuilderFakeHistory();
+		$history->anchors = $anchors;
 
 		$sales_repo        = new BuilderFakeSales();
 		$sales_repo->sales = $sales;

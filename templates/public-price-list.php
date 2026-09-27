@@ -56,6 +56,7 @@ defined( 'ABSPATH' ) || exit;
 				<th scope="col"><?php esc_html_e( 'Unit', 'sidrena-cijena-eu' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Unit price', 'sidrena-cijena-eu' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Retail price', 'sidrena-cijena-eu' ); ?></th>
+				<th scope="col"><?php esc_html_e( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Special sale', 'sidrena-cijena-eu' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Anchor price', 'sidrena-cijena-eu' ); ?></th>
 				<th scope="col"><?php esc_html_e( 'Anchor date', 'sidrena-cijena-eu' ); ?></th>
@@ -66,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 		<tbody>
 			<?php if ( empty( $rows ) ) : ?>
 				<tr>
-					<td colspan="12"><?php esc_html_e( 'No items match this filter.', 'sidrena-cijena-eu' ); ?></td>
+					<td colspan="13"><?php esc_html_e( 'No items match this filter.', 'sidrena-cijena-eu' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			<?php foreach ( $rows as $sidrena_row ) : ?>
@@ -78,6 +79,7 @@ defined( 'ABSPATH' ) || exit;
 					<td><?php echo esc_html( (string) $sidrena_row['jedinica_mjere'] ); ?></td>
 					<td><?php echo esc_html( (string) $sidrena_row['unit_price_display'] ); ?></td>
 					<td><?php echo esc_html( (string) $sidrena_row['retail_display'] ); ?></td>
+					<td><?php echo esc_html( (string) $sidrena_row['lowest_30_day_display'] ); ?></td>
 					<td><?php echo esc_html( (string) $sidrena_row['sale_display'] ); ?></td>
 					<td><?php echo esc_html( (string) $sidrena_row['anchor_display'] ); ?></td>
 					<td><?php echo esc_html( (string) $sidrena_row['reference_display'] ); ?></td>

@@ -1,18 +1,20 @@
 # Prompt 9 — UI/UX pass: admin screens, public price list, accessibility (no Docker needed, optional for E2E)
 
+> **Status (v2.0.0):** COMPLETED. All UI/UX passes (UX-01 through UX-11) implemented, tested, and shipped.
+
 ```
 You are improving the user experience of the WordPress plugin in the current directory
 (sidrena-cijena.php is the bootstrap): the Sidrena Cijena admin screens and the public
 price-list output. Croatian-first: every visible string goes through the
-`sidrena-cijena` textdomain. Work only inside this plugin; never touch WordPress core,
+`sidrena-cijena-eu` textdomain. Work only inside this plugin; never touch WordPress core,
 themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the CSV/XML
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).
 
-Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
+Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
-Status (v1.0.13): work items 1–3 below have shipped as UX-01..UX-03 (see
+Status (v2.0.0): work items 1–3 below have shipped as UX-01..UX-03 (see
 docs/improvement-backlog.md and the 1.0.13 entry in docs/release-readiness.md).
 Run this prompt for the remaining items 4–7.
 
@@ -82,11 +84,11 @@ Work items (priority order — read the listed files first, fix what is really t
    remaining literals (ImportPage's `<th>SKU</th>`, AuditPage's 'true'/'false').
 
 After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
-`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 0 untranslated strings in
+`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 705 translated strings / 0 untranslated in
 languages/hr_HR.po.
 
 Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
-with Docker also `npm run test:e2e` (port 8889 only — never point Playwright at 8888) and
+with Docker also `npm run test:e2e` (42 Playwright specs, port 8889 only — never point Playwright at 8888) and
 update specs when markup intentionally changes.
 
 Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run

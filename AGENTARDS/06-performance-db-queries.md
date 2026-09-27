@@ -1,5 +1,7 @@
 # Prompt 6 — Performance pass 1: database and query tuning (Docker optional, needed for measurements)
 
+> **Status (v2.0.0):** COMPLETED. Work items 1–4, 6 shipped as PERF-01–PERF-04, PERF-06; items 5 and 7 measured as PERF-05, PERF-07 (see docs/improvement-backlog.md).
+
 ```
 You are optimising the data layer of the WordPress plugin in the current directory
 (sidrena-cijena.php is the bootstrap). Goal: fewer, smaller, indexed queries with
@@ -12,7 +14,7 @@ changes are additive only (new indexes/columns, never rewritten rows) and legal 
 must not change (docs/legal-rules.md). Keep the plugin working with and without
 WooCommerce. Commit each item separately (perf: / fix:), with tests.
 
-Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
+Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
 
 Measurement (do this first and again at the end; Docker optional for code fixes):
 - Demo shop: `./local.sh` → http://localhost:8888 (admin / password) with 200+ seeded

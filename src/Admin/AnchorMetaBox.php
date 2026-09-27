@@ -97,10 +97,44 @@ final class AnchorMetaBox {
 		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena-eu' ) . '</p>';
 		CardVisibility::render_control( $post->ID );
-		echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h3>';
-		self::render( $post );
-		echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h3>';
-		SpecialSaleMetaBox::render( $post );
+
+		$product = wc_get_product( $post->ID );
+
+		if ( $product && $product->is_type( 'variable' ) ) {
+			$items = Plugin::instance()->catalog()->get_items(
+				array(
+					'include'            => array( $post->ID ),
+					'per_page'           => 1,
+					'include_variations' => true,
+				)
+			);
+
+			foreach ( $items as $item ) {
+				if ( ! $item->is_variation() ) {
+					continue;
+				}
+
+				$variation_post = get_post( (int) $item->variation_id );
+
+				if ( ! $variation_post instanceof \WP_Post ) {
+					continue;
+				}
+
+				echo '<section class="sidrena-cijena-variation-evidence">';
+				printf( '<h3>%1$s (#%2$d)</h3>', esc_html( $item->name ), (int) $item->variation_id );
+				echo '<h4>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h4>';
+				self::render( $variation_post );
+				echo '<hr /><h4>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h4>';
+				SpecialSaleMetaBox::render( $variation_post );
+				echo '</section>';
+			}
+		} else {
+			echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h3>';
+			self::render( $post );
+			echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h3>';
+			SpecialSaleMetaBox::render( $post );
+		}
+
 		echo '</div></div>';
 	}
 
@@ -121,6 +155,15 @@ final class AnchorMetaBox {
 
 		$status            = Plugin::instance()->anchors()->status( $item );
 		$anchor_date_value = $status['reference_date'];
+		$variation_id      = (int) $item->variation_id;
+		$field_suffix      = $variation_id > 0 ? '[' . $variation_id . ']' : '';
+		$id_suffix         = $variation_id > 0 ? '-' . $variation_id : '';
+		$product_id        = (int) $item->id;
+		$action_url        = admin_url( 'admin-post.php' );
+
+		if ( $variation_id > 0 ) {
+			$action_url = add_query_arg( 'variation_id', $variation_id, $action_url );
+		}
 		if ( $status['introduced_after'] && ! $status['anchor'] && $item->first_seen ) {
 			$anchor_date_value = substr( (string) $item->first_seen, 0, 10 );
 		}
@@ -164,29 +207,29 @@ final class AnchorMetaBox {
 		?>
 		<div class="sidrena-cijena-anchor-form" style="margin-top:1em">
 			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce' ); ?>
-			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $post->ID ); ?>" />
+			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $product_id ); ?>" />
 
 			<p>
-				<label for="sidrena-anchor-price"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena-eu' ); ?></label>
-				<input type="text" class="regular-text" id="sidrena-anchor-price" name="anchor_price"
+				<label for="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena-eu' ); ?></label>
+				<input type="text" class="regular-text" id="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>" name="anchor_price<?php echo esc_attr( $field_suffix ); ?>"
 					value="<?php echo $status['anchor'] && null !== $status['anchor']['price'] ? esc_attr( (string) $status['anchor']['price'] ) : ''; ?>" />
 				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<p>
-				<label for="sidrena-anchor-date"><?php echo esc_html__( 'Reference date', 'sidrena-cijena-eu' ); ?></label>
-				<input type="date" id="sidrena-anchor-date" name="reference_date" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
+				<label for="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Reference date', 'sidrena-cijena-eu' ); ?></label>
+				<input type="date" id="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>" name="reference_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
 				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<?php if ( $status['anchor'] ) : ?>
 				<p>
-					<label for="sidrena-anchor-reason"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena-eu' ); ?></label>
-					<input type="text" class="regular-text" id="sidrena-anchor-reason" name="correction_reason" value="" />
+						<label for="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena-eu' ); ?></label>
+						<input type="text" class="regular-text" id="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>" name="correction_reason<?php echo esc_attr( $field_suffix ); ?>" value="" />
 				</p>
 			<?php endif; ?>
 
-			<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post">
+			<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( $action_url ); ?>" formmethod="post">
 				<?php echo esc_html__( 'Record anchor price', 'sidrena-cijena-eu' ); ?>
 			</button>
 		</div>
@@ -194,7 +237,15 @@ final class AnchorMetaBox {
 
 		printf(
 			'<p><a href="%1$s">%2$s</a></p>',
-			esc_url( AdminMenu::url( 'sidrena-cijena-history', array( 'product_id' => $post->ID ) ) ),
+			esc_url(
+				AdminMenu::url(
+					'sidrena-cijena-history',
+					array(
+						'product_id'   => $product_id,
+						'variation_id' => $variation_id,
+					)
+				)
+			),
 			esc_html__( 'View the full price history', 'sidrena-cijena-eu' )
 		);
 	}
@@ -211,8 +262,11 @@ final class AnchorMetaBox {
 
 		check_admin_referer( self::ACTION, 'sidrena_cijena_anchor_nonce' );
 
-		$product_id = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
-		$item       = $product_id ? Plugin::instance()->catalog()->get_item( $product_id ) : null;
+		$product_id   = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
+		$variation_id = isset( $_REQUEST['variation_id'] ) ? absint( wp_unslash( $_REQUEST['variation_id'] ) ) : 0;
+		$item         = $variation_id > 0
+			? Plugin::instance()->catalog()->get_variation( $product_id, $variation_id )
+			: ( $product_id ? Plugin::instance()->catalog()->get_item( $product_id ) : null );
 
 		if ( ! $item ) {
 			self::redirect_back( 0, __( 'The catalog item could not be loaded.', 'sidrena-cijena-eu' ) );
@@ -220,12 +274,12 @@ final class AnchorMetaBox {
 			return;
 		}
 
-		$price = isset( $_POST['anchor_price'] ) ? sanitize_text_field( wp_unslash( $_POST['anchor_price'] ) ) : '';
+		$price = self::posted_value( 'anchor_price', $variation_id );
 
 		$args = array(
 			'source'            => 'manual',
-			'reference_date'    => isset( $_POST['reference_date'] ) ? sanitize_text_field( wp_unslash( $_POST['reference_date'] ) ) : '',
-			'correction_reason' => isset( $_POST['correction_reason'] ) ? sanitize_text_field( wp_unslash( $_POST['correction_reason'] ) ) : '',
+			'reference_date'    => self::posted_value( 'reference_date', $variation_id ),
+			'correction_reason' => self::posted_value( 'correction_reason', $variation_id ),
 		);
 
 		$result = Plugin::instance()->anchors()->record( $item, $price, $args );
@@ -237,6 +291,32 @@ final class AnchorMetaBox {
 		}
 
 		self::redirect_back( $product_id, __( 'The anchor price has been recorded.', 'sidrena-cijena-eu' ), 'success' );
+	}
+
+	/**
+	 * Read a scalar field or the value posted for the selected variation.
+	 *
+	 * @param string $key          POST field name.
+	 * @param int    $variation_id Variation ID, or zero for a non-variation.
+	 * @return string
+	 */
+	private static function posted_value( $key, $variation_id ) {
+		// The public handler verifies the nonce before calling this helper.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST[ $key ] ) ) {
+			return '';
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- The handler verifies the nonce and this value is sanitized below.
+		$value = wp_unslash( $_POST[ $key ] );
+
+		if ( $variation_id > 0 ) {
+			$value = is_array( $value ) && isset( $value[ $variation_id ] ) ? $value[ $variation_id ] : '';
+		} elseif ( is_array( $value ) ) {
+			$value = '';
+		}
+
+		return sanitize_text_field( (string) $value );
 	}
 
 	/**

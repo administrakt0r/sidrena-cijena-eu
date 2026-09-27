@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-26T22:24:42+00:00\n"
+"POT-Creation-Date: 2026-09-27T04:40:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,6 +140,9 @@ msgstr ""
 msgid "30-day price warnings"
 msgstr ""
 
+msgid "30-day reference price explanation"
+msgstr ""
+
 msgid "Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted."
 msgstr ""
 
@@ -260,6 +263,9 @@ msgstr ""
 msgid "Applicable reference date"
 msgstr ""
 
+msgid "A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price."
+msgstr ""
+
 msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
 msgstr ""
 
@@ -327,6 +333,12 @@ msgid "Bulk entry"
 msgstr ""
 
 msgid "Bulk setup of anchor price from current catalog price"
+msgstr ""
+
+msgid "Calculation explanation: %1$s (starts %2$s)"
+msgstr ""
+
+msgid "Calculation window (30 days):"
 msgstr ""
 
 msgid "Cancel editing"
@@ -446,6 +458,9 @@ msgstr ""
 msgid "Currency symbol (6,99 EUR)"
 msgstr ""
 
+msgid "Current 30-day reference baseline (preview for today)"
+msgstr ""
+
 msgid "Current price"
 msgstr ""
 
@@ -492,6 +507,12 @@ msgid "Description"
 msgstr ""
 
 msgid "Deselect all"
+msgstr ""
+
+msgid "determined by record #%1$d, %2$s from %3$s"
+msgstr ""
+
+msgid "Determining lowest price"
 msgstr ""
 
 msgid "Dismiss"
@@ -546,6 +567,9 @@ msgid "Edit catalog item"
 msgstr ""
 
 msgid "Edit location"
+msgstr ""
+
+msgid "Effective period"
 msgstr ""
 
 msgid "Enable frontend display"
@@ -701,7 +725,13 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
+msgid "for sale starting %s"
+msgstr ""
+
 msgid "FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!"
+msgstr ""
+
+msgid "Full 30-day price history is available."
 msgstr ""
 
 msgid "General reference date"
@@ -740,6 +770,9 @@ msgstr ""
 msgid "I confirm replacing existing anchor records listed above."
 msgstr ""
 
+msgid "ID"
+msgstr ""
+
 msgid "Identifier"
 msgstr ""
 
@@ -767,6 +800,9 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
+msgid "Informed calculation"
+msgstr ""
+
 msgid "Inline, next to the price"
 msgstr ""
 
@@ -777,6 +813,12 @@ msgid "Ispisuje status dodatka: broj artikala, sidrenih cijena, lokacija i zadnj
 msgstr ""
 
 msgid "Item"
+msgstr ""
+
+msgid "Item:"
+msgstr ""
+
+msgid "Item identity:"
 msgstr ""
 
 msgid "Items"
@@ -905,6 +947,9 @@ msgstr ""
 msgid "lowercase"
 msgstr ""
 
+msgid "Lowest 30-day price label"
+msgstr ""
+
 msgid "Lowest price in the last 30 days"
 msgstr ""
 
@@ -945,6 +990,9 @@ msgid "Monochrome"
 msgstr ""
 
 msgid "More than one catalog record uses the SKU %s. Price history may be ambiguous."
+msgstr ""
+
+msgid "Multiple successive reductions detected. All applicable prices in the 30-day window were evaluated."
 msgstr ""
 
 msgid "Najniža cijena u zadnjih 30 dana:"
@@ -989,6 +1037,9 @@ msgstr ""
 msgid "No anchor price is recorded for this item (reference date %s)."
 msgstr ""
 
+msgid "No applicable lowest price could be calculated for this 30-day window."
+msgstr ""
+
 msgid "No archived %1$s price list exists for %2$s."
 msgstr ""
 
@@ -1028,7 +1079,13 @@ msgstr ""
 msgid "none mapped yet"
 msgstr ""
 
+msgid "No price history exists in or before the 30-day calculation window (%1$s). A reference price cannot be calculated without historical evidence."
+msgstr ""
+
 msgid "No price history records match the filter."
+msgstr ""
+
+msgid "No price history records overlapped this calculation window."
 msgstr ""
 
 msgid "No price list has been published yet."
@@ -1050,6 +1107,9 @@ msgid "No special sale is recorded for this item."
 msgstr ""
 
 msgid "Not calculated"
+msgstr ""
+
+msgid "Not calculated (no applicable price in window)"
 msgstr ""
 
 msgid "Note"
@@ -1091,7 +1151,13 @@ msgstr ""
 msgid "Only when the anchor differs"
 msgstr ""
 
+msgid "open"
+msgstr ""
+
 msgid "Open documentation & guide"
+msgstr ""
+
+msgid "Open full price history for this item &rarr;"
 msgstr ""
 
 msgid "Open legal rules"
@@ -1199,6 +1265,9 @@ msgstr ""
 msgid "Price history is append-only. Corrections add a new record that references the original; nothing is overwritten or deleted."
 msgstr ""
 
+msgid "Price history is shorter than 30 days (covers %1$d days starting from %2$s). The reference price is calculated from the available history."
+msgstr ""
+
 msgid "Price history records"
 msgstr ""
 
@@ -1233,6 +1302,9 @@ msgid "Primjer: PRODAVAONICA_ILICA-1_POSL-01_1_26092026_0800.csv"
 msgstr ""
 
 msgid "Product"
+msgstr ""
+
+msgid "Product #%1$d (SKU: %2$s) — %3$s"
 msgstr ""
 
 msgid "Product cards"
@@ -1328,6 +1400,12 @@ msgstr ""
 msgid "Reference dates and legal rules"
 msgstr ""
 
+msgid "Reference prices per item:"
+msgstr ""
+
+msgid "Reference price text for this cart item."
+msgstr ""
+
 msgid "Referentni datum"
 msgstr ""
 
@@ -1356,6 +1434,9 @@ msgid "Retail price"
 msgstr ""
 
 msgid "Retail store (prodavaonica)"
+msgstr ""
+
+msgid "Role"
 msgstr ""
 
 msgid "Row"
@@ -1416,6 +1497,9 @@ msgid "Select all on page"
 msgstr ""
 
 msgid "Select all on this page"
+msgstr ""
+
+msgid "Selected 30-day lowest price:"
 msgstr ""
 
 msgid "Select the facility form that matches this sales location’s legal/store classification."
@@ -1571,6 +1655,9 @@ msgstr ""
 msgid "Standalone catalog"
 msgstr ""
 
+msgid "Standalone item #%1$d (SKU: %2$s) — %3$s"
+msgstr ""
+
 msgid "Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama."
 msgstr ""
 
@@ -1721,6 +1808,9 @@ msgstr ""
 msgid "The location street address and city are required in the price-list filename."
 msgstr ""
 
+msgid "The lowest applicable price in the 30-day window (%2$s to %3$s) is %1$s."
+msgstr ""
+
 msgid "The lowest price of the 30 days before the start date is calculated and stored automatically."
 msgstr ""
 
@@ -1773,6 +1863,12 @@ msgid "The reference date is missing or not a valid date."
 msgstr ""
 
 msgid "The reference date is not a valid date (YYYY-MM-DD)."
+msgstr ""
+
+msgid "The reference price is determined by a manual baseline record (#%1$d)."
+msgstr ""
+
+msgid "The reference price is determined by an imported or seeded baseline record (#%1$d, source: %2$s)."
 msgstr ""
 
 msgid "There is no record of this type to correct."
@@ -1928,6 +2024,9 @@ msgstr ""
 msgid "variation"
 msgstr ""
 
+msgid "Variation #%1$d of Product #%2$d (SKU: %3$s) — %4$s"
+msgstr ""
+
 msgid "Variation ID"
 msgstr ""
 
@@ -1938,6 +2037,9 @@ msgid "Važna pravna napomena o nepromjenjivosti dokaza:"
 msgstr ""
 
 msgid "View price lists"
+msgstr ""
+
+msgid "View source records (%d found in window)"
 msgstr ""
 
 msgid "View the full price history"
@@ -1959,6 +2061,9 @@ msgid "When"
 msgstr ""
 
 msgid "Will overwrite"
+msgstr ""
+
+msgid "Window: %1$s to %2$s"
 msgstr ""
 
 msgid "WordPress in Europe — premium WordPress hosting, start free."

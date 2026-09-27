@@ -1,5 +1,7 @@
 # Prompt 4 — General improvement pass (no Docker needed)
 
+> **Status (v2.0.0):** COMPLETED. Robustness, WooCommerce product editor, styling, and compatibility improvements shipped.
+
 ```
 You are improving the WordPress plugin in the current directory (sidrena-cijena.php is
 the bootstrap). Pick a small number of high-value items (2-3 per session, not more unless
@@ -51,7 +53,7 @@ This pass focuses on robustness and compatibility:
    - Run all four static gates:
      `composer test:unit && composer lint && composer analyse && npm run lint:js`
    - If translation strings were updated, regenerate catalogs:
-     `php tools/i18n/make-pot.php --locale=hr_HR` (0 untranslated in languages/hr_HR.po).
+     `php tools/i18n/make-pot.php --locale=hr_HR` (705 translated strings / 0 untranslated in languages/hr_HR.po).
    - Follow the release procedure in AGENTARDS/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
      2. Run `tools/build-zip.sh <version>`.

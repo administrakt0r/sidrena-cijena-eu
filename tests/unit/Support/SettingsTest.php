@@ -36,6 +36,7 @@ class SettingsTest extends TestCase {
 		$defaults = Settings::defaults();
 
 		$this->assertSame( 'Sidrena cijena', $defaults['anchor_label'] );
+		$this->assertSame( 'Lowest price in the last 30 days', $defaults['thirty_day_label'] );
 		$this->assertSame( array( 'csv', 'xml' ), $defaults['formats'] );
 		$this->assertSame( 30, $defaults['retention_days'] );
 		$this->assertSame( '08:00', $defaults['deadline'] );

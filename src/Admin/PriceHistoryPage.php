@@ -54,6 +54,8 @@ class PriceHistoryPage {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters.
 		$product_id = isset( $_GET['product_id'] ) ? absint( wp_unslash( $_GET['product_id'] ) ) : 0;
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters.
+		$variation_id = isset( $_GET['variation_id'] ) ? absint( wp_unslash( $_GET['variation_id'] ) ) : 0;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters.
 		$type = isset( $_GET['price_type'] ) ? sanitize_key( wp_unslash( $_GET['price_type'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filters.
 		$source = isset( $_GET['source'] ) ? sanitize_key( wp_unslash( $_GET['source'] ) ) : '';
@@ -69,6 +71,10 @@ class PriceHistoryPage {
 
 		if ( $product_id > 0 ) {
 			$args['product_id'] = $product_id;
+		}
+
+		if ( $variation_id > 0 ) {
+			$args['variation_id'] = $variation_id;
 		}
 
 		if ( in_array( $type, PriceHistoryRepository::TYPES, true ) ) {
@@ -98,7 +104,23 @@ class PriceHistoryPage {
 
 		echo '<p>' . esc_html__( 'Price history is append-only. Corrections add a new record that references the original; nothing is overwritten or deleted.', 'sidrena-cijena-eu' ) . '</p>';
 
-		self::render_filters( $product_id, $type, $source );
+		self::render_filters( $product_id, $variation_id, $type, $source );
+
+		if ( $product_id > 0 ) {
+			$item = $variation_id > 0
+				? Plugin::instance()->catalog()->get_variation( $product_id, $variation_id )
+				: Plugin::instance()->catalog()->get_item( $product_id );
+
+			if ( $item ) {
+				$explainer   = Plugin::instance()->lowest_price_explainer();
+				$explanation = $explainer->explain( $item, Dates::today() );
+				echo '<div class="sidrena-cijena-history-explanation" style="margin: 15px 0; padding: 12px; background: #fff; border: 1px solid #c3c4c7; border-radius: 4px;">';
+				echo '<h2 style="margin-top: 0; font-size: 14px;">' . esc_html__( '30-day reference price explanation', 'sidrena-cijena-eu' ) . '</h2>';
+				echo $explainer->render_html( $explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '</div>';
+			}
+		}
+
 		self::render_table( $rows, $total, $page );
 		self::render_correction_form( $product_id );
 
@@ -108,16 +130,18 @@ class PriceHistoryPage {
 	/**
 	 * Render the filter bar.
 	 *
-	 * @param int    $product_id Product filter.
-	 * @param string $type       Price type filter.
-	 * @param string $source     Source filter.
+	 * @param int    $product_id   Product filter.
+	 * @param int    $variation_id Variation filter.
+	 * @param string $type         Price type filter.
+	 * @param string $source       Source filter.
 	 * @return void
 	 */
-	protected static function render_filters( $product_id, $type, $source ) {
+	protected static function render_filters( $product_id, $variation_id, $type, $source ) {
 		echo '<form method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 		echo '<p>';
 		echo '<label>' . esc_html__( 'Product ID', 'sidrena-cijena-eu' ) . ' <input type="number" name="product_id" value="' . esc_attr( (string) $product_id ) . '" min="0" /></label> ';
+		echo '<label>' . esc_html__( 'Variation ID', 'sidrena-cijena-eu' ) . ' <input type="number" name="variation_id" value="' . esc_attr( (string) $variation_id ) . '" min="0" /></label> ';
 
 		echo '<label>' . esc_html__( 'Type', 'sidrena-cijena-eu' ) . ' <select name="price_type">';
 		echo '<option value="">' . esc_html__( 'All types', 'sidrena-cijena-eu' ) . '</option>';

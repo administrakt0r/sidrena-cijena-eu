@@ -10,6 +10,7 @@ namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
+use SidrenaCijena\Database\SpecialSaleRepository;
 use SidrenaCijena\Pricing\AnchorPriceService;
 use SidrenaCijena\Tests\Support\PluginSwap;
 use SidrenaCijena\WooCommerce\Display\PriceDisplay;
@@ -27,6 +28,21 @@ class DisplayVariationProduct extends \WC_Product {
 	 */
 	public function get_price_html() {
 		return '<span>12,00 €</span>';
+	}
+}
+
+/**
+ * Exposes the separate 30-day reference renderer to focused unit tests.
+ */
+class DisplayPriceForTest extends PriceDisplay {
+	/**
+	 * Render the 30-day price block for an item.
+	 *
+	 * @param CatalogItem $item Catalog item.
+	 * @return string
+	 */
+	public function render_thirty_day_for_test( CatalogItem $item ) {
+		return $this->render_thirty_day( $item, 'variation', array() );
 	}
 }
 
@@ -76,7 +92,7 @@ class VariationDisplayTest extends TestCase {
 		$catalog->method( 'get_variation' )->with( 10, 11 )->willReturn( $item );
 		PluginSwap::swap( 'catalog', $catalog );
 		$anchors = $this->createMock( AnchorPriceService::class );
-		$anchors->method( 'get_anchor' )->willReturn(
+		$anchors->expects( $this->exactly( 2 ) )->method( 'get_anchor' )->with( $item )->willReturn(
 			array(
 				'price'          => 9.0,
 				'reference_date' => '2026-09-10',
@@ -97,6 +113,70 @@ class VariationDisplayTest extends TestCase {
 			$this->assertStringContainsString( '10. 9. 2026.', $data['price_html'] );
 		} finally {
 			PluginSwap::swap( 'catalog', null );
+		}
+	}
+
+	/**
+	 * A variation's 30-day display never borrows its parent's active sale.
+	 *
+	 * @return void
+	 */
+	public function test_variation_30_day_display_uses_only_its_own_active_sale() {
+		$item  = new CatalogItem(
+			array(
+				'id'           => 10,
+				'variation_id' => 11,
+				'currency'     => 'EUR',
+			)
+		);
+		$sales = $this->getMockBuilder( SpecialSaleRepository::class )
+			->disableOriginalConstructor()
+			->onlyMethods( array( 'active_map' ) )
+			->getMock();
+		$sales->method( 'active_map' )->willReturn(
+			array(
+				'10:0'  => array( 'lowest_30_day_price' => 99.0 ),
+				'10:11' => array( 'lowest_30_day_price' => 7.0 ),
+			)
+		);
+		$anchors = $this->createMock( AnchorPriceService::class );
+		PluginSwap::swap( 'special_sales', $sales );
+
+		try {
+			$html = ( new DisplayPriceForTest( $anchors ) )->render_thirty_day_for_test( $item );
+			$this->assertStringContainsString( '7,00', $html );
+			$this->assertStringNotContainsString( '99,00', $html );
+		} finally {
+			PluginSwap::swap( 'special_sales', null );
+		}
+	}
+
+	/**
+	 * A parent 30-day reference is not rendered for a variation without its own.
+	 *
+	 * @return void
+	 */
+	public function test_variation_without_active_sale_does_not_render_parent_reference() {
+		$item  = new CatalogItem(
+			array(
+				'id'           => 10,
+				'variation_id' => 11,
+				'currency'     => 'EUR',
+			)
+		);
+		$sales = $this->getMockBuilder( SpecialSaleRepository::class )
+			->disableOriginalConstructor()
+			->onlyMethods( array( 'active_map' ) )
+			->getMock();
+		$sales->method( 'active_map' )->willReturn(
+			array( '10:0' => array( 'lowest_30_day_price' => 99.0 ) )
+		);
+		PluginSwap::swap( 'special_sales', $sales );
+
+		try {
+			$this->assertSame( '', ( new DisplayPriceForTest( $this->createMock( AnchorPriceService::class ) ) )->render_thirty_day_for_test( $item ) );
+		} finally {
+			PluginSwap::swap( 'special_sales', null );
 		}
 	}
 }

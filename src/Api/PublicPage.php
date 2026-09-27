@@ -406,13 +406,15 @@ class PublicPage {
 	 * @return array<mixed>
 	 */
 	protected function display_row( array $row ) {
-		$row['unit_price_display']   = null === $row['cijena_za_jedinicu_mjere'] ? '' : Currency::format( (float) $row['cijena_za_jedinicu_mjere'] );
-		$row['retail_display']       = Currency::format( (float) $row['maloprodajna_cijena'] );
-		$row['anchor_display']       = null === $row['sidrena_cijena'] ? '' : Currency::format( (float) $row['sidrena_cijena'] );
-		$row['reference_display']    = Dates::format_date_display( isset( $row['anchor_reference_date'] ) ? $row['anchor_reference_date'] : '' );
-		$row['type_display']         = 'usluga' === $row['vrsta'] ? __( 'Service', 'sidrena-cijena-eu' ) : __( 'Product', 'sidrena-cijena-eu' );
-		$row['sale_display']         = empty( $row['poseban_oblik_prodaje'] ) ? '' : (string) $row['naziv_posebnog_oblika_prodaje'];
-		$row['availability_display'] = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'sidrena-cijena-eu' ) : __( 'Unavailable', 'sidrena-cijena-eu' );
+		$row['unit_price_display']    = null === $row['cijena_za_jedinicu_mjere'] ? '' : Currency::format( (float) $row['cijena_za_jedinicu_mjere'] );
+		$row['retail_display']        = Currency::format( (float) $row['maloprodajna_cijena'] );
+		$lowest_30_day_price          = isset( $row['special_sale']['lowest_30_day_price'] ) ? $row['special_sale']['lowest_30_day_price'] : null;
+		$row['lowest_30_day_display'] = null === $lowest_30_day_price ? '' : Currency::format( (float) $lowest_30_day_price );
+		$row['anchor_display']        = null === $row['sidrena_cijena'] ? '' : Currency::format( (float) $row['sidrena_cijena'] );
+		$row['reference_display']     = Dates::format_date_display( isset( $row['anchor_reference_date'] ) ? $row['anchor_reference_date'] : '' );
+		$row['type_display']          = 'usluga' === $row['vrsta'] ? __( 'Service', 'sidrena-cijena-eu' ) : __( 'Product', 'sidrena-cijena-eu' );
+		$row['sale_display']          = empty( $row['poseban_oblik_prodaje'] ) ? '' : (string) $row['naziv_posebnog_oblika_prodaje'];
+		$row['availability_display']  = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'sidrena-cijena-eu' ) : __( 'Unavailable', 'sidrena-cijena-eu' );
 
 		return $row;
 	}

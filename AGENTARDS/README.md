@@ -4,18 +4,18 @@ Copy-paste prompts you can run with any AI coding agent (Antigravity, OpenCode, 
 audit, cross-check, verify, improve and release this plugin. Run them **in order**; each prompt
 is self-contained, completely up to date, and states its own done-criteria.
 
-| # | File | Purpose | Needs Docker? |
-|---|------|---------|---------------|
-| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No |
-| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No |
-| 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** |
-| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No |
-| 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: WordPress.org readiness, plugin audit & release | Optional |
-| 6 | [06-performance-db-queries.md](06-performance-db-queries.md) | Performance 1: query tuning, N+1 removal, indexes, COUNT hotspots | Optional (measurements) |
-| 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) |
-| 8 | [08-performance-export-cron.md](08-performance-export-cron.md) | Performance 3: generation pipeline, memory, cron/cleanup jobs | Optional (measurements) |
-| 9 | [09-ui-ux-improvements.md](09-ui-ux-improvements.md) | UI/UX: admin screens, public price list, accessibility, i18n consistency | No (E2E optional) |
-| 10 | [10-prompt-drift-check.md](10-prompt-drift-check.md) | Prompt-pack drift audit: keep every prompt file in sync with the codebase | No |
+| # | File | Purpose | Needs Docker? | Status |
+|---|------|---------|---------------|--------|
+| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.0 |
+| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.0 |
+| 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** | ✅ v2.0.0 |
+| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.0 |
+| 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: WordPress.org readiness, plugin audit & release | Optional | ✅ v2.0.0 |
+| 6 | [06-performance-db-queries.md](06-performance-db-queries.md) | Performance 1: query tuning, N+1 removal, indexes, COUNT hotspots | Optional (measurements) | ✅ v2.0.0 |
+| 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) | ✅ v2.0.0 |
+| 8 | [08-performance-export-cron.md](08-performance-export-cron.md) | Performance 3: generation pipeline, memory, cron/cleanup jobs | Optional (measurements) | ✅ v2.0.0 |
+| 9 | [09-ui-ux-improvements.md](09-ui-ux-improvements.md) | UI/UX: admin screens, public price list, accessibility, i18n consistency | No (E2E optional) | ✅ v2.0.0 |
+| 10 | [10-prompt-drift-check.md](10-prompt-drift-check.md) | Prompt-pack drift audit: keep every prompt file in sync with the codebase | No | ✅ v2.0.0 |
 
 Prompts 6–8 are the performance track (measure first, record the numbers), prompt 9 is the
 UI/UX track; prompt 4 covers everything else. Performance work is logged as `PERF-xx` and
@@ -23,17 +23,17 @@ UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventio
 `IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
 session that changes the codebase) to keep every prompt honest.
 
-## Current green baseline (v1.0.14)
+## Current green baseline (v2.0.0)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
 `tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
 on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 306 tests / 1083 assertions (`composer test:unit`).
-- Integration suite: 77 tests / 349 assertions (`composer test:integration` in wp-env).
-- E2E: 28 Playwright tests against port 8889 (`npm run test:e2e`).
-- PHPStan level 6: 0 errors · PHPCS clean · ESLint clean · `./local.sh` exits 0.
-- Croatian catalog complete: 632 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
+- Unit suite: 361 tests / 1296 assertions (`composer test:unit`).
+- Integration suite: 96 tests / 454 assertions (`composer test:integration` in wp-env).
+- E2E: 42 Playwright specs against port 8889 (`npm run test:e2e`).
+- PHPStan level 6: 0 errors across 117 files · PHPCS clean (175 files) · ESLint clean · `./local.sh` exits 0.
+- Croatian catalog complete: 705 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
 
 ## Hard rules for every prompt
 
@@ -44,7 +44,7 @@ on Docker hosts); see `docs/testing.md`.
 - **CRITICAL - Do NOT run `wp plugin install --force`:** The host repository is directly bind-mounted into Docker containers. Running `wp plugin install <zip> --force` triggers WordPress's `Plugin_Upgrader` which deletes the directory contents before extracting!
 - **Local WordPress environments:**
   - **Demo shop:** `./local.sh` starts wp-env at `http://localhost:8888` (`admin` / `password`), sets EUR/Europe-Zagreb, seeds demo items, anchors, a sale, and generates price lists. Stop with `./stoplocal.sh`.
-  - **Test shop:** `npm run wp-env:test -- start` starts the isolated test site at `http://localhost:8889`. Playwright E2E tests (`npm run test:e2e`) run **exclusively** against port 8889.
+  - **Test shop:** `npx wp-env start` starts the isolated test site at `http://localhost:8889`. Playwright E2E tests (`npm run test:e2e`) run **exclusively** against port 8889.
   - Wrap docker commands in `sg docker -c '…'` if the running shell does not inherit docker group permissions.
   - Before integration tests, clean test DB: `npx wp-env clean tests`.
 
@@ -68,7 +68,7 @@ Every completed run ships a new version archive following the repository convent
    npx wp-env clean tests
    composer test:integration   # PHPUnit integration suite in wp-env
    ./local.sh                  # One-command local setup, must exit 0
-   npm run wp-env:test -- start
+   npx wp-env start
    npm run test:e2e            # Playwright E2E on port 8889 only
    ```
 3. **Regenerate translations** if `__()` strings changed:

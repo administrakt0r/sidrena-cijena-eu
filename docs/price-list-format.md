@@ -28,9 +28,12 @@ Two public HTML pages expose the same data to a human reader. Both always
 describe the **webshop** location, the same one the machine-readable feed
 serves, and neither requires a login:
 
-* `/sidrena-cjenik/` — the current price list: one row per item with the
-  retail price, the anchor price and its reference date, the unit price, the
-  availability and the special form of sale. A search box (`?q=`) matches
+* `/sidrena-cjenik/` — the public shopper-facing price list: one row per item
+  with the retail price, the lowest price in the preceding 30 days for an
+  active classified sale when calculated, the anchor price and its reference
+  date, the unit price, availability and the special form of sale. An
+  advertised special sale therefore shows its reduced price and both
+  references when available. A search box (`?q=`) matches
   name, SKU, brand and barcode, and `?type=proizvod|usluga` narrows the list
   to products or services. The page links to the XML and CSV files.
 * `/arhiva-sidrene-cijene/` — the published price lists of the location
@@ -39,9 +42,9 @@ serves, and neither requires a login:
 
 Both pages are also available as shortcodes — `[sidrena-cjenik]` and
 `[sidrena-arhiva]` — for merchants who want them inside their own layout.
-The pages are rendered from the same builder and the same publication rows as
-the exported files, so a page can never show a different price than the file
-the ministry downloads.
+The pages share the feed catalog rows and current retail prices. The
+shopper-facing HTML page also renders the 30-day reference for a classified
+sale; that display value is not added to the CSV/XML price-list contract.
 
 ## CSV
 

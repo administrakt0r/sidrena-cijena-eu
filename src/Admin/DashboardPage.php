@@ -150,7 +150,7 @@ class DashboardPage {
 				}
 			}
 
-			$sale = isset( $sales_map[ $key ] ) ? $sales_map[ $key ] : ( $item->is_variation() && isset( $sales_map[ $item->id . ':0' ] ) ? $sales_map[ $item->id . ':0' ] : null );
+			$sale = isset( $sales_map[ $key ] ) ? $sales_map[ $key ] : null;
 
 			if ( ! isset( $regular[ $key ] ) && ! $sale ) {
 				++$missing_history;

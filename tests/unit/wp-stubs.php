@@ -16,9 +16,11 @@ if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
 	define( 'WEEK_IN_SECONDS', 604800 );
 }
 
-$GLOBALS['sidrena_test_options']    = array();
-$GLOBALS['sidrena_test_transients'] = array();
-$GLOBALS['sidrena_test_scheduled']  = array();
+$GLOBALS['sidrena_test_options']      = array();
+$GLOBALS['sidrena_test_transients']   = array();
+$GLOBALS['sidrena_test_scheduled']    = array();
+$GLOBALS['sidrena_test_textdomains']  = array();
+$GLOBALS['sidrena_test_translations'] = array();
 
 if ( ! function_exists( '__' ) ) {
 	/**
@@ -29,6 +31,10 @@ if ( ! function_exists( '__' ) ) {
 	 * @return string
 	 */
 	function __( $text, $domain = 'default' ) {
+		if ( ! empty( $GLOBALS['sidrena_test_translations'][ $domain ][ $text ] ) ) {
+			return $GLOBALS['sidrena_test_translations'][ $domain ][ $text ];
+		}
+
 		return $text;
 	}
 }
@@ -293,6 +299,26 @@ if ( ! function_exists( 'apply_filters' ) ) {
 	 * @return mixed
 	 */
 	function apply_filters( $tag, $value ) {
+		$args = func_get_args();
+		array_shift( $args );
+
+		if ( empty( $GLOBALS['wp_filter'][ $tag ] ) || ! is_array( $GLOBALS['wp_filter'][ $tag ] ) ) {
+			return $value;
+		}
+
+		ksort( $GLOBALS['wp_filter'][ $tag ] );
+
+		foreach ( $GLOBALS['wp_filter'][ $tag ] as $priority_callbacks ) {
+			foreach ( $priority_callbacks as $entry ) {
+				$callback = $entry['function'];
+				if ( is_callable( $callback ) ) {
+					$call_args = array_slice( $args, 0, $entry['accepted_args'] );
+					$value     = call_user_func_array( $callback, $call_args );
+					$args[0]   = $value;
+				}
+			}
+		}
+
 		return $value;
 	}
 }
@@ -312,23 +338,99 @@ if ( ! function_exists( 'apply_filters_ref_array' ) ) {
 
 if ( ! function_exists( 'add_filter' ) ) {
 	/**
-	 * No-op filter registration.
+	 * Register a filter hook.
 	 *
-	 * @return bool
+	 * @param string   $tag             Tag name.
+	 * @param callable $function_to_add Callback.
+	 * @param int      $priority        Priority.
+	 * @param int      $accepted_args   Accepted arguments.
+	 * @return true
 	 */
-	function add_filter() {
+	function add_filter( $tag, $function_to_add, $priority = 10, $accepted_args = 1 ) {
+		if ( ! isset( $GLOBALS['wp_filter'] ) || ! is_array( $GLOBALS['wp_filter'] ) ) {
+			$GLOBALS['wp_filter'] = array();
+		}
+
+		$GLOBALS['wp_filter'][ $tag ][ (int) $priority ][] = array(
+			'function'      => $function_to_add,
+			'accepted_args' => (int) $accepted_args,
+		);
+
 		return true;
 	}
 }
 
 if ( ! function_exists( 'add_action' ) ) {
 	/**
-	 * No-op action registration.
+	 * Action registration.
 	 *
+	 * @param string   $tag             Tag name.
+	 * @param callable $function_to_add Callback.
+	 * @param int      $priority        Priority.
+	 * @param int      $accepted_args   Accepted arguments.
+	 * @return true
+	 */
+	function add_action( $tag, $function_to_add, $priority = 10, $accepted_args = 1 ) {
+		return add_filter( $tag, $function_to_add, $priority, $accepted_args );
+	}
+}
+
+if ( ! function_exists( 'register_activation_hook' ) ) {
+	/**
+	 * Register activation hook stub.
+	 *
+	 * @param string   $file     File.
+	 * @param callable $callback Callback.
 	 * @return bool
 	 */
-	function add_action() {
+	function register_activation_hook( $file, $callback ) {
 		return true;
+	}
+}
+
+if ( ! function_exists( 'register_deactivation_hook' ) ) {
+	/**
+	 * Register deactivation hook stub.
+	 *
+	 * @param string   $file     File.
+	 * @param callable $callback Callback.
+	 * @return bool
+	 */
+	function register_deactivation_hook( $file, $callback ) {
+		return true;
+	}
+}
+
+if ( ! function_exists( '__return_true' ) ) {
+	/**
+	 * Callback returning true.
+	 *
+	 * @return true
+	 */
+	function __return_true() {
+		return true;
+	}
+}
+
+if ( ! function_exists( '__return_false' ) ) {
+	/**
+	 * Callback returning false.
+	 *
+	 * @return false
+	 */
+	function __return_false() {
+		return false;
+	}
+}
+
+if ( ! function_exists( '__return_null' ) ) {
+	/**
+	 * Callback returning null.
+	 *
+	 * @return null
+	 */
+	function __return_null() {
+		return null;
 	}
 }
 
@@ -356,11 +458,30 @@ if ( ! function_exists( 'remove_filter' ) ) {
 
 if ( ! function_exists( 'do_action' ) ) {
 	/**
-	 * No-op action dispatch.
+	 * Action dispatch.
 	 *
+	 * @param string $tag Action tag.
 	 * @return void
 	 */
-	function do_action() {
+	function do_action( $tag ) {
+		$args = func_get_args();
+		array_shift( $args );
+
+		if ( empty( $GLOBALS['wp_filter'][ $tag ] ) || ! is_array( $GLOBALS['wp_filter'][ $tag ] ) ) {
+			return;
+		}
+
+		ksort( $GLOBALS['wp_filter'][ $tag ] );
+
+		foreach ( $GLOBALS['wp_filter'][ $tag ] as $priority_callbacks ) {
+			foreach ( $priority_callbacks as $entry ) {
+				$callback = $entry['function'];
+				if ( is_callable( $callback ) ) {
+					$call_args = array_slice( $args, 0, $entry['accepted_args'] );
+					call_user_func_array( $callback, $call_args );
+				}
+			}
+		}
 	}
 }
 
@@ -671,7 +792,77 @@ if ( ! function_exists( 'get_locale' ) ) {
 	 * @return string
 	 */
 	function get_locale() {
-		return 'en_US';
+		return isset( $GLOBALS['sidrena_test_locale'] ) ? (string) $GLOBALS['sidrena_test_locale'] : 'en_US';
+	}
+}
+
+if ( ! function_exists( 'determine_locale' ) ) {
+	/**
+	 * Determine locale stub.
+	 *
+	 * @return string
+	 */
+	function determine_locale() {
+		return get_locale();
+	}
+}
+
+if ( ! function_exists( 'is_textdomain_loaded' ) ) {
+	/**
+	 * Textdomain loaded stub.
+	 *
+	 * @param string $domain Domain.
+	 * @return bool
+	 */
+	function is_textdomain_loaded( $domain ) {
+		return ! empty( $GLOBALS['sidrena_test_textdomains'][ $domain ] );
+	}
+}
+
+if ( ! function_exists( 'load_textdomain' ) ) {
+	/**
+	 * Load textdomain stub.
+	 *
+	 * @param string $domain Domain.
+	 * @param string $mofile File path.
+	 * @return bool
+	 */
+	function load_textdomain( $domain, $mofile ) {
+		$GLOBALS['sidrena_test_textdomains'][ $domain ] = $mofile;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'unload_textdomain' ) ) {
+	/**
+	 * Unload textdomain stub.
+	 *
+	 * @param string $domain Domain.
+	 * @return bool
+	 */
+	function unload_textdomain( $domain ) {
+		unset( $GLOBALS['sidrena_test_textdomains'][ $domain ] );
+		unset( $GLOBALS['sidrena_test_translations'][ $domain ] );
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'load_plugin_textdomain' ) ) {
+	/**
+	 * Load plugin textdomain stub.
+	 *
+	 * @param string      $domain          Domain.
+	 * @param bool        $deprecated      Deprecated.
+	 * @param string|bool $plugin_rel_path Plugin relative path.
+	 * @return bool
+	 */
+	function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ) {
+		unset( $deprecated );
+		$GLOBALS['sidrena_test_textdomains'][ $domain ] = (string) $plugin_rel_path;
+
+		return true;
 	}
 }
 
@@ -1582,3 +1773,54 @@ if ( ! function_exists( 'sanitize_html_class' ) ) {
 		return preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $class );
 	}
 }
+
+if ( ! function_exists( 'add_settings_section' ) ) {
+	/**
+	 * Settings section stub.
+	 *
+	 * @param string   $id       Section ID.
+	 * @param string   $title    Section title.
+	 * @param callable $callback Render callback.
+	 * @param string   $page     Page.
+	 * @return void
+	 */
+	function add_settings_section( $id, $title, $callback, $page ) {
+		if ( ! isset( $GLOBALS['sidrena_test_settings_sections'] ) ) {
+			$GLOBALS['sidrena_test_settings_sections'] = array();
+		}
+
+		$GLOBALS['sidrena_test_settings_sections'][ $page ][ $id ] = array(
+			'id'       => $id,
+			'title'    => $title,
+			'callback' => $callback,
+		);
+	}
+}
+
+if ( ! function_exists( 'add_settings_field' ) ) {
+	/**
+	 * Settings field stub.
+	 *
+	 * @param string       $id       Field ID.
+	 * @param string       $title    Field title.
+	 * @param callable     $callback Render callback.
+	 * @param string       $page     Page.
+	 * @param string       $section  Section.
+	 * @param array<mixed> $args     Extra arguments.
+	 * @return void
+	 */
+	function add_settings_field( $id, $title, $callback, $page, $section = 'default', $args = array() ) {
+		if ( ! isset( $GLOBALS['sidrena_test_settings_fields'] ) ) {
+			$GLOBALS['sidrena_test_settings_fields'] = array();
+		}
+
+		$GLOBALS['sidrena_test_settings_fields'][ $page ][] = array(
+			'id'       => $id,
+			'title'    => $title,
+			'callback' => $callback,
+			'section'  => $section,
+			'args'     => $args,
+		);
+	}
+}
+

@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Api;
 
+use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Settings;
 use SidrenaCijena\WooCommerce\Display\PriceDisplay;
@@ -67,7 +68,8 @@ final class TemplateFunctions {
 	 * Render the anchor price block.
 	 *
 	 * @param int          $product_id Product ID.
-	 * @param array<mixed> $args       `variation_id`, `show_current`, `show_anchor`, `label`, `only_when_different`, `context`.
+	 * @param array<mixed> $args       `variation_id`, `show_current`, `show_anchor`, `show_30_day`, `label`,
+	 *                                 `only_when_different`, `context`.
 	 * @return string
 	 */
 	public static function render_anchor_price( $product_id, array $args = array() ) {
@@ -92,12 +94,13 @@ final class TemplateFunctions {
 	public static function shortcode( $atts ) {
 		$atts = shortcode_atts(
 			array(
-				'product_id'   => 0,
-				'variation_id' => 0,
-				'show_current' => 'yes',
-				'show_anchor'  => 'yes',
-				'show_30_day'  => 'no',
-				'label'        => '',
+				'product_id'       => 0,
+				'variation_id'     => 0,
+				'show_current'     => 'yes',
+				'show_anchor'      => 'yes',
+				'show_30_day'      => 'yes',
+				'label'            => '',
+				'thirty_day_label' => '',
 			),
 			$atts,
 			'sidrena_cijena'
@@ -120,16 +123,14 @@ final class TemplateFunctions {
 		$html = self::render_anchor_price(
 			$product_id,
 			array(
-				'variation_id' => (int) $atts['variation_id'],
-				'show_current' => self::is_yes( $atts['show_current'] ),
-				'show_anchor'  => self::is_yes( $atts['show_anchor'] ),
-				'label'        => (string) $atts['label'],
+				'variation_id'     => (int) $atts['variation_id'],
+				'show_current'     => self::is_yes( $atts['show_current'] ),
+				'show_anchor'      => self::is_yes( $atts['show_anchor'] ),
+				'show_30_day'      => self::is_yes( $atts['show_30_day'] ),
+				'label'            => (string) $atts['label'],
+				'thirty_day_label' => (string) $atts['thirty_day_label'],
 			)
 		);
-
-		if ( self::is_yes( $atts['show_30_day'] ) ) {
-			$html .= self::render_30_day_price( $product_id, (int) $atts['variation_id'] );
-		}
 
 		return $html;
 	}
@@ -137,11 +138,12 @@ final class TemplateFunctions {
 	/**
 	 * Render the separate 30-day price block.
 	 *
-	 * @param int $product_id   Product ID.
-	 * @param int $variation_id Variation ID.
+	 * @param int         $product_id   Product ID.
+	 * @param int         $variation_id Variation ID.
+	 * @param string|null $label        Optional display label.
 	 * @return string
 	 */
-	public static function render_30_day_price( $product_id, $variation_id = 0 ) {
+	public static function render_30_day_price( $product_id, $variation_id = 0, $label = null ) {
 		$price = self::get_lowest_30_day_price( $product_id, $variation_id );
 
 		if ( null === $price ) {
@@ -154,10 +156,57 @@ final class TemplateFunctions {
 			return '';
 		}
 
+		if ( 'woocommerce' === $item->source ) {
+			$regular    = \SidrenaCijena\Support\Currency::to_storage( $item->regular_price );
+			$current    = \SidrenaCijena\Support\Currency::to_storage( $item->effective_price() );
+			$sale_price = \SidrenaCijena\Support\Currency::to_storage( $item->sale_price );
+
+			if ( null !== $regular && null !== $current ) {
+				$promotional = $regular > 0 && $current < $regular;
+
+				if ( ! $promotional && null !== $item->current_price && null !== $sale_price ) {
+					$promotional = $current === $sale_price;
+				}
+
+				if ( ! $promotional ) {
+					return '';
+				}
+			}
+
+			$active = Plugin::instance()->special_sales()->active_map();
+			$key    = (int) $product_id . ':' . (int) $variation_id;
+			$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
+
+			if ( ! $sale ) {
+				return '';
+			}
+
+			$periods    = Plugin::instance()->history()->active_sale_period_map( array( (int) $item->id ) );
+			$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $key;
+			$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
+
+			if ( ! \SidrenaCijena\Pricing\SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
+				return '';
+			}
+		}
+
+		$display_label = null !== $label && '' !== $label
+			? (string) $label
+			: (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) );
+
+		/**
+		 * Filters the 30-day lowest price display label.
+		 *
+		 * @param string      $label   Display label.
+		 * @param CatalogItem $item    Catalog item.
+		 * @param string      $context Rendering context.
+		 */
+		$display_label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $display_label, $item, 'template' );
+
 		$args = array(
 			'item'    => $item,
 			'price'   => $price,
-			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) ),
+			'label'   => $display_label,
 			'display' => \SidrenaCijena\Support\Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 		);
 

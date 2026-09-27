@@ -63,7 +63,7 @@ unclear eligibility needs human review.
   `sidrena_cijena_render_anchor_price()` (also namespaced under
   `SidrenaCijena\Api`).
 * Shortcode: `[sidrena_cijena product_id="…" variation_id="…"
-  show_current="yes" show_anchor="yes" show_30_day="no" label="…"]`
+  show_current="yes" show_anchor="yes" show_30_day="yes" label="…"]`
   rendering `.sidrena-cijena__current`, `__anchor` and `__30-day` blocks.
 * Templates in `templates/` are overridable via
   `your-theme/sidrena-cijena/anchor-price.php` (same for

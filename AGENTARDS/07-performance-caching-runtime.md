@@ -1,5 +1,7 @@
 # Prompt 7 — Performance pass 2: caching, request-time work and asset loading (Docker optional, needed for measurements)
 
+> **Status (v2.0.0):** COMPLETED. Caching, runtime optimization, textdomain loading, and asset loading improvements completed and verified.
+
 ```
 You are reducing per-request cost of the WordPress plugin in the current directory
 (sidrena-cijena.php is the bootstrap). Goal: no wasted work on requests that do not need
@@ -12,7 +14,7 @@ publication gate are legal state — a cached compliance result must never hide 
 ERROR. Keep the plugin working with and without WooCommerce. Commit each item separately
 (perf: / fix:), with tests. PHP 7.4-8.4 only.
 
-Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
+Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in

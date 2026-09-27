@@ -130,6 +130,74 @@ class SpecialSaleServiceTest extends TestCase {
 	}
 
 	/**
+	 * Sale calculation and its history snapshot use the selected variation.
+	 *
+	 * @return void
+	 */
+	public function test_create_calculates_and_stores_sale_for_exact_variation() {
+		$item    = $this->item(
+			array(
+				'id'           => 201,
+				'parent_id'    => 201,
+				'variation_id' => 11,
+				'sku'          => 'KAV-SMALL',
+			)
+		);
+		$history = $this->getMockBuilder( PriceHistoryRepository::class )
+			->disableOriginalConstructor()
+			->onlyMethods( array( 'timeline', 'insert' ) )
+			->getMock();
+		$history->expects( $this->once() )
+			->method( 'timeline' )
+			->with( 201, 11, '2026-10-01', '2026-09-01' )
+			->willReturn(
+				array(
+					array(
+						'price'      => '8.00',
+						'valid_from' => '2026-09-15 00:00:00',
+						'valid_to'   => null,
+						'price_type' => 'regular',
+					),
+				)
+			);
+		$history->expects( $this->once() )
+			->method( 'insert' )
+			->with(
+				$this->callback(
+					static function ( $row ) {
+						return 201 === $row['product_id'] && 11 === $row['variation_id'] && 8.0 === $row['price'];
+					}
+				)
+			)
+			->willReturn( 300 );
+		$sales = $this->getMockBuilder( SpecialSaleRepository::class )
+			->disableOriginalConstructor()
+			->onlyMethods( array( 'insert' ) )
+			->getMock();
+		$sales->expects( $this->once() )
+			->method( 'insert' )
+			->with(
+				$this->callback(
+					static function ( $row ) {
+						return 201 === $row['product_id'] && 11 === $row['variation_id'] && 8.0 === $row['lowest_30_day_price'];
+					}
+				)
+			)
+			->willReturn( 55 );
+
+		$result = ( new SpecialSaleService( $sales, $history, new LowestPrice30DayCalculator() ) )->create(
+			$item,
+			array(
+				'sale_type'   => 'akcija',
+				'start_date'  => '2026-10-01',
+				'promo_price' => '5.99',
+			)
+		);
+
+		$this->assertSame( 55, $result );
+	}
+
+	/**
 	 * Updating a sale the repository cannot find is a 404.
 	 *
 	 * @return void
@@ -194,28 +262,32 @@ class SpecialSaleServiceTest extends TestCase {
 	/**
 	 * Build a catalog item.
 	 *
+	 * @param array<string,mixed> $overrides Item fields to replace.
 	 * @return CatalogItem
 	 */
-	protected function item() {
+	protected function item( array $overrides = array() ) {
 		return new CatalogItem(
-			array(
-				'id'            => 42,
-				'type'          => 'product',
-				'name'          => 'Kava mljevena 250 g',
-				'sku'           => 'KAV-250',
-				'brand'         => 'Franck',
-				'barcode'       => '3851234567890',
-				'unit'          => 'kg',
-				'unit_price'    => 28.0,
-				'currency'      => 'EUR',
-				'availability'  => 'available',
-				'regular_price' => 6.99,
-				'sale_price'    => 5.99,
-				'current_price' => 5.99,
-				'tax_inclusive' => true,
-				'first_seen'    => '2025-01-10',
-				'categories'    => array(),
-				'source'        => 'standalone',
+			array_merge(
+				array(
+					'id'            => 42,
+					'type'          => 'product',
+					'name'          => 'Kava mljevena 250 g',
+					'sku'           => 'KAV-250',
+					'brand'         => 'Franck',
+					'barcode'       => '3851234567890',
+					'unit'          => 'kg',
+					'unit_price'    => 28.0,
+					'currency'      => 'EUR',
+					'availability'  => 'available',
+					'regular_price' => 6.99,
+					'sale_price'    => 5.99,
+					'current_price' => 5.99,
+					'tax_inclusive' => true,
+					'first_seen'    => '2025-01-10',
+					'categories'    => array(),
+					'source'        => 'standalone',
+				),
+				$overrides
 			)
 		);
 	}

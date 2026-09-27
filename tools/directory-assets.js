@@ -19,17 +19,21 @@ const path = require( 'node:path' );
 			await page.setContent( `<style>body{margin:0}svg{display:block;width:100%;height:100%}</style>${ svg }` );
 			await page.screenshot( { path: path.join( directory, output ) } );
 		}
-		// Deliberately the demo shop: this is documentation capture, not E2E.
+		const baseUrl = process.env.WP_BASE_URL || 'http://localhost:8889';
 		await page.setViewportSize( { width: 1280, height: 900 } );
-		await page.goto( 'http://localhost:8888/sidrena-cjenik/', { waitUntil: 'networkidle' } );
+		await page.goto( `${ baseUrl }/sidrena-cjenik/`, { waitUntil: 'networkidle' } );
 		await page.screenshot( { path: path.join( directory, 'screenshot-1.png' ) } );
-		await page.goto( 'http://localhost:8888/wp-login.php' );
+		await page.goto( `${ baseUrl }/wp-login.php` );
 		await page.locator( '#user_login' ).fill( 'admin' );
 		await page.locator( '#user_pass' ).fill( 'password' );
 		await Promise.all( [ page.waitForURL( /wp-admin/ ), page.locator( '#wp-submit' ).click() ] );
-		await page.goto( 'http://localhost:8888/wp-admin/admin.php?page=sidrena-cijena', { waitUntil: 'networkidle' } );
+		await page.goto( `${ baseUrl }/wp-admin/admin.php?page=sidrena-cijena`, { waitUntil: 'networkidle' } );
 		await page.screenshot( { path: path.join( directory, 'screenshot-2.png' ) } );
-		console.log( 'Directory icons, banners and two demo screenshots generated.' );
+		await page.goto( `${ baseUrl }/wp-admin/admin.php?page=sidrena-cijena-history`, { waitUntil: 'networkidle' } );
+		await page.screenshot( { path: path.join( directory, 'screenshot-3.png' ) } );
+		await page.goto( `${ baseUrl }/wp-admin/admin.php?page=sidrena-cijena-settings`, { waitUntil: 'networkidle' } );
+		await page.screenshot( { path: path.join( directory, 'screenshot-4.png' ) } );
+		console.log( 'Directory icons, banners and 4 screenshots generated.' );
 	} finally {
 		await browser.close();
 	}

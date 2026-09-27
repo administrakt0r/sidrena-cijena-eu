@@ -9,11 +9,13 @@ namespace SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Api\PublicPage;
+use SidrenaCijena\Api\TemplateFunctions;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Pricing\AnchorPriceService;
 use SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
@@ -184,9 +186,9 @@ class PageHistoryFake extends PriceHistoryRepository {
 	 * @return array<mixed>|null
 	 */
 	public function latest( $product_id, $variation_id, $price_type ) {
-		unset( $product_id, $variation_id, $price_type );
+		$key = (int) $product_id . ':' . (int) $variation_id;
 
-		return null;
+		return 'anchor' === $price_type && isset( $this->anchors[ $key ] ) ? $this->anchors[ $key ] : null;
 	}
 
 	/**
@@ -332,6 +334,17 @@ class PublicPageProbe extends PublicPage {
 	}
 
 	/**
+	 * Expose a template partial for serialized-output assertions.
+	 *
+	 * @param string       $name Partial name.
+	 * @param array<mixed> $args Template arguments.
+	 * @return string
+	 */
+	public function render_partial( $name, array $args ) {
+		return $this->partial( $name, $args );
+	}
+
+	/**
 	 * Reset the static style flag.
 	 *
 	 * @return void
@@ -361,6 +374,8 @@ class PublicPageTest extends TestCase {
 		PluginSwap::swap( 'locations', null );
 		PluginSwap::swap( 'publications', null );
 		PluginSwap::swap( 'special_sales', null );
+		PluginSwap::swap( 'anchors', null );
+		PluginSwap::swap( 'anchor_cache', null );
 		PublicPageProbe::reset_styles();
 
 		unset( $GLOBALS['sidrena_test_timezone'] );
@@ -430,15 +445,57 @@ class PublicPageTest extends TestCase {
 		$this->reset_state();
 
 		$probe = new PublicPageProbe();
-		$out   = $probe->decorate( $this->row() );
+		$out   = $probe->decorate(
+			$this->row(
+				array(
+					'special_sale' => array( 'lowest_30_day_price' => 1.49 ),
+				)
+			)
+		);
 
 		$this->assertSame( '1,33 €', $out['unit_price_display'] );
 		$this->assertSame( '1,99 €', $out['retail_display'] );
+		$this->assertSame( '1,49 €', $out['lowest_30_day_display'] );
 		$this->assertSame( '1,75 €', $out['anchor_display'] );
 		$this->assertSame( '02.05.2025.', $out['reference_display'] );
 		$this->assertSame( 'Product', $out['type_display'] );
 		$this->assertSame( 'Akcija', $out['sale_display'] );
 		$this->assertSame( 'Available', $out['availability_display'] );
+	}
+
+	/**
+	 * The public table serializes the 30-day low between retail price and sale name.
+	 *
+	 * @return void
+	 */
+	public function test_public_price_list_serializes_the_30_day_reference_with_a_sale() {
+		$this->reset_state();
+
+		$probe      = new PublicPageProbe();
+		$row        = $probe->decorate(
+			$this->row(
+				array(
+					'special_sale' => array( 'lowest_30_day_price' => 1.49 ),
+				)
+			)
+		);
+		$html       = $probe->render_partial(
+			'public-price-list.php',
+			array(
+				'rows'        => array( $row ),
+				'meta'        => array(),
+				'location'    => null,
+				'q'           => '',
+				'type'        => '',
+				'feed_xml'    => '',
+				'feed_csv'    => '',
+				'archive_url' => '',
+			)
+		);
+		$serialized = preg_replace( '/\s+/', ' ', $html );
+
+		$this->assertStringContainsString( '<th scope="col">Lowest price in the last 30 days</th>', $serialized );
+		$this->assertStringContainsString( '<td>1,99 €</td> <td>1,49 €</td> <td>Akcija</td>', $serialized );
 	}
 
 	/**
@@ -484,6 +541,7 @@ class PublicPageTest extends TestCase {
 
 		$this->assertSame( '', $out['unit_price_display'] );
 		$this->assertSame( '', $out['anchor_display'] );
+		$this->assertSame( '', $out['lowest_30_day_display'] );
 		$this->assertSame( '', $out['reference_display'] );
 		$this->assertSame( '', $out['sale_display'] );
 		$this->assertSame( 'Service', $out['type_display'] );
@@ -661,6 +719,44 @@ class PublicPageTest extends TestCase {
 	}
 
 	/**
+	 * The price shortcode defaults to one 30-day block and honors its override.
+	 *
+	 * @covers \SidrenaCijena\Api\TemplateFunctions::shortcode
+	 * @return void
+	 */
+	public function test_price_shortcode_honors_30_day_visibility_without_duplicate_blocks() {
+		$this->reset_state();
+		$catalog = $this->wire_catalog();
+		$item    = $catalog->items[0];
+		PluginSwap::swap( 'anchors', new AnchorPriceService( Plugin::instance()->history() ) );
+		$sales = new PageSaleFake();
+
+		$sales->map[ $item->key() ] = array( 'lowest_30_day_price' => 1.50 );
+		PluginSwap::swap( 'special_sales', $sales );
+
+		$default = TemplateFunctions::shortcode( array( 'product_id' => $item->id ) );
+		$this->assertSame( 1, substr_count( $default, 'sidrena-cijena--30-day' ) );
+		$this->assertStringContainsString( '1,50', $default );
+
+		$hidden = TemplateFunctions::shortcode(
+			array(
+				'product_id'  => $item->id,
+				'show_30_day' => 'no',
+			)
+		);
+		$this->assertSame( 0, substr_count( $hidden, 'sidrena-cijena--30-day' ) );
+		$this->assertStringNotContainsString( '1,50', $hidden );
+
+		$shown = TemplateFunctions::shortcode(
+			array(
+				'product_id'  => $item->id,
+				'show_30_day' => 'yes',
+			)
+		);
+		$this->assertSame( 1, substr_count( $shown, 'sidrena-cijena--30-day' ) );
+	}
+
+	/**
 	 * The type filter keeps only the requested item type.
 	 *
 	 * @return void
@@ -710,6 +806,7 @@ class PublicPageTest extends TestCase {
 
 		$this->assertStringContainsString( 'sidrena-cijena-cjenik', $out );
 		$this->assertStringNotContainsString( 'Mlijeko 1L', $out );
+		$this->assertStringContainsString( '<td colspan="13">', $out );
 	}
 
 	/**

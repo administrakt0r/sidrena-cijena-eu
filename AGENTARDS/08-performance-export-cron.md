@@ -1,5 +1,7 @@
 # Prompt 8 — Performance pass 3: export pipeline, memory and cron jobs (Docker optional, needed for measurements)
 
+> **Status (v2.0.0):** COMPLETED. Generation pipeline, incremental hashing, and cron cleanup optimizations completed and verified.
+
 ```
 You are optimising the generation pipeline of the WordPress plugin in the current
 directory (sidrena-cijena.php is the bootstrap): daily price-list generation, file
@@ -13,7 +15,7 @@ checksum/fingerprint reporting, the 30+ day archive retention (max(30, retention
 and the blocking publication gate (FR-007) all stay exactly as they are. Append-only
 price history. PHP 7.4-8.4. Commit each item separately (perf: / fix:), with tests.
 
-Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the suite.
+Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in

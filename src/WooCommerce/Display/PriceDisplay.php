@@ -10,6 +10,7 @@ namespace SidrenaCijena\WooCommerce\Display;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Pricing\AnchorPriceService;
+use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
 use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Settings;
 
@@ -43,10 +44,160 @@ class PriceDisplay {
 	 */
 	public function register() {
 		add_filter( 'woocommerce_get_price_html', array( $this, 'filter_price_html' ), 20, 2 );
+		add_filter( 'woocommerce_cart_item_price', array( $this, 'filter_cart_item_price' ), 20, 3 );
+		add_filter( 'woocommerce_cart_item_subtotal', array( $this, 'filter_checkout_item_subtotal' ), 20, 3 );
+		add_filter( 'woocommerce_widget_cart_item_quantity', array( $this, 'filter_widget_cart_item_quantity' ), 20, 3 );
 		add_filter( 'render_block', array( $this, 'filter_price_block' ), 20, 2 );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'render_single_summary' ), (int) Settings::get( 'display_priority', 20 ) );
 		add_action( 'woocommerce_after_shop_loop_item_title', array( $this, 'render_archive_item' ), (int) Settings::get( 'display_priority', 20 ) );
+		if ( did_action( 'woocommerce_blocks_loaded' ) ) {
+			$this->register_cart_block_extension();
+		} else {
+			add_action( 'woocommerce_blocks_loaded', array( $this, 'register_cart_block_extension' ) );
+		}
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Register reference-price text for WooCommerce Cart and Checkout blocks.
+	 *
+	 * @return void
+	 */
+	public function register_cart_block_extension() {
+		if ( ! function_exists( 'woocommerce_store_api_register_endpoint_data' ) ) {
+			return;
+		}
+
+		woocommerce_store_api_register_endpoint_data(
+			array(
+				'endpoint'        => 'cart-item',
+				'namespace'       => 'sidrena-cijena-eu',
+				'schema_callback' => function () {
+					return array(
+						'cartPriceSuffix' => array(
+							'description' => __( 'Reference price text for this cart item.', 'sidrena-cijena-eu' ),
+							'type'        => 'string',
+							'context'     => array( 'view' ),
+							'readonly'    => true,
+						),
+					);
+				},
+				'data_callback'   => function ( $cart_item ) {
+					return array( 'cartPriceSuffix' => $this->cart_reference_text( $cart_item ) );
+				},
+			)
+		);
+	}
+
+	/**
+	 * Add reference prices next to the unit price in the classic cart.
+	 *
+	 * @param string $price     Cart item price HTML.
+	 * @param array  $cart_item Cart item.
+	 * @param string $key       Cart item key.
+	 * @return string
+	 */
+	public function filter_cart_item_price( $price, $cart_item, $key ) {
+		unset( $key );
+
+		return $this->append_cart_reference( $price, $cart_item );
+	}
+
+	/**
+	 * Add reference prices next to checkout line subtotals in classic checkout.
+	 *
+	 * The classic checkout shows a line subtotal instead of a unit price.
+	 *
+	 * @param string $subtotal  Cart item subtotal HTML.
+	 * @param array  $cart_item Cart item.
+	 * @param string $key       Cart item key.
+	 * @return string
+	 */
+	public function filter_checkout_item_subtotal( $subtotal, $cart_item, $key ) {
+		unset( $key );
+
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+			return $subtotal;
+		}
+
+		return $this->append_cart_reference( $subtotal, $cart_item );
+	}
+
+	/**
+	 * Add reference prices next to mini-cart item prices.
+	 *
+	 * @param string $quantity  Mini-cart quantity and price HTML.
+	 * @param array  $cart_item Cart item.
+	 * @param string $key       Cart item key.
+	 * @return string
+	 */
+	public function filter_widget_cart_item_quantity( $quantity, $cart_item, $key ) {
+		unset( $key );
+
+		return $this->append_cart_reference( $quantity, $cart_item );
+	}
+
+	/**
+	 * Add the rendered reference block to a classic cart price string.
+	 *
+	 * @param string $price     Existing price HTML.
+	 * @param array  $cart_item Cart item.
+	 * @return string
+	 */
+	protected function append_cart_reference( $price, $cart_item ) {
+		if ( false !== strpos( $price, 'sidrena-cijena' ) ) {
+			return $price;
+		}
+
+		return $price . $this->cart_reference_html( $cart_item );
+	}
+
+	/**
+	 * Reference prices for one cart item, labeled as per-item amounts.
+	 *
+	 * @param array $cart_item Cart item.
+	 * @return string
+	 */
+	protected function cart_reference_html( $cart_item ) {
+		$product = $this->cart_item_product( $cart_item );
+		$html    = $product ? $this->render( $product, 'cart' ) : '';
+
+		if ( '' === $html ) {
+			return '';
+		}
+
+		return '<div class="sidrena-cijena__cart-reference"><span class="sidrena-cijena__cart-unit-label">' . esc_html__( 'Reference prices per item:', 'sidrena-cijena-eu' ) . '</span> ' . $html . '</div>';
+	}
+
+	/**
+	 * Plain text for the block Cart/Checkout price filter.
+	 *
+	 * @param array $cart_item Cart item.
+	 * @return string
+	 */
+	protected function cart_reference_text( $cart_item ) {
+		$html = $this->cart_reference_html( $cart_item );
+
+		if ( '' === $html ) {
+			return '';
+		}
+
+		$html = preg_replace( '~</(?:span|div)\s*>~i', ' ', $html );
+		$text = html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+
+		return trim( (string) preg_replace( '/\s+/u', ' ', $text ) );
+	}
+
+	/**
+	 * Get the product instance from a WooCommerce cart item.
+	 *
+	 * @param mixed $cart_item Cart item.
+	 * @return \WC_Product|null
+	 */
+	protected function cart_item_product( $cart_item ) {
+		return is_array( $cart_item ) && isset( $cart_item['data'] ) && $cart_item['data'] instanceof \WC_Product
+			? $cart_item['data']
+			: null;
 	}
 
 	/**
@@ -194,10 +345,6 @@ class PriceDisplay {
 			return;
 		}
 
-		if ( ! Settings::get( 'display_product_pages' ) && ! Settings::get( 'display_archives' ) ) {
-			return;
-		}
-
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
 			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
@@ -205,13 +352,25 @@ class PriceDisplay {
 			SIDRENA_CIJENA_VERSION
 		);
 
-		wp_enqueue_script(
-			'sidrena-cijena-frontend',
-			SIDRENA_CIJENA_URL . 'assets/js/frontend.js',
-			array(),
-			SIDRENA_CIJENA_VERSION,
-			true
-		);
+		if ( Settings::get( 'display_product_pages' ) || Settings::get( 'display_archives' ) ) {
+			wp_enqueue_script(
+				'sidrena-cijena-frontend',
+				SIDRENA_CIJENA_URL . 'assets/js/frontend.js',
+				array(),
+				SIDRENA_CIJENA_VERSION,
+				true
+			);
+		}
+
+		if ( wp_script_is( 'wc-blocks-checkout', 'registered' ) ) {
+			wp_enqueue_script(
+				'sidrena-cijena-cart-blocks',
+				SIDRENA_CIJENA_URL . 'assets/js/cart-blocks.js',
+				array( 'wc-blocks-checkout' ),
+				SIDRENA_CIJENA_VERSION,
+				true
+			);
+		}
 	}
 
 	/**
@@ -367,21 +526,55 @@ class PriceDisplay {
 		$key    = (int) $item->id . ':' . (int) $item->variation_id;
 		$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
 
-		if ( ( ! $sale || null === $sale['lowest_30_day_price'] ) && $item->is_variation() ) {
-			$key  = (int) $item->id . ':0';
-			$sale = isset( $active[ $key ] ) ? $active[ $key ] : null;
-		}
-
 		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {
 			return '';
 		}
 
+		if ( 'woocommerce' === $item->source ) {
+			$current    = Currency::to_storage( $item->effective_price() );
+			$regular    = Currency::to_storage( $item->regular_price );
+			$sale_price = Currency::to_storage( $item->sale_price );
+
+			if ( null !== $regular && null !== $current ) {
+				$promotional = $regular > 0 && $current < $regular;
+
+				if ( ! $promotional && null !== $item->current_price && null !== $sale_price ) {
+					$promotional = $current === $sale_price;
+				}
+
+				if ( ! $promotional ) {
+					return '';
+				}
+			}
+
+			$periods    = Plugin::instance()->history()->active_sale_period_map( array( (int) $item->id ) );
+			$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $key;
+			$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
+
+			if ( ! SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
+				return '';
+			}
+		}
+
 		$price = (float) $sale['lowest_30_day_price'];
+
+		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
+			? (string) $args['thirty_day_label']
+			: (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) );
+
+		/**
+		 * Filters the 30-day lowest price display label.
+		 *
+		 * @param string      $label   Display label.
+		 * @param CatalogItem $item    Catalog item.
+		 * @param string      $context Rendering context.
+		 */
+		$label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $label, $item, $context );
 
 		$template_args = array(
 			'item'    => $item,
 			'price'   => $price,
-			'label'   => (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) ),
+			'label'   => $label,
 			'display' => Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 			'style'   => (string) Settings::get( 'product_display_style', 'plain' ),
 		);

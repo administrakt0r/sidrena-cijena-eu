@@ -1,11 +1,13 @@
 # Prompt 2 — Compliance cross-check (no Docker needed)
 
+> **Status (v2.0.0):** COMPLETED. Legal and specification cross-check verified and shipped.
+
 ```
 You are auditing the plugin in the current directory against Croatian legal requirements
 and its documentation. Read `docs/legal-rules.md`, `docs/feature-acceptance.md`,
 `docs/price-list-format.md`, `docs/filename-profile.md`, `docs/price-history.md`,
 `docs/operations.md`, and the known-findings record `docs/compliance-audit-2026-09-24.md`
-first. Baseline: 301+ unit tests / 1078+ assertions green before you start.
+first. Baseline: 361+ unit tests / 1296+ assertions green before you start.
 
 For each item below, verify the implementation and fix deviations (tests first
 where behaviour changes). Commit each fix separately.

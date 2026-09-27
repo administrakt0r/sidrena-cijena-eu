@@ -43,6 +43,10 @@ final class DisplaySettingsPage {
 				'label' => __( 'Anchor price label', 'sidrena-cijena-eu' ),
 				'type'  => 'text',
 			),
+			'thirty_day_label'      => array(
+				'label' => __( 'Lowest 30-day price label', 'sidrena-cijena-eu' ),
+				'type'  => 'text',
+			),
 			'currency_display'      => array(
 				'label' => __( 'Currency display', 'sidrena-cijena-eu' ),
 				'type'  => 'select',

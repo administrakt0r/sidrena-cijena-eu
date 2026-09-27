@@ -100,8 +100,27 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 	 * @return CatalogItem[]
 	 */
 	public function get_items( array $args = array() ) {
+		$page = $this->query_items_page( $args );
+
+		return $page['items'];
+	}
+
+	/**
+	 * Query one page while retaining the number of WooCommerce products fetched.
+	 *
+	 * The catalog can expand one variable product into many variation items or
+	 * omit a variable parent that has no purchasable variations. Pagination must
+	 * therefore follow the WooCommerce page size, not the expanded item count.
+	 *
+	 * @param array<mixed> $args Query arguments.
+	 * @return array{items:CatalogItem[],product_count:int}
+	 */
+	protected function query_items_page( array $args = array() ) {
 		if ( ! $this->is_available() ) {
-			return array();
+			return array(
+				'items'         => array(),
+				'product_count' => 0,
+			);
 		}
 
 		$args = wp_parse_args(
@@ -180,8 +199,6 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			}
 
 			if ( ! empty( $args['include_variations'] ) && $product->is_type( 'variable' ) ) {
-				$variation_count = 0;
-
 				foreach ( $product->get_children() as $variation_id ) {
 					$variation = wc_get_product( (int) $variation_id );
 
@@ -195,11 +212,6 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 					}
 
 					$items[] = $this->build_item( $variation );
-					++$variation_count;
-				}
-
-				if ( 0 === $variation_count ) {
-					$items[] = $this->build_item( $product );
 				}
 
 				continue;
@@ -208,7 +220,10 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$items[] = $this->build_item( $product );
 		}
 
-		return $items;
+		return array(
+			'items'         => $items,
+			'product_count' => count( $products ),
+		);
 	}
 
 	/**
@@ -288,7 +303,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$page     = 1;
 
 		do {
-			$items = $this->get_items(
+			$result = $this->query_items_page(
 				array_merge(
 					$args,
 					array(
@@ -297,12 +312,13 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 					)
 				)
 			);
+			$items  = $result['items'];
 
 			foreach ( $items as $item ) {
 				yield $item;
 			}
 
-			$found = count( $items );
+			$found = (int) $result['product_count'];
 
 			++$page;
 		} while ( $found >= $per_page );

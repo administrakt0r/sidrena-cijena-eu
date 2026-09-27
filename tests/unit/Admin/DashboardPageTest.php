@@ -443,11 +443,11 @@ class DashboardPageTest extends TestCase {
 			$data['comparison']
 		);
 
-		// Variation 201/202 inherit the parent sale and must not count as missing
-		// history; 101 (anchor only) and 103 (promo without a sale row) remain.
-		$this->assertSame( 2, $data['missing_history'] );
-		$this->assertSame( 1, $data['thirty_day_warnings'] );
-		$this->assertSame( 1, $data['unclassified_promotions'] );
+		// Parent sales do not classify variations 201/202. Each variation, 101,
+		// and 103 therefore lacks its own regular or special-sale history.
+		$this->assertSame( 4, $data['missing_history'] );
+		$this->assertSame( 0, $data['thirty_day_warnings'] );
+		$this->assertSame( 3, $data['unclassified_promotions'] );
 	}
 
 	/**

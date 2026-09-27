@@ -350,4 +350,161 @@ class Test_Special_Sales extends WP_UnitTestCase {
 		$this->assertNotNull( $active );
 		$this->assertSame( $sale_id, (int) $active['id'] );
 	}
+
+	/**
+	 * When a sale ends or expires, the 30-day display cleanly disappears, history remains intact,
+	 * and subsequent 30-day calculations incorporate the prior promotional price.
+	 *
+	 * @return void
+	 */
+	public function test_sale_end_lifecycle_cleans_display_and_preserves_history_for_subsequent_calculation() {
+		$item  = $this->create_item( 'Trajno mlijeko', 'MLJ-TRAJNO', 2.00 );
+		$today = Dates::today();
+
+		// Seed regular price 35 days ago.
+		$this->history->insert(
+			array(
+				'product_id' => $item->id,
+				'item_type'  => 'product',
+				'sku'        => $item->sku,
+				'price_type' => 'regular',
+				'price'      => 2.00,
+				'valid_from' => Dates::add_days( $today, -35 ),
+				'source'     => 'manual',
+			)
+		);
+
+		// Sale 1: started 20 days ago, ended 5 days ago with promotional price 1.40.
+		$sale_1_start = Dates::add_days( $today, -20 );
+		$sale_1_end   = Dates::add_days( $today, -5 );
+
+		$sale_1_id = $this->service->create(
+			$item,
+			array(
+				'sale_type'   => 'akcija',
+				'sale_name'   => 'Prva akcija',
+				'start_date'  => $sale_1_start,
+				'end_date'    => $sale_1_end,
+				'promo_price' => 1.40,
+			)
+		);
+		$this->assertIsInt( $sale_1_id );
+
+		// Record the applied promotional price for Sale 1 in history.
+		$this->history->insert(
+			array(
+				'product_id' => $item->id,
+				'item_type'  => 'product',
+				'sku'        => $item->sku,
+				'price_type' => 'sale',
+				'price'      => 1.40,
+				'valid_from' => $sale_1_start,
+				'valid_to'   => $sale_1_end . ' 23:59:59',
+				'source'     => 'manual',
+			)
+		);
+
+		// Record closure / return to regular price after Sale 1 ended.
+		$this->history->insert(
+			array(
+				'product_id' => $item->id,
+				'item_type'  => 'product',
+				'sku'        => $item->sku,
+				'price_type' => 'sale',
+				'price'      => null,
+				'valid_from' => Dates::add_days( $today, -4 ),
+				'source'     => 'manual',
+				'metadata'   => array( 'event' => 'price_interval_closed' ),
+			)
+		);
+
+		// 1. Verify that now (sale ended 5 days ago), no active sale applies:
+		$this->assertNull( $this->service->active( $item->id ) );
+
+		// 2. Verify that the 30-day lowest price display cleanly disappears:
+		$display  = new \SidrenaCijena\WooCommerce\Display\PriceDisplay( Plugin::instance()->anchors() );
+		$rendered = $display->render_item( $item, 'single' );
+		$this->assertStringNotContainsString( 'sidrena-cijena--30-day', $rendered );
+
+		// 3. Verify historical records in wp_sidrena_price_history remain permanently intact:
+		$history_rows = $this->history->query(
+			array(
+				'product_id' => $item->id,
+				'orderby'    => 'id',
+				'order'      => 'ASC',
+			)
+		);
+		$this->assertGreaterThanOrEqual( 3, count( $history_rows ) );
+
+		$prices_recorded = array_column( $history_rows, 'price' );
+		$this->assertContains( 1.40, array_map( 'floatval', array_filter( $prices_recorded ) ) );
+
+		// 4. Create Sale 2 starting today:
+		// The 30-day window covers today-30 to today-1, which includes Sale 1's 1.40 promotional price!
+		$sale_2_id = $this->service->create(
+			$item,
+			array(
+				'sale_type'   => 'akcija',
+				'sale_name'   => 'Druga akcija',
+				'start_date'  => $today,
+				'end_date'    => Dates::add_days( $today, 5 ),
+				'promo_price' => 1.20,
+			)
+		);
+		$this->assertIsInt( $sale_2_id );
+
+		$sale_2 = $this->sales->get( $sale_2_id );
+		$this->assertSame( 1.40, (float) $sale_2['lowest_30_day_price'], 'Subsequent 30-day calculation must incorporate prior promo price from history.' );
+	}
+
+	/**
+	 * The refresh_statuses method transitions sales and flushes RestCache.
+	 *
+	 * @return void
+	 */
+	public function test_refresh_statuses_transitions_and_flushes_rest_cache() {
+		$item  = $this->create_item( 'Sok jabuka', 'SOK-JAB', 3.00 );
+		$today = Dates::today();
+
+		// 1. Create a scheduled sale whose start date is today:
+		$sale_id = $this->service->create(
+			$item,
+			array(
+				'sale_type'  => 'akcija',
+				'start_date' => $today,
+				'end_date'   => Dates::add_days( $today, 3 ),
+			)
+		);
+
+		$sale = $this->sales->get( $sale_id );
+		$this->assertSame( 'scheduled', $sale['status'] );
+
+		// Populate RestCache.
+		$rest_cache = Plugin::instance()->rest_cache();
+		$args       = array(
+			'page'     => 'cjenik',
+			'location' => 99,
+		);
+		$key_before = $rest_cache->key( $args );
+		$rest_cache->set( $key_before, 'cached-html' );
+		$this->assertSame( 'cached-html', $rest_cache->get( $key_before ) );
+
+		$gen_before = $rest_cache->generation();
+
+		// Transition statuses.
+		$updated = $this->sales->refresh_statuses();
+		$this->assertGreaterThanOrEqual( 1, $updated );
+
+		// Verify status transitioned.
+		$sale_refreshed = $this->sales->get( $sale_id );
+		$this->assertSame( 'active', $sale_refreshed['status'] );
+
+		// Verify RestCache generation bumped and cache flushed.
+		$gen_after = $rest_cache->generation();
+		$this->assertGreaterThan( $gen_before, $gen_after );
+
+		$key_after = $rest_cache->key( $args );
+		$this->assertNotSame( $key_before, $key_after );
+		$this->assertNull( $rest_cache->get( $key_after ) );
+	}
 }

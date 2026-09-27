@@ -281,6 +281,46 @@ class ValidatorTest extends TestCase {
 	}
 
 	/**
+	 * A parent sale cannot classify or supply a reference price for a variation.
+	 *
+	 * @return void
+	 */
+	public function test_parent_sale_does_not_satisfy_variation_compliance() {
+		$item    = $this->item(
+			array(
+				'id'            => 201,
+				'variation_id'  => 11,
+				'parent_id'     => 201,
+				'source'        => 'woocommerce',
+				'regular_price' => 10.0,
+				'sale_price'    => 8.0,
+				'current_price' => 8.0,
+			)
+		);
+		$context = $this->item_context( array( $item ) );
+
+		$context['sales']['201:0'] = array(
+			'product_id'          => 201,
+			'variation_id'        => 0,
+			'start_date'          => '2026-09-21',
+			'promo_price'         => '8.00',
+			'sale_type'           => 'akcija',
+			'lowest_30_day_price' => '7.00',
+		);
+		$context['sale_periods']   = array(
+			'201:0' => array(
+				'valid_from' => '2026-09-21 00:00:00',
+				'price'      => '8.000000',
+			),
+		);
+
+		$rules = $this->sale_rules();
+
+		$this->assertSame( 'missing_sale_type', $rules->missing_sale_type( $context )[0]->code );
+		$this->assertSame( array(), $rules->sale_price_not_below_reference( $context ) );
+	}
+
+	/**
 	 * Progressive reductions keep their original classification; a new period does not.
 	 *
 	 * @return void

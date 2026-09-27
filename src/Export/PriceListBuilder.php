@@ -173,7 +173,7 @@ class PriceListBuilder {
 	}
 
 	/**
-	 * Active special sale for an item, falling back to the parent item.
+	 * Active special sale recorded for this exact item.
 	 *
 	 * @param CatalogItem         $item  Item.
 	 * @param array<string,array> $sales Sale rows keyed by `product:variation`.
@@ -182,17 +182,7 @@ class PriceListBuilder {
 	 */
 	protected function sale_for( CatalogItem $item, array $sales, array $periods = array() ) {
 		$key  = $item->key();
-		$sale = null;
-
-		if ( isset( $sales[ $key ] ) ) {
-			$sale = $sales[ $key ];
-		} elseif ( $item->is_variation() ) {
-			$parent_key = (int) $item->parent_id . ':0';
-
-			if ( isset( $sales[ $parent_key ] ) ) {
-				$sale = $sales[ $parent_key ];
-			}
-		}
+		$sale = isset( $sales[ $key ] ) ? $sales[ $key ] : null;
 
 		if ( ! $sale ) {
 			return null;

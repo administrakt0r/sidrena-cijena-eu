@@ -268,7 +268,13 @@ class SpecialSaleRepository {
 			)
 		);
 
-		return (int) $activated + (int) $ended;
+		$total = (int) $activated + (int) $ended;
+
+		if ( $total > 0 ) {
+			do_action( 'sidrena_cijena_special_sale_changed', 0, 0, 0 );
+		}
+
+		return $total;
 	}
 
 	/**

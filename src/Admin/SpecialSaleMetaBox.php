@@ -79,11 +79,25 @@ class SpecialSaleMetaBox {
 			return;
 		}
 
-		$sales = Plugin::instance()->special_sales()->for_item( (int) $item->id, (int) $item->variation_id );
-		$today = Dates::today();
+		$sales        = Plugin::instance()->special_sales()->for_item( (int) $item->id, (int) $item->variation_id );
+		$today        = Dates::today();
+		$variation_id = (int) $item->variation_id;
+		$field_suffix = $variation_id > 0 ? '[' . $variation_id . ']' : '';
+		$id_suffix    = $variation_id > 0 ? '-' . $variation_id : '';
+		$action_url   = admin_url( 'admin-post.php' );
+
+		if ( $variation_id > 0 ) {
+			$action_url = add_query_arg( 'variation_id', $variation_id, $action_url );
+		}
+
+		$explainer = Plugin::instance()->lowest_price_explainer();
 
 		?>
 		<div class="sidrena-cijena-sale">
+			<p class="sidrena-cijena-item-identity" style="margin-top:0;margin-bottom:10px;font-size:13px;">
+				<strong><?php echo esc_html__( 'Item:', 'sidrena-cijena-eu' ); ?></strong>
+				<code><?php echo esc_html( $explainer->format_identity( $item ) ); ?></code>
+			</p>
 			<?php if ( ! empty( $sales ) ) : ?>
 				<table class="widefat striped">
 					<caption class="screen-reader-text"><?php echo esc_html__( 'Recorded special sales', 'sidrena-cijena-eu' ); ?></caption>
@@ -120,6 +134,11 @@ class SpecialSaleMetaBox {
 									echo null === $sale['lowest_30_day_price']
 										? esc_html__( 'Not calculated', 'sidrena-cijena-eu' )
 										: esc_html( Currency::format( (float) $sale['lowest_30_day_price'], $item->currency, array( 'display' => 'symbol' ) ) );
+
+									if ( ! empty( $sale['window_start'] ) && ! empty( $sale['window_end'] ) ) {
+										/* translators: 1: window start date, 2: window end date */
+										echo '<br /><span class="description" style="font-size:11px;">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'sidrena-cijena-eu' ), (string) $sale['window_start'], (string) $sale['window_end'] ) ) . '</span>';
+									}
 									?>
 								</td>
 								<td><?php echo esc_html( Labels::sale_status( (string) $sale['status'] ) ); ?></td>
@@ -127,18 +146,47 @@ class SpecialSaleMetaBox {
 						<?php endforeach; ?>
 					</tbody>
 				</table>
+
+				<div class="sidrena-cijena-sale-explanations" style="margin-top:10px;">
+					<?php foreach ( array_slice( $sales, 0, 5 ) as $sale ) : ?>
+						<?php
+						$explanation = $explainer->explain( $item, $sale );
+						$sale_name   = ! empty( $sale['sale_name'] ) ? (string) $sale['sale_name'] : Labels::sale_type( (string) $sale['sale_type'] );
+						?>
+						<details class="sidrena-cijena-explanation-details" style="margin-bottom:8px;border:1px solid #c3c4c7;border-radius:3px;padding:6px 10px;background:#fdfdfd;">
+							<summary style="cursor:pointer;font-weight:600;color:#2271b1;font-size:12px;">
+								<?php
+								/* translators: 1: sale name, 2: sale start date */
+								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'sidrena-cijena-eu' ), $sale_name, (string) $sale['start_date'] ) );
+								?>
+							</summary>
+							<?php echo $explainer->render_html( $explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						</details>
+					<?php endforeach; ?>
+				</div>
 			<?php else : ?>
 				<p><?php echo esc_html__( 'No special sale is recorded for this item.', 'sidrena-cijena-eu' ); ?></p>
+				<?php
+				$today_explanation = $explainer->explain( $item, $today );
+				?>
+				<details class="sidrena-cijena-explanation-details" style="margin-bottom:12px;border:1px solid #c3c4c7;border-radius:3px;padding:6px 10px;background:#fdfdfd;">
+					<summary style="cursor:pointer;font-weight:600;color:#2271b1;font-size:12px;">
+						<?php echo esc_html__( 'Current 30-day reference baseline (preview for today)', 'sidrena-cijena-eu' ); ?>
+					</summary>
+					<?php echo $explainer->render_html( $today_explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</details>
 			<?php endif; ?>
 
 			<div class="sidrena-cijena-sale-form">
 				<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_sale_nonce' ); ?>
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $item->id ); ?>" />
-				<input type="hidden" name="variation_id" value="<?php echo esc_attr( (string) $item->variation_id ); ?>" />
+				<?php if ( 0 === $variation_id ) : ?>
+					<input type="hidden" name="variation_id" value="0" />
+				<?php endif; ?>
 
 				<p>
-					<label for="sidrena-cijena-sale-type"><?php echo esc_html__( 'Sale type', 'sidrena-cijena-eu' ); ?></label>
-					<select id="sidrena-cijena-sale-type" name="sale_type" class="widefat">
+					<label for="sidrena-cijena-sale-type<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale type', 'sidrena-cijena-eu' ); ?></label>
+					<select id="sidrena-cijena-sale-type<?php echo esc_attr( $id_suffix ); ?>" name="sale_type<?php echo esc_attr( $field_suffix ); ?>" class="widefat">
 						<option value=""><?php echo esc_html__( '- select -', 'sidrena-cijena-eu' ); ?></option>
 						<?php foreach ( self::sale_types() as $type ) : ?>
 							<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( Labels::sale_type( $type ) ); ?></option>
@@ -148,26 +196,26 @@ class SpecialSaleMetaBox {
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-name"><?php echo esc_html__( 'Sale name', 'sidrena-cijena-eu' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-name" name="sale_name" class="widefat" />
+					<label for="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale name', 'sidrena-cijena-eu' ); ?></label>
+					<input type="text" id="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>" name="sale_name<?php echo esc_attr( $field_suffix ); ?>" class="widefat" />
 					<span class="description"><?php echo esc_html__( 'Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-start"><?php echo esc_html__( 'Start date', 'sidrena-cijena-eu' ); ?></label>
-					<input type="date" id="sidrena-cijena-sale-start" name="start_date" value="<?php echo esc_attr( $today ); ?>" />
+					<label for="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Start date', 'sidrena-cijena-eu' ); ?></label>
+					<input type="date" id="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>" name="start_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $today ); ?>" />
 					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-end"><?php echo esc_html__( 'End date (optional)', 'sidrena-cijena-eu' ); ?></label>
-					<input type="date" id="sidrena-cijena-sale-end" name="end_date" />
+					<label for="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'End date (optional)', 'sidrena-cijena-eu' ); ?></label>
+					<input type="date" id="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>" name="end_date<?php echo esc_attr( $field_suffix ); ?>" />
 					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-promo"><?php echo esc_html__( 'Promotional price', 'sidrena-cijena-eu' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-promo" name="promo_price" class="widefat" inputmode="decimal" />
+					<label for="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Promotional price', 'sidrena-cijena-eu' ); ?></label>
+					<input type="text" id="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>" name="promo_price<?php echo esc_attr( $field_suffix ); ?>" class="widefat" inputmode="decimal" />
 					<span class="description"><?php echo esc_html__( 'Enter the actual selling price during this promotion, using a decimal comma or point.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 
@@ -175,7 +223,7 @@ class SpecialSaleMetaBox {
 					<?php echo esc_html__( 'The lowest price of the 30 days before the start date is calculated and stored automatically.', 'sidrena-cijena-eu' ); ?>
 				</p>
 
-				<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post">
+				<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( $action_url ); ?>" formmethod="post">
 					<?php echo esc_html__( 'Record special sale', 'sidrena-cijena-eu' ); ?>
 				</button>
 			</div>
@@ -196,7 +244,7 @@ class SpecialSaleMetaBox {
 		check_admin_referer( self::ACTION, 'sidrena_cijena_sale_nonce' );
 
 		$product_id   = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
-		$variation_id = isset( $_POST['variation_id'] ) ? absint( wp_unslash( $_POST['variation_id'] ) ) : 0;
+		$variation_id = isset( $_REQUEST['variation_id'] ) ? absint( wp_unslash( $_REQUEST['variation_id'] ) ) : 0;
 
 		$item = $variation_id > 0
 			? Plugin::instance()->catalog()->get_variation( $product_id, $variation_id )
@@ -209,11 +257,11 @@ class SpecialSaleMetaBox {
 		}
 
 		$args = array(
-			'sale_type'   => isset( $_POST['sale_type'] ) ? sanitize_key( wp_unslash( $_POST['sale_type'] ) ) : '',
-			'sale_name'   => isset( $_POST['sale_name'] ) ? sanitize_text_field( wp_unslash( $_POST['sale_name'] ) ) : '',
-			'start_date'  => isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '',
-			'end_date'    => isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '',
-			'promo_price' => isset( $_POST['promo_price'] ) ? sanitize_text_field( wp_unslash( $_POST['promo_price'] ) ) : '',
+			'sale_type'   => sanitize_key( self::posted_value( 'sale_type', $variation_id ) ),
+			'sale_name'   => self::posted_value( 'sale_name', $variation_id ),
+			'start_date'  => self::posted_value( 'start_date', $variation_id ),
+			'end_date'    => self::posted_value( 'end_date', $variation_id ),
+			'promo_price' => self::posted_value( 'promo_price', $variation_id ),
 		);
 
 		$result = Plugin::instance()->special_sale_service()->create( $item, $args );
@@ -225,6 +273,32 @@ class SpecialSaleMetaBox {
 		}
 
 		self::redirect_back( $product_id, 'success', __( 'The special sale was recorded and the 30-day price was calculated.', 'sidrena-cijena-eu' ) );
+	}
+
+	/**
+	 * Read a scalar field or the value posted for the selected variation.
+	 *
+	 * @param string $key          POST field name.
+	 * @param int    $variation_id Variation ID, or zero for a non-variation.
+	 * @return string
+	 */
+	private static function posted_value( $key, $variation_id ) {
+		// The public handler verifies the nonce before calling this helper.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST[ $key ] ) ) {
+			return '';
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- The handler verifies the nonce and this value is sanitized below.
+		$value = wp_unslash( $_POST[ $key ] );
+
+		if ( $variation_id > 0 ) {
+			$value = is_array( $value ) && isset( $value[ $variation_id ] ) ? $value[ $variation_id ] : '';
+		} elseif ( is_array( $value ) ) {
+			$value = '';
+		}
+
+		return sanitize_text_field( (string) $value );
 	}
 
 	/**

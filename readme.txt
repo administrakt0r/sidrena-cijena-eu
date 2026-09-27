@@ -5,7 +5,7 @@ Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 2.0.0
-License: GPLv2 or later
+License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Croatian anchor prices, 30-day sale-price history and daily CSV/XML price lists for WooCommerce or a standalone catalog.
@@ -87,13 +87,22 @@ uninstall retain data. Optional uninstall cleanup removes operational data and
 files but preserves anchor and 30-day evidence, including their audit attribution.
 Review retained records with your data-protection and legal advisers.
 
+== Screenshots ==
+
+1. Public price-list page with search, item types and downloads.
+2. Administrative compliance dashboard with anchor price coverage, validator findings and publication status.
+3. Price history and immutable audit log of statutory reference dates.
+4. Plugin settings and legal rules configuration.
+
 == Changelog ==
 
 = 2.0.0 =
 * Rename the plugin to Sidrena Cijena EU.
+* Complete 10-task compliance remediation roadmap covering price-history reliability, WooCommerce promotional-state integration, variation-specific reference prices, customer-visible price locations, feed and promotional output coverage, Croatian customer wording, time/cache/sale-end behavior, administrator explainability, and a final regression pass.
 * Fix the Styling tab so it opens the styling settings screen.
 * Add a public HTML archive of generated price lists, with default-enabled footer and sitemap links and settings to control them.
 * Harden optional uninstall cleanup and complete Croatian translations for the archive settings.
+* 361 unit tests, 96 integration tests, 42 E2E specs — all green.
 
 = 1.0.18 =
 * Fix Legal rules saves that could cause a WordPress error page.

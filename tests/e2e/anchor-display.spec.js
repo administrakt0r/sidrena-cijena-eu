@@ -9,6 +9,7 @@ const CURRENT_PRICE = '20.00';
 
 test.describe( 'Anchor price display', () => {
 	let productId;
+	let upsellId;
 
 	test.beforeAll( () => {
 		wpCli( [ 'plugin', 'activate', 'sidrena-cijena' ] );
@@ -34,15 +35,47 @@ test.describe( 'Anchor price display', () => {
 				"', array('source' => 'manual'));"
 		);
 
+		const upsell = wpEval(
+			"$p = new WC_Product_Simple(); $p->set_name('E2E sidrena povezani proizvod'); $p->set_regular_price('30.00'); $p->set_sku('E2E-RELATED-1'); echo $p->save();"
+		);
+		upsellId = parseInt( upsell.trim(), 10 );
+
 		wpEval(
-			"update_option('sidrena_cijena_settings', array_merge(SidrenaCijena\\Support\\Settings::defaults(), array('display_enabled' => true, 'display_location' => 'price_html')));"
+			"$plugin = \\SidrenaCijena\\Plugin::instance(); $item = $plugin->catalog()->get_item(" +
+				upsellId +
+				"); $plugin->anchors()->record($item, '35.00', array('source' => 'manual')); update_post_meta(" +
+				upsellId +
+				", '_sidrena_cijena_show_in_cards', '1'); $parent = wc_get_product(" +
+				productId +
+				"); $parent->set_upsell_ids(array(" +
+				upsellId +
+				")); $parent->save();"
+		);
+
+		wpEval(
+			"update_option('sidrena_cijena_settings', array_merge(SidrenaCijena\\Support\\Settings::defaults(), array('display_enabled' => true, 'display_archives' => true, 'display_location' => 'price_html')));"
 		);
 	} );
 
 	test.afterAll( () => {
+		if ( upsellId ) {
+			wpEval( 'wp_delete_post(' + upsellId + ', true);' );
+		}
+
 		if ( productId ) {
 			wpEval( 'wp_delete_post(' + productId + ', true);' );
 		}
+	} );
+
+	test( 'related upsell cards show the related product reference price', async ( { page } ) => {
+		await page.goto( '/?p=' + productId );
+
+		const card = page.locator( '.up-sells .product' ).filter( { hasText: 'E2E sidrena povezani proizvod' } );
+		const reference = card.locator( '.sidrena-cijena[data-product-id="' + upsellId + '"]' );
+
+		await expect( reference ).toBeVisible();
+		await expect( reference.locator( '.sidrena-cijena__anchor-value' ) ).toContainText( '35,00' );
+		await expect( card.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 0 );
 	} );
 
 	test( 'shows the anchor price on the single product page', async ( { page } ) => {

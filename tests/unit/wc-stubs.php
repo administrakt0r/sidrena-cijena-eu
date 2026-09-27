@@ -67,6 +67,64 @@ if ( ! class_exists( 'WC_Product' ) ) {
 		}
 
 		/**
+		 * Product post status.
+		 *
+		 * @return string
+		 */
+		public function get_status() {
+			return isset( $this->data['status'] ) ? (string) $this->data['status'] : 'publish';
+		}
+
+		/**
+		 * Product display name.
+		 *
+		 * @return string
+		 */
+		public function get_name() {
+			return isset( $this->data['name'] ) ? (string) $this->data['name'] : '';
+		}
+
+		/**
+		 * Product SKU.
+		 *
+		 * @return string
+		 */
+		public function get_sku() {
+			return isset( $this->data['sku'] ) ? (string) $this->data['sku'] : '';
+		}
+
+		/**
+		 * Child variation IDs.
+		 *
+		 * @return int[]
+		 */
+		public function get_children() {
+			return isset( $this->data['children'] ) ? array_map( 'intval', (array) $this->data['children'] ) : array();
+		}
+
+		/**
+		 * Whether the product can currently be purchased.
+		 *
+		 * @return bool
+		 */
+		public function is_purchasable() {
+			if ( array_key_exists( 'purchasable', $this->data ) ) {
+				return (bool) $this->data['purchasable'];
+			}
+
+			return '' !== $this->get_price( 'edit' );
+		}
+
+		/**
+		 * Whether stock is available.
+		 *
+		 * @return bool
+		 */
+		public function is_in_stock() {
+			return ! array_key_exists( 'in_stock', $this->data ) || (bool) $this->data['in_stock'];
+		}
+
+		/**
 		 * Whether the product is of a type.
 		 *
 		 * @param string $type Product type.
@@ -147,7 +205,28 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 			return isset( $this->data['date_on_sale_to'] ) ? $this->data['date_on_sale_to'] : null;
 		}
+
+		/**
+		 * Product metadata.
+		 *
+		 * @param string $key Meta key.
+		 * @param bool   $single Return a single value.
+		 * @return mixed
+		 */
+		public function get_meta( $key, $single = true ) {
+			unset( $single );
+
+			return isset( $this->data['meta'][ $key ] ) ? $this->data['meta'][ $key ] : '';
+		}
 	}
+}
+
+if ( ! class_exists( 'WC_Product_Variation' ) && class_exists( 'WC_Product' ) ) {
+
+	/**
+	 * Variation marker used by catalog item hydration.
+	 */
+	class WC_Product_Variation extends WC_Product {}
 }
 
 if ( ! function_exists( 'wc_get_product' ) ) {
@@ -165,7 +244,11 @@ if ( ! function_exists( 'wc_get_product' ) ) {
 			return false;
 		}
 
-		return new WC_Product( $GLOBALS['sidrena_test_wc_products'][ $product_id ] );
+		$data = $GLOBALS['sidrena_test_wc_products'][ $product_id ];
+
+		return isset( $data['type'] ) && 'variation' === $data['type']
+			? new WC_Product_Variation( $data )
+			: new WC_Product( $data );
 	}
 }
 
@@ -199,19 +282,154 @@ if ( ! function_exists( 'wc_get_products' ) ) {
 	 * Retrieve products matching query.
 	 *
 	 * @param array<string,mixed> $args Query arguments.
-	 * @return array<int,int>|object
+	 * @return array<int,int|WC_Product>|object
 	 */
 	function wc_get_products( $args = array() ) {
 		$items = isset( $GLOBALS['sidrena_test_wc_products'] ) ? (array) $GLOBALS['sidrena_test_wc_products'] : array();
+		$ids   = array_keys( $items );
 
-		if ( ! empty( $args['paginate'] ) ) {
-			return (object) array(
-				'total'         => count( $items ),
-				'max_num_pages' => 1,
-				'products'      => array_keys( $items ),
+		if ( isset( $args['include'] ) ) {
+			$ids = array_values( array_intersect( $ids, array_map( 'intval', (array) $args['include'] ) ) );
+		}
+
+		if ( isset( $args['exclude'] ) ) {
+			$ids = array_values( array_diff( $ids, array_map( 'intval', (array) $args['exclude'] ) ) );
+		}
+
+		if ( isset( $args['parent'] ) ) {
+			$parent_id = (int) $args['parent'];
+			$ids       = array_values(
+				array_filter(
+					$ids,
+					static function ( $id ) use ( $items, $parent_id ) {
+						return isset( $items[ $id ]['parent_id'] ) && (int) $items[ $id ]['parent_id'] === $parent_id;
+					}
+				)
 			);
 		}
 
-		return array_keys( $items );
+		if ( isset( $args['type'] ) ) {
+			$type = (array) $args['type'];
+			$ids  = array_values(
+				array_filter(
+					$ids,
+					static function ( $id ) use ( $items, $type ) {
+						return isset( $items[ $id ]['type'] ) && in_array( $items[ $id ]['type'], $type, true );
+					}
+				)
+			);
+		} else {
+			$ids = array_values(
+				array_filter(
+					$ids,
+					static function ( $id ) use ( $items ) {
+						return ! isset( $items[ $id ]['type'] ) || 'variation' !== $items[ $id ]['type'];
+					}
+				)
+			);
+		}
+
+		if ( isset( $args['status'] ) ) {
+			$statuses = (array) $args['status'];
+			$ids      = array_values(
+				array_filter(
+					$ids,
+					static function ( $id ) use ( $items, $statuses ) {
+						$status = isset( $items[ $id ]['status'] ) ? $items[ $id ]['status'] : 'publish';
+						return in_array( $status, $statuses, true );
+					}
+				)
+			);
+		}
+
+		if ( 'DESC' === strtoupper( isset( $args['order'] ) ? (string) $args['order'] : 'ASC' ) ) {
+			$ids = array_reverse( $ids );
+		}
+
+		$total = count( $ids );
+		$limit = isset( $args['limit'] ) ? (int) $args['limit'] : -1;
+		$page  = isset( $args['page'] ) ? max( 1, (int) $args['page'] ) : 1;
+
+		if ( $limit > 0 ) {
+			$ids = array_slice( $ids, ( $page - 1 ) * $limit, $limit );
+		}
+
+		if ( ! empty( $args['paginate'] ) ) {
+			return (object) array(
+				'total'         => $total,
+				'max_num_pages' => $limit > 0 ? (int) ceil( $total / $limit ) : 1,
+				'products'      => $ids,
+			);
+		}
+
+		if ( isset( $args['return'] ) && 'ids' === $args['return'] ) {
+			return array_map( 'intval', $ids );
+		}
+
+		return array_map(
+			static function ( $id ) use ( $items ) {
+				$data = $items[ $id ];
+
+				return isset( $data['type'] ) && 'variation' === $data['type']
+					? new WC_Product_Variation( $data )
+					: new WC_Product( $data );
+			},
+			$ids
+		);
+	}
+}
+
+if ( ! function_exists( 'update_meta_cache' ) ) {
+	function update_meta_cache( $meta_type, $object_ids ) {
+		unset( $meta_type, $object_ids );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'update_object_term_cache' ) ) {
+	function update_object_term_cache( $object_ids, $object_type ) {
+		unset( $object_ids, $object_type );
+		return true;
+	}
+}
+
+if ( ! function_exists( 'get_post_meta' ) ) {
+	function get_post_meta( $post_id, $key = '', $single = false ) {
+		$products = isset( $GLOBALS['sidrena_test_wc_products'] ) ? (array) $GLOBALS['sidrena_test_wc_products'] : array();
+		$value    = isset( $products[ (int) $post_id ]['meta'][ $key ] ) ? $products[ (int) $post_id ]['meta'][ $key ] : '';
+		return $single ? $value : array( $value );
+	}
+}
+
+if ( ! function_exists( 'get_the_terms' ) ) {
+	function get_the_terms( $post_id, $taxonomy ) {
+		unset( $post_id, $taxonomy );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'wp_get_post_terms' ) ) {
+	function wp_get_post_terms( $post_id, $taxonomy, $args = array() ) {
+		unset( $post_id, $taxonomy, $args );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'get_the_date' ) ) {
+	function get_the_date( $format = '', $post = null ) {
+		unset( $format, $post );
+		return '2026-01-01';
+	}
+}
+
+if ( ! function_exists( 'get_woocommerce_currency' ) ) {
+	function get_woocommerce_currency() {
+		return 'EUR';
+	}
+}
+
+if ( ! function_exists( 'wc_prices_include_tax' ) ) {
+	function wc_prices_include_tax() {
+		return true;
 	}
 }

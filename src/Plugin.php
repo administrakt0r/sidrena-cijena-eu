@@ -117,6 +117,13 @@ final class Plugin {
 	private $lowest_price = null;
 
 	/**
+	 * 30-day lowest price explainer.
+	 *
+	 * @var \SidrenaCijena\Pricing\LowestPriceExplainer|null
+	 */
+	private $lowest_price_explainer = null;
+
+	/**
 	 * Special sale service.
 	 *
 	 * @var \SidrenaCijena\Pricing\SpecialSaleService|null
@@ -212,7 +219,7 @@ final class Plugin {
 		add_action( 'sidrena_cijena_price_changed', array( $this, 'queue_service_regeneration' ), 10, 2 );
 		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'invalidate_anchor_cache' ), 5, 3 );
 		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
-		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'flush_rest_cache' ) );
+		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'on_special_sale_changed' ), 10, 3 );
 		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
 		add_action( 'transition_post_status', array( $this, 'flush_on_catalog_status_change' ), 10, 3 );
 		add_action( 'before_delete_post', array( $this, 'flush_on_catalog_item_deleted' ), 10, 2 );
@@ -289,6 +296,34 @@ final class Plugin {
 	 */
 	public function flush_rest_cache() {
 		$this->rest_cache()->flush();
+	}
+
+	/**
+	 * Flush cached REST and product caches when a special sale changes or transitions.
+	 *
+	 * @param int $sale_id      Sale ID.
+	 * @param int $product_id   Product ID.
+	 * @param int $variation_id Variation ID.
+	 * @return void
+	 */
+	public function on_special_sale_changed( $sale_id = 0, $product_id = 0, $variation_id = 0 ) {
+		unset( $sale_id );
+
+		$this->flush_rest_cache();
+
+		if ( (int) $product_id > 0 ) {
+			if ( function_exists( 'wc_delete_product_transients' ) ) {
+				wc_delete_product_transients( (int) $product_id );
+			}
+
+			if ( function_exists( 'clean_post_cache' ) ) {
+				clean_post_cache( (int) $product_id );
+
+				if ( (int) $variation_id > 0 ) {
+					clean_post_cache( (int) $variation_id );
+				}
+			}
+		}
 	}
 
 	/**
@@ -531,6 +566,22 @@ final class Plugin {
 		}
 
 		return $this->lowest_price;
+	}
+
+	/**
+	 * 30-day lowest price explainer.
+	 *
+	 * @return \SidrenaCijena\Pricing\LowestPriceExplainer
+	 */
+	public function lowest_price_explainer() {
+		if ( null === $this->lowest_price_explainer ) {
+			$this->lowest_price_explainer = new \SidrenaCijena\Pricing\LowestPriceExplainer(
+				$this->history(),
+				$this->lowest_price()
+			);
+		}
+
+		return $this->lowest_price_explainer;
 	}
 
 	/**

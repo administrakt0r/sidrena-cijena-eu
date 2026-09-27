@@ -14,6 +14,27 @@ The audit’s legal baseline was the Croatian Consumer Protection Act, NN 19/202
 - Verify the changed behavior in layers: focused tests, relevant broader tests, then the configured local WordPress/WooCommerce runtime where applicable. Report commands, site/environment, outcomes, and anything not verified. Never claim a test passed without running it.
 - If a task uncovers another defect, classify it as **ASAP** (can misstate a consumer price/reference price, expose a serious data-integrity issue, or block safe release) or **FUTURE** (important but not a current release blocker). Give evidence and add a proposed follow-up to the report; do not start that work in the same run.
 
+## Completion status (2026-09-27)
+
+All 10 tasks have been implemented, tested and verified green:
+
+| Task | Status | Verified |
+|------|--------|----------|
+| 1 — Refresh the audit | ✅ Completed | Code review, no production changes |
+| 2 — Make the historical price timeline reliable | ✅ Completed | Unit + integration tests |
+| 3 — Connect WooCommerce promotional state | ✅ Completed | Unit + integration + E2E |
+| 4 — Keep variation offers and reference prices paired | ✅ Completed | Unit + integration + E2E |
+| 5 — Cover customer-visible price locations | ✅ Completed | Unit + E2E |
+| 6 — Review plugin-generated feeds and promotional output | ✅ Completed | Unit + integration |
+| 7 — Guarantee clear Croatian customer wording | ✅ Completed | Unit + integration + i18n |
+| 8 — Verify time, cache, and sale-end behavior | ✅ Completed | Unit + integration |
+| 9 — Make the calculated result explainable | ✅ Completed | Unit tests |
+| 10 — Final focused compliance regression pass | ✅ Completed | All layers green |
+
+Final baseline: 361 unit tests / 1296 assertions, 96 integration tests / 454 assertions,
+42 Playwright E2E specs, PHPStan Level 6 (0 errors, 117 files), PHPCS clean (175 files),
+ESLint clean, 705 translated strings / 0 untranslated.
+
 ## Ordered task list
 
 ### Task 1 — Refresh the audit against current code and legal sources

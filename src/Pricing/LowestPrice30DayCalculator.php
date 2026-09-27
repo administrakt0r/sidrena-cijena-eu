@@ -70,20 +70,41 @@ class LowestPrice30DayCalculator {
 	 * @return array{price:float|null,window_start:string|null,window_end:string|null,rows:int}
 	 */
 	public function calculate_window( array $history, $sale_start ) {
+		$audit = $this->audit_window( $history, $sale_start );
+
+		return array(
+			'price'        => $audit['price'],
+			'window_start' => $audit['window_start'],
+			'window_end'   => $audit['window_end'],
+			'rows'         => $audit['rows'],
+		);
+	}
+
+	/**
+	 * Detailed audit evaluation of the calculation window and source records.
+	 *
+	 * @param array<mixed> $history    History rows.
+	 * @param string       $sale_start Sale start date (`Y-m-d`).
+	 * @return array{price:float|null,window_start:string|null,window_end:string|null,rows:int,source_records:array<int,array<string,mixed>>,determining_record:array<string,mixed>|null}
+	 */
+	public function audit_window( array $history, $sale_start ) {
 		$window = $this->window( $sale_start );
 
 		if ( ! $window ) {
 			return array(
-				'price'        => null,
-				'window_start' => null,
-				'window_end'   => null,
-				'rows'         => 0,
+				'price'              => null,
+				'window_start'       => null,
+				'window_end'         => null,
+				'rows'               => 0,
+				'source_records'     => array(),
+				'determining_record' => null,
 			);
 		}
 
-		$lowest = null;
-		$rows   = 0;
-		$starts = array();
+		$lowest         = null;
+		$rows           = 0;
+		$starts         = array();
+		$source_records = array();
 
 		foreach ( $history as $row ) {
 			if ( ! is_array( $row ) ) {
@@ -159,14 +180,39 @@ class LowestPrice30DayCalculator {
 				$lowest = $price;
 			}
 
+			$source_records[] = array(
+				'id'             => isset( $row['id'] ) ? (int) $row['id'] : 0,
+				'price'          => $price,
+				'price_type'     => $type,
+				'source'         => isset( $row['source'] ) ? (string) $row['source'] : 'manual',
+				'valid_from'     => isset( $row['valid_from'] ) ? (string) $row['valid_from'] : null,
+				'valid_to'       => isset( $row['valid_to'] ) ? (string) $row['valid_to'] : null,
+				'created_at'     => isset( $row['created_at'] ) ? (string) $row['created_at'] : null,
+				'effective_from' => $from,
+				'effective_to'   => $to,
+				'is_determining' => false,
+				'raw'            => $row,
+			);
+
 			++$rows;
 		}
 
+		$determining = null;
+		foreach ( $source_records as &$record ) {
+			$record['is_determining'] = ( null !== $lowest && abs( $record['price'] - $lowest ) < 0.000001 );
+			if ( $record['is_determining'] && null === $determining ) {
+				$determining = $record;
+			}
+		}
+		unset( $record );
+
 		return array(
-			'price'        => $lowest,
-			'window_start' => $window['window_start'],
-			'window_end'   => $window['window_end'],
-			'rows'         => $rows,
+			'price'              => $lowest,
+			'window_start'       => $window['window_start'],
+			'window_end'         => $window['window_end'],
+			'rows'               => $rows,
+			'source_records'     => $source_records,
+			'determining_record' => $determining,
 		);
 	}
 

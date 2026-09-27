@@ -18,11 +18,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIDRENA_CIJENA_VERSION', '2.0.0' );
-define( 'SIDRENA_CIJENA_FILE', __FILE__ );
-define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
-define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
-define( 'SIDRENA_CIJENA_BASENAME', plugin_basename( __FILE__ ) );
+defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.0' );
+defined( 'SIDRENA_CIJENA_FILE' ) || define( 'SIDRENA_CIJENA_FILE', __FILE__ );
+defined( 'SIDRENA_CIJENA_DIR' ) || define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
+defined( 'SIDRENA_CIJENA_URL' ) || define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
+defined( 'SIDRENA_CIJENA_BASENAME' ) || define( 'SIDRENA_CIJENA_BASENAME', plugin_basename( __FILE__ ) );
 
 require_once SIDRENA_CIJENA_DIR . 'src/Support/Autoloader.php';
 require_once SIDRENA_CIJENA_DIR . 'src/Api/functions.php';
@@ -37,11 +37,35 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
  *
  * Always loads the Croatian translation catalogue by default so the plugin
  * interface is 100% in Croatian on all sites, even if WordPress runs in English.
+ * Supports filtering to allow English fallback or standard textdomain resolution.
  *
  * @return void
  */
 function sidrena_cijena_load_textdomain() {
-	load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
+	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'sidrena-cijena-eu' ) ) {
+		return;
+	}
+
+	$locale = function_exists( 'determine_locale' ) ? determine_locale() : ( function_exists( 'get_locale' ) ? get_locale() : 'hr_HR' );
+
+	/**
+	 * Filters whether to load the bundled Croatian translation catalog by default.
+	 *
+	 * Enabled by default so Croatian legal wording renders consistently even if
+	 * WordPress is installed in English. Return false to use English fallback or
+	 * standard WordPress textdomain resolution.
+	 *
+	 * @param bool   $load   Whether to load the Croatian catalog.
+	 * @param string $locale Active locale.
+	 */
+	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', true, $locale );
+
+	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
+		load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
+		return;
+	}
+
+	load_plugin_textdomain( 'sidrena-cijena-eu', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
 }
 add_action( 'plugins_loaded', 'sidrena_cijena_load_textdomain', 5 );
 add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-26T22:24:42+00:00\n"
-"PO-Revision-Date: 2026-09-26T22:24:42+00:00\n"
+"POT-Creation-Date: 2026-09-27T04:40:37+00:00\n"
+"PO-Revision-Date: 2026-09-27T04:40:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -142,6 +142,9 @@ msgstr "30 dana"
 msgid "30-day price warnings"
 msgstr "Upozorenja o 30-dnevnoj cijeni"
 
+msgid "30-day reference price explanation"
+msgstr "Obrazloženje najniže 30-dnevne cijene"
+
 msgid "Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted."
 msgstr "Prihvaćeni stupci: sku ili product_id, variation_id, reference_date, anchor_price te opcionalno category i name. Datumi su Y-m-d ili d.m.Y; decimalni zarezi su prihvaćeni."
 
@@ -262,6 +265,9 @@ msgstr "Primjenjivi proizvodi"
 msgid "Applicable reference date"
 msgstr "Mjerodavni referentni datum"
 
+msgid "A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price."
+msgstr "Prethodni posebni oblik prodaje završio je nedavno unutar 30-dnevnog prozora (završio %1$s, cijena %2$s) i uračunat je u najnižu 30-dnevnu cijenu."
+
 msgid "A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check."
 msgstr "Promocija bez klasificirane vrste prodaje nikada se ne tretira kao poseban oblik prodaje i prijavljuje se provjerom usklađenosti."
 
@@ -330,6 +336,12 @@ msgstr "Skupni unos"
 
 msgid "Bulk setup of anchor price from current catalog price"
 msgstr "Skupno postavljanje sidrene cijene prema trenutnoj cijeni u katalogu"
+
+msgid "Calculation explanation: %1$s (starts %2$s)"
+msgstr "Obrazloženje izračuna: %1$s (početak %2$s)"
+
+msgid "Calculation window (30 days):"
+msgstr "Prozor izračuna (30 dana):"
 
 msgid "Cancel editing"
 msgstr "Odustani od uređivanja"
@@ -448,6 +460,9 @@ msgstr "Prikaz valute"
 msgid "Currency symbol (6,99 EUR)"
 msgstr "Simbol valute (6,99 €)"
 
+msgid "Current 30-day reference baseline (preview for today)"
+msgstr "Trenutačna 30-dnevna referentna polazna točka (pregled za danas)"
+
 msgid "Current price"
 msgstr "Trenutačna cijena"
 
@@ -495,6 +510,12 @@ msgstr "Opis"
 
 msgid "Deselect all"
 msgstr "Poništi odabir"
+
+msgid "determined by record #%1$d, %2$s from %3$s"
+msgstr "određeno zapisom #%1$d, %2$s od %3$s"
+
+msgid "Determining lowest price"
+msgstr "Određuje najnižu cijenu"
 
 msgid "Dismiss"
 msgstr "Odbaci"
@@ -549,6 +570,9 @@ msgstr "Uredi stavku kataloga"
 
 msgid "Edit location"
 msgstr "Uredi lokaciju"
+
+msgid "Effective period"
+msgstr "Razdoblje primjene"
 
 msgid "Enable frontend display"
 msgstr "Omogući prikaz na stranici"
@@ -703,8 +727,14 @@ msgstr "Format"
 msgid "Formats"
 msgstr "Formati"
 
+msgid "for sale starting %s"
+msgstr "za prodaju koja počinje %s"
+
 msgid "FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!"
 msgstr "BESPLATAN AI API poslužitelj, kompatibilan s OpenAI — uključite AI inferenciju u svoje aplikacije i projekte besplatno!"
+
+msgid "Full 30-day price history is available."
+msgstr "Dostupna je potpuna 30-dnevna povijest cijena."
 
 msgid "General reference date"
 msgstr "Opći referentni datum"
@@ -742,6 +772,9 @@ msgstr "Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenj
 msgid "I confirm replacing existing anchor records listed above."
 msgstr "Potvrđujem zamjenu gore navedenih postojećih zapisa sidrenih cijena."
 
+msgid "ID"
+msgstr "ID"
+
 msgid "Identifier"
 msgstr "Oznaka"
 
@@ -769,6 +802,9 @@ msgstr "Uključi u WordPressov sitemap"
 msgid "Info"
 msgstr "Informacija"
 
+msgid "Informed calculation"
+msgstr "Uključeno u izračun"
+
 msgid "Inline, next to the price"
 msgstr "U retku, uz cijenu"
 
@@ -780,6 +816,12 @@ msgstr "Ispisuje status dodatka: broj artikala, sidrenih cijena, lokacija i zadn
 
 msgid "Item"
 msgstr "Stavka"
+
+msgid "Item:"
+msgstr "Stavka:"
+
+msgid "Item identity:"
+msgstr "Identitet stavke:"
 
 msgid "Items"
 msgstr "Stavke"
@@ -907,6 +949,9 @@ msgstr "Zapisi"
 msgid "lowercase"
 msgstr "mala slova"
 
+msgid "Lowest 30-day price label"
+msgstr "Oznaka najniže cijene u zadnjih 30 dana"
+
 msgid "Lowest price in the last 30 days"
 msgstr "Najniža cijena u zadnjih 30 dana"
 
@@ -948,6 +993,9 @@ msgstr "Jednobojno"
 
 msgid "More than one catalog record uses the SKU %s. Price history may be ambiguous."
 msgstr "Više zapisa kataloga koristi SKU %s. Povijest cijena može biti dvosmislena."
+
+msgid "Multiple successive reductions detected. All applicable prices in the 30-day window were evaluated."
+msgstr "Otkriveno je više uzastopnih sniženja. Procijenjene su sve primjenjive cijene u 30-dnevnom prozoru."
 
 msgid "Najniža cijena u zadnjih 30 dana:"
 msgstr "Najniža cijena u zadnjih 30 dana:"
@@ -991,6 +1039,9 @@ msgstr "Sidrena cijena nije evidentirana. Za stavku prvi put ponuđenu nakon %s 
 msgid "No anchor price is recorded for this item (reference date %s)."
 msgstr "Za ovu stavku nije evidentirana sidrena cijena (referentni datum %s)."
 
+msgid "No applicable lowest price could be calculated for this 30-day window."
+msgstr "Za ovaj 30-dnevni prozor nije bilo moguće izračunati primjenjivu najnižu cijenu."
+
 msgid "No archived %1$s price list exists for %2$s."
 msgstr "Ne postoji arhivirani cjenik %1$s za %2$s."
 
@@ -1030,8 +1081,14 @@ msgstr "Nijedan zapis ne odgovara ovim filtrima."
 msgid "none mapped yet"
 msgstr "još nijedan nije mapiran"
 
+msgid "No price history exists in or before the 30-day calculation window (%1$s). A reference price cannot be calculated without historical evidence."
+msgstr "U 30-dnevnom prozoru izračuna (%1$s) niti prije njega ne postoji povijest cijena. Referentna cijena ne može se izračunati bez povijesnih dokaza."
+
 msgid "No price history records match the filter."
 msgstr "Nijedan zapis povijesti cijena ne odgovara filtru."
+
+msgid "No price history records overlapped this calculation window."
+msgstr "Nijedan zapis povijesti cijena ne preklapa ovaj prozor izračuna."
 
 msgid "No price list has been published yet."
 msgstr "Još nije objavljen nijedan cjenik."
@@ -1053,6 +1110,9 @@ msgstr "Za ovu stavku nije evidentiran poseban oblik prodaje."
 
 msgid "Not calculated"
 msgstr "Nije izračunato"
+
+msgid "Not calculated (no applicable price in window)"
+msgstr "Nije izračunato (nema primjenjive cijene u prozoru)"
 
 msgid "Note"
 msgstr "Napomena"
@@ -1093,8 +1153,14 @@ msgstr "Samo odabrane kategorije"
 msgid "Only when the anchor differs"
 msgstr "Samo kada se sidrena cijena razlikuje"
 
+msgid "open"
+msgstr "otvoreno"
+
 msgid "Open documentation & guide"
 msgstr "Otvori dokumentaciju i vodič"
+
+msgid "Open full price history for this item &rarr;"
+msgstr "Otvori punu povijest cijena za ovu stavku &rarr;"
 
 msgid "Open legal rules"
 msgstr "Otvori pravna pravila"
@@ -1201,6 +1267,9 @@ msgstr "Povijest cijena"
 msgid "Price history is append-only. Corrections add a new record that references the original; nothing is overwritten or deleted."
 msgstr "Povijest cijena samo se dopunjuje. Ispravci dodaju novi zapis koji upućuje na izvorni; ništa se ne prebrisuje niti briše."
 
+msgid "Price history is shorter than 30 days (covers %1$d days starting from %2$s). The reference price is calculated from the available history."
+msgstr "Povijest cijena kraća je od 30 dana (pokriva %1$d dana počevši od %2$s). Referentna cijena izračunata je iz dostupne povijesti."
+
 msgid "Price history records"
 msgstr "Zapisi povijesti cijena"
 
@@ -1236,6 +1305,9 @@ msgstr "Primjer: PRODAVAONICA_ILICA-1_POSL-01_1_26092026_0800.csv"
 
 msgid "Product"
 msgstr "Proizvod"
+
+msgid "Product #%1$d (SKU: %2$s) — %3$s"
+msgstr "Proizvod #%1$d (SKU: %2$s) — %3$s"
 
 msgid "Product cards"
 msgstr "Kartice proizvoda"
@@ -1330,6 +1402,12 @@ msgstr "Referentni datumi"
 msgid "Reference dates and legal rules"
 msgstr "Referentni datumi i pravna pravila"
 
+msgid "Reference prices per item:"
+msgstr "Referentne cijene po komadu:"
+
+msgid "Reference price text for this cart item."
+msgstr "Referentni tekst cijene za ovu stavku košarice."
+
 msgid "Referentni datum"
 msgstr "Referentni datum"
 
@@ -1359,6 +1437,9 @@ msgstr "Maloprodajna cijena"
 
 msgid "Retail store (prodavaonica)"
 msgstr "Prodavaonica"
+
+msgid "Role"
+msgstr "Uloga"
 
 msgid "Row"
 msgstr "Redak"
@@ -1419,6 +1500,9 @@ msgstr "Odaberi sve na stranici"
 
 msgid "Select all on this page"
 msgstr "Odaberi sve na ovoj stranici"
+
+msgid "Selected 30-day lowest price:"
+msgstr "Odabrana najniža 30-dnevna cijena:"
 
 msgid "Select the facility form that matches this sales location’s legal/store classification."
 msgstr "Odaberite oblik poslovnog prostora koji odgovara pravnoj/poslovnoj klasifikaciji ovog prodajnog mjesta."
@@ -1573,6 +1657,9 @@ msgstr "Posebne prodaje"
 msgid "Standalone catalog"
 msgstr "Samostalni katalog"
 
+msgid "Standalone item #%1$d (SKU: %2$s) — %3$s"
+msgstr "Zasebna stavka #%1$d (SKU: %2$s) — %3$s"
+
 msgid "Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama."
 msgstr "Standardni referentni datum za sve kategorije koje ne pripadaju posebnim/osjetljivim skupinama."
 
@@ -1723,6 +1810,9 @@ msgstr "Lokacija ima objavljene cjenike pa je deaktivirana umjesto obrisana."
 msgid "The location street address and city are required in the price-list filename."
 msgstr "Ulica i grad prodajnog mjesta obvezni su u nazivu datoteke cjenika."
 
+msgid "The lowest applicable price in the 30-day window (%2$s to %3$s) is %1$s."
+msgstr "Najniža primjenjiva cijena u 30-dnevnom prozoru (%2$s do %3$s) je %1$s."
+
 msgid "The lowest price of the 30 days before the start date is calculated and stored automatically."
 msgstr "Najniža cijena u 30 dana prije datuma početka izračunava se i pohranjuje automatski."
 
@@ -1776,6 +1866,12 @@ msgstr "Referentni datum nedostaje ili nije valjan datum."
 
 msgid "The reference date is not a valid date (YYYY-MM-DD)."
 msgstr "Referentni datum nije valjan datum (GGGG-MM-DD)."
+
+msgid "The reference price is determined by a manual baseline record (#%1$d)."
+msgstr "Referentna cijena određena je ručnim početnim zapisom (#%1$d)."
+
+msgid "The reference price is determined by an imported or seeded baseline record (#%1$d, source: %2$s)."
+msgstr "Referentna cijena određena je uvezenim ili početno unesenim zapisom (#%1$d, izvor: %2$s)."
 
 msgid "There is no record of this type to correct."
 msgstr "Ne postoji zapis ove vrste za ispravak."
@@ -1930,6 +2026,9 @@ msgstr "Upozorenja provjere"
 msgid "variation"
 msgstr "varijacija"
 
+msgid "Variation #%1$d of Product #%2$d (SKU: %3$s) — %4$s"
+msgstr "Varijacija #%1$d proizvoda #%2$d (SKU: %3$s) — %4$s"
+
 msgid "Variation ID"
 msgstr "ID varijacije"
 
@@ -1941,6 +2040,9 @@ msgstr "Važna pravna napomena o nepromjenjivosti dokaza:"
 
 msgid "View price lists"
 msgstr "Pregledaj cjenike"
+
+msgid "View source records (%d found in window)"
+msgstr "Pregled izvornih zapisa (%d pronađeno u prozoru)"
 
 msgid "View the full price history"
 msgstr "Pregledaj cijelu povijest cijena"
@@ -1962,6 +2064,9 @@ msgstr "Kada"
 
 msgid "Will overwrite"
 msgstr "Prebrisat će"
+
+msgid "Window: %1$s to %2$s"
+msgstr "Prozor: %1$s do %2$s"
 
 msgid "WordPress in Europe — premium WordPress hosting, start free."
 msgstr "WordPress u Europi — vrhunski WordPress hosting, započnite besplatno."

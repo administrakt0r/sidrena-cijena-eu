@@ -30,13 +30,13 @@ in `languages/` is restored automatically so the tree stays release-clean;
 real catalogue changes are kept and flagged for commit. The E2E gate refuses to
 run when `WP_BASE_URL` points at port 8888 (the demo shop).
 
-## Current baselines (v1.0.14)
+## Current baselines (v2.0.0)
 
 Compare against these when judging whether a change regressed anything:
 
-* Unit: 306 tests / 1083 assertions · E2E: 28 specs · Integration: 77 tests / 349 assertions.
-* `languages/hr_HR.po`: 632 strings, 0 untranslated.
-* PHPStan level 6, PHPCS and ESLint: clean.
+* Unit: 361 tests / 1296 assertions · E2E: 42 specs · Integration: 96 tests / 454 assertions.
+* `languages/hr_HR.po`: 705 strings, 0 untranslated.
+* PHPStan level 6 (0 errors, 117 files), PHPCS (175 files) and ESLint: clean.
 
 Unit tests use `tests/unit/wp-stubs.php` (WordPress function stubs) and
 never touch a database. Integration tests extend `WP_UnitTestCase`,
@@ -112,7 +112,7 @@ creates the 17 required scenarios as `SEED-*` standalone items: `normal`,
 * Import validation: resolution, normalization, duplicates, overwrite,
   unchanged detection, Croatian dates.
 
-## Quickstart validation (quickstart.md)
+## Quickstart validation
 
 V1 activation/migration · V2 anchors + display · V3 30-day engine ·
 V4 generation · V5 archive/retention · V6 public access · V7 compliance

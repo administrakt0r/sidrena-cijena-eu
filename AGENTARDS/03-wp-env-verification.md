@@ -1,5 +1,7 @@
 # Prompt 3 — Full wp-env verification (needs Docker)
 
+> **Status (v2.0.0):** COMPLETED. Integration suite, E2E suite, and 7-point checklist fully verified.
+
 ```
 You are verifying the plugin in the current directory inside a real WordPress environment.
 Requires Docker, Node 18+, PHP + Composer. If the current shell cannot access the Docker socket,
@@ -14,16 +16,16 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    17 compliance scenarios). Stop with `./stoplocal.sh`.
 2. Isolated testing environment:
    Start the automated test site on port 8889:
-   `npm run wp-env:test -- start`
+   `npx wp-env start`
 3. Integration testing:
    Clean the test database first to ensure clean state:
    `npx wp-env clean tests`
    Then run the integration suite:
    `composer test:integration`
    (or `npx wp-env run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration`)
-   Must pass 100% (76+ tests, 342+ assertions).
+   Must pass 100% (96+ tests, 454+ assertions).
 4. End-to-End testing:
-   Run Playwright tests exclusively against the port 8889 test instance:
+   Run Playwright tests exclusively against the port 8889 test instance (42 specs passing):
    `npm run test:e2e`
    (Do NOT point Playwright at the 8888 demo shop).
 5. 7-point live verification checklist:
@@ -49,6 +51,6 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    - Run all static quality gates (`composer test:unit && composer lint && composer analyse && npm run lint:js`).
    - Package and release per AGENTARDS/README.md (bump version, build zip, verify with unzip -t, commit and push).
 
-Done when: integration suite passes, E2E suite passes on port 8889, all 7 verification steps pass,
+Done when: integration suite passes (96 tests / 454 assertions), E2E suite passes (42 Playwright specs on port 8889), all 7 verification steps pass,
 and any fixes are packaged, committed, and pushed.
 ```

@@ -164,20 +164,14 @@ class SaleRules {
 	}
 
 	/**
-	 * Active special sale for an item, falling back to its parent.
+	 * Active special sale recorded for this exact item.
 	 *
 	 * @param CatalogItem  $item    Item.
 	 * @param array<mixed> $context Validation context.
 	 * @return array<mixed>|null
 	 */
 	protected function sale_for( CatalogItem $item, array $context ) {
-		$sale = null;
-
-		if ( isset( $context['sales'][ $item->key() ] ) ) {
-			$sale = $context['sales'][ $item->key() ];
-		} elseif ( $item->is_variation() && isset( $context['sales'][ $item->id . ':0' ] ) ) {
-			$sale = $context['sales'][ $item->id . ':0' ];
-		}
+		$sale = isset( $context['sales'][ $item->key() ] ) ? $context['sales'][ $item->key() ] : null;
 
 		if ( ! $sale ) {
 			return null;

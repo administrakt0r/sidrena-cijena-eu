@@ -1,5 +1,7 @@
 # Prompt 10 — Prompt-pack drift audit: keep AGENTARDS/ in sync with the codebase (no Docker needed, full gates optional)
 
+> **Status (v2.0.0):** COMPLETED. Drift check executed and synchronized against v2.0.0 release.
+
 ```
 You are the maintainer of the AGENTARDS prompt pack shipped inside this WordPress
 plugin (sidrena-cijena.php is the bootstrap). The files in AGENTARDS/ are executed
@@ -12,7 +14,7 @@ change legal semantics (docs/legal-rules.md), the CSV/XML contracts or the
 filename pattern. Prompt-pack maintenance needs no version bump and no release
 archive; commit atomically (docs:) and push to origin master.
 
-Baseline (v1.0.13): 301 unit tests / 1078 assertions green — keep green, grow the
+Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the
 suite. Treat `tools/verify.sh` output as the source of truth for every number
 (with Docker also `tools/verify.sh --with-integration --with-e2e`). Never invent
 numbers; if a suite could not run, say which one instead of guessing.
@@ -58,7 +60,7 @@ Work items:
    repository still matches what the prompts claim
    (`composer test:unit && composer lint && composer analyse && npm run lint:js`),
    and after any string change regenerate the catalogs
-   (`php tools/i18n/make-pot.php --locale=hr_HR`) and confirm 0 untranslated in
+   (`php tools/i18n/make-pot.php --locale=hr_HR`) and confirm 705 translated strings / 0 untranslated in
    languages/hr_HR.po. Commit atomically (docs:) and push to origin master.
 
 Done when: every path, class, command and number referenced by AGENTARDS/*.md
