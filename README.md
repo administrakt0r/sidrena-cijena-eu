@@ -6,9 +6,9 @@
 
 Besplatan WordPress dodatak za hrvatske trgovce i WooCommerce.
 
-[Glavna stranica](https://sidrenacijena.eu/) · [Demo trgovina](https://wordpress.sidrenacijena.eu/) · [Preuzmi dodatak 2.0.0](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip)
+[Glavna stranica](https://sidrenacijena.eu/) · [Demo trgovina](https://wordpress.sidrenacijena.eu/) · [Preuzmi dodatak 2.0.1](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip)
 
-![Verzija 2.0.0](https://img.shields.io/badge/verzija-2.0.0-1d6b55?style=flat-square)
+![Verzija 2.0.1](https://img.shields.io/badge/verzija-2.0.1-1d6b55?style=flat-square)
 ![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)
 ![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?style=flat-square&logo=php&logoColor=white)
 ![Licenca GPL-2.0-or-later](https://img.shields.io/badge/licenca-GPL--2.0--or--later-1d6b55?style=flat-square)
