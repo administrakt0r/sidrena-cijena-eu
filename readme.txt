@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.10
+Stable tag: 2.0.11
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.11 =
+* Security sweep & capability enforcement: explicitly bound `register_setting` for settings and legal rules to `manage_sidrena_cijena` capability via `Capabilities::capability()`.
+* Quality gates & test suite: added `SettingsPageTest` covering capability verification and tab dispatch, stubbed `register_setting` in unit test stubs; 438 unit tests (1,557 assertions), PHPCS clean across 181 files, PHPStan level 6 (0 errors across 117 files), ESLint clean, and complete Croatian translation catalog (749 translated strings / 0 untranslated).
 
 = 2.0.10 =
 * Static audit & database hardening: prepared queries with modern `%i` table identifier placeholders in `MigrationDetector` across own history table, schema inspection tables, and postmeta queries.

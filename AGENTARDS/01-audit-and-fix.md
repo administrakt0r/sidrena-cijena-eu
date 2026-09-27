@@ -1,6 +1,6 @@
 # Prompt 1 — Audit and fix (no Docker needed)
 
-> **Status (v2.0.10):** COMPLETED. Full static audit pass completed, verified, and shipped.
+> **Status (v2.0.11):** COMPLETED. Full static audit pass completed, verified, and shipped.
 
 ```
 You are maintaining the WordPress plugin in the current directory
@@ -49,5 +49,5 @@ Steps:
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
    - Commit everything including versions/<version>/ and push to origin master.
 
-Done when: unit suite passes (436 unit tests / 1543 assertions), lint exits 0 (PHPCS clean across 180 files), PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0 (ESLint clean in assets/js), translations are complete (749 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built and pushed.
+Done when: unit suite passes (438 unit tests / 1557 assertions), lint exits 0 (PHPCS clean across 181 files), PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0 (ESLint clean in assets/js), translations are complete (749 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built and pushed.
 ```

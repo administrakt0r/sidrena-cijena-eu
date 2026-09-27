@@ -268,4 +268,12 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | SEC-05 | `done` | Static audit & hardening: prepared `MigrationDetector` queries with modern `%i` identifier placeholders; hardened `LowestPriceExplainer` against array-to-string conversion; guaranteed `WC_Product|null` return in `PriceDisplay`; handled `mb_convert_encoding` error in `CsvParser`; guarded `strtotime` parsing before `gmdate`; verified `WP_Filesystem_Base` and `WP_Query` type checks; added complete unit test suite for `MigrationDetector` | `MigrationDetectorTest` (7 tests, 18 assertions); 436 unit tests passing (1,543 assertions); PHPStan Level 7 clean (0 errors); PHPCS clean (180 files); ESLint clean |
 | REL-22 | `done` | Package and verify release 2.0.10 archive | `tools/build-zip.sh 2.0.10` built `versions/2.0.10/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Static audit pass & capability enforcement (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SEC-06 | `done` | Static audit & capability enforcement: explicitly bound `register_setting` calls for plugin settings and legal rules to `manage_sidrena_cijena` capability via `Capabilities::capability()`; added unit test coverage in `SettingsPageTest` covering capability verification and tab routing; added `register_setting` stub in unit stubs | `SettingsPageTest` (2 tests, 9 assertions); 438 unit tests passing (1,557 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (181 files); ESLint clean |
+| REL-23 | `done` | Package and verify release 2.0.11 archive | `tools/build-zip.sh 2.0.11` built `versions/2.0.11/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+
 

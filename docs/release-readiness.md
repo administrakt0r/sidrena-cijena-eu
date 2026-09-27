@@ -1,5 +1,13 @@
 # Release verification
 
+## Release 2.0.11 — Static Audit, Capability Enforcement & Settings Unit Coverage (2026-09-28)
+
+- Full static audit pass per `AGENTARDS/01-audit-and-fix.md` (SEC-06).
+- Security sweep & capability enforcement (`src/Admin/SettingsPage.php`): explicitly configured `'capability' => Capabilities::capability()` on `register_setting` calls for both plugin settings and statutory legal rules, enforcing `manage_sidrena_cijena` capability when updating settings through `options.php`.
+- Test harness & coverage: added `register_setting` stub to `tests/unit/wp-stubs.php` and created `tests/unit/Admin/SettingsPageTest.php` with unit test coverage for capability binding and tab routing.
+- Quality gates: 438 unit tests (1,557 assertions), 0 failures; PHPCS clean across 181 files; PHPStan level 6 clean (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.11/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.11` and verified with `unzip -t`.
+
 ## Release 2.0.10 — Static Audit, Database Hardening & Strict Type Guarding (2026-09-27)
 
 - Full static audit pass per `AGENTARDS/01-audit-and-fix.md` (SEC-05).
