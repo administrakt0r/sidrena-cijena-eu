@@ -172,6 +172,20 @@ class CsvParserEncodingTest extends TestCase {
 	}
 
 	/**
+	 * Paths containing directory traversal inside temp directory are rejected.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_rejects_temp_dir_path_traversal() {
+		$parser = new CsvParser();
+		$result = $parser->parse_file( sys_get_temp_dir() . '/../something.csv' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
+	}
+
+
+	/**
 	 * File inside allowed root parses successfully.
 	 *
 	 * @return void

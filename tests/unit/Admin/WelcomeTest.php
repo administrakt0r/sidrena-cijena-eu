@@ -154,6 +154,26 @@ class WelcomeTest extends TestCase {
 	}
 
 	/**
+	 * REST request suppresses redirect and preserves the flag.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @return void
+	 */
+	public function test_maybe_redirect_guards_against_rest_request() {
+		if ( ! defined( 'REST_REQUEST' ) ) {
+			define( 'REST_REQUEST', true );
+		}
+
+		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
+
+		WelcomeBanner::maybe_redirect();
+
+		$this->assertSame( 1, get_option( WelcomeBanner::REDIRECT_OPTION ) );
+	}
+
+
+	/**
 	 * Setup guide renders steps and author projects.
 	 *
 	 * @return void
