@@ -11,12 +11,11 @@ themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the 
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).
 
-Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
+Baseline (v2.0.8): 422 unit tests / 1511 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
-Status (v2.0.0): work items 1–3 below have shipped as UX-01..UX-03 (see
-docs/improvement-backlog.md and the 1.0.13 entry in docs/release-readiness.md).
-Run this prompt for the remaining items 4–7.
+Status (v2.0.4): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
+passes expanded through UX-13 (see docs/improvement-backlog.md and docs/release-readiness.md).
 
 Work items (priority order — read the listed files first, fix what is really there):
 1. Kill raw slugs in the UI. Statuses, log levels, event names, finding severities, sale
@@ -84,7 +83,7 @@ Work items (priority order — read the listed files first, fix what is really t
    remaining literals (ImportPage's `<th>SKU</th>`, AuditPage's 'true'/'false').
 
 After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
-`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 705 translated strings / 0 untranslated in
+`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 749 translated strings / 0 untranslated in
 languages/hr_HR.po.
 
 Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
