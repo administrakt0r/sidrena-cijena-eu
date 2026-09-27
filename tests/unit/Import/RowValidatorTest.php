@@ -275,6 +275,33 @@ class RowValidatorTest extends TestCase {
 	}
 
 	/**
+	 * Flexible ERP dates (single-digit day/month, slashes, dashes) are normalized to Y-m-d.
+	 *
+	 * @return void
+	 */
+	public function test_flexible_erp_date_formats_are_normalized() {
+		// Single-digit month without trailing dot: 10.9.2026.
+		$r1 = $this->validate( "sku;reference_date;anchor_price\nCAJ-100;10.9.2026;5,00\n" );
+		$this->assertSame( '2026-09-10', $r1['rows'][0]['values']['reference_date'] );
+		$this->assertSame( 'valid', $r1['rows'][0]['status'] );
+
+		// Single-digit day and month: 2.5.2025.
+		$r2 = $this->validate( "sku;reference_date;anchor_price\nCAJ-100;2.5.2025;5,00\n" );
+		$this->assertSame( '2025-05-02', $r2['rows'][0]['values']['reference_date'] );
+		$this->assertSame( 'valid', $r2['rows'][0]['status'] );
+
+		// Slash formatted: 10/09/2026.
+		$r3 = $this->validate( "sku;reference_date;anchor_price\nCAJ-100;10/09/2026;5,00\n" );
+		$this->assertSame( '2026-09-10', $r3['rows'][0]['values']['reference_date'] );
+		$this->assertSame( 'valid', $r3['rows'][0]['status'] );
+
+		// Dash formatted: 10-09-2026.
+		$r4 = $this->validate( "sku;reference_date;anchor_price\nCAJ-100;10-09-2026;5,00\n" );
+		$this->assertSame( '2026-09-10', $r4['rows'][0]['values']['reference_date'] );
+		$this->assertSame( 'valid', $r4['rows'][0]['status'] );
+	}
+
+	/**
 	 * Unknown products are invalid.
 	 *
 	 * @return void

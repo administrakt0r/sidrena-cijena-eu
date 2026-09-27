@@ -220,7 +220,7 @@ class SpecialSaleMetaBox {
 
 				<p>
 					<label for="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Promotional price', 'sidrena-cijena-eu' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>" name="promo_price<?php echo esc_attr( $field_suffix ); ?>" class="widefat" inputmode="decimal" />
+					<input type="text" id="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>" name="promo_price<?php echo esc_attr( $field_suffix ); ?>" class="widefat" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 14.99', 'sidrena-cijena-eu' ); ?>" />
 					<span class="description"><?php echo esc_html__( 'Enter the actual selling price during this promotion, using a decimal comma or point.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 

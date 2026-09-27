@@ -273,6 +273,9 @@ final class RowValidator {
 	/**
 	 * Normalize a date value to Y-m-d.
 	 *
+	 * Handles ISO 8601 (Y-m-d), Croatian dot notation (d.m.Y, j.n.Y with optional trailing dot),
+	 * slash notation (d/m/Y, j/n/Y, Y/m/d), and dash notation (d-m-Y, j-n-Y).
+	 *
 	 * @param string $value Raw value.
 	 * @return string
 	 */
@@ -287,10 +290,15 @@ final class RowValidator {
 			return $value;
 		}
 
-		$parsed = \DateTimeImmutable::createFromFormat( '!d.m.Y', $value );
-
-		if ( $parsed && $parsed->format( 'd.m.Y' ) === $value ) {
-			return $parsed->format( 'Y-m-d' );
+		$formats = array( '!d.m.Y', '!j.n.Y', '!d/m/Y', '!j/n/Y', '!d-m-Y', '!j-n-Y', '!Y/m/d' );
+		foreach ( $formats as $format ) {
+			$parsed = \DateTimeImmutable::createFromFormat( $format, $value );
+			if ( $parsed ) {
+				$check_format = ltrim( $format, '!' );
+				if ( $parsed->format( $check_format ) === $value ) {
+					return $parsed->format( 'Y-m-d' );
+				}
+			}
 		}
 
 		return '';

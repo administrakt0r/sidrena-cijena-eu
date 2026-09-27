@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.5 =
+* Lifecycle cleanup: opt-in uninstall cleanup now purges all plugin transients from options while strictly preserving the append-only anchor and 30-day legal evidence; plugin deactivation clears catch-up locks while retaining all data.
+* Feed corruption protection: public XML and CSV feeds verify publication file readability, non-empty size, and SHA-256 checksums before serving, triggering automatic 503 recovery and queuing clean background rebuilds on file tampering or corruption.
+* Resilient CSV date parsing: CSV import row validation now seamlessly normalizes common ERP date variations (including single-digit days/months, slashes, dashes, and trailing dots) into canonical Y-m-d.
+* Admin forms and ergonomics: added clear format hints and placeholders across store locations, price history corrections, and product edit panels, and added decimal inputmode for mobile entry.
+* Security and quality gates: added regression coverage for unauthorized admin-post execution across all plugin handlers; 400 unit tests (1,444 assertions) green, clean PHPCS, clean PHPStan level 6, clean ESLint, and 100% complete Croatian translations (749 translated strings, 0 untranslated).
 
 = 2.0.4 =
 * Public archive pagination: add pagination support, "showing X–Y of Z published price lists" count, and [sidrena-arhiva] paged parameter support to public price-list archive.

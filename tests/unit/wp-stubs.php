@@ -761,6 +761,81 @@ if ( ! function_exists( 'wp_normalize_path' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_posts' ) ) {
+	/**
+	 * Post query stub.
+	 *
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	function get_posts( $args = array() ) {
+		unset( $args );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'wp_delete_post' ) ) {
+	/**
+	 * Delete post stub.
+	 *
+	 * @param int  $post_id      Post ID.
+	 * @param bool $force_delete Force delete.
+	 * @return bool
+	 */
+	function wp_delete_post( $post_id = 0, $force_delete = false ) {
+		unset( $post_id, $force_delete );
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_delete_term' ) ) {
+	/**
+	 * Delete term stub.
+	 *
+	 * @param int    $term_id  Term ID.
+	 * @param string $taxonomy Taxonomy.
+	 * @param array  $args     Arguments.
+	 * @return bool
+	 */
+	function wp_delete_term( $term_id, $taxonomy, $args = array() ) {
+		unset( $term_id, $taxonomy, $args );
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'get_terms' ) ) {
+	/**
+	 * Get terms stub.
+	 *
+	 * @param array $args Arguments.
+	 * @return array
+	 */
+	function get_terms( $args = array() ) {
+		unset( $args );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'wp_die' ) ) {
+	/**
+	 * wp_die stub.
+	 *
+	 * @param string|mixed $message Error message.
+	 * @param string|int   $title   Title or HTTP response code.
+	 * @param array        $args    Arguments.
+	 * @throws \RuntimeException Always thrown for unit test assertions.
+	 * @return void
+	 */
+	function wp_die( $message = '', $title = '', $args = array() ) {
+		$code = is_int( $title ) ? $title : ( is_array( $args ) && isset( $args['response'] ) ? (int) $args['response'] : 500 );
+		throw new \RuntimeException( is_scalar( $message ) ? (string) $message : 'wp_die', $code );
+	}
+}
+
 if ( ! function_exists( 'trailingslashit' ) ) {
 	/**
 	 * Trailing slash stub.

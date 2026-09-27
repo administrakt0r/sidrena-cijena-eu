@@ -765,4 +765,14 @@ return array (
   'Dostupni su unaprijed definirani stilovi: interaktivni tooltip s ikonom (?), minimalistički, bedž, kartica, obrub, meka pozadina, monokromatski, pilula, oznaka, naglašena traka i suptilni prikaz. U postavkama možete odabrati i način prikaza datuma (tooltip, u retku, podtekst ili skriveno) te debljinu fonta.' => 'Dostupni su unaprijed definirani stilovi: interaktivni tooltip s ikonom (?), minimalistički, bedž, kartica, obrub, meka pozadina, monokromatski, pilula, oznaka, naglašena traka i suptilni prikaz. U postavkama možete odabrati i način prikaza datuma (tooltip, u retku, podtekst ili skriveno) te debljinu fonta.',
   'Prilagođava tekst oznake najniže 30-dnevne cijene po artiklu i kontekstu prikaza.' => 'Prilagođava tekst oznake najniže 30-dnevne cijene po artiklu i kontekstu prikaza.',
   'Prilagođava tekst poveznice na arhivu cjenika u podnožju stranice.' => 'Prilagođava tekst poveznice na arhivu cjenika u podnožju stranice.',
+  'e.g. Vlaška 68' => 'npr. Vlaška 68',
+  'e.g. Zagreb' => 'npr. Zagreb',
+  'e.g. P1, W1' => 'npr. P1, W1',
+  'Required internal store/outlet code, unique across locations and used in the filename (e.g. P1, P2, W1).' => 'Obavezna interna oznaka trgovine/poslovnice, jedinstvena među lokacijama i korištena u nazivu datoteke (npr. P1, P2, W1).',
+  'e.g. 19.99' => 'npr. 19,99',
+  'e.g. 14.99' => 'npr. 14,99',
+  'The WooCommerce product ID or standalone item ID from your catalog.' => 'WooCommerce ID proizvoda ili ID samostalne stavke iz vašeg kataloga.',
+  'Optional WooCommerce variation ID. Leave blank or 0 for simple products and services.' => 'Opcionalni WooCommerce ID varijacije. Ostavite prazno ili 0 za jednostavne proizvode i usluge.',
+  'Enter the verified price using a decimal point or comma (e.g. 19.99 or 19,99).' => 'Unesite provjereni iznos cijene koristeći točku ili zarez (npr. 19.99 ili 19,99).',
 );
+

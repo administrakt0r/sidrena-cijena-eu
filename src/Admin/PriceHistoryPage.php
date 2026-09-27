@@ -250,10 +250,12 @@ class PriceHistoryPage {
 		echo '<table class="form-table" role="presentation"><tbody>';
 		echo '<tr><th scope="row"><label for="sidrena-history-product">' . esc_html__( 'Product ID', 'sidrena-cijena-eu' ) . '</label></th>';
 		echo '<td><input type="number" id="sidrena-history-product" name="product_id" min="1" required value="' . esc_attr( $product ) . '"' . FormState::error_attributes( $errors, 'product_id', 'sidrena-history-product' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'The WooCommerce product ID or standalone item ID from your catalog.', 'sidrena-cijena-eu' ) . '</p>';
 		FormState::render_error( $errors, 'product_id', 'sidrena-history-product' );
 		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-variation">' . esc_html__( 'Variation ID', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="number" id="sidrena-history-variation" name="variation_id" min="0" value="' . esc_attr( $variation ) . '" /></td></tr>';
+		echo '<td><input type="number" id="sidrena-history-variation" name="variation_id" min="0" value="' . esc_attr( $variation ) . '" />';
+		echo '<p class="description">' . esc_html__( 'Optional WooCommerce variation ID. Leave blank or 0 for simple products and services.', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-type">' . esc_html__( 'Price type', 'sidrena-cijena-eu' ) . '</label></th><td><select id="sidrena-history-type" name="price_type"' . FormState::error_attributes( $errors, 'price_type', 'sidrena-history-type' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
 
 		foreach ( array( 'anchor', 'regular', 'sale' ) as $option ) {
@@ -264,7 +266,8 @@ class PriceHistoryPage {
 		FormState::render_error( $errors, 'price_type', 'sidrena-history-type' );
 		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-price">' . esc_html__( 'New price', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="text" id="sidrena-history-price" name="price" required value="' . esc_attr( $price ) . '"' . FormState::error_attributes( $errors, 'price', 'sidrena-history-price' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<td><input type="text" id="sidrena-history-price" name="price" required inputmode="decimal" placeholder="' . esc_attr__( 'e.g. 19.99', 'sidrena-cijena-eu' ) . '" value="' . esc_attr( $price ) . '"' . FormState::error_attributes( $errors, 'price', 'sidrena-history-price' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'Enter the verified price using a decimal point or comma (e.g. 19.99 or 19,99).', 'sidrena-cijena-eu' ) . '</p>';
 		FormState::render_error( $errors, 'price', 'sidrena-history-price' );
 		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-reference">' . esc_html__( 'Reference date', 'sidrena-cijena-eu' ) . '</label></th>';

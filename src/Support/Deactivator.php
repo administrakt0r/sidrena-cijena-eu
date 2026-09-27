@@ -26,6 +26,8 @@ final class Deactivator {
 	public static function deactivate() {
 		Scheduler::unschedule_all();
 
+		delete_transient( Scheduler::CATCHUP_LOCK );
+
 		flush_rewrite_rules();
 
 		/**

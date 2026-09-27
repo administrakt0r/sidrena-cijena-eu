@@ -92,13 +92,14 @@ final class Uninstaller {
 			return $summary;
 		}
 
-		$summary['deleted']   = true;
-		$summary['pruned']    = self::prune_price_history();
-		$summary['tables']    = self::drop_tables();
-		$summary['preserved'] = array( self::history_table() );
-		$summary['options']   = self::delete_options();
-		$summary['posts']     = self::delete_standalone_items();
-		$summary['files']     = self::delete_publication_files();
+		$summary['deleted']    = true;
+		$summary['pruned']     = self::prune_price_history();
+		$summary['tables']     = self::drop_tables();
+		$summary['preserved']  = array( self::history_table() );
+		$summary['options']    = self::delete_options();
+		$summary['transients'] = self::delete_transients();
+		$summary['posts']      = self::delete_standalone_items();
+		$summary['files']      = self::delete_publication_files();
 
 		return $summary;
 	}
@@ -169,6 +170,21 @@ final class Uninstaller {
 		}
 
 		return self::$options;
+	}
+
+	/**
+	 * Delete plugin transients from the options table.
+	 *
+	 * @return int Number of transient options deleted.
+	 */
+	public static function delete_transients() {
+		global $wpdb;
+
+		$table = ! empty( $wpdb->options ) ? $wpdb->options : $wpdb->prefix . 'options';
+
+		// Table name is built from the trusted options table property or WordPress prefix.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return (int) $wpdb->query( "DELETE FROM `{$table}` WHERE option_name LIKE '_transient_sidrena_%' OR option_name LIKE '_transient_timeout_sidrena_%'" );
 	}
 
 	/**

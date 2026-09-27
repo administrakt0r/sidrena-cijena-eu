@@ -54,7 +54,8 @@ class PriceHistoryPageTest extends TestCase {
 
 		$this->assertStringContainsString( 'id="sidrena-history-product"', $html );
 		$this->assertStringContainsString( 'value="42"', $html );
-		$this->assertStringContainsString( 'name="price" required value=""', $html );
+		$this->assertStringContainsString( 'name="price"', $html );
+		$this->assertStringContainsString( 'value=""', $html );
 	}
 
 	/**

@@ -218,7 +218,7 @@ final class AnchorMetaBox {
 
 			<p>
 				<label for="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena-eu' ); ?></label>
-				<input type="text" class="regular-text" id="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>" name="anchor_price<?php echo esc_attr( $field_suffix ); ?>"
+				<input type="text" class="regular-text" id="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>" name="anchor_price<?php echo esc_attr( $field_suffix ); ?>" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 19.99', 'sidrena-cijena-eu' ); ?>"
 					value="<?php echo $status['anchor'] && null !== $status['anchor']['price'] ? esc_attr( (string) $status['anchor']['price'] ) : ''; ?>" />
 				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena-eu' ); ?></span>
 			</p>

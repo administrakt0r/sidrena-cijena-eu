@@ -92,4 +92,35 @@ class UninstallerTest extends TestCase {
 		$this->assertContains( 'sidrena_cijena_setup_complete', $options );
 		$this->assertContains( 'sidrena_cijena_delete_data_on_uninstall', $options );
 	}
+
+	/**
+	 * Verify delete_transients runs query against the options table.
+	 *
+	 * @return void
+	 */
+	public function test_delete_transients_executes_cleanup_query() {
+		$deleted = Uninstaller::delete_transients();
+
+		$this->assertIsInt( $deleted );
+	}
+
+	/**
+	 * Verify run executes full cleanup when opt-in is enabled, preserving evidence tables.
+	 *
+	 * @return void
+	 */
+	public function test_run_when_enabled_prunes_history_and_preserves_evidence_tables() {
+		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => true ) ) );
+
+		$summary = Uninstaller::run();
+
+		$this->assertTrue( $summary['deleted'] );
+		$this->assertArrayHasKey( 'pruned', $summary );
+		$this->assertArrayHasKey( 'transients', $summary );
+		$this->assertContains( 'wp_sidrena_price_history', $summary['preserved'] );
+		$this->assertContains( 'wp_sidrena_special_sales', $summary['tables'] );
+		$this->assertContains( 'wp_sidrena_locations', $summary['tables'] );
+		$this->assertContains( 'wp_sidrena_publications', $summary['tables'] );
+		$this->assertContains( 'wp_sidrena_logs', $summary['tables'] );
+	}
 }

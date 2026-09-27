@@ -314,7 +314,7 @@ class PublicFeedTest extends TestCase {
 		$publications->latest_row = array(
 			'path'     => $file,
 			'filename' => 'list.xml',
-			'checksum' => 'abc123',
+			'checksum' => hash( 'sha256', '<price-list/>' ),
 		);
 		PluginSwap::swap( 'publications', $publications );
 
@@ -369,6 +369,90 @@ class PublicFeedTest extends TestCase {
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
+
+		$this->assertSame( array(), $probe->sent );
+		$this->assertSame( 1, $probe->missing );
+	}
+
+	/**
+	 * Verify is_valid_published_file rejects empty or corrupt files.
+	 *
+	 * @return void
+	 */
+	public function test_is_valid_published_file_rejects_empty_or_corrupt_files() {
+		$feed = new PublicFeed();
+
+		// Non-existent path.
+		$this->assertFalse(
+			$feed->is_valid_published_file(
+				array(
+					'path' => '/nonexistent/file.csv',
+				)
+			)
+		);
+
+		// Empty (0-byte) file.
+		$tmp_empty = tempnam( sys_get_temp_dir(), 'feed_empty_' );
+		$this->assertFalse(
+			$feed->is_valid_published_file(
+				array(
+					'path'     => $tmp_empty,
+					'checksum' => 'fake',
+				)
+			)
+		);
+		unlink( $tmp_empty );
+
+		// Checksum mismatch.
+		$tmp_corrupt = tempnam( sys_get_temp_dir(), 'feed_corrupt_' );
+		file_put_contents( $tmp_corrupt, 'corrupt content' );
+		$this->assertFalse(
+			$feed->is_valid_published_file(
+				array(
+					'path'     => $tmp_corrupt,
+					'checksum' => 'different_checksum',
+				)
+			)
+		);
+
+		// Valid file with correct checksum.
+		$valid_checksum = hash( 'sha256', 'corrupt content' );
+		$this->assertTrue(
+			$feed->is_valid_published_file(
+				array(
+					'path'     => $tmp_corrupt,
+					'checksum' => $valid_checksum,
+				)
+			)
+		);
+		unlink( $tmp_corrupt );
+	}
+
+	/**
+	 * Checksum mismatch causes serve to report missing and queue rebuild.
+	 *
+	 * @return void
+	 */
+	public function test_serve_reports_missing_on_checksum_mismatch() {
+		$this->reset_state();
+
+		$tmp = tempnam( sys_get_temp_dir(), 'feed_mismatch_' );
+		file_put_contents( $tmp, 'tampered content' );
+
+		$publications             = new FeedPublicationFake();
+		$publications->latest_row = array(
+			'path'     => $tmp,
+			'filename' => 'list.csv',
+			'checksum' => 'expected_sha256_hash_that_does_not_match',
+		);
+		PluginSwap::swap( 'publications', $publications );
+
+		$GLOBALS['sidrena_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'csv' );
+
+		$probe = new PublicFeedProbe();
+		$probe->serve();
+
+		unlink( $tmp );
 
 		$this->assertSame( array(), $probe->sent );
 		$this->assertSame( 1, $probe->missing );

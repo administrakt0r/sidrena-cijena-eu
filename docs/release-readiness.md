@@ -1,5 +1,16 @@
 # Release verification
 
+## Release 2.0.5 — Robustness, Lifecycle Cleanup & Compatibility Pass (2026-09-27)
+
+- General improvement pass per `AGENTARDS/04-improve.md` (ROB-01..ROB-03).
+- Lifecycle cleanup & transient hygiene (`src/Support/Uninstaller.php`, `src/Support/Deactivator.php`): opt-in uninstall cleanup now removes all plugin transients from `wp_options` (`_transient_sidrena_%` and `_transient_timeout_sidrena_%`) while strictly preserving append-only anchor and 30-day legal evidence in `wp_sidrena_price_history`; plugin deactivation removes active catch-up locks while retaining all data.
+- Public feed corruption protection (`src/Api/PublicFeed.php`): public XML and CSV feeds verify publication file readability, non-empty size (>0 bytes), and match SHA-256 checksums before serving, triggering automatic 503 recovery and queuing clean background rebuilds on file tampering or corruption.
+- Resilient CSV date parsing (`src/Import/RowValidator.php`): enhanced `normalize_date()` to seamlessly parse common ERP date variations (including single-digit days/months like `10.9.2026`, `1.5.2025`, slashes `10/09/2026`, dashes `10-09-2026`, and trailing dots `10.09.2026.`), normalizing accurately to canonical `Y-m-d`.
+- Admin forms UX & decimal input ergonomics (`src/Admin/LocationsPage.php`, `src/Admin/AnchorMetaBox.php`, `src/Admin/SpecialSaleMetaBox.php`, `src/Admin/PriceHistoryPage.php`): added clear format hints and placeholders for addresses (`e.g. Vlaška 68`), cities (`e.g. Zagreb`), facility identifiers (`e.g. P1, W1`), and price inputs, with decimal `inputmode` on mobile/tablets.
+- Security sweep & regression tests (`tests/unit/Admin/AdminPostCapabilityTest.php`): added regression tests for unauthorized admin-post execution across all plugin handlers (`AnchorMetaBox`, `SpecialSaleMetaBox`, `PriceHistoryPage`, `LocationsPage`, `PublicationsPage`, `BulkAnchorEntryPage`, `SetupGuidePage`).
+- Quality gates: 400 unit tests (1,444 assertions), 0 failures; PHPCS clean across 177 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.5/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.5` and verified with `unzip -t`.
+
 ## Release 2.0.4 — Public Archive Pagination, Compliance Findings Pagination & Editor Formatting Pass (2026-09-27)
 
 - UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (UX-13).

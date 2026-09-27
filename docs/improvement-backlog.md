@@ -217,4 +217,14 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | UX-13 | `done` | Public archive pagination & counts, compliance report table pagination (50 items/page), WooCommerce editor Croatian date formatting (`d.m.Y.`), legal settings boolean string formatting, publications dismissible notice, and documentation expansion | 384 unit tests (1,393 assertions) green; PHPCS/PHPStan/ESLint clean; 741 translated Croatian strings with 0 untranslated |
 | REL-16 | `done` | Package and verify release 2.0.4 archive | `tools/build-zip.sh 2.0.4` built `versions/2.0.4/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Robustness, lifecycle cleanup and compatibility pass (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| ROB-01 | `done` | Lifecycle cleanup & transient hygiene: opt-in uninstall cleanup now purges all plugin transients from options (`_transient_sidrena_%` and `_transient_timeout_sidrena_%`) while strictly preserving append-only anchor and 30-day legal evidence; plugin deactivation clears catch-up locks while retaining all data (IMP-09) | `UninstallerTest::test_delete_transients_executes_cleanup_query`, `test_run_when_enabled_prunes_history_and_preserves_evidence_tables`, and `DeactivatorTest` |
+| ROB-02 | `done` | Feed corruption protection & resilient ERP parsing: public XML/CSV feeds verify publication file readability, non-empty size, and SHA-256 checksums before serving, queuing clean background rebuilds on corrupt/empty files; CSV import row validation now seamlessly normalizes common ERP date variations (single-digit day/month, slashes, dashes, trailing dots) | `PublicFeedTest::test_is_valid_published_file_rejects_empty_or_corrupt_files`, `test_serve_reports_missing_on_checksum_mismatch`, and `RowValidatorTest::test_flexible_erp_date_formats_are_normalized` |
+| ROB-03 | `done` | Admin forms UX & permission-denied sweep: added format hints and placeholders across store locations, price history corrections, and product edit panels; added decimal `inputmode` for mobile entry; added security regression coverage for unauthorized admin-post execution across all plugin handlers | `AdminPostCapabilityTest` (10 tests, 20 assertions covering all plugin handlers); all four static gates green; 749 Croatian strings with 0 untranslated |
+| REL-17 | `done` | Package and verify release 2.0.5 archive | `tools/build-zip.sh 2.0.5` built `versions/2.0.5/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+
 

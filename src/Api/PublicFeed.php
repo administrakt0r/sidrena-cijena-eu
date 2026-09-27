@@ -168,13 +168,58 @@ class PublicFeed {
 		$location = self::public_location();
 		$row      = $location ? $this->current_file( (int) $location['id'], $format ) : null;
 
-		if ( $row && is_readable( $row['path'] ) ) {
+		if ( $row && $this->is_valid_published_file( $row ) ) {
 			$this->send_file( $row, $format );
 
 			return;
 		}
 
 		$this->serve_missing();
+	}
+
+	/**
+	 * Verify that a published file exists, is readable, non-empty, and matches its recorded checksum.
+	 *
+	 * Corrupt or truncated files are rejected so the visitor or ministry receives
+	 * a 503 while a clean file is regenerated, rather than malformed data.
+	 *
+	 * @param array<mixed> $row Publication row.
+	 * @return bool
+	 */
+	public function is_valid_published_file( array $row ) {
+		if ( empty( $row['path'] ) || ! is_string( $row['path'] ) || ! is_readable( $row['path'] ) ) {
+			return false;
+		}
+
+		$size = filesize( $row['path'] );
+		if ( false === $size || $size <= 0 ) {
+			Logger::warning(
+				'public_feed_corrupt_file',
+				'The published price list file is empty or unreadable.',
+				array( 'path' => $row['path'] )
+			);
+
+			return false;
+		}
+
+		if ( ! empty( $row['checksum'] ) && is_string( $row['checksum'] ) ) {
+			$actual = hash_file( 'sha256', $row['path'] );
+			if ( false === $actual || ! hash_equals( (string) $row['checksum'], $actual ) ) {
+				Logger::warning(
+					'public_feed_checksum_mismatch',
+					'The published price list file checksum did not match the recorded publication evidence.',
+					array(
+						'path'              => $row['path'],
+						'recorded_checksum' => $row['checksum'],
+						'actual_checksum'   => $actual,
+					)
+				);
+
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

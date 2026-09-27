@@ -1,6 +1,6 @@
 # Prompt 4 — General improvement pass (no Docker needed)
 
-> **Status (v2.0.0):** COMPLETED. Robustness, WooCommerce product editor, styling, and compatibility improvements shipped.
+> **Status (v2.0.5):** COMPLETED. Robustness, lifecycle cleanup, ERP date resilience, feed corruption recovery, and admin ergonomics shipped.
 
 ```
 You are improving the WordPress plugin in the current directory (sidrena-cijena.php is

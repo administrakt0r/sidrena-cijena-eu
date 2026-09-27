@@ -134,16 +134,16 @@ class LocationsPage {
 		echo '</select><p class="description">' . esc_html__( 'Select the facility form that matches this sales location’s legal/store classification.', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-address">' . esc_html__( 'Address', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $address ) . '" />';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-address" name="address" value="' . esc_attr( $address ) . '" placeholder="' . esc_attr__( 'e.g. Vlaška 68', 'sidrena-cijena-eu' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Enter the official street address and house number; this is used in the generated price-list filename.', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-city">' . esc_html__( 'City', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $city ) . '" />';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-city" name="city" value="' . esc_attr( $city ) . '" placeholder="' . esc_attr__( 'e.g. Zagreb', 'sidrena-cijena-eu' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'Enter the city name as it should appear in the published filename.', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-identifier">' . esc_html__( 'Facility identifier', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $identifier ) . '"' . FormState::error_attributes( $errors, 'identifier', 'sidrena-location-identifier' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
-		echo '<p class="description">' . esc_html__( 'Required, unique across locations and used in the filename.', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-identifier" name="identifier" required value="' . esc_attr( $identifier ) . '" placeholder="' . esc_attr__( 'e.g. P1, W1', 'sidrena-cijena-eu' ) . '"' . FormState::error_attributes( $errors, 'identifier', 'sidrena-location-identifier' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<p class="description">' . esc_html__( 'Required internal store/outlet code, unique across locations and used in the filename (e.g. P1, P2, W1).', 'sidrena-cijena-eu' ) . '</p>';
 		FormState::render_error( $errors, 'identifier', 'sidrena-location-identifier' );
 		echo '</td></tr>';
 
