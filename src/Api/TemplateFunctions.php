@@ -192,7 +192,7 @@ final class TemplateFunctions {
 
 		$display_label = null !== $label && '' !== $label
 			? (string) $label
-			: (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
 
 		/**
 		 * Filters the 30-day lowest price display label.

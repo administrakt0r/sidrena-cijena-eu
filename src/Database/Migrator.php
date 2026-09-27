@@ -55,6 +55,10 @@ final class Migrator {
 		Schema::create_tables();
 		update_option( self::OPTION, $to, false );
 
+		if ( function_exists( 'flush_rewrite_rules' ) ) {
+			flush_rewrite_rules( false );
+		}
+
 		/**
 		 * Fires after the schema has been migrated.
 		 *

@@ -431,4 +431,60 @@ class PublicFeedTest extends TestCase {
 		$probe->queue_now();
 		$this->assertCount( 2, $GLOBALS['sidrena_test_scheduled'] );
 	}
+
+	/**
+	 * Fallback route matching resolves XML and CSV feeds when rewrites are unflushed.
+	 *
+	 * @return void
+	 */
+	public function test_parse_request_fallback_matches_xml_and_csv() {
+		$this->reset_state();
+		$feed = new PublicFeed();
+
+		// 1. Matched from wp->request for XML.
+		$wp             = new \stdClass();
+		$wp->request    = PublicFeed::STEM . '.xml';
+		$wp->query_vars = array( 'error' => '404' );
+		$feed->parse_request_fallback( $wp );
+		$this->assertSame( 'xml', $wp->query_vars[ PublicFeed::QUERY_VAR ] );
+		$this->assertArrayNotHasKey( 'error', $wp->query_vars );
+
+		// 2. Matched from wp->request for CSV.
+		$wp             = new \stdClass();
+		$wp->request    = PublicFeed::STEM . '.csv';
+		$wp->query_vars = array( 'error' => '404' );
+		$feed->parse_request_fallback( $wp );
+		$this->assertSame( 'csv', $wp->query_vars[ PublicFeed::QUERY_VAR ] );
+		$this->assertArrayNotHasKey( 'error', $wp->query_vars );
+
+		// 3. Matched from REQUEST_URI when wp->request is empty.
+		$wp                     = new \stdClass();
+		$wp->request            = '';
+		$wp->query_vars         = array( 'error' => '404' );
+		$_SERVER['REQUEST_URI'] = '/' . PublicFeed::STEM . '.xml';
+		$feed->parse_request_fallback( $wp );
+		$this->assertSame( 'xml', $wp->query_vars[ PublicFeed::QUERY_VAR ] );
+		$this->assertArrayNotHasKey( 'error', $wp->query_vars );
+
+		unset( $_SERVER['REQUEST_URI'] );
+	}
+
+	/**
+	 * Method add_rewrites self-heals by flushing rewrite rules when the feed XML rule is missing.
+	 *
+	 * @return void
+	 */
+	public function test_add_rewrites_self_heals_when_rule_missing() {
+		$this->reset_state();
+		$feed = new PublicFeed();
+
+		$GLOBALS['sidrena_test_options']['rewrite_rules'] = array(
+			'^some-other-slug/?$' => 'index.php?page=other',
+		);
+		$GLOBALS['sidrena_test_flushed_rules']            = 0;
+
+		$feed->add_rewrites();
+
+		$this->assertGreaterThan( 0, $GLOBALS['sidrena_test_flushed_rules'] );
+	}
 }

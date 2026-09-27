@@ -74,10 +74,169 @@
 .sidrena-cijena--style-outline,
 .sidrena-cijena--style-soft,
 .sidrena-cijena--style-mono,
-.sidrena-cijena--style-pill {
+.sidrena-cijena--style-pill,
+.sidrena-cijena--style-tooltip,
+.sidrena-cijena--style-tag {
 	box-sizing: border-box;
 	padding: 0.12em 0.38em;
 	border-radius: 3px;
+}
+
+.sidrena-cijena--style-tooltip {
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	color: #1d2327;
+}
+
+.sidrena-cijena--style-minimal {
+	border: none;
+	background: transparent;
+	padding: 0;
+}
+
+.sidrena-cijena--style-tag {
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1e40af;
+}
+
+.sidrena-cijena--style-accent {
+	border-left: 3px solid #2271b1;
+	padding-left: 0.45em;
+	background: #f8f9fa;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	border-radius: 0 3px 3px 0;
+}
+
+.sidrena-cijena--style-subtle {
+	color: #646970;
+	font-size: 0.92em;
+}
+
+.sidrena-cijena--style-subtle .sidrena-cijena__label {
+	color: #787c82;
+}
+
+.sidrena-cijena--weight-semibold .sidrena-cijena__anchor-value {
+	font-weight: 600;
+}
+
+.sidrena-cijena--weight-bold .sidrena-cijena__anchor-value {
+	font-weight: 700;
+}
+
+/* Tooltip popup styling */
+.sidrena-cijena__tooltip-wrap {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 0.2em;
+}
+
+.sidrena-cijena__help-trigger {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4em;
+	height: 1.4em;
+	font-size: 0.85em;
+	font-weight: 700;
+	line-height: 1;
+	border-radius: 50%;
+	background: #f0f0f1;
+	color: #2271b1;
+	border: 1px solid #c3c4c7;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+	vertical-align: middle;
+	text-decoration: none;
+	padding: 0;
+}
+
+.sidrena-cijena__help-trigger:hover,
+.sidrena-cijena__help-trigger:focus-visible,
+.sidrena-cijena__help-trigger[aria-expanded="true"] {
+	background: #2271b1;
+	color: #fff;
+	border-color: #2271b1;
+	outline: none;
+}
+
+.sidrena-cijena__tooltip-popup {
+	display: none;
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 50%;
+	transform: translateX(-50%);
+	min-width: 190px;
+	max-width: 280px;
+	width: max-content;
+	padding: 8px 10px;
+	background: #fff;
+	color: #1d2327;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.35;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	z-index: 99999;
+	text-align: left;
+	pointer-events: auto;
+	white-space: normal;
+}
+
+.sidrena-cijena__tooltip-popup::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #fff transparent transparent transparent;
+}
+
+.sidrena-cijena__tooltip-popup::before {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -6px;
+	border-width: 6px;
+	border-style: solid;
+	border-color: #c3c4c7 transparent transparent transparent;
+}
+
+.sidrena-cijena__tooltip-popup.is-active,
+.sidrena-cijena__tooltip-wrap:hover .sidrena-cijena__tooltip-popup,
+.sidrena-cijena__tooltip-wrap:focus-within .sidrena-cijena__tooltip-popup {
+	display: block;
+}
+
+.sidrena-cijena__tooltip-text {
+	display: block;
+	margin-bottom: 4px;
+	color: #2c3338;
+}
+
+.sidrena-cijena__tooltip-date {
+	display: block;
+	font-weight: 600;
+	color: #50575e;
+	border-top: 1px solid #f0f0f1;
+	padding-top: 4px;
+	margin-top: 4px;
+}
+
+.sidrena-cijena__reference-date--subtext {
+	display: block;
+	margin-left: 0;
+	margin-top: 0.15em;
+	font-size: 0.88em;
+	color: #646970;
 }
 
 .sidrena-cijena--style-badge {
@@ -129,6 +288,33 @@
 	border: 1px solid #9ac8e8;
 	border-radius: 999px;
 	background: #fff;
+}
+
+/* Unobtrusive footer archive link */
+.sidrena-cijena-archive-link {
+	display: block;
+	margin: 0.5rem auto;
+	padding: 0.25rem 0.5rem;
+	text-align: center;
+	font-size: 11px;
+	line-height: 1.4;
+	color: #8c8f94;
+	clear: both;
+}
+
+.sidrena-cijena-archive-link a {
+	color: inherit;
+	text-decoration: none;
+	opacity: 0.75;
+	font-size: inherit;
+	transition: opacity 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.sidrena-cijena-archive-link a:hover,
+.sidrena-cijena-archive-link a:focus {
+	opacity: 1;
+	text-decoration: underline;
+	color: #2271b1;
 }
 
 /* Public price list and archive */

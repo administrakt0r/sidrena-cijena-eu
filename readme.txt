@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.3 =
+* Storefront presentation: introduce interactive tooltip preset with unobtrusive help trigger (?) and accessible explanation popup, customizable date display modes (tooltip, inline, subtext, hidden), font-weight controls (normal, semi-bold, bold), and new minimalist display presets (tooltip, minimal, tag, accent, subtle).
+* Croatian-first wording: default 30-day statutory reference label set to "Najniža cijena u zadnjih 30 dana" with automatic backward-compatible migration for legacy English values, strictly distinguishing reference pricing from anchor pricing.
+* Daily deadline input normalization: operations settings now accept single-digit hour and AM/PM notations (e.g. "8:00", "8:00 AM", "8:00 PM") and normalize cleanly to 24-hour HH:MM format.
+* Public feed and archive robustness: add rewrite rule verification, fallback route parsing, and automatic rewrite flush during database setup.
+* Quality gates and test suite: 382 unit tests (1,387 assertions) green, PHPCS and PHPStan clean, 736 translated Croatian strings with 0 untranslated.
 
 = 2.0.2 =
 * Centralize styles and scripts: extract inline style attributes into assets/css/admin.css, move bulk anchor selection and confirmation scripts to assets/js/admin.js, add busy/disabled state handling for long-running submit buttons, implement all status badge variant colors, fix low-contrast badge color for WCAG AA compliance, and enqueue admin assets on product edit screens.

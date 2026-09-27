@@ -92,6 +92,7 @@ class PublicPage {
 		$this->add_rewrites();
 
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
+		add_action( 'parse_request', array( $this, 'parse_request_fallback' ) );
 		add_action( 'template_redirect', array( $this, 'serve' ), 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'wp_footer', array( $this, 'footer_link' ) );
@@ -120,6 +121,52 @@ class PublicPage {
 			'index.php?' . self::QUERY_VAR . '=' . self::PAGE_ARCHIVE,
 			'top'
 		);
+
+		// Self-heal: ensure rules are flushed if missing from the active rules.
+		$rules = get_option( 'rewrite_rules' );
+		if ( is_array( $rules ) && ! empty( $rules ) && ! isset( $rules[ '^' . self::STEM_ARCHIVE . '/?$' ] ) ) {
+			flush_rewrite_rules( false );
+		}
+	}
+
+	/**
+	 * Extract normalized path from a URL.
+	 *
+	 * @param string $url URL or request URI.
+	 * @return string
+	 */
+	protected static function parse_path( $url ) {
+		$path = wp_parse_url( (string) $url, PHP_URL_PATH );
+
+		return trim( (string) $path, '/' );
+	}
+
+	/**
+	 * Fallback route matching when rewrite rules have not been flushed yet.
+	 *
+	 * @param \WP $wp WordPress environment.
+	 * @return void
+	 */
+	public function parse_request_fallback( $wp ) {
+		$request = trim( (string) $wp->request, '/' );
+		if ( '' === $request && isset( $_SERVER['REQUEST_URI'] ) ) {
+			$raw_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			$request = self::parse_path( $raw_uri );
+			$home    = self::parse_path( home_url() );
+			if ( '' !== $home && 0 === strpos( $request, $home ) ) {
+				$request = trim( (string) substr( $request, strlen( $home ) ), '/' );
+			}
+		}
+
+		if ( self::STEM_ARCHIVE === $request ) {
+			$wp->query_vars[ self::QUERY_VAR ] = self::PAGE_ARCHIVE;
+			$wp->matched_rule                  = 'sidrena_cijena_archive';
+			unset( $wp->query_vars['error'] );
+		} elseif ( self::STEM_LIST === $request ) {
+			$wp->query_vars[ self::QUERY_VAR ] = self::PAGE_LIST;
+			$wp->matched_rule                  = 'sidrena_cijena_cjenik';
+			unset( $wp->query_vars['error'] );
+		}
 	}
 
 	/**
@@ -143,14 +190,34 @@ class PublicPage {
 		$page = (string) get_query_var( self::QUERY_VAR );
 
 		if ( ! in_array( $page, array( self::PAGE_LIST, self::PAGE_ARCHIVE ), true ) ) {
+			$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request = '' !== $raw_uri ? self::parse_path( $raw_uri ) : '';
+			$home    = self::parse_path( home_url() );
+			if ( '' !== $home && 0 === strpos( $request, $home ) ) {
+				$request = trim( (string) substr( $request, strlen( $home ) ), '/' );
+			}
+
+			if ( self::STEM_ARCHIVE === $request ) {
+				$page = self::PAGE_ARCHIVE;
+			} elseif ( self::STEM_LIST === $request ) {
+				$page = self::PAGE_LIST;
+			} else {
+				return;
+			}
+		}
+
+		global $wp_query;
+
+		if ( self::PAGE_ARCHIVE === $page && ! Settings::get( 'public_archive_enabled', true ) ) {
+			if ( is_object( $wp_query ) ) {
+				$wp_query->set_404();
+			}
+			status_header( 404 );
 			return;
 		}
 
-		if ( self::PAGE_ARCHIVE === $page && ! Settings::get( 'public_archive_enabled', true ) ) {
-			global $wp_query;
-			$wp_query->set_404();
-			status_header( 404 );
-			return;
+		if ( is_object( $wp_query ) ) {
+			$wp_query->is_404 = false;
 		}
 
 		status_header( 200 );
@@ -176,7 +243,13 @@ class PublicPage {
 			return;
 		}
 
-		printf( '<p class="sidrena-cijena-archive-link"><a href="%1$s">%2$s</a></p>', esc_url( home_url( '/' . self::STEM_ARCHIVE . '/' ) ), esc_html__( 'Published price lists', 'sidrena-cijena-eu' ) );
+		$text = (string) apply_filters( 'sidrena_cijena_footer_link_text', __( 'Cjenici', 'sidrena-cijena-eu' ) );
+
+		printf(
+			'<p class="sidrena-cijena-archive-link"><a href="%1$s">%2$s</a></p>',
+			esc_url( home_url( '/' . self::STEM_ARCHIVE . '/' ) ),
+			esc_html( $text )
+		);
 	}
 
 	/**

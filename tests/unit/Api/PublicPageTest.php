@@ -1045,4 +1045,97 @@ class PublicPageTest extends TestCase {
 		$out2          = $probe->shortcode_list( array() );
 		$this->assertStringContainsString( 'Stavka 55', $out2 );
 	}
+
+	/**
+	 * Fallback route matching resolves archive and list pages when rewrites are unflushed.
+	 *
+	 * @return void
+	 */
+	public function test_parse_request_fallback_matches_archive_and_list() {
+		$this->reset_state();
+		$page = new PublicPage();
+
+		// 1. Matched from wp->request for archive.
+		$wp             = new \stdClass();
+		$wp->request    = PublicPage::STEM_ARCHIVE;
+		$wp->query_vars = array( 'error' => '404' );
+		$page->parse_request_fallback( $wp );
+		$this->assertSame( PublicPage::PAGE_ARCHIVE, $wp->query_vars[ PublicPage::QUERY_VAR ] );
+		$this->assertArrayNotHasKey( 'error', $wp->query_vars );
+
+		// 2. Matched from wp->request for list.
+		$wp             = new \stdClass();
+		$wp->request    = PublicPage::STEM_LIST;
+		$wp->query_vars = array();
+		$page->parse_request_fallback( $wp );
+		$this->assertSame( PublicPage::PAGE_LIST, $wp->query_vars[ PublicPage::QUERY_VAR ] );
+
+		// 3. Matched from REQUEST_URI when wp->request is empty.
+		$wp                     = new \stdClass();
+		$wp->request            = '';
+		$wp->query_vars         = array( 'error' => '404' );
+		$_SERVER['REQUEST_URI'] = '/' . PublicPage::STEM_ARCHIVE . '/';
+		$page->parse_request_fallback( $wp );
+		$this->assertSame( PublicPage::PAGE_ARCHIVE, $wp->query_vars[ PublicPage::QUERY_VAR ] );
+		$this->assertArrayNotHasKey( 'error', $wp->query_vars );
+
+		unset( $_SERVER['REQUEST_URI'] );
+	}
+
+	/**
+	 * Footer link renders unobtrusive "Cjenici" link and supports filtering.
+	 *
+	 * @return void
+	 */
+	public function test_footer_link_renders_unobtrusive_cjenici_link() {
+		$this->reset_state();
+		$page = new PublicPage();
+
+		// When footer link setting is disabled, nothing outputs.
+		\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => false ) );
+		ob_start();
+		$page->footer_link();
+		$disabled_out = ob_get_clean();
+		$this->assertSame( '', $disabled_out );
+
+		// When enabled, outputs small link with default text "Cjenici".
+		\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => true ) );
+		ob_start();
+		$page->footer_link();
+		$out = ob_get_clean();
+		$this->assertStringContainsString( 'sidrena-cijena-archive-link', $out );
+		$this->assertStringContainsString( 'Cjenici', $out );
+		$this->assertStringContainsString( PublicPage::STEM_ARCHIVE, $out );
+
+		// Filter hook sidrena_cijena_footer_link_text.
+		add_filter(
+			'sidrena_cijena_footer_link_text',
+			static function () {
+				return 'Službeni cjenici';
+			}
+		);
+		ob_start();
+		$page->footer_link();
+		$filtered_out = ob_get_clean();
+		$this->assertStringContainsString( 'Službeni cjenici', $filtered_out );
+	}
+
+	/**
+	 * Method add_rewrites self-heals by flushing rewrite rules when the archive rule is missing.
+	 *
+	 * @return void
+	 */
+	public function test_add_rewrites_self_heals_when_rule_missing() {
+		$this->reset_state();
+		$page = new PublicPage();
+
+		$GLOBALS['sidrena_test_options']['rewrite_rules'] = array(
+			'^some-other-slug/?$' => 'index.php?page=other',
+		);
+		$GLOBALS['sidrena_test_flushed_rules']            = 0;
+
+		$page->add_rewrites();
+
+		$this->assertGreaterThan( 0, $GLOBALS['sidrena_test_flushed_rules'] );
+	}
 }

@@ -49,14 +49,26 @@ final class SettingsFields {
 	 * @return void
 	 */
 	public function text( $key, $value, array $args = array() ) {
+		$attrs = '';
+		if ( isset( $args['pattern'] ) ) {
+			$attrs .= ' pattern="' . esc_attr( $args['pattern'] ) . '"';
+		}
+		if ( isset( $args['maxlength'] ) ) {
+			$attrs .= ' maxlength="' . esc_attr( (string) $args['maxlength'] ) . '"';
+		}
+		if ( isset( $args['inputmode'] ) ) {
+			$attrs .= ' inputmode="' . esc_attr( $args['inputmode'] ) . '"';
+		}
+
 		printf(
-			'<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" value="%5$s" placeholder="%6$s" />',
+			'<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" value="%5$s" placeholder="%6$s"%7$s />',
 			esc_attr( isset( $args['type'] ) ? $args['type'] : 'text' ),
 			esc_attr( isset( $args['class'] ) ? $args['class'] : 'regular-text' ),
 			esc_attr( $key ),
 			esc_attr( $this->name( $key ) ),
 			esc_attr( (string) $value ),
-			esc_attr( isset( $args['placeholder'] ) ? $args['placeholder'] : '' )
+			esc_attr( isset( $args['placeholder'] ) ? $args['placeholder'] : '' ),
+			$attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 
 		$this->description( $args );

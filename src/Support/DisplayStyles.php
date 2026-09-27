@@ -20,6 +20,7 @@ final class DisplayStyles {
 	 */
 	public static function presets() {
 		return array(
+			'tooltip'   => __( 'Tooltip / Info icon', 'sidrena-cijena-eu' ),
 			'plain'     => __( 'Plain', 'sidrena-cijena-eu' ),
 			'badge'     => __( 'Badge', 'sidrena-cijena-eu' ),
 			'card'      => __( 'Card', 'sidrena-cijena-eu' ),
@@ -29,6 +30,10 @@ final class DisplayStyles {
 			'soft'      => __( 'Soft background', 'sidrena-cijena-eu' ),
 			'mono'      => __( 'Monochrome', 'sidrena-cijena-eu' ),
 			'pill'      => __( 'Pill', 'sidrena-cijena-eu' ),
+			'minimal'   => __( 'Minimal', 'sidrena-cijena-eu' ),
+			'tag'       => __( 'Tag', 'sidrena-cijena-eu' ),
+			'accent'    => __( 'Accent stripe', 'sidrena-cijena-eu' ),
+			'subtle'    => __( 'Subtle', 'sidrena-cijena-eu' ),
 		);
 	}
 }

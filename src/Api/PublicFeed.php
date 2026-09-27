@@ -61,6 +61,7 @@ class PublicFeed {
 		$this->add_rewrites();
 
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
+		add_action( 'parse_request', array( $this, 'parse_request_fallback' ) );
 		add_action( 'template_redirect', array( $this, 'serve' ), 0 );
 	}
 
@@ -75,6 +76,51 @@ class PublicFeed {
 			'index.php?' . self::QUERY_VAR . '=$matches[1]',
 			'top'
 		);
+
+		$rules = get_option( 'rewrite_rules' );
+		if ( is_array( $rules ) && ! empty( $rules ) && ! isset( $rules[ '^' . self::STEM . '\.(xml|csv)$' ] ) ) {
+			flush_rewrite_rules( false );
+		}
+	}
+
+	/**
+	 * Extract normalized path from a URL.
+	 *
+	 * @param string $url URL or request URI.
+	 * @return string
+	 */
+	protected static function parse_path( $url ) {
+		$path = wp_parse_url( (string) $url, PHP_URL_PATH );
+
+		return trim( (string) $path, '/' );
+	}
+
+	/**
+	 * Fallback route matching when rewrite rules have not been flushed yet.
+	 *
+	 * @param \WP $wp WordPress environment.
+	 * @return void
+	 */
+	public function parse_request_fallback( $wp ) {
+		$request = trim( (string) $wp->request, '/' );
+		if ( '' === $request && isset( $_SERVER['REQUEST_URI'] ) ) {
+			$raw_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			$request = self::parse_path( $raw_uri );
+			$home    = self::parse_path( home_url() );
+			if ( '' !== $home && 0 === strpos( $request, $home ) ) {
+				$request = trim( (string) substr( $request, strlen( $home ) ), '/' );
+			}
+		}
+
+		if ( self::STEM . '.xml' === $request ) {
+			$wp->query_vars[ self::QUERY_VAR ] = 'xml';
+			$wp->matched_rule                  = 'sidrena_cijena_feed_xml';
+			unset( $wp->query_vars['error'] );
+		} elseif ( self::STEM . '.csv' === $request ) {
+			$wp->query_vars[ self::QUERY_VAR ] = 'csv';
+			$wp->matched_rule                  = 'sidrena_cijena_feed_csv';
+			unset( $wp->query_vars['error'] );
+		}
 	}
 
 	/**
@@ -98,7 +144,25 @@ class PublicFeed {
 		$format = (string) get_query_var( self::QUERY_VAR );
 
 		if ( ! in_array( $format, array( 'xml', 'csv' ), true ) ) {
-			return;
+			$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request = '' !== $raw_uri ? self::parse_path( $raw_uri ) : '';
+			$home    = self::parse_path( home_url() );
+			if ( '' !== $home && 0 === strpos( $request, $home ) ) {
+				$request = trim( (string) substr( $request, strlen( $home ) ), '/' );
+			}
+
+			if ( self::STEM . '.xml' === $request ) {
+				$format = 'xml';
+			} elseif ( self::STEM . '.csv' === $request ) {
+				$format = 'csv';
+			} else {
+				return;
+			}
+		}
+
+		global $wp_query;
+		if ( is_object( $wp_query ) ) {
+			$wp_query->is_404 = false;
 		}
 
 		$location = self::public_location();

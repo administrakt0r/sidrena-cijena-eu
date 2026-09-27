@@ -40,7 +40,69 @@
 		}
 	}
 
+	function closeAllTooltips() {
+		var activePopups = document.querySelectorAll( '.sidrena-cijena__tooltip-popup.is-active' );
+		for ( var k = 0; k < activePopups.length; k++ ) {
+			activePopups[ k ].classList.remove( 'is-active' );
+			activePopups[ k ].setAttribute( 'aria-hidden', 'true' );
+		}
+		var activeTriggers = document.querySelectorAll( '[data-sidrena-cijena-tooltip-trigger][aria-expanded="true"]' );
+		for ( var l = 0; l < activeTriggers.length; l++ ) {
+			activeTriggers[ l ].setAttribute( 'aria-expanded', 'false' );
+		}
+	}
+
+	function toggleTooltip( trigger, event ) {
+		if ( event ) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		var wrap = trigger.closest ? trigger.closest( '.sidrena-cijena__tooltip-wrap' ) : trigger.parentNode;
+		if ( ! wrap ) {
+			return;
+		}
+
+		var popup = wrap.querySelector( '[data-sidrena-cijena-tooltip-popup]' );
+		if ( ! popup ) {
+			return;
+		}
+
+		var isOpen = popup.classList.contains( 'is-active' );
+		closeAllTooltips();
+
+		if ( ! isOpen ) {
+			popup.classList.add( 'is-active' );
+			popup.setAttribute( 'aria-hidden', 'false' );
+			trigger.setAttribute( 'aria-expanded', 'true' );
+		}
+	}
+
+	function bindTooltipEvents() {
+		document.addEventListener( 'click', function ( event ) {
+			var trigger = event.target && event.target.closest
+				? event.target.closest( '[data-sidrena-cijena-tooltip-trigger]' )
+				: null;
+
+			if ( trigger ) {
+				toggleTooltip( trigger, event );
+			} else if ( ! ( event.target && event.target.closest && event.target.closest( '.sidrena-cijena__tooltip-popup' ) ) ) {
+				closeAllTooltips();
+			}
+		} );
+
+		document.addEventListener( 'keydown', function ( event ) {
+			if ( 'Escape' === event.key || 'Esc' === event.key ) {
+				closeAllTooltips();
+			} else if ( ( 'Enter' === event.key || ' ' === event.key ) && event.target && event.target.hasAttribute && event.target.hasAttribute( 'data-sidrena-cijena-tooltip-trigger' ) ) {
+				toggleTooltip( event.target, event );
+			}
+		} );
+	}
+
 	function bind() {
+		bindTooltipEvents();
+
 		if ( window.jQuery ) {
 			window.jQuery( document ).on( 'found_variation', function ( event, variation ) {
 				update( variation, event.target.closest( '.product' ) || event.target );

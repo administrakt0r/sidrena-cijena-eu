@@ -203,3 +203,11 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | UX-07 | `done` | Accessibility and i18n hygiene: add `label_for` across all settings screens, fix `SaleTypesSettings` ID mismatch, add `<legend>` to settings fieldsets, add `aria-live="polite"` variation updates, clean up duplicate description in locations, and complete Croatian translation catalog (714 translated, 0 untranslated) | `make-pot.php` confirms 0 untranslated strings, unit tests in `LocationsPageTest` pass |
 | REL-14 | `done` | Package and verify release 2.0.2 archive | `tools/build-zip.sh 2.0.2` built `versions/2.0.2/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Storefront presentation & customer wording pass (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| UX-12 | `done` | Storefront presentation & Croatian-first wording: add interactive tooltip preset with (?) popup and configurable date modes (tooltip, inline, subtext, hidden), font-weight controls, minimalist display presets (tooltip, minimal, tag, accent, subtle), migrate default 30-day reference label to Croatian ("Najniža cijena u zadnjih 30 dana") with legacy migration, and add flexible time input normalization | 382 unit tests (1,387 assertions) in `CustomerWordingTest`, `SettingsTest`, `PublicPageTest`, and `PublicFeedTest`; clean PHPCS/PHPStan/ESLint; 736 translated Croatian strings with 0 untranslated |
+| REL-15 | `done` | Package and verify release 2.0.3 archive | `tools/build-zip.sh 2.0.3` built `versions/2.0.3/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+

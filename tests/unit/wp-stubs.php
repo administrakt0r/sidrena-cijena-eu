@@ -169,6 +169,18 @@ if ( ! function_exists( 'esc_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'esc_url_raw' ) ) {
+	/**
+	 * URL escape raw stub.
+	 *
+	 * @param string $url URL.
+	 * @return string
+	 */
+	function esc_url_raw( $url ) {
+		return filter_var( (string) $url, FILTER_SANITIZE_URL );
+	}
+}
+
 if ( ! function_exists( 'esc_js' ) ) {
 	/**
 	 * JavaScript escape stub.
@@ -1379,6 +1391,22 @@ if ( ! function_exists( 'add_rewrite_rule' ) ) {
 	}
 }
 
+if ( ! function_exists( 'flush_rewrite_rules' ) ) {
+	/**
+	 * Record a flush_rewrite_rules() call.
+	 *
+	 * @param bool $hard Whether to rewrite .htaccess.
+	 * @return void
+	 */
+	function flush_rewrite_rules( $hard = true ) {
+		unset( $hard );
+		if ( ! isset( $GLOBALS['sidrena_test_flushed_rules'] ) ) {
+			$GLOBALS['sidrena_test_flushed_rules'] = 0;
+		}
+		++$GLOBALS['sidrena_test_flushed_rules'];
+	}
+}
+
 if ( ! function_exists( 'get_query_var' ) ) {
 	/**
 	 * Read a recorded query variable.
@@ -1401,6 +1429,19 @@ if ( ! function_exists( 'home_url' ) ) {
 	 */
 	function home_url( $path = '' ) {
 		return 'https://shop.example' . $path;
+	}
+}
+
+if ( ! function_exists( 'wp_parse_url' ) ) {
+	/**
+	 * Parse URL stub.
+	 *
+	 * @param string $url       URL.
+	 * @param int    $component Component.
+	 * @return mixed
+	 */
+	function wp_parse_url( $url, $component = -1 ) {
+		return parse_url( $url, $component );
 	}
 }
 

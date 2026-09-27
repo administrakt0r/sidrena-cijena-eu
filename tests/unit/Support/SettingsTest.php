@@ -36,7 +36,9 @@ class SettingsTest extends TestCase {
 		$defaults = Settings::defaults();
 
 		$this->assertSame( 'Sidrena cijena', $defaults['anchor_label'] );
-		$this->assertSame( 'Lowest price in the last 30 days', $defaults['thirty_day_label'] );
+		$this->assertSame( 'Najniža cijena u zadnjih 30 dana', $defaults['thirty_day_label'] );
+		$this->assertSame( 'tooltip', $defaults['product_display_style'] );
+		$this->assertSame( 'tooltip', $defaults['anchor_date_mode'] );
 		$this->assertSame( array( 'csv', 'xml' ), $defaults['formats'] );
 		$this->assertSame( 30, $defaults['retention_days'] );
 		$this->assertSame( '08:00', $defaults['deadline'] );
@@ -112,18 +114,29 @@ class SettingsTest extends TestCase {
 		$this->assertSame( 'pill', Settings::sanitize( array( 'product_display_style' => 'pill' ) )['product_display_style'] );
 		$this->assertSame( 160, Settings::sanitize( array( 'display_size' => 300 ) )['display_size'] );
 		$this->assertSame( 40, Settings::sanitize( array( 'display_size' => 0 ) )['display_size'] );
-		$this->assertSame( 'plain', Settings::sanitize( array( 'product_display_style' => array( 'evil' ) ) )['product_display_style'] );
+		$this->assertSame( 'tooltip', Settings::sanitize( array( 'product_display_style' => array( 'evil' ) ) )['product_display_style'] );
 	}
 
 	/**
-	 * Sanitization rejects invalid deadline values.
+	 * Sanitization rejects invalid deadline values and normalizes 24h/AM-PM values.
 	 *
 	 * @return void
 	 */
 	public function test_sanitize_rejects_invalid_deadline() {
 		$sanitized = Settings::sanitize( array( 'deadline' => '25:99' ) );
-
 		$this->assertSame( '08:00', $sanitized['deadline'] );
+
+		// 8:00 normalizes to 08:00
+		$sanitized2 = Settings::sanitize( array( 'deadline' => '8:00' ) );
+		$this->assertSame( '08:00', $sanitized2['deadline'] );
+
+		// 2:30 PM normalizes to 14:30
+		$sanitized3 = Settings::sanitize( array( 'deadline' => '2:30 PM' ) );
+		$this->assertSame( '14:30', $sanitized3['deadline'] );
+
+		// 14:45 stays 14:45
+		$sanitized4 = Settings::sanitize( array( 'deadline' => '14:45' ) );
+		$this->assertSame( '14:45', $sanitized4['deadline'] );
 	}
 
 	/**
@@ -144,7 +157,7 @@ class SettingsTest extends TestCase {
 	 */
 	public function test_product_display_style_accepts_presets_and_rejects_unknown_values() {
 		$this->assertSame( 'badge', Settings::sanitize( array( 'product_display_style' => 'badge' ) )['product_display_style'] );
-		$this->assertSame( 'plain', Settings::sanitize( array( 'product_display_style' => 'custom-css' ) )['product_display_style'] );
+		$this->assertSame( 'tooltip', Settings::sanitize( array( 'product_display_style' => 'custom-css' ) )['product_display_style'] );
 	}
 
 	/**

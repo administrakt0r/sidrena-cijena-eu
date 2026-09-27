@@ -18,6 +18,7 @@ use SidrenaCijena\Tests\Support\PluginSwap;
 use SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 require_once dirname( __DIR__ ) . '/wc-stubs.php';
+require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
  * Double for PriceDisplay that exposes render_thirty_day for unit testing.
@@ -38,6 +39,16 @@ class TestablePriceDisplay extends PriceDisplay {
 	 */
 	public function call_render_thirty_day( CatalogItem $item, $context = 'single', array $args = array() ) {
 		return $this->render_thirty_day( $item, $context, $args );
+	}
+
+	/**
+	 * Public proxy for protected load_template.
+	 *
+	 * @param array<mixed> $args Template arguments.
+	 * @return string
+	 */
+	public function call_load_template( array $args ) {
+		return $this->load_template( $args );
 	}
 }
 
@@ -246,7 +257,7 @@ class CustomerWordingTest extends TestCase {
 		// No translations loaded in $GLOBALS['sidrena_test_translations'].
 		$defaults = Settings::defaults();
 
-		$this->assertSame( 'Lowest price in the last 30 days', $defaults['thirty_day_label'] );
+		$this->assertSame( 'Najniža cijena u zadnjih 30 dana', $defaults['thirty_day_label'] );
 		$this->assertSame( 'Lowest price in the last 30 days', Labels::price_type( 'lowest_30_day' ) );
 		$this->assertSame( 'Anchor price', Labels::price_type( 'anchor' ) );
 		$this->assertSame( 'Regular price', Labels::price_type( 'regular' ) );
@@ -281,5 +292,103 @@ class CustomerWordingTest extends TestCase {
 
 		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
 		$this->assertStringNotContainsString( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+	}
+
+	/**
+	 * Anchor price template renders tooltip popup by default with unobtrusive (?) trigger.
+	 *
+	 * @return void
+	 */
+	public function test_anchor_price_template_renders_default_tooltip_style_and_popup() {
+		$display = new TestablePriceDisplay();
+		$args    = array(
+			'context'                => 'archive',
+			'label'                  => 'Sidrena cijena',
+			'anchor_price'           => 9.99,
+			'anchor_display'         => '9,99 €',
+			'current_price'          => 12.99,
+			'current_display'        => '12,99 €',
+			'show_current'           => false,
+			'show_anchor'            => true,
+			'reference_date'         => '2026-09-15',
+			'reference_date_display' => '15. 9. 2026.',
+			'anchor_title'           => 'Sidrena cijena (15. 9. 2026.)',
+			'disclaimer'             => '',
+			'style'                  => 'tooltip',
+			'date_mode'              => 'tooltip',
+			'tooltip_text'           => 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.',
+			'font_weight'            => 'normal',
+			'product_id'             => 10,
+			'variation_id'           => 0,
+		);
+
+		$html = $display->call_load_template( $args );
+
+		$this->assertStringContainsString( 'sidrena-cijena--style-tooltip', $html );
+		$this->assertStringContainsString( 'sidrena-cijena__help-trigger', $html );
+		$this->assertStringContainsString( '(?)', $html );
+		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-trigger', $html );
+		$this->assertStringContainsString( 'sidrena-cijena__tooltip-popup', $html );
+		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-popup', $html );
+		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-date', $html );
+		$this->assertStringContainsString( '15. 9. 2026.', $html );
+		$this->assertStringContainsString( '9,99 €', $html );
+		$this->assertStringNotContainsString( 'sidrena-cijena__reference-date', $html );
+	}
+
+	/**
+	 * Anchor price template respects date_mode (inline, subtext, hidden) and font_weight.
+	 *
+	 * @return void
+	 */
+	public function test_anchor_price_template_respects_date_modes_and_font_weights() {
+		$display = new TestablePriceDisplay();
+		$base    = array(
+			'context'                => 'single',
+			'label'                  => 'Sidrena cijena',
+			'anchor_price'           => 19.99,
+			'anchor_display'         => '19,99 €',
+			'current_price'          => 24.99,
+			'current_display'        => '24,99 €',
+			'show_current'           => false,
+			'show_anchor'            => true,
+			'reference_date'         => '2026-09-01',
+			'reference_date_display' => '1. 9. 2026.',
+			'anchor_title'           => 'Sidrena cijena (1. 9. 2026.)',
+			'disclaimer'             => '',
+			'product_id'             => 10,
+			'variation_id'           => 0,
+		);
+
+		// 1. Inline mode with bold weight.
+		$inline_args                = $base;
+		$inline_args['style']       = 'badge';
+		$inline_args['date_mode']   = 'inline';
+		$inline_args['font_weight'] = 'bold';
+		$inline_html                = $display->call_load_template( $inline_args );
+		$this->assertStringContainsString( 'sidrena-cijena--style-badge', $inline_html );
+		$this->assertStringContainsString( 'sidrena-cijena--weight-bold', $inline_html );
+		$this->assertStringContainsString( 'sidrena-cijena__reference-date', $inline_html );
+		$this->assertStringNotContainsString( 'sidrena-cijena__reference-date--subtext', $inline_html );
+		$this->assertStringNotContainsString( 'sidrena-cijena__tooltip-popup', $inline_html );
+
+		// 2. Subtext mode with semi-bold weight.
+		$subtext_args                = $base;
+		$subtext_args['style']       = 'minimal';
+		$subtext_args['date_mode']   = 'subtext';
+		$subtext_args['font_weight'] = 'semi-bold';
+		$subtext_html                = $display->call_load_template( $subtext_args );
+		$this->assertStringContainsString( 'sidrena-cijena--style-minimal', $subtext_html );
+		$this->assertStringContainsString( 'sidrena-cijena--weight-semibold', $subtext_html );
+		$this->assertStringContainsString( 'sidrena-cijena__reference-date--subtext', $subtext_html );
+
+		// 3. Hidden mode.
+		$hidden_args              = $base;
+		$hidden_args['style']     = 'tag';
+		$hidden_args['date_mode'] = 'hidden';
+		$hidden_html              = $display->call_load_template( $hidden_args );
+		$this->assertStringContainsString( 'sidrena-cijena--style-tag', $hidden_html );
+		$this->assertStringNotContainsString( 'sidrena-cijena__reference-date', $hidden_html );
+		$this->assertStringNotContainsString( 'sidrena-cijena__tooltip-popup', $hidden_html );
 	}
 }

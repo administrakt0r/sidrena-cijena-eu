@@ -116,10 +116,49 @@
 		}
 	}
 
+	function bindTimeInputs() {
+		var inputs = document.querySelectorAll( '.sidrena-time-input' );
+		for ( var i = 0; i < inputs.length; i++ ) {
+			inputs[ i ].addEventListener( 'blur', function ( event ) {
+				var val = event.target.value.trim();
+				// Format 8:00 -> 08:00
+				var match1 = val.match( /^([0-9]):([0-5][0-9])$/ );
+				if ( match1 ) {
+					event.target.value = '0' + match1[ 1 ] + ':' + match1[ 2 ];
+					return;
+				}
+				// Format 800 -> 08:00 or 1430 -> 14:30
+				var match2 = val.match( /^([0-1]?[0-9]|2[0-3])([0-5][0-9])$/ );
+				if ( match2 ) {
+					var h = match2[ 1 ];
+					if ( 1 === h.length ) {
+						h = '0' + h;
+					}
+					event.target.value = h + ':' + match2[ 2 ];
+					return;
+				}
+				// Convert AM/PM if pasted
+				var match3 = val.match( /^([0-1]?[0-9]):([0-5][0-9])\s*(AM|PM)$/i );
+				if ( match3 ) {
+					var hour = parseInt( match3[ 1 ], 10 );
+					var min = match3[ 2 ];
+					var ampm = match3[ 3 ].toUpperCase();
+					if ( 'PM' === ampm && hour < 12 ) {
+						hour += 12;
+					} else if ( 'AM' === ampm && 12 === hour ) {
+						hour = 0;
+					}
+					event.target.value = ( hour < 10 ? '0' : '' ) + hour + ':' + min;
+				}
+			} );
+		}
+	}
+
 	function init() {
 		focusFeedback();
 		bindStylePreviews();
 		bindBulkAnchorSelection();
+		bindTimeInputs();
 	}
 
 	if ( 'loading' === document.readyState ) {

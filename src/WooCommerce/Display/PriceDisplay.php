@@ -483,7 +483,10 @@ class PriceDisplay {
 				'reference_date_display' => $reference_date_display,
 				'anchor_title'           => '' !== $reference_date_display ? sprintf( '%s (%s)', $label, $reference_date_display ) : $label,
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
-				'style'                  => (string) Settings::get( 'product_display_style', 'plain' ),
+				'style'                  => (string) Settings::get( 'product_display_style', 'tooltip' ),
+				'date_mode'              => (string) Settings::get( 'anchor_date_mode', 'tooltip' ),
+				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.', 'sidrena-cijena-eu' ) ),
+				'font_weight'            => (string) Settings::get( 'anchor_font_weight', 'normal' ),
 				'product_id'             => (int) $item->id,
 				'variation_id'           => (int) $item->variation_id,
 			);
@@ -560,7 +563,7 @@ class PriceDisplay {
 
 		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
 			? (string) $args['thirty_day_label']
-			: (string) Settings::get( 'thirty_day_label', __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
 
 		/**
 		 * Filters the 30-day lowest price display label.
@@ -576,7 +579,7 @@ class PriceDisplay {
 			'price'   => $price,
 			'label'   => $label,
 			'display' => Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
-			'style'   => (string) Settings::get( 'product_display_style', 'plain' ),
+			'style'   => (string) Settings::get( 'product_display_style', 'tooltip' ),
 		);
 
 		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );

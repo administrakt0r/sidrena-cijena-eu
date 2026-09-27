@@ -1,5 +1,17 @@
 # Release verification
 
+## Release 2.0.3 — Storefront Presentation & Customer Wording Pass (2026-09-27)
+
+- Storefront presentation & Croatian-first wording pass (UX-12).
+- Interactive tooltip preset (`product_display_style = 'tooltip'`): displays an unobtrusive `(?)` trigger button with accessible explanation popup (`anchor_tooltip_text`) and reference date, keeping storefront product cards clean while complying with legal disclosure requirements.
+- Configurable date display modes (`anchor_date_mode`: `tooltip`, `inline`, `subtext`, `hidden`) and typography controls (`anchor_font_weight`: `normal`, `semi-bold`, `bold`).
+- Expanded storefront presets: added `tooltip`, `minimal`, `tag`, `accent`, and `subtle` styles.
+- Croatian-first statutory reference wording: default 30-day reference label set to `"Najniža cijena u zadnjih 30 dana"` with automatic backward-compatible migration for sites storing the legacy English string, strictly distinguishing reference pricing from anchor pricing.
+- Operation settings resilience: enhanced daily deadline sanitizer to normalize single-digit hour (`8:00`) and 12-hour AM/PM formats (`8:00 AM`, `8:00 PM`) to 24-hour `08:00` / `20:00`.
+- Public feed and archive robustness: added rewrite rule verification, fallback route parsing, and automatic rewrite flush during database setup.
+- Quality gates: 382 unit tests (1,387 assertions), 0 failures; PHPCS clean across 175 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (736 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.3/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.3` and verified with `unzip -t`.
+
 ## Release 2.0.2 — UI/UX Improvements Pass (2026-09-27)
 
 - UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (Items 4, 5, 6, 7 / UX-04..UX-07).

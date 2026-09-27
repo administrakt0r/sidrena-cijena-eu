@@ -117,8 +117,13 @@ final class OperationsSettingsPage {
 					$key,
 					$value,
 					array(
-						'type'        => 'time',
-						'description' => __( 'Working-day deadline in 24-hour site time (default 08:00).', 'sidrena-cijena-eu' ),
+						'type'        => 'text',
+						'class'       => 'small-text sidrena-time-input',
+						'placeholder' => '08:00',
+						'pattern'     => '^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
+						'maxlength'   => 5,
+						'inputmode'   => 'numeric',
+						'description' => __( '24-hour format (HH:MM, e.g. 08:00 or 14:30) in site local time.', 'sidrena-cijena-eu' ),
 					)
 				);
 				break;

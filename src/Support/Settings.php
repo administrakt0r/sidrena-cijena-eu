@@ -32,7 +32,10 @@ final class Settings {
 			'anchor_label'             => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
 			'currency_display'         => 'symbol',
 			'display_location'         => 'price_html',
-			'product_display_style'    => 'plain',
+			'product_display_style'    => 'tooltip',
+			'anchor_date_mode'         => 'tooltip',
+			'anchor_tooltip_text'      => __( 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.', 'sidrena-cijena-eu' ),
+			'anchor_font_weight'       => 'normal',
 			'display_size'             => 40,
 			'display_priority'         => 20,
 			'display_product_pages'    => true,
@@ -51,7 +54,7 @@ final class Settings {
 			'sale_types'               => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
 			'filename_separator'       => '_',
 			'filename_case'            => 'upper',
-			'thirty_day_label'         => __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ),
+			'thirty_day_label'         => __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ),
 		);
 	}
 
@@ -65,6 +68,10 @@ final class Settings {
 
 		if ( ! is_array( $stored ) ) {
 			$stored = array();
+		}
+
+		if ( isset( $stored['thirty_day_label'] ) && 'Lowest price in the last 30 days' === $stored['thirty_day_label'] ) {
+			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' );
 		}
 
 		return wp_parse_args( $stored, self::defaults() );
@@ -189,6 +196,18 @@ final class Settings {
 			$output['product_display_style'] = $input['product_display_style'];
 		}
 
+		if ( isset( $input['anchor_date_mode'] ) && in_array( $input['anchor_date_mode'], array( 'tooltip', 'inline', 'subtext', 'hidden' ), true ) ) {
+			$output['anchor_date_mode'] = $input['anchor_date_mode'];
+		}
+
+		if ( isset( $input['anchor_tooltip_text'] ) ) {
+			$output['anchor_tooltip_text'] = sanitize_textarea_field( (string) $input['anchor_tooltip_text'] );
+		}
+
+		if ( isset( $input['anchor_font_weight'] ) && in_array( $input['anchor_font_weight'], array( 'normal', 'semi-bold', 'bold' ), true ) ) {
+			$output['anchor_font_weight'] = $input['anchor_font_weight'];
+		}
+
 		if ( isset( $input['display_size'] ) ) {
 			$output['display_size'] = min( 160, max( 40, (int) $input['display_size'] ) );
 		}
@@ -219,8 +238,27 @@ final class Settings {
 			}
 		}
 
-		if ( isset( $input['deadline'] ) && preg_match( '/^([01][0-9]|2[0-3]):[0-5][0-9]$/', (string) $input['deadline'] ) ) {
-			$output['deadline'] = (string) $input['deadline'];
+		if ( isset( $input['deadline'] ) ) {
+			$deadline = trim( (string) $input['deadline'] );
+			// Normalize single-digit hour like "8:00" to "08:00".
+			if ( preg_match( '/^([0-9]):([0-5][0-9])$/', $deadline, $matches ) ) {
+				$deadline = '0' . $matches[1] . ':' . $matches[2];
+			}
+			// Convert AM/PM formatted times to 24-hour format.
+			if ( preg_match( '/^([0-1]?[0-9]):([0-5][0-9])\s*(AM|PM)$/i', $deadline, $matches ) ) {
+				$hour = (int) $matches[1];
+				$min  = $matches[2];
+				$ampm = strtoupper( $matches[3] );
+				if ( 'PM' === $ampm && $hour < 12 ) {
+					$hour += 12;
+				} elseif ( 'AM' === $ampm && 12 === $hour ) {
+					$hour = 0;
+				}
+				$deadline = sprintf( '%02d:%s', $hour, $min );
+			}
+			if ( preg_match( '/^([01][0-9]|2[0-3]):[0-5][0-9]$/', $deadline ) ) {
+				$output['deadline'] = $deadline;
+			}
 		}
 
 		if ( isset( $input['retention_days'] ) ) {

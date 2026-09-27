@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 2.0.2\n"
+"Project-Id-Version: Sidrena cijena 2.0.3\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-27T14:29:14+00:00\n"
+"POT-Creation-Date: 2026-09-27T15:26:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -134,6 +134,9 @@ msgstr ""
 msgid "7. Kuke za programere (Hooks)"
 msgstr ""
 
+msgid "24-hour format (HH:MM, e.g. 08:00 or 14:30) in site local time."
+msgstr ""
+
 msgid "30 days"
 msgstr ""
 
@@ -141,6 +144,9 @@ msgid "30-day price warnings"
 msgstr ""
 
 msgid "30-day reference price explanation"
+msgstr ""
+
+msgid "Accent stripe"
 msgstr ""
 
 msgid "Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted."
@@ -233,6 +239,9 @@ msgstr ""
 msgid "Anchor price display"
 msgstr ""
 
+msgid "Anchor price font weight"
+msgstr ""
+
 msgid "Anchor price label"
 msgstr ""
 
@@ -312,6 +321,9 @@ msgid "Barcode"
 msgstr ""
 
 msgid "Before you import"
+msgstr ""
+
+msgid "Bold (700)"
 msgstr ""
 
 msgid "Both formats are published for every location unless the location restricts them."
@@ -407,6 +419,9 @@ msgstr ""
 msgid "Cjelovit priručnik za rad s dodatkom, zakonska pravila, automatizaciju, skupno postavljanje cijena, WP-CLI naredbe i razvojne kuke."
 msgstr ""
 
+msgid "Cjenici"
+msgstr ""
+
 msgid "Cjenici se moraju objaviti prije 08:00 sati svakog dana:"
 msgstr ""
 
@@ -414,6 +429,9 @@ msgid "Cleanup"
 msgstr ""
 
 msgid "Clearance (rasprodaja)"
+msgstr ""
+
+msgid "Clear explanation displayed in the popup when customers click or hover over the (?) icon."
 msgstr ""
 
 msgid "Clear filters"
@@ -528,6 +546,9 @@ msgid "Dismiss"
 msgstr ""
 
 msgid "Display"
+msgstr ""
+
+msgid "Display customization options"
 msgstr ""
 
 msgid "Display position"
@@ -770,6 +791,9 @@ msgstr ""
 msgid "Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta."
 msgstr ""
 
+msgid "Hidden from product box (accessible in title / description)"
+msgstr ""
+
 msgid "Historical price"
 msgstr ""
 
@@ -816,6 +840,12 @@ msgid "Informed calculation"
 msgstr ""
 
 msgid "Inline, next to the price"
+msgstr ""
+
+msgid "Inline text next to price (e.g. Cijena na dan 10. 9. 2026.)"
+msgstr ""
+
+msgid "Interactive tooltip / icon (?) next to price (Recommended – keeps product box clean)"
 msgstr ""
 
 msgid "Invalid"
@@ -995,6 +1025,9 @@ msgstr ""
 msgid "Migration path"
 msgstr ""
 
+msgid "Minimal"
+msgstr ""
+
 msgid "Missing"
 msgstr ""
 
@@ -1005,6 +1038,9 @@ msgid "More than one catalog record uses the SKU %s. Price history may be ambigu
 msgstr ""
 
 msgid "Multiple successive reductions detected. All applicable prices in the 30-day window were evaluated."
+msgstr ""
+
+msgid "Najniža cijena u zadnjih 30 dana"
 msgstr ""
 
 msgid "Najniža cijena u zadnjih 30 dana:"
@@ -1115,6 +1151,9 @@ msgstr ""
 msgid "No report is available for this import."
 msgstr ""
 
+msgid "Normal (400)"
+msgstr ""
+
 msgid "No sales locations have been configured."
 msgstr ""
 
@@ -1143,6 +1182,9 @@ msgid "Not scheduled."
 msgstr ""
 
 msgid "Novi proizvodi (prva ponuda)"
+msgstr ""
+
+msgid "Objašnjenje sidrene cijene"
 msgstr ""
 
 msgid "Observed first offer"
@@ -1415,6 +1457,9 @@ msgstr ""
 msgid "Reference date"
 msgstr ""
 
+msgid "Reference date display"
+msgstr ""
+
 msgid "Reference dates"
 msgstr ""
 
@@ -1524,6 +1569,9 @@ msgid "Selected 30-day lowest price:"
 msgstr ""
 
 msgid "Select the facility form that matches this sales location’s legal/store classification."
+msgstr ""
+
+msgid "Semi-bold (600)"
 msgstr ""
 
 msgid "Separate block below the price"
@@ -1646,6 +1694,9 @@ msgstr ""
 msgid "Sidrena cijena: today's %s deadline passed without a successful price-list publication. Catch-up generation is pending."
 msgstr ""
 
+msgid "Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje."
+msgstr ""
+
 msgid "Sidrena cijena price history"
 msgstr ""
 
@@ -1700,6 +1751,12 @@ msgstr ""
 msgid "Styling"
 msgstr ""
 
+msgid "Subtext below anchor price"
+msgstr ""
+
+msgid "Subtle"
+msgstr ""
+
 msgid "Successful"
 msgstr ""
 
@@ -1722,6 +1779,9 @@ msgid "System"
 msgstr ""
 
 msgid "Table pagination"
+msgstr ""
+
+msgid "Tag"
 msgstr ""
 
 msgid "Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes."
@@ -1967,6 +2027,12 @@ msgstr ""
 msgid "Today's price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date."
 msgstr ""
 
+msgid "Tooltip / Info icon"
+msgstr ""
+
+msgid "Tooltip explanation text"
+msgstr ""
+
 msgid "Too many requests. Please retry shortly."
 msgstr ""
 
@@ -2084,6 +2150,9 @@ msgstr ""
 msgid "When"
 msgstr ""
 
+msgid "When set to tooltip, users can click the (?) icon to see a popup with full explanation and reference date."
+msgstr ""
+
 msgid "Will overwrite"
 msgstr ""
 
@@ -2091,9 +2160,6 @@ msgid "Window: %1$s to %2$s"
 msgstr ""
 
 msgid "WordPress in Europe — premium WordPress hosting, start free."
-msgstr ""
-
-msgid "Working-day deadline in 24-hour site time (default 08:00)."
 msgstr ""
 
 msgid "WP-CLI naredbe"
