@@ -1168,7 +1168,25 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return bool
 	 */
 	function wp_doing_ajax() {
-		return false;
+		return ! empty( $GLOBALS['sidrena_test_doing_ajax'] );
+	}
+
+	/**
+	 * Cron detection stub.
+	 *
+	 * @return bool
+	 */
+	function wp_doing_cron() {
+		return ! empty( $GLOBALS['sidrena_test_doing_cron'] );
+	}
+
+	/**
+	 * Network admin detection stub.
+	 *
+	 * @return bool
+	 */
+	function is_network_admin() {
+		return ! empty( $GLOBALS['sidrena_test_is_network_admin'] );
 	}
 
 	/**

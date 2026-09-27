@@ -118,4 +118,79 @@ class CsvParserEncodingTest extends TestCase {
 		$this->assertSame( '6,99', $parse['rows'][0]['anchor_price'] );
 		$this->assertSame( '2026-09-10', $parse['rows'][0]['reference_date'] );
 	}
+
+	/**
+	 * Empty path is rejected.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_rejects_empty_path() {
+		$parser = new CsvParser();
+		$result = $parser->parse_file( '' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
+	}
+
+	/**
+	 * Path traversal is rejected.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_rejects_path_traversal() {
+		$parser = new CsvParser();
+		$result = $parser->parse_file( '../some/relative/file.csv' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
+	}
+
+	/**
+	 * Non-existent file is rejected.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_rejects_nonexistent_file() {
+		$parser = new CsvParser();
+		$result = $parser->parse_file( sys_get_temp_dir() . '/sidrena_nonexistent_xyz123.csv' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
+	}
+
+	/**
+	 * Files outside allowed roots are rejected.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_rejects_file_outside_allowed_roots() {
+		$parser = new CsvParser();
+		$result = $parser->parse_file( __FILE__ );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
+	}
+
+	/**
+	 * File inside allowed root parses successfully.
+	 *
+	 * @return void
+	 */
+	public function test_parse_file_accepts_file_in_allowed_root() {
+		$tmp = tempnam( sys_get_temp_dir(), 'sidrena_test_' );
+		$this->assertNotFalse( $tmp );
+
+		file_put_contents( $tmp, "sku;naziv;anchor_price\nKAV;Kava;7,49\n" );
+
+		$parser = new CsvParser();
+		$result = $parser->parse_file( $tmp );
+
+		unlink( $tmp );
+
+		$this->assertIsArray( $result );
+		$this->assertCount( 1, $result['rows'] );
+		$this->assertSame( 'KAV', $result['rows'][0]['sku'] );
+		$this->assertSame( 'Kava', $result['rows'][0]['name'] );
+		$this->assertSame( '7,49', $result['rows'][0]['anchor_price'] );
+	}
 }
