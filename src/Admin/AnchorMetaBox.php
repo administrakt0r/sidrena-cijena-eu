@@ -160,7 +160,7 @@ final class AnchorMetaBox {
 		$field_suffix      = $variation_id > 0 ? '[' . $variation_id . ']' : '';
 		$id_suffix         = $variation_id > 0 ? '-' . $variation_id : '';
 		$product_id        = (int) $item->id;
-		$action_url        = admin_url( 'admin-post.php' );
+		$action_url        = add_query_arg( 'action', self::ACTION, admin_url( 'admin-post.php' ) );
 
 		if ( $variation_id > 0 ) {
 			$action_url = add_query_arg( 'variation_id', $variation_id, $action_url );
@@ -213,7 +213,7 @@ final class AnchorMetaBox {
 
 		?>
 		<div class="sidrena-cijena-anchor-form">
-			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce' ); ?>
+			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce', false ); ?>
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $product_id ); ?>" />
 
 			<p>
@@ -232,7 +232,8 @@ final class AnchorMetaBox {
 			<?php if ( $status['anchor'] ) : ?>
 				<p>
 						<label for="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena-eu' ); ?></label>
-						<input type="text" class="regular-text" id="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>" name="correction_reason<?php echo esc_attr( $field_suffix ); ?>" value="" />
+						<input type="text" class="regular-text" id="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>" name="correction_reason<?php echo esc_attr( $field_suffix ); ?>" value="" placeholder="<?php echo esc_attr__( 'e.g. Typo in original reference price', 'sidrena-cijena-eu' ); ?>" />
+						<span class="description"><?php echo esc_html__( 'Required when updating an existing anchor price. State the documented reason from your business records for amending this legal price record.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 			<?php endif; ?>
 

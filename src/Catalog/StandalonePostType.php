@@ -146,28 +146,40 @@ final class StandalonePostType {
 	public static function fields() {
 		return array(
 			'_sidrena_sku'           => array(
-				'label' => __( 'SKU / code', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'SKU / code', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'placeholder' => __( 'e.g. ART-001', 'sidrena-cijena-eu' ),
+				'description' => __( 'Catalog SKU or internal product code.', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_barcode'       => array(
-				'label' => __( 'Barcode', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'Barcode', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'placeholder' => __( 'e.g. 3850123456789', 'sidrena-cijena-eu' ),
+				'description' => __( 'EAN, UPC, or GTIN barcode.', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_unit'          => array(
-				'label' => __( 'Unit of measure', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'Unit of measure', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'placeholder' => __( 'e.g. kom, kg, l', 'sidrena-cijena-eu' ),
+				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_unit_price'    => array(
-				'label' => __( 'Price per unit of measure', 'sidrena-cijena-eu' ),
-				'type'  => 'price',
+				'label'       => __( 'Price per unit of measure', 'sidrena-cijena-eu' ),
+				'type'        => 'price',
+				'placeholder' => __( 'e.g. 9.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Calculated selling price per unit of measure.', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_regular_price' => array(
-				'label' => __( 'Regular price', 'sidrena-cijena-eu' ),
-				'type'  => 'price',
+				'label'       => __( 'Regular price', 'sidrena-cijena-eu' ),
+				'type'        => 'price',
+				'placeholder' => __( 'e.g. 19.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Regular selling price before discounts.', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_sale_price'    => array(
-				'label' => __( 'Sale price', 'sidrena-cijena-eu' ),
-				'type'  => 'price',
+				'label'       => __( 'Sale price', 'sidrena-cijena-eu' ),
+				'type'        => 'price',
+				'placeholder' => __( 'e.g. 14.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Promotional selling price if currently discounted.', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_availability'  => array(
 				'label'   => __( 'Availability', 'sidrena-cijena-eu' ),
@@ -178,12 +190,15 @@ final class StandalonePostType {
 				),
 			),
 			'_sidrena_currency'      => array(
-				'label' => __( 'Currency', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'Currency', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'placeholder' => __( 'e.g. EUR', 'sidrena-cijena-eu' ),
+				'description' => __( 'Three-letter currency code (defaults to EUR).', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_first_seen'    => array(
-				'label' => __( 'First appearance date', 'sidrena-cijena-eu' ),
-				'type'  => 'date',
+				'label'       => __( 'First appearance date', 'sidrena-cijena-eu' ),
+				'type'        => 'date',
+				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'sidrena-cijena-eu' ),
 			),
 			'_sidrena_tax_inclusive' => array(
 				'label' => __( 'Prices include tax', 'sidrena-cijena-eu' ),
@@ -204,7 +219,8 @@ final class StandalonePostType {
 		echo '<table class="form-table" role="presentation"><tbody>';
 
 		foreach ( self::fields() as $key => $field ) {
-			$value = get_post_meta( $post->ID, $key, true );
+			$value       = get_post_meta( $post->ID, $key, true );
+			$placeholder = isset( $field['placeholder'] ) ? (string) $field['placeholder'] : '';
 
 			echo '<tr>';
 			echo '<th scope="row"><label for="' . esc_attr( $key ) . '">' . esc_html( $field['label'] ) . '</label></th>';
@@ -225,8 +241,12 @@ final class StandalonePostType {
 					echo '<input type="date" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) $value ) . '" />';
 					break;
 				default:
-					echo '<input type="text" class="regular-text" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) $value ) . '" />';
+					echo '<input type="text" class="regular-text" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) $value ) . '"' . ( '' !== $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' />';
 					break;
+			}
+
+			if ( ! empty( $field['description'] ) ) {
+				echo '<p class="description">' . esc_html( (string) $field['description'] ) . '</p>';
 			}
 
 			echo '</td></tr>';

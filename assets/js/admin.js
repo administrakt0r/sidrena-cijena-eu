@@ -154,11 +154,27 @@
 		}
 	}
 
+	function bindEvidenceForms() {
+		var forms = document.querySelectorAll( '.sidrena-cijena-anchor-form, .sidrena-cijena-sale-form' );
+		for ( var i = 0; i < forms.length; i++ ) {
+			forms[ i ].addEventListener( 'keydown', function ( event ) {
+				if ( 13 === event.keyCode && 'INPUT' === event.target.tagName ) {
+					var btn = this.querySelector( 'button[type="submit"]' );
+					if ( btn ) {
+						event.preventDefault();
+						btn.click();
+					}
+				}
+			} );
+		}
+	}
+
 	function init() {
 		focusFeedback();
 		bindStylePreviews();
 		bindBulkAnchorSelection();
 		bindTimeInputs();
+		bindEvidenceForms();
 	}
 
 	if ( 'loading' === document.readyState ) {

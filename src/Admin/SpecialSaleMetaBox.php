@@ -84,7 +84,7 @@ class SpecialSaleMetaBox {
 		$variation_id = (int) $item->variation_id;
 		$field_suffix = $variation_id > 0 ? '[' . $variation_id . ']' : '';
 		$id_suffix    = $variation_id > 0 ? '-' . $variation_id : '';
-		$action_url   = admin_url( 'admin-post.php' );
+		$action_url   = add_query_arg( 'action', self::ACTION, admin_url( 'admin-post.php' ) );
 
 		if ( $variation_id > 0 ) {
 			$action_url = add_query_arg( 'variation_id', $variation_id, $action_url );
@@ -183,7 +183,7 @@ class SpecialSaleMetaBox {
 			<?php endif; ?>
 
 			<div class="sidrena-cijena-sale-form">
-				<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_sale_nonce' ); ?>
+				<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_sale_nonce', false ); ?>
 				<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $item->id ); ?>" />
 				<?php if ( 0 === $variation_id ) : ?>
 					<input type="hidden" name="variation_id" value="0" />
@@ -202,7 +202,7 @@ class SpecialSaleMetaBox {
 
 				<p>
 					<label for="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale name', 'sidrena-cijena-eu' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>" name="sale_name<?php echo esc_attr( $field_suffix ); ?>" class="widefat" />
+					<input type="text" id="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>" name="sale_name<?php echo esc_attr( $field_suffix ); ?>" class="widefat" placeholder="<?php echo esc_attr__( 'e.g. Spring Sale', 'sidrena-cijena-eu' ); ?>" />
 					<span class="description"><?php echo esc_html__( 'Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 
@@ -324,14 +324,20 @@ class SpecialSaleMetaBox {
 	 * @return void
 	 */
 	protected static function redirect_back( $post_id, $type, $message ) {
+		$url = $post_id
+			? get_edit_post_link( $post_id, 'raw' )
+			: admin_url( 'edit.php?post_type=product' );
+
+		if ( ! $url ) {
+			$url = admin_url();
+		}
+
 		$url = add_query_arg(
 			array(
-				'post'                       => (int) $post_id,
-				'action'                     => 'edit',
 				'sidrena_cijena_notice'      => $type,
 				'sidrena_cijena_notice_text' => rawurlencode( $message ),
 			),
-			admin_url( 'post.php' )
+			$url
 		);
 
 		wp_safe_redirect( $url );

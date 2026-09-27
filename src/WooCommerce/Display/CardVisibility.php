@@ -43,7 +43,7 @@ final class CardVisibility {
 	 * @return void
 	 */
 	public static function render_control( $product_id ) {
-		wp_nonce_field( self::FIELD, self::NONCE );
+		wp_nonce_field( self::FIELD, self::NONCE, false );
 		echo '<p class="form-field"><label for="sidrena-cijena-show-in-cards">' . esc_html__( 'Product cards', 'sidrena-cijena-eu' ) . '</label>';
 		echo '<input type="hidden" name="' . esc_attr( self::FIELD ) . '" value="0" />';
 		echo '<input type="checkbox" id="sidrena-cijena-show-in-cards" name="' . esc_attr( self::FIELD ) . '" value="1" ' . checked( self::is_visible( $product_id ), true, false ) . ' /> ';

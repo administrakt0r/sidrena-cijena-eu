@@ -119,7 +119,7 @@ class LocationsPage {
 		echo '<table class="form-table" role="presentation"><tbody>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-name">' . esc_html__( 'Name', 'sidrena-cijena-eu' ) . '</label></th>';
-		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $name ) . '"' . FormState::error_attributes( $errors, 'name', 'sidrena-location-name' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
+		echo '<td><input type="text" class="regular-text" id="sidrena-location-name" name="name" required value="' . esc_attr( $name ) . '" placeholder="' . esc_attr__( 'e.g. Zagreb — Vlaška 68', 'sidrena-cijena-eu' ) . '"' . FormState::error_attributes( $errors, 'name', 'sidrena-location-name' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
 		echo '<p class="description">' . esc_html__( 'A staff-facing name to recognize this shop, for example “Zagreb — Vlaška 68”.', 'sidrena-cijena-eu' ) . '</p>';
 		FormState::render_error( $errors, 'name', 'sidrena-location-name' );
 		echo '</td></tr>';
@@ -183,7 +183,8 @@ class LocationsPage {
 		) as $value => $label ) {
 			echo '<option value="' . esc_attr( $value ) . '"' . selected( $sep, $value, false ) . '>' . esc_html( $label ) . '</option>';
 		}
-		echo '</select></td></tr>';
+		echo '</select>';
+		echo '<p class="description">' . esc_html__( 'Separator between parts in the generated filename (default is underscore).', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row"><label for="sidrena-location-case">' . esc_html__( 'Filename letter case', 'sidrena-cijena-eu' ) . '</label></th>';
 		echo '<td><select id="sidrena-location-case" name="case">';
@@ -194,7 +195,8 @@ class LocationsPage {
 		) as $value => $label ) {
 			echo '<option value="' . esc_attr( $value ) . '"' . selected( $case, $value, false ) . '>' . esc_html( $label ) . '</option>';
 		}
-		echo '</select></td></tr>';
+		echo '</select>';
+		echo '<p class="description">' . esc_html__( 'Letter case for the generated filename (default is lowercase).', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '</tbody></table>';
 
