@@ -275,5 +275,12 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | SEC-06 | `done` | Static audit & capability enforcement: explicitly bound `register_setting` calls for plugin settings and legal rules to `manage_sidrena_cijena` capability via `Capabilities::capability()`; added unit test coverage in `SettingsPageTest` covering capability verification and tab routing; added `register_setting` stub in unit stubs | `SettingsPageTest` (2 tests, 9 assertions); 438 unit tests passing (1,557 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (181 files); ESLint clean |
 | REL-23 | `done` | Package and verify release 2.0.11 archive | `tools/build-zip.sh 2.0.11` built `versions/2.0.11/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Product editor save workflows, robustness & regression coverage (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| ROB-04 | `done` | Hardened WooCommerce product editor save workflows and form ergonomics: eliminated duplicate `_wp_http_referer` nonces in meta box forms (`AnchorMetaBox`, `SpecialSaleMetaBox`, `CardVisibility`); bound explicit `action` query parameters to `$action_url`; hardened `SpecialSaleMetaBox::redirect_back()` using `get_edit_post_link()`; prevented accidental Enter submission in evidence sub-forms in `admin.js`; added ergonomic placeholders and descriptions in locations, standalone types, and meta boxes; authored comprehensive unit tests covering regular product saves, variable products, and dedicated evidence recording | `ProductEditorSaveTest` (13 tests, 49 assertions); 451 unit tests passing (1,606 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (182 files); ESLint clean; Croatian translations 100% complete (768 translated / 0 untranslated) |
+| REL-24 | `done` | Package and verify release 2.0.12 archive | `tools/build-zip.sh 2.0.12` built `versions/2.0.12/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
 
 

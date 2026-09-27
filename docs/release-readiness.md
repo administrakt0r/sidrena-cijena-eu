@@ -1,5 +1,14 @@
 # Release verification
 
+## Release 2.0.12 — Product Editor Save Workflows, Robustness & Regression Coverage (2026-09-28)
+
+- Robustness & compatibility pass per `AGENTARDS/04-improve.md` (ROB-04).
+- WooCommerce product editor save workflows (`src/Admin/AnchorMetaBox.php`, `src/Admin/SpecialSaleMetaBox.php`, `src/WooCommerce/Display/CardVisibility.php`): bound explicit `action` query parameters to `$action_url`, passed `$referer = false` in `wp_nonce_field` to eliminate redundant `_wp_http_referer` fields that could collide with main product editor saves, and hardened `SpecialSaleMetaBox::redirect_back()` using `get_edit_post_link()` and graceful fallback.
+- Form ergonomics & safety: prevented accidental submission on Enter key within inline evidence sub-forms in `assets/js/admin.js`, added intuitive placeholders and translated descriptions in `LocationsPage.php`, `StandalonePostType.php`, and product meta boxes.
+- Regression test coverage: authored `tests/unit/WooCommerce/ProductEditorSaveTest.php` (13 tests, 49 assertions) verifying ordinary WooCommerce product updates, dedicated anchor and sale recording handlers, variable product panel rendering, and form markup safety (no nested forms, no duplicate `_wpnonce`, no HTML5 `required` blockers).
+- Quality gates: 451 unit tests (1,606 assertions), 0 failures; PHPCS clean across 182 files; PHPStan level 6 clean (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (768 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.12/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.12` and verified with `unzip -t`.
+
 ## Release 2.0.11 — Static Audit, Capability Enforcement & Settings Unit Coverage (2026-09-28)
 
 - Full static audit pass per `AGENTARDS/01-audit-and-fix.md` (SEC-06).

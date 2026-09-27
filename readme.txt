@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.11
+Stable tag: 2.0.12
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.12 =
+* Robustness & WooCommerce product editor workflows: hardened anchor price and special sale meta boxes by binding dedicated actions via action query parameters and eliminating redundant `_wp_http_referer` nonce fields that could collide with main product editor saves.
+* Safe admin form ergonomics: added graceful fallback and `get_edit_post_link()` redirect handling in `SpecialSaleMetaBox`, prevented accidental submission on Enter within inline evidence sub-forms in `admin.js`, and added intuitive placeholders and translated descriptions across locations, standalone post types, and evidence forms.
+* Regression test coverage: added comprehensive `ProductEditorSaveTest` verifying ordinary WooCommerce product updates, dedicated anchor and sale recording handlers, variable product panel rendering, and form markup safety (no nested forms, no duplicate `_wpnonce`, no HTML5 `required` blockers); 451 unit tests (1,606 assertions) passing, complete Croatian translations (768 translated / 0 untranslated).
 
 = 2.0.11 =
 * Security sweep & capability enforcement: explicitly bound `register_setting` for settings and legal rules to `manage_sidrena_cijena` capability via `Capabilities::capability()`.
