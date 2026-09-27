@@ -1061,6 +1061,13 @@ if ( ! class_exists( 'wpdb' ) ) {
 		public $prefix = 'wp_';
 
 		/**
+		 * Postmeta table name.
+		 *
+		 * @var string
+		 */
+		public $postmeta = 'wp_postmeta';
+
+		/**
 		 * Last insert ID.
 		 *
 		 * @var int
@@ -1097,12 +1104,12 @@ if ( ! class_exists( 'wpdb' ) ) {
 					++$argument_index;
 
 					if ( '%i' === $matches[0] ) {
-					return '`' . str_replace( '`', '``', (string) $value ) . '`';
-				}
+						return '`' . str_replace( '`', '``', (string) $value ) . '`';
+					}
 
-				$format_args[] = $value;
+					$format_args[] = $value;
 
-				return $matches[0];
+					return $matches[0];
 				},
 				$query
 			);
