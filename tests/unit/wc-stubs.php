@@ -218,6 +218,29 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 			return isset( $this->data['meta'][ $key ] ) ? $this->data['meta'][ $key ] : '';
 		}
+
+		/**
+		 * Update product metadata.
+		 *
+		 * @param string $key Meta key.
+		 * @param mixed  $value Meta value.
+		 * @return void
+		 */
+		public function update_meta_data( $key, $value ) {
+			if ( ! isset( $this->data['meta'] ) || ! is_array( $this->data['meta'] ) ) {
+				$this->data['meta'] = array();
+			}
+
+			$this->data['meta'][ $key ] = $value;
+
+			if ( ! empty( $this->data['id'] ) ) {
+				$id = (int) $this->data['id'];
+				if ( ! isset( $GLOBALS['sidrena_test_wc_products'][ $id ]['meta'] ) ) {
+					$GLOBALS['sidrena_test_wc_products'][ $id ]['meta'] = array();
+				}
+				$GLOBALS['sidrena_test_wc_products'][ $id ]['meta'][ $key ] = $value;
+			}
+		}
 	}
 }
 

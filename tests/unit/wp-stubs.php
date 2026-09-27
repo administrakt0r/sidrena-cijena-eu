@@ -761,6 +761,85 @@ if ( ! function_exists( 'wp_normalize_path' ) ) {
 	}
 }
 
+if ( ! class_exists( 'WP_Post' ) ) {
+	/**
+	 * Post object stub.
+	 */
+	class WP_Post {
+
+		/**
+		 * Post ID.
+		 *
+		 * @var int
+		 */
+		public $ID = 0;
+
+		/**
+		 * Post type.
+		 *
+		 * @var string
+		 */
+		public $post_type = 'post';
+
+		/**
+		 * Post status.
+		 *
+		 * @var string
+		 */
+		public $post_status = 'publish';
+
+		/**
+		 * Post title.
+		 *
+		 * @var string
+		 */
+		public $post_title = '';
+
+		/**
+		 * Constructor.
+		 *
+		 * @param array<string,mixed>|object|null $data Initial data.
+		 */
+		public function __construct( $data = null ) {
+			if ( is_array( $data ) || is_object( $data ) ) {
+				foreach ( (array) $data as $key => $val ) {
+					$this->{$key} = $val;
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists( 'get_post' ) ) {
+	/**
+	 * Retrieve post data given a post ID or post object.
+	 *
+	 * @param int|WP_Post|null $post Post ID or post object.
+	 * @return WP_Post|null
+	 */
+	function get_post( $post = null ) {
+		if ( $post instanceof WP_Post ) {
+			return $post;
+		}
+
+		$id = is_object( $post ) ? (int) $post->ID : (int) $post;
+
+		if ( isset( $GLOBALS['sidrena_test_posts'][ $id ] ) ) {
+			$data = $GLOBALS['sidrena_test_posts'][ $id ];
+
+			return $data instanceof WP_Post ? $data : new WP_Post( $data );
+		}
+
+		if ( isset( $GLOBALS['post'] ) && is_object( $GLOBALS['post'] ) && (int) $GLOBALS['post']->ID === $id ) {
+			$p = $GLOBALS['post'];
+
+			return $p instanceof WP_Post ? $p : new WP_Post( $p );
+		}
+
+		return $id > 0 ? new WP_Post( array( 'ID' => $id, 'post_type' => 'product' ) ) : null;
+	}
+}
+
 if ( ! function_exists( 'get_posts' ) ) {
 	/**
 	 * Post query stub.
@@ -1561,6 +1640,41 @@ if ( ! function_exists( 'admin_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_edit_post_link' ) ) {
+	/**
+	 * Retrieve the edit post link for post.
+	 *
+	 * @param int|WP_Post $id      Post ID or post object.
+	 * @param string      $context How to write the URL.
+	 * @return string|null
+	 */
+	function get_edit_post_link( $id = 0, $context = 'display' ) {
+		unset( $context );
+		$post_id = is_object( $id ) ? (int) $id->ID : (int) $id;
+
+		return $post_id > 0 ? admin_url( 'post.php?post=' . $post_id . '&action=edit' ) : null;
+	}
+}
+
+if ( ! function_exists( 'wp_safe_redirect' ) ) {
+	/**
+	 * Safe redirect stub.
+	 *
+	 * @param string $location Location.
+	 * @param int    $status   HTTP status code.
+	 * @throws \RuntimeException Thrown to halt execution in unit tests like exit.
+	 * @return bool
+	 */
+	function wp_safe_redirect( $location, $status = 302 ) {
+		$GLOBALS['sidrena_test_last_redirect'] = array(
+			'location' => $location,
+			'status'   => $status,
+		);
+
+		throw new \RuntimeException( 'REDIRECT:' . $location, (int) $status );
+	}
+}
+
 if ( ! function_exists( 'wp_nonce_url' ) ) {
 	/**
 	 * Append a nonce to a URL.
@@ -1596,6 +1710,47 @@ if ( ! function_exists( 'wp_nonce_field' ) ) {
 		}
 
 		return $html;
+	}
+}
+
+if ( ! function_exists( 'wp_verify_nonce' ) ) {
+	/**
+	 * Verify that a nonce is correct and valid.
+	 *
+	 * @param string     $nonce  Nonce.
+	 * @param string|int $action Action name.
+	 * @return int|false
+	 */
+	function wp_verify_nonce( $nonce, $action = -1 ) {
+		unset( $action );
+
+		return ! empty( $nonce ) && 'test-nonce' === $nonce ? 1 : false;
+	}
+}
+
+if ( ! function_exists( 'check_admin_referer' ) ) {
+	/**
+	 * Ensure that user was referred from an admin page with a valid nonce.
+	 *
+	 * @param int|string $action    Action name.
+	 * @param string     $query_arg Nonce argument.
+	 * @return int|false
+	 */
+	function check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
+		$nonce = '';
+		if ( isset( $_POST[ $query_arg ] ) ) {
+			$nonce = (string) $_POST[ $query_arg ];
+		} elseif ( isset( $_GET[ $query_arg ] ) ) {
+			$nonce = (string) $_GET[ $query_arg ];
+		} elseif ( isset( $_REQUEST[ $query_arg ] ) ) {
+			$nonce = (string) $_REQUEST[ $query_arg ];
+		}
+
+		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+			wp_die( 'The link you followed has expired.', 403 );
+		}
+
+		return 1;
 	}
 }
 
