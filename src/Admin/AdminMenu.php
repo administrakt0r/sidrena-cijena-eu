@@ -108,7 +108,15 @@ final class AdminMenu {
 			wp_enqueue_style( 'sidrena-cijena-frontend', SIDRENA_CIJENA_URL . 'assets/css/frontend.css', array(), SIDRENA_CIJENA_VERSION );
 		}
 
-		if ( false === strpos( (string) $hook_suffix, 'sidrena-cijena' ) && false === strpos( (string) $hook_suffix, 'sidrena_item' ) ) {
+		$is_product_screen = false;
+		if ( in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $screen && ( 'product' === $screen->post_type || 'sidrena_item' === $screen->post_type ) ) {
+				$is_product_screen = true;
+			}
+		}
+
+		if ( ! $is_product_screen && false === strpos( (string) $hook_suffix, 'sidrena-cijena' ) && false === strpos( (string) $hook_suffix, 'sidrena_item' ) ) {
 			return;
 		}
 

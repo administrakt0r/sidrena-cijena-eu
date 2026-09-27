@@ -70,16 +70,23 @@ final class OperationsSettingsPage {
 		);
 
 		foreach ( $fields as $key => $field ) {
+			$field_args = array(
+				'key'   => $key,
+				'type'  => $field['type'],
+				'label' => $field['label'],
+			);
+
+			if ( 'formats' !== $field['type'] ) {
+				$field_args['label_for'] = $key;
+			}
+
 			add_settings_field(
 				'sidrena_cijena_' . $key,
 				$field['label'],
 				array( __CLASS__, 'render_field' ),
 				self::PAGE,
 				'sidrena_cijena_operations',
-				array(
-					'key'  => $key,
-					'type' => $field['type'],
-				)
+				$field_args
 			);
 		}
 	}
@@ -137,6 +144,7 @@ final class OperationsSettingsPage {
 					),
 					array(
 						'description' => __( 'Both formats are published for every location unless the location restricts them.', 'sidrena-cijena-eu' ),
+						'legend'      => isset( $args['label'] ) ? (string) $args['label'] : '',
 					)
 				);
 				break;

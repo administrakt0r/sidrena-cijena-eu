@@ -163,11 +163,16 @@ final class SettingsFields {
 	public function checkboxes( $key, $value, array $choices, array $args = array() ) {
 		$value = array_map( 'strval', (array) $value );
 
+		$legend = isset( $args['legend'] ) ? (string) $args['legend'] : ( isset( $args['label'] ) ? (string) $args['label'] : '' );
+
 		echo '<fieldset>';
+		if ( '' !== $legend ) {
+			echo '<legend class="screen-reader-text"><span>' . esc_html( $legend ) . '</span></legend>';
+		}
 
 		foreach ( $choices as $choice_value => $label ) {
 			printf(
-				'<label style="display:block"><input type="checkbox" name="%1$s[]" value="%2$s" %3$s /> %4$s</label>',
+				'<label class="sidrena-checkbox-label"><input type="checkbox" name="%1$s[]" value="%2$s" %3$s /> %4$s</label>',
 				esc_attr( $this->name( $key ) ),
 				esc_attr( (string) $choice_value ),
 				checked( in_array( (string) $choice_value, $value, true ), true, false ),

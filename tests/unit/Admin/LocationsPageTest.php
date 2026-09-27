@@ -96,7 +96,7 @@ class LocationsPageTest extends TestCase {
 		$html = LocationsPageProbe::form();
 
 		$this->assertStringContainsString( '<label><input type="checkbox" name="active" value="1" checked=\'checked\' />', $html );
-		$this->assertStringContainsString( '<label style="margin-right:1em;"><input type="checkbox" name="formats[]"', $html );
+		$this->assertStringContainsString( '<label class="sidrena-label-inline"><input type="checkbox" name="formats[]"', $html );
 	}
 
 	/**

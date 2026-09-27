@@ -130,3 +130,124 @@
 	border-radius: 999px;
 	background: #fff;
 }
+
+/* Public price list and archive */
+.sidrena-cijena-table-container {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	margin: 1rem 0;
+}
+
+.sidrena-cijena-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.sidrena-cijena-table caption {
+	text-align: left;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.sidrena-cijena-table th,
+.sidrena-cijena-table td {
+	padding: 0.5rem 0.6rem;
+	border-bottom: 1px solid #dcdcde;
+	text-align: left;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.sidrena-cijena-table td:nth-child(2) {
+	white-space: normal;
+	min-width: 180px;
+}
+
+.sidrena-cijena-cjenik__meta,
+.sidrena-cijena-cjenik__links {
+	margin: 0.75rem 0;
+}
+
+.sidrena-cijena-cjenik__count {
+	margin: 0.5rem 0;
+	font-size: 0.9em;
+	color: #50575e;
+}
+
+.sidrena-cijena-cjenik__clear {
+	margin-left: 0.5rem;
+	text-decoration: underline;
+}
+
+.sidrena-cijena-cjenik__search {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	flex-wrap: wrap;
+	margin: 0.75rem 0;
+}
+
+.sidrena-cijena-cjenik__search input[type="search"] {
+	max-width: 100%;
+}
+
+.sidrena-cijena-pagination {
+	margin: 1rem 0;
+	display: flex;
+	gap: 0.35rem;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.sidrena-cijena-pagination .page-numbers {
+	display: inline-block;
+	padding: 0.35rem 0.65rem;
+	border: 1px solid #dcdcde;
+	text-decoration: none;
+	border-radius: 3px;
+	color: inherit;
+}
+
+.sidrena-cijena-pagination .page-numbers.current {
+	background: #2271b1;
+	color: #fff;
+	border-color: #2271b1;
+	font-weight: 600;
+}
+
+/* Print styling for legally mandated price list output */
+@media print {
+	.sidrena-cijena-cjenik__search,
+	.sidrena-cijena-cjenik__links,
+	.sidrena-cijena-cjenik__clear,
+	.sidrena-cijena-pagination,
+	.sidrena-cijena-archive-link {
+		display: none !important;
+	}
+
+	.sidrena-cijena-table-container {
+		overflow: visible !important;
+		margin: 0 !important;
+	}
+
+	.sidrena-cijena-table {
+		width: 100% !important;
+		border-collapse: collapse !important;
+		font-size: 8.5pt !important;
+	}
+
+	.sidrena-cijena-table th,
+	.sidrena-cijena-table td {
+		border: 1px solid #333 !important;
+		padding: 3px 5px !important;
+		color: #000 !important;
+		white-space: normal !important;
+	}
+
+	.sidrena-cijena-cjenik__meta {
+		font-size: 9.5pt !important;
+		margin-bottom: 6px !important;
+	}
+}

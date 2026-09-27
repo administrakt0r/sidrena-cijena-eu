@@ -28,42 +28,48 @@ defined( 'ABSPATH' ) || exit;
 		</p>
 	<?php endif; ?>
 
-	<table class="sidrena-cijena-table">
-		<caption><?php esc_html_e( 'Archive of published price lists', 'sidrena-cijena-eu' ); ?></caption>
-		<thead>
-			<tr>
-				<th scope="col"><?php esc_html_e( 'Published', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'File', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Format', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Items', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Size', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Checksum', 'sidrena-cijena-eu' ); ?></th>
-				<th scope="col"><?php esc_html_e( 'Download', 'sidrena-cijena-eu' ); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php if ( empty( $rows ) ) : ?>
+	<div class="sidrena-cijena-table-container">
+		<table class="sidrena-cijena-table">
+			<caption><?php esc_html_e( 'Archive of published price lists', 'sidrena-cijena-eu' ); ?></caption>
+			<thead>
 				<tr>
-					<td colspan="7"><?php esc_html_e( 'No price lists have been published yet.', 'sidrena-cijena-eu' ); ?></td>
+					<th scope="col"><?php esc_html_e( 'Published', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'File', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Format', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Items', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Size', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Checksum', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Download', 'sidrena-cijena-eu' ); ?></th>
 				</tr>
-			<?php endif; ?>
-			<?php foreach ( $rows as $sidrena_row ) : ?>
-				<tr>
-					<td><?php echo esc_html( (string) $sidrena_row['published_display'] ); ?></td>
-					<td><?php echo esc_html( (string) $sidrena_row['filename'] ); ?></td>
-					<td><?php echo esc_html( (string) $sidrena_row['format_display'] ); ?></td>
-					<td><?php echo (int) $sidrena_row['item_count']; ?></td>
-					<td><?php echo esc_html( (string) $sidrena_row['size_display'] ); ?></td>
-					<td><code><?php echo esc_html( (string) $sidrena_row['checksum_short'] ); ?></code></td>
-					<td><a href="<?php echo esc_url( (string) $sidrena_row['download_url'] ); ?>"><?php esc_html_e( 'Download', 'sidrena-cijena-eu' ); ?></a></td>
-				</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				<?php if ( empty( $rows ) ) : ?>
+					<tr>
+						<td colspan="7"><?php esc_html_e( 'No price lists have been published yet.', 'sidrena-cijena-eu' ); ?></td>
+					</tr>
+				<?php endif; ?>
+				<?php foreach ( $rows as $sidrena_row ) : ?>
+					<tr>
+						<td><?php echo esc_html( (string) $sidrena_row['published_display'] ); ?></td>
+						<td><?php echo esc_html( (string) $sidrena_row['filename'] ); ?></td>
+						<td><?php echo esc_html( (string) $sidrena_row['format_display'] ); ?></td>
+						<td><?php echo (int) $sidrena_row['item_count']; ?></td>
+						<td><?php echo esc_html( (string) $sidrena_row['size_display'] ); ?></td>
+						<td><code><?php echo esc_html( (string) $sidrena_row['checksum_short'] ); ?></code></td>
+						<td>
+							<a href="<?php echo esc_url( (string) $sidrena_row['download_url'] ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: publication file name. */ __( 'Download %s', 'sidrena-cijena-eu' ), (string) $sidrena_row['filename'] ) ); ?>">
+								<?php esc_html_e( 'Download', 'sidrena-cijena-eu' ); ?>
+							</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
 
 	<p class="sidrena-cijena-cjenik__links">
 		<a href="<?php echo esc_url( $list_url ); ?>"><?php esc_html_e( 'Current price list', 'sidrena-cijena-eu' ); ?></a>
-		<a href="<?php echo esc_url( $feed_xml ); ?>">XML</a>
-		<a href="<?php echo esc_url( $feed_csv ); ?>">CSV</a>
+		<a href="<?php echo esc_url( $feed_xml ); ?>"><?php esc_html_e( 'XML Feed', 'sidrena-cijena-eu' ); ?></a>
+		<a href="<?php echo esc_url( $feed_csv ); ?>"><?php esc_html_e( 'CSV Feed', 'sidrena-cijena-eu' ); ?></a>
 	</p>
 </div>

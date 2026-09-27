@@ -149,6 +149,8 @@ class LogsPage {
 			return '—';
 		}
 
-		return Dates::from_utc( (string) $datetime )->format( 'Y-m-d H:i' );
+		$formatted = Dates::format_datetime_display( (string) $datetime );
+
+		return '' !== $formatted ? $formatted : '—';
 	}
 }

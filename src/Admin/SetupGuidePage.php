@@ -175,7 +175,7 @@ final class SetupGuidePage {
 		echo '<div class="wrap sidrena-setup">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Setup Guide', 'sidrena-cijena-eu' ) . '</h1>';
 		echo '<p>' . esc_html__( 'Five steps, a few minutes. Made by administrakt0r.', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<p><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book" style="vertical-align:middle;margin-right:4px;"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena-eu' ) . '</a></p>';
+		echo '<p><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena-eu' ) . '</a></p>';
 
 		Notice::from_request();
 

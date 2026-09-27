@@ -18,6 +18,9 @@
 
 		for ( var i = 0; i < nodes.length; i++ ) {
 			nodes[ i ].textContent = display;
+			if ( ! nodes[ i ].hasAttribute( 'aria-live' ) ) {
+				nodes[ i ].setAttribute( 'aria-live', 'polite' );
+			}
 		}
 
 		var dateNodes = root.querySelectorAll( '[data-sidrena-cijena-reference-date]' );

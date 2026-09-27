@@ -14,7 +14,7 @@ is self-contained, completely up to date, and states its own done-criteria.
 | 6 | [06-performance-db-queries.md](06-performance-db-queries.md) | Performance 1: query tuning, N+1 removal, indexes, COUNT hotspots | Optional (measurements) | ✅ v2.0.0 |
 | 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) | ✅ v2.0.0 |
 | 8 | [08-performance-export-cron.md](08-performance-export-cron.md) | Performance 3: generation pipeline, memory, cron/cleanup jobs | Optional (measurements) | ✅ v2.0.0 |
-| 9 | [09-ui-ux-improvements.md](09-ui-ux-improvements.md) | UI/UX: admin screens, public price list, accessibility, i18n consistency | No (E2E optional) | ✅ v2.0.0 |
+| 9 | [09-ui-ux-improvements.md](09-ui-ux-improvements.md) | UI/UX: admin screens, public price list, accessibility, i18n consistency | No (E2E optional) | ✅ v2.0.2 |
 | 10 | [10-prompt-drift-check.md](10-prompt-drift-check.md) | Prompt-pack drift audit: keep every prompt file in sync with the codebase | No | ✅ v2.0.0 |
 
 Prompts 6–8 are the performance track (measure first, record the numbers), prompt 9 is the
@@ -23,17 +23,17 @@ UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventio
 `IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
 session that changes the codebase) to keep every prompt honest.
 
-## Current green baseline (v2.0.1)
+## Current green baseline (v2.0.2)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
 `tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
 on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 370 tests / 1314 assertions (`composer test:unit`).
+- Unit suite: 375 tests / 1343 assertions (`composer test:unit`).
 - Integration suite: 96 tests / 454 assertions (`composer test:integration` in wp-env).
 - E2E: 42 Playwright specs against port 8889 (`npm run test:e2e`).
 - PHPStan level 6: 0 errors across 117 files · PHPCS clean (175 files) · ESLint clean · `./local.sh` exits 0.
-- Croatian catalog complete: 705 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
+- Croatian catalog complete: 714 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
 
 ## Hard rules for every prompt
 

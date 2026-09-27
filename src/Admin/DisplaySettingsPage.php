@@ -92,6 +92,7 @@ final class DisplaySettingsPage {
 					'key'         => $key,
 					'type'        => $field['type'],
 					'description' => '',
+					'label_for'   => $key,
 				)
 			);
 		}

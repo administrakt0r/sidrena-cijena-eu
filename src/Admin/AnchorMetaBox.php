@@ -205,7 +205,7 @@ final class AnchorMetaBox {
 		}
 
 		?>
-		<div class="sidrena-cijena-anchor-form" style="margin-top:1em">
+		<div class="sidrena-cijena-anchor-form">
 			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce' ); ?>
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $product_id ); ?>" />
 

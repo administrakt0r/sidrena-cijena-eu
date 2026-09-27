@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Plugin;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
@@ -60,16 +61,23 @@ final class LegalSettingsPage {
 		);
 
 		foreach ( $fields as $key => $field ) {
+			$field_args = array(
+				'key'   => $key,
+				'type'  => $field['type'],
+				'label' => $field['label'],
+			);
+
+			if ( 'categories' !== $field['type'] ) {
+				$field_args['label_for'] = $key;
+			}
+
 			add_settings_field(
 				'sidrena_cijena_' . $key,
 				$field['label'],
 				array( __CLASS__, 'render_field' ),
 				self::PAGE,
 				'sidrena_cijena_legal',
-				array(
-					'key'  => $key,
-					'type' => $field['type'],
-				)
+				$field_args
 			);
 		}
 	}
@@ -121,7 +129,8 @@ final class LegalSettingsPage {
 					return;
 				}
 
-				$fields->checkboxes( $key, (array) $value, $choices );
+				$legend = isset( $args['label'] ) ? (string) $args['label'] : '';
+				$fields->checkboxes( $key, (array) $value, $choices, array( 'legend' => $legend ) );
 				break;
 			default:
 				$fields->text( $key, $value );
@@ -157,7 +166,7 @@ final class LegalSettingsPage {
 		foreach ( array_slice( array_reverse( $history ), 0, 20 ) as $entry ) {
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td><td>%4$s</td><td>%5$s</td></tr>',
-				esc_html( isset( $entry['timestamp'] ) ? (string) $entry['timestamp'] : '' ),
+				esc_html( isset( $entry['timestamp'] ) ? Dates::format_datetime_display( $entry['timestamp'] ) : '' ),
 				esc_html( Labels::rule_setting( isset( $entry['key'] ) ? (string) $entry['key'] : '' ) ),
 				esc_html( self::format_value( isset( $entry['old'] ) ? $entry['old'] : null ) ),
 				esc_html( self::format_value( isset( $entry['new'] ) ? $entry['new'] : null ) ),

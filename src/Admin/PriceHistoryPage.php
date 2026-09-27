@@ -114,8 +114,8 @@ class PriceHistoryPage {
 			if ( $item ) {
 				$explainer   = Plugin::instance()->lowest_price_explainer();
 				$explanation = $explainer->explain( $item, Dates::today() );
-				echo '<div class="sidrena-cijena-history-explanation" style="margin: 15px 0; padding: 12px; background: #fff; border: 1px solid #c3c4c7; border-radius: 4px;">';
-				echo '<h2 style="margin-top: 0; font-size: 14px;">' . esc_html__( '30-day reference price explanation', 'sidrena-cijena-eu' ) . '</h2>';
+				echo '<div class="sidrena-cijena-history-explanation">';
+				echo '<h2>' . esc_html__( '30-day reference price explanation', 'sidrena-cijena-eu' ) . '</h2>';
 				echo $explainer->render_html( $explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '</div>';
 			}
@@ -201,10 +201,10 @@ class PriceHistoryPage {
 			$note = isset( $row['correction_reason'] ) ? (string) $row['correction_reason'] : '';
 
 			echo '<tr>';
-			echo '<td>' . esc_html( Dates::from_utc( (string) $row['created_at'] )->format( 'Y-m-d H:i' ) ) . '</td>';
+			echo '<td>' . esc_html( Dates::format_datetime_display( (string) $row['created_at'] ) ) . '</td>';
 			echo '<td>' . esc_html( $item ) . '</td>';
 			echo '<td>' . esc_html( Labels::price_type( (string) $row['price_type'] ) ) . '</td>';
-			echo '<td>' . esc_html( Currency::format_decimal( (float) $row['price'] ) . ' ' . (string) $row['currency'] ) . '</td>';
+			echo '<td>' . esc_html( Currency::format( (float) $row['price'], (string) $row['currency'] ) ) . '</td>';
 			echo '<td>' . esc_html( Labels::source( (string) $row['source'] ) ) . '</td>';
 			echo '<td>' . esc_html( $user ) . '</td>';
 			$reference = Dates::format_date_display( isset( $row['reference_date'] ) ? $row['reference_date'] : '' );

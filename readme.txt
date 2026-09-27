@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.2 =
+* Centralize styles and scripts: extract inline style attributes into assets/css/admin.css, move bulk anchor selection and confirmation scripts to assets/js/admin.js, add busy/disabled state handling for long-running submit buttons, implement all status badge variant colors, fix low-contrast badge color for WCAG AA compliance, and enqueue admin assets on product edit screens.
+* Public price list improvements: add catalog pagination (50 items per page), "showing X–Y of Z items" result count, clear-filters affordance, horizontal-scrolling responsive table wrapper, print media styling for legally mandated price-list printouts, translated XML/CSV feed links, and accessible aria-labels on archive download links.
+* Formatting consistency: introduce Dates::format_datetime_display() across all admin screens for unified Croatian site-time display (d.m.Y. H:i), and unify amount formatting via Currency::format().
+* Accessibility and i18n hygiene: add label_for across all settings screens, fix SaleTypesSettings label_for mismatch, add screen-reader legends to checkbox fieldsets, add aria-live variation updates, clean up duplicate description in locations, and complete Croatian translation catalog (714 translated, 0 untranslated).
 
 = 2.0.1 =
 * Security audit: add unit regression tests for CsvParser allowed upload and temp path validation.

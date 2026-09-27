@@ -614,8 +614,9 @@ class PublicPageTest extends TestCase {
 
 		$this->assertSame(
 			array(
-				'q'    => 'mlijeko',
-				'type' => 'proizvod',
+				'q'     => 'mlijeko',
+				'type'  => 'proizvod',
+				'paged' => 1,
 			),
 			$probe->request_arguments()
 		);
@@ -623,8 +624,19 @@ class PublicPageTest extends TestCase {
 		$_GET = array();
 		$this->assertSame(
 			array(
-				'q'    => '',
-				'type' => '',
+				'q'     => '',
+				'type'  => '',
+				'paged' => 1,
+			),
+			$probe->request_arguments()
+		);
+
+		$_GET['paged'] = '3';
+		$this->assertSame(
+			array(
+				'q'     => '',
+				'type'  => '',
+				'paged' => 3,
 			),
 			$probe->request_arguments()
 		);
@@ -859,7 +871,178 @@ class PublicPageTest extends TestCase {
 		$probe->render_list( array() );
 		$probe->render_list( array( 'q' => 'klime' ) );
 		$probe->render_list( array( 'type' => 'usluga' ) );
+		$probe->render_list( array( 'paged' => 2 ) );
 
-		$this->assertSame( 3, $catalog->iterate_calls );
+		$this->assertSame( 4, $catalog->iterate_calls );
+	}
+
+	/**
+	 * Large catalog is paginated and displays result count and pagination links.
+	 *
+	 * @return void
+	 */
+	public function test_render_list_paginates_large_catalog() {
+		$this->reset_state();
+
+		$catalog = new PageCatalogFake();
+		for ( $i = 1; $i <= 55; ++$i ) {
+			$catalog->items[] = new CatalogItem(
+				array(
+					'id'            => $i,
+					'type'          => 'product',
+					'name'          => sprintf( 'Proizvod %02d', $i ),
+					'sku'           => sprintf( 'SKU-%02d', $i ),
+					'brand'         => 'Brand',
+					'barcode'       => '1000' . $i,
+					'regular_price' => 10.0 + $i,
+					'current_price' => 10.0 + $i,
+				)
+			);
+		}
+		PluginSwap::swap( 'catalog', $catalog );
+		PluginSwap::swap( 'history', new PageHistoryFake() );
+		PluginSwap::swap( 'special_sales', new PageSaleFake() );
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 1,
+				'type' => 'webshop',
+				'name' => 'Webshop',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$probe = new PublicPageProbe();
+
+		$page_1 = $probe->render_list( array( 'paged' => 1 ) );
+		$this->assertStringContainsString( 'Proizvod 01<', $page_1 );
+		$this->assertStringContainsString( 'Proizvod 50<', $page_1 );
+		$this->assertStringNotContainsString( 'Proizvod 51<', $page_1 );
+		$this->assertStringContainsString( 'Showing 1–50 of 55 items.', $page_1 );
+		$this->assertStringContainsString( 'sidrena-cijena-pagination', $page_1 );
+		$this->assertStringContainsString( 'sidrena-cijena-table-container', $page_1 );
+		$this->assertStringContainsString( 'XML Feed', $page_1 );
+		$this->assertStringContainsString( 'CSV Feed', $page_1 );
+
+		PublicPageProbe::reset_styles();
+		$page_2 = $probe->render_list( array( 'paged' => 2 ) );
+		$this->assertStringNotContainsString( 'Proizvod 01<', $page_2 );
+		$this->assertStringContainsString( 'Proizvod 51<', $page_2 );
+		$this->assertStringContainsString( 'Proizvod 55<', $page_2 );
+		$this->assertStringContainsString( 'Showing 51–55 of 55 items.', $page_2 );
+	}
+
+	/**
+	 * Active search or type filters display a clear-filters link.
+	 *
+	 * @return void
+	 */
+	public function test_render_list_shows_clear_filters_link() {
+		$this->reset_state();
+		$this->wire_catalog();
+
+		$probe = new PublicPageProbe();
+
+		$clean = $probe->render_list( array() );
+		$this->assertStringNotContainsString( 'Clear filters', $clean );
+
+		PublicPageProbe::reset_styles();
+		$filtered = $probe->render_list( array( 'q' => 'Mlijeko' ) );
+		$this->assertStringContainsString( 'Clear filters', $filtered );
+	}
+
+	/**
+	 * Archive render wraps in container, gives download links accessible names, and translates feed links.
+	 *
+	 * @return void
+	 */
+	public function test_render_archive_accessible_download_and_translated_feeds() {
+		$this->reset_state();
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 7,
+				'type' => 'webshop',
+				'name' => 'Webshop Zagreb',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$pub       = new PagePublicationFake();
+		$pub->rows = array(
+			array(
+				'id'           => 1,
+				'location_id'  => 7,
+				'format'       => 'csv',
+				'filename'     => 'cjenik-2026-09-25.csv',
+				'file_size'    => 1024,
+				'checksum'     => '1234567890abcdef',
+				'item_count'   => 10,
+				'published_at' => '2026-09-25 12:00:00',
+				'created_at'   => '2026-09-25 12:00:00',
+				'url'          => 'https://example.com/cjenik-2026-09-25.csv',
+			),
+		);
+		PluginSwap::swap( 'publications', $pub );
+
+		$probe = new PublicPageProbe();
+		$out   = $probe->render_archive();
+
+		$this->assertStringContainsString( 'sidrena-cijena-table-container', $out );
+		$this->assertStringContainsString( 'aria-label="Download cjenik-2026-09-25.csv"', $out );
+		$this->assertStringContainsString( 'XML Feed', $out );
+		$this->assertStringContainsString( 'CSV Feed', $out );
+	}
+
+	/**
+	 * Shortcode accepts paged attribute and $_GET['paged'].
+	 *
+	 * @return void
+	 */
+	public function test_shortcode_list_supports_paged_parameter() {
+		$this->reset_state();
+
+		$catalog = new PageCatalogFake();
+		for ( $i = 1; $i <= 55; ++$i ) {
+			$catalog->items[] = new CatalogItem(
+				array(
+					'id'            => $i,
+					'type'          => 'product',
+					'name'          => 'Stavka ' . $i,
+					'sku'           => 'STK-' . $i,
+					'regular_price' => 5.0,
+					'current_price' => 5.0,
+				)
+			);
+		}
+		PluginSwap::swap( 'catalog', $catalog );
+		PluginSwap::swap( 'history', new PageHistoryFake() );
+		PluginSwap::swap( 'special_sales', new PageSaleFake() );
+
+		$locations       = new PageLocationFake();
+		$locations->rows = array(
+			array(
+				'id'   => 1,
+				'type' => 'webshop',
+				'name' => 'Webshop',
+			),
+		);
+		PluginSwap::swap( 'locations', $locations );
+
+		$probe = new PublicPageProbe();
+
+		// Shortcode attribute paged 2.
+		$out1 = $probe->shortcode_list( array( 'paged' => '2' ) );
+		$this->assertStringContainsString( 'Stavka 55', $out1 );
+		$this->assertStringNotContainsString( 'Stavka 1<', $out1 );
+
+		// Via global query argument paged.
+		PublicPageProbe::reset_styles();
+		Plugin::instance()->rest_cache()->flush();
+		$_GET['paged'] = '2';
+		$out2          = $probe->shortcode_list( array() );
+		$this->assertStringContainsString( 'Stavka 55', $out2 );
 	}
 }

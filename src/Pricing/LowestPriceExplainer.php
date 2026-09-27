@@ -142,7 +142,7 @@ class LowestPriceExplainer {
 						/* translators: 1: end date, 2: sale price */
 						__( 'A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price.', 'sidrena-cijena-eu' ),
 						$last_ended['effective_to'],
-						Currency::format_decimal( (float) $last_ended['price'] ) . ' ' . $item->currency
+						Currency::format( (float) $last_ended['price'], $item->currency )
 					);
 				}
 			}
@@ -365,9 +365,9 @@ class LowestPriceExplainer {
 							</thead>
 							<tbody>
 								<?php foreach ( (array) $explanation['source_records'] as $record ) : ?>
-									<tr<?php echo ! empty( $record['is_determining'] ) ? ' style="background-color: #edfaef; font-weight: bold;"' : ''; ?>>
+									<tr<?php echo ! empty( $record['is_determining'] ) ? ' class="sidrena-determining-record"' : ''; ?>>
 										<td>#<?php echo esc_html( (string) $record['id'] ); ?></td>
-										<td><?php echo esc_html( Currency::format_decimal( (float) $record['price'] ) . ' ' . (string) $explanation['currency'] ); ?></td>
+										<td><?php echo esc_html( Currency::format( (float) $record['price'], (string) $explanation['currency'] ) ); ?></td>
 										<td><?php echo esc_html( Labels::price_type( (string) $record['price_type'] ) ); ?></td>
 										<td><?php echo esc_html( Labels::source( (string) $record['source'] ) ); ?></td>
 										<td>

@@ -49,7 +49,7 @@ class SaleTypesSettings {
 			array( __CLASS__, 'render_field' ),
 			self::PAGE,
 			self::SECTION,
-			array( 'label_for' => 'sidrena_cijena_sale_types' )
+			array( 'label_for' => 'sale_types' )
 		);
 	}
 

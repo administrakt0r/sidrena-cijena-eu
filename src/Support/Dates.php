@@ -152,6 +152,50 @@ final class Dates {
 	}
 
 	/**
+	 * Format a UTC datetime for display in the site time zone.
+	 *
+	 * Consistent with format_date_display: outputs Croatian `d.m.Y. H:i`.
+	 *
+	 * @param mixed $value UTC datetime string or integer timestamp.
+	 * @return string Formatted site-local datetime or empty string if invalid.
+	 */
+	public static function format_datetime_display( $value ) {
+		if ( empty( $value ) ) {
+			return '';
+		}
+
+		if ( is_numeric( $value ) ) {
+			$dt = self::from_utc( gmdate( 'Y-m-d H:i:s', (int) $value ) );
+
+			return $dt ? $dt->format( 'd.m.Y. H:i' ) : '';
+		}
+
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		$value = trim( $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		$dt = self::from_utc( 16 === strlen( $value ) ? $value . ':00' : $value );
+
+		if ( $dt ) {
+			return $dt->format( 'd.m.Y. H:i' );
+		}
+
+		try {
+			$parsed = new \DateTimeImmutable( $value );
+
+			return $parsed->setTimezone( self::timezone() )->format( 'd.m.Y. H:i' );
+		} catch ( \Exception $e ) {
+			return '';
+		}
+	}
+
+	/**
 	 * The `Y-m-d` portion of a date or datetime string.
 	 *
 	 * Values read back from `datetime` columns arrive as `Y-m-d H:i:s` and must

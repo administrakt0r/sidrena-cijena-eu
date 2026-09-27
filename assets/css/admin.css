@@ -17,16 +17,34 @@
 }
 
 .sidrena-cijena-status--missing,
-.sidrena-cijena-status--failed {
+.sidrena-cijena-status--failed,
+.sidrena-cijena-status--error,
+.sidrena-cijena-status--invalid {
 	background: #fcf0f1;
 	color: #b32d2e;
 }
 
 .sidrena-cijena-status--needs_verification,
 .sidrena-cijena-status--pending,
-.sidrena-cijena-status--superseded {
+.sidrena-cijena-status--warning,
+.sidrena-cijena-status--duplicate,
+.sidrena-cijena-status--overwrite {
 	background: #fef8ee;
-	color: #996800;
+	color: #734b00; /* WCAG AA compliant >= 4.5:1 on #fef8ee */
+}
+
+.sidrena-cijena-status--info,
+.sidrena-cijena-status--generated,
+.sidrena-cijena-status--validated {
+	background: #f0f6fb;
+	color: #135e96;
+}
+
+.sidrena-cijena-status--superseded,
+.sidrena-cijena-status--expired,
+.sidrena-cijena-status--unchanged {
+	background: #f0f0f1;
+	color: #50575e;
 }
 
 .sidrena-cijena-cards {
@@ -179,3 +197,160 @@
 	width: min(320px, 75vw);
 	vertical-align: middle;
 }
+
+/* Centralized admin layout & typography */
+.sidrena-dashboard-guide-action {
+	margin-bottom: 15px;
+}
+
+.sidrena-icon-inline {
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+.sidrena-bulk-all-card {
+	max-width: 100%;
+	margin-top: 15px;
+	margin-bottom: 20px;
+	padding: 16px 20px;
+}
+
+.sidrena-label-inline {
+	margin-right: 1em;
+}
+
+.sidrena-label-inline-wide {
+	margin-right: 20px;
+}
+
+.sidrena-bulk-selection-actions {
+	margin-bottom: 12px;
+}
+
+.sidrena-guidance-list {
+	list-style: disc;
+	margin-left: 20px;
+}
+
+.sidrena-sources-table {
+	max-width: 900px;
+}
+
+.sidrena-migration-steps {
+	margin-left: 20px;
+}
+
+.sidrena-import-commit-form {
+	margin-top: 1em;
+}
+
+.sidrena-cijena-anchor-form {
+	margin-top: 1em;
+}
+
+.sidrena-checkbox-label {
+	display: block;
+}
+
+.sidrena-cijena-item-identity {
+	margin-top: 0;
+	margin-bottom: 10px;
+	font-size: 13px;
+}
+
+.sidrena-cijena-sale-explanations {
+	margin-top: 10px;
+}
+
+.sidrena-cijena-explanation-details {
+	margin-bottom: 8px;
+	border: 1px solid #c3c4c7;
+	border-radius: 3px;
+	padding: 6px 10px;
+	background: #fdfdfd;
+}
+
+.sidrena-cijena-explanation-summary {
+	cursor: pointer;
+	font-weight: 600;
+	color: #2271b1;
+	font-size: 12px;
+}
+
+.sidrena-cijena-history-explanation {
+	margin: 15px 0;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.sidrena-cijena-history-explanation h2 {
+	margin-top: 0;
+	font-size: 14px;
+}
+
+.sidrena-docs-wrap {
+	max-width: 1200px;
+}
+
+.sidrena-docs-description {
+	font-size: 14px;
+	margin-bottom: 20px;
+}
+
+.sidrena-docs-nav {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 25px;
+}
+
+.sidrena-docs-card {
+	max-width: 100%;
+	padding: 20px;
+	margin-bottom: 25px;
+}
+
+.sidrena-docs-table {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.sidrena-docs-list {
+	list-style: disc;
+	padding-left: 25px;
+	line-height: 1.8;
+}
+
+.sidrena-docs-callout {
+	background: #f0f6fb;
+	border-left: 4px solid #2271b1;
+	padding: 12px 16px;
+	margin: 15px 0;
+}
+
+/* Accessible focus-visible indicators */
+.button:focus-visible,
+.sidrena-style-choice:focus-visible,
+.sidrena-cijena-cards a:focus-visible,
+.sidrena-docs-nav a:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+/* Long-running action busy state */
+.button.is-busy,
+button.is-busy {
+	position: relative;
+	opacity: 0.75;
+	pointer-events: none;
+	cursor: wait !important;
+}
+
+.sidrena-determining-record {
+	background-color: #edfaef;
+	font-weight: bold;
+}
+
+

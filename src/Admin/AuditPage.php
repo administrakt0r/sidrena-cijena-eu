@@ -177,7 +177,7 @@ class AuditPage {
 			$user_id = isset( $context['user_id'] ) ? (int) $context['user_id'] : 0;
 
 			echo '<tr>';
-			echo '<td>' . esc_html( Dates::from_utc( (string) $row['created_at'] )->format( 'Y-m-d H:i' ) ) . '</td>';
+			echo '<td>' . esc_html( Dates::format_datetime_display( (string) $row['created_at'] ) ) . '</td>';
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['level'] ) . '">' . esc_html( Labels::log_level( (string) $row['level'] ) ) . '</span></td>';
 			echo '<td>' . esc_html( Labels::log_event( (string) $row['event'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) $row['message'] ) . '</td>';
@@ -197,13 +197,9 @@ class AuditPage {
 	 * @return string
 	 */
 	protected static function site_time( $timestamp ) {
-		try {
-			$date = new \DateTimeImmutable( $timestamp );
-		} catch ( \Exception $exception ) {
-			return $timestamp;
-		}
+		$formatted = Dates::format_datetime_display( $timestamp );
 
-		return $date->setTimezone( Dates::timezone() )->format( 'Y-m-d H:i' );
+		return '' !== $formatted ? $formatted : (string) $timestamp;
 	}
 
 	/**
@@ -217,8 +213,9 @@ class AuditPage {
 			return implode( ', ', array_map( 'strval', $value ) );
 		}
 
-		if ( is_bool( $value ) ) {
-			return $value ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
+		if ( is_bool( $value ) || 'true' === $value || 'false' === $value ) {
+			$bool = is_bool( $value ) ? $value : ( 'true' === $value );
+			return $bool ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' );
 		}
 
 		return (string) $value;

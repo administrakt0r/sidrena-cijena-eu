@@ -1512,6 +1512,43 @@ if ( ! function_exists( 'add_query_arg' ) ) {
 	}
 }
 
+if ( ! function_exists( 'remove_query_arg' ) ) {
+	/**
+	 * Remove query arguments from a URL.
+	 *
+	 * @param string|string[] $key Query key(s) to remove.
+	 * @param string|false    $url Optional. URL to modify. Defaults to $_SERVER['REQUEST_URI'].
+	 * @return string
+	 */
+	function remove_query_arg( $key, $url = false ) {
+		if ( false === $url ) {
+			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		}
+
+		$keys = is_array( $key ) ? $key : array( $key );
+
+		$parts = explode( '?', (string) $url, 2 );
+		$base  = $parts[0];
+		$query = isset( $parts[1] ) ? $parts[1] : '';
+
+		if ( '' === $query ) {
+			return $base;
+		}
+
+		parse_str( $query, $params );
+
+		foreach ( $keys as $k ) {
+			unset( $params[ $k ] );
+		}
+
+		if ( empty( $params ) ) {
+			return $base;
+		}
+
+		return $base . '?' . http_build_query( $params );
+	}
+}
+
 if ( ! function_exists( 'size_format' ) ) {
 	/**
 	 * Human-readable file size.

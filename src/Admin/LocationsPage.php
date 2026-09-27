@@ -163,13 +163,13 @@ class LocationsPage {
 
 		echo '</select>';
 		echo '<p class="description">' . esc_html__( 'Choose whether this location receives every catalog item, only selected categories, or all except selected categories.', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<p><label class="screen-reader-text" for="sidrena-location-categories">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena-eu' ) . '</label>';
+		echo '<p><label class="screen-reader-text" for="sidrena-location-categories">' . esc_html__( 'Category slugs', 'sidrena-cijena-eu' ) . '</label>';
 		echo '<input type="text" class="regular-text" id="sidrena-location-categories" name="applies_categories" value="' . esc_attr( $cats ) . '" placeholder="' . esc_attr__( 'category-slug, other-slug', 'sidrena-cijena-eu' ) . '" /></p>';
 		echo '<p class="description">' . esc_html__( 'Category slugs, comma separated. Leave empty to include everything.', 'sidrena-cijena-eu' ) . '</p></td></tr>';
 
 		echo '<tr><th scope="row">' . esc_html__( 'Formats', 'sidrena-cijena-eu' ) . '</th><td>';
 		foreach ( array( 'csv', 'xml' ) as $format ) {
-			echo '<label style="margin-right:1em;"><input type="checkbox" name="formats[]" value="' . esc_attr( $format ) . '"' . checked( in_array( $format, $formats, true ), true, false ) . ' /> ' . esc_html( strtoupper( $format ) ) . '</label>';
+			echo '<label class="sidrena-label-inline"><input type="checkbox" name="formats[]" value="' . esc_attr( $format ) . '"' . checked( in_array( $format, $formats, true ), true, false ) . ' /> ' . esc_html( strtoupper( $format ) ) . '</label>';
 		}
 		echo '<p class="description">' . esc_html__( 'Choose the file formats accepted by this location. The generated files remain available in the publication archive.', 'sidrena-cijena-eu' ) . '</p>';
 		echo '</td></tr>';
@@ -254,7 +254,7 @@ class LocationsPage {
 			echo '<td>' . esc_html( (string) (int) $location['sequence_no'] ) . '</td>';
 			echo '<td>' . esc_html( $location['active'] ? __( 'Yes', 'sidrena-cijena-eu' ) : __( 'No', 'sidrena-cijena-eu' ) ) . '</td>';
 			echo '<td>' . esc_html( implode( ', ', array_map( 'strtoupper', $formats ) ) ) . '</td>';
-			echo '<td>' . esc_html( $last && ! empty( $last['published_at'] ) ? Dates::from_utc( (string) $last['published_at'] )->format( 'Y-m-d H:i' ) : '—' ) . '</td>';
+			echo '<td>' . esc_html( $last && ! empty( $last['published_at'] ) ? Dates::format_datetime_display( (string) $last['published_at'] ) : '—' ) . '</td>';
 			echo '<td>';
 			echo '<a href="' . esc_url( self::url( array( 'location' => $id ) ) ) . '">' . esc_html__( 'Edit', 'sidrena-cijena-eu' ) . '</a> | ';
 

@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.2 — UI/UX Improvements Pass (2026-09-27)
+
+- UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (Items 4, 5, 6, 7 / UX-04..UX-07).
+- Centralised admin styles and scripts: removed inline style attributes across admin screens, extracted bulk anchor entry select-all/deselect-all and overwrite confirmation into `assets/js/admin.js`, added `:focus-visible` styles, added busy/disabled states for long-running submit buttons, added full status badge variant styles, fixed badge color contrast for WCAG AA compliance (>7:1 on light background), and enqueued admin assets on product edit screens.
+- Public price list improvements: added catalog pagination (`const LIST_PER_PAGE = 50`), "showing X–Y of Z items" count, clear-filters affordance, helpful empty state action, horizontal scroll container, print media stylesheet rules for legally mandated printouts, translated XML/CSV feed links, and accessible filename aria-labels on archive download links.
+- Consistent date and amount formatting: introduced `Dates::format_datetime_display()` across all admin screens for unified Croatian site-time display (`d.m.Y. H:i`), and unified amount formatting via `Currency::format()`.
+- Accessibility and i18n hygiene: added `label_for` attributes across all settings screens, fixed `SaleTypesSettings` ID mismatch, added `<legend>` to checkbox fieldsets, added `aria-live="polite"` variation updates, cleaned up duplicate description in locations, and completed Croatian translation catalog (714 translated, 0 untranslated).
+- Quality gates: 375 unit tests (1,343 assertions), 0 failures; PHPCS clean across 175 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (714 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.2/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.2` and verified with `unzip -t`.
+
 ## Release 2.0.1 — Audit & Fix Pass (2026-09-27)
 
 - Full static audit and security sweep per `AGENTARDS/01-audit-and-fix.md`.

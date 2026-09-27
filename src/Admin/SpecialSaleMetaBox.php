@@ -94,7 +94,7 @@ class SpecialSaleMetaBox {
 
 		?>
 		<div class="sidrena-cijena-sale">
-			<p class="sidrena-cijena-item-identity" style="margin-top:0;margin-bottom:10px;font-size:13px;">
+			<p class="sidrena-cijena-item-identity">
 				<strong><?php echo esc_html__( 'Item:', 'sidrena-cijena-eu' ); ?></strong>
 				<code><?php echo esc_html( $explainer->format_identity( $item ) ); ?></code>
 			</p>
@@ -137,7 +137,7 @@ class SpecialSaleMetaBox {
 
 									if ( ! empty( $sale['window_start'] ) && ! empty( $sale['window_end'] ) ) {
 										/* translators: 1: window start date, 2: window end date */
-										echo '<br /><span class="description" style="font-size:11px;">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'sidrena-cijena-eu' ), (string) $sale['window_start'], (string) $sale['window_end'] ) ) . '</span>';
+										echo '<br /><span class="description">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'sidrena-cijena-eu' ), (string) $sale['window_start'], (string) $sale['window_end'] ) ) . '</span>';
 									}
 									?>
 								</td>
@@ -147,14 +147,14 @@ class SpecialSaleMetaBox {
 					</tbody>
 				</table>
 
-				<div class="sidrena-cijena-sale-explanations" style="margin-top:10px;">
+				<div class="sidrena-cijena-sale-explanations">
 					<?php foreach ( array_slice( $sales, 0, 5 ) as $sale ) : ?>
 						<?php
 						$explanation = $explainer->explain( $item, $sale );
 						$sale_name   = ! empty( $sale['sale_name'] ) ? (string) $sale['sale_name'] : Labels::sale_type( (string) $sale['sale_type'] );
 						?>
-						<details class="sidrena-cijena-explanation-details" style="margin-bottom:8px;border:1px solid #c3c4c7;border-radius:3px;padding:6px 10px;background:#fdfdfd;">
-							<summary style="cursor:pointer;font-weight:600;color:#2271b1;font-size:12px;">
+						<details class="sidrena-cijena-explanation-details">
+							<summary class="sidrena-cijena-explanation-summary">
 								<?php
 								/* translators: 1: sale name, 2: sale start date */
 								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'sidrena-cijena-eu' ), $sale_name, (string) $sale['start_date'] ) );
@@ -169,8 +169,8 @@ class SpecialSaleMetaBox {
 				<?php
 				$today_explanation = $explainer->explain( $item, $today );
 				?>
-				<details class="sidrena-cijena-explanation-details" style="margin-bottom:12px;border:1px solid #c3c4c7;border-radius:3px;padding:6px 10px;background:#fdfdfd;">
-					<summary style="cursor:pointer;font-weight:600;color:#2271b1;font-size:12px;">
+				<details class="sidrena-cijena-explanation-details">
+					<summary class="sidrena-cijena-explanation-summary">
 						<?php echo esc_html__( 'Current 30-day reference baseline (preview for today)', 'sidrena-cijena-eu' ); ?>
 					</summary>
 					<?php echo $explainer->render_html( $today_explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

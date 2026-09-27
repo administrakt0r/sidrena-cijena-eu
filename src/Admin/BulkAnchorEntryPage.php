@@ -50,17 +50,17 @@ class BulkAnchorEntryPage {
 
 		self::render_notice();
 
-		echo '<div class="card sidrena-bulk-all-card" style="max-width:100%;margin-top:15px;margin-bottom:20px;padding:16px 20px;">';
+		echo '<div class="card sidrena-bulk-all-card">';
 		echo '<h2>' . esc_html__( 'Set anchor prices for all products at once (from current price)', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>' . esc_html__( 'This option automatically sets the anchor price for products and variations in your shop based on their current active price and prescribed legal reference date (2 May 2025 for legacy categories, 10 September 2026 for all others).', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" onsubmit="return confirm(\'' . esc_js( __( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena-eu' ) ) . '\');">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_ALL_CURRENT ) . '" />';
 		wp_nonce_field( self::ACTION_ALL_CURRENT, 'sidrena_cijena_all_current_nonce' );
 		echo '<p>';
-		echo '<label style="margin-right:20px;"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena-eu' ) . '</label>';
+		echo '<label class="sidrena-label-inline-wide"><input type="radio" name="scope" value="missing" checked="checked" /> ' . esc_html__( 'Only for products missing an anchor price (recommended)', 'sidrena-cijena-eu' ) . '</label>';
 		echo '<label><input type="radio" name="scope" value="all" /> ' . esc_html__( 'For all products in catalog (including overwriting existing)', 'sidrena-cijena-eu' ) . '</label>';
 		echo '</p>';
-		echo '<p><button type="submit" class="button button-primary">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena-eu' ) . '</button></p>';
+		echo '<p><button type="submit" class="button button-primary" data-sidrena-confirm="' . esc_attr__( 'Are you sure you want to set anchor prices for all products in your shop based on their current prices?', 'sidrena-cijena-eu' ) . '">' . esc_html__( 'Set anchor prices for all products in shop', 'sidrena-cijena-eu' ) . '</button></p>';
 		echo '</form>';
 		echo '</div>';
 
@@ -89,12 +89,12 @@ class BulkAnchorEntryPage {
 		);
 		echo '</p>';
 
-		echo '<p class="sidrena-bulk-selection-actions" style="margin-bottom:12px;">';
+		echo '<p class="sidrena-bulk-selection-actions">';
 		echo '<button type="button" class="button button-secondary" id="sidrena-btn-select-all">' . esc_html__( 'Select all on this page', 'sidrena-cijena-eu' ) . '</button> ';
 		echo '<button type="button" class="button button-secondary" id="sidrena-btn-deselect-all">' . esc_html__( 'Deselect all', 'sidrena-cijena-eu' ) . '</button>';
 		echo '</p>';
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
 		wp_nonce_field( self::ACTION, 'sidrena_cijena_bulk_nonce' );
 
@@ -125,42 +125,8 @@ class BulkAnchorEntryPage {
 		}
 
 		echo '</tbody></table>';
-		submit_button( __( 'Record checked anchors', 'sidrena-cijena-eu' ) );
+		submit_button( __( 'Record checked anchors', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy' );
 		echo '</form>';
-
-		echo '<script>
-		document.addEventListener("DOMContentLoaded", function() {
-			var master = document.getElementById("sidrena-select-all");
-			var cbs = document.querySelectorAll(".sidrena-row-cb");
-			if (master) {
-				master.addEventListener("change", function() {
-					for (var i = 0; i < cbs.length; i++) {
-						cbs[i].checked = master.checked;
-					}
-				});
-			}
-			var btnAll = document.getElementById("sidrena-btn-select-all");
-			if (btnAll) {
-				btnAll.addEventListener("click", function(e) {
-					e.preventDefault();
-					for (var i = 0; i < cbs.length; i++) {
-						cbs[i].checked = true;
-					}
-					if (master) master.checked = true;
-				});
-			}
-			var btnNone = document.getElementById("sidrena-btn-deselect-all");
-			if (btnNone) {
-				btnNone.addEventListener("click", function(e) {
-					e.preventDefault();
-					for (var i = 0; i < cbs.length; i++) {
-						cbs[i].checked = false;
-					}
-					if (master) master.checked = false;
-				});
-			}
-		});
-		</script>';
 
 		Pagination::render( $paged, $total, self::PER_PAGE );
 

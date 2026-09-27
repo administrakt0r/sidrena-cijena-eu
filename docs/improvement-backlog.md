@@ -192,3 +192,14 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | --- | --- | --- | --- |
 | SEC-01 | `done` | Full static audit sweep (capabilities, nonces, output escaping, prepared SQL, allowed upload paths, log context sanitization, welcome redirect guards) | `CsvParserEncodingTest` regression tests for allowed path checking and `WelcomeTest` regression tests for capability, cron, ajax, and network admin guards; 370 unit tests passing |
 | REL-13 | `done` | Package and verify release 2.0.1 archive | `tools/build-zip.sh 2.0.1` built `versions/2.0.1/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+## UI/UX improvements pass (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| UX-04 | `done` | Centralise admin styles and scripts: extract inline `style=""` attributes to `assets/css/admin.css`, extract bulk entry select-all/deselect-all and overwrite confirmation into `assets/js/admin.js`, add button busy states, full status badge variants, improve contrast on badges for WCAG AA compliance, and enqueue admin assets on product edit screens | Clean separation in `admin.css`/`admin.js`, `:focus-visible` and busy state verified, product edit screen asset enqueueing tested |
+| UX-05 | `done` | Public price list improvements: add catalog pagination (`LIST_PER_PAGE = 50`), "showing X–Y of Z items" result count, clear-filters affordance, horizontal-scrolling responsive table wrapper, print media styling for legally mandated price-list printouts, translated XML/CSV feed links, and accessible aria-labels on archive download links | Unit tests in `PublicPageTest` covering pagination, caching, filters, container, print rules and accessible labels; all green |
+| UX-06 | `done` | Formatting consistency: introduce `Dates::format_datetime_display()` across all admin screens for unified Croatian site-time display (`d.m.Y. H:i`), and unify amount formatting via `Currency::format()` | Unit tests in `DatesTest` covering summer/winter time offsets, string/int inputs; all admin screens updated |
+| UX-07 | `done` | Accessibility and i18n hygiene: add `label_for` across all settings screens, fix `SaleTypesSettings` ID mismatch, add `<legend>` to settings fieldsets, add `aria-live="polite"` variation updates, clean up duplicate description in locations, and complete Croatian translation catalog (714 translated, 0 untranslated) | `make-pot.php` confirms 0 untranslated strings, unit tests in `LocationsPageTest` pass |
+| REL-14 | `done` | Package and verify release 2.0.2 archive | `tools/build-zip.sh 2.0.2` built `versions/2.0.2/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+

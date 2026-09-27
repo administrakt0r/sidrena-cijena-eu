@@ -44,7 +44,7 @@ class DashboardPage {
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena', 'sidrena-cijena-eu' ) . '</h1>';
-		echo '<p style="margin-bottom:15px;"><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book" style="vertical-align:middle;margin-right:4px;"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena-eu' ) . '</a></p>';
+		echo '<p class="sidrena-dashboard-guide-action"><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena-eu' ) . '</a></p>';
 
 		if ( $data['total'] > $data['scanned'] ) {
 			printf(
@@ -389,7 +389,9 @@ class DashboardPage {
 			return '—';
 		}
 
-		return Dates::from_utc( (string) $datetime )->format( 'Y-m-d H:i' );
+		$formatted = Dates::format_datetime_display( (string) $datetime );
+
+		return '' !== $formatted ? $formatted : '—';
 	}
 
 	/**
@@ -399,6 +401,8 @@ class DashboardPage {
 	 * @return string
 	 */
 	protected static function timestamp_time( $timestamp ) {
-		return Dates::from_utc( gmdate( 'Y-m-d H:i:s', $timestamp ) )->format( 'Y-m-d H:i' );
+		$formatted = Dates::format_datetime_display( (int) $timestamp );
+
+		return '' !== $formatted ? $formatted : '—';
 	}
 }

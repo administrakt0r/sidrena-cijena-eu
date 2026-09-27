@@ -329,7 +329,7 @@ class ImportPage {
 	 */
 	protected static function render_guidance() {
 		echo '<div class="notice notice-info"><p><strong>' . esc_html__( 'Before you import', 'sidrena-cijena-eu' ) . '</strong></p>';
-		echo '<ul style="list-style:disc;margin-left:20px;">';
+		echo '<ul class="sidrena-guidance-list">';
 		echo '<li>' . esc_html__( 'Today\'s price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '<li>' . esc_html__( 'For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '<li>' . esc_html__( 'Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason.', 'sidrena-cijena-eu' ) . '</li>';
@@ -346,7 +346,7 @@ class ImportPage {
 		$sources = MigrationDetector::detect();
 
 		echo '<h2>' . esc_html__( 'Existing price history sources', 'sidrena-cijena-eu' ) . '</h2>';
-		echo '<table class="widefat striped" style="max-width:900px;">';
+		echo '<table class="widefat striped sidrena-sources-table">';
 		echo '<caption class="screen-reader-text">' . esc_html__( 'Existing price history sources', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		echo '<th scope="col">' . esc_html__( 'Source', 'sidrena-cijena-eu' ) . '</th>';
@@ -364,7 +364,7 @@ class ImportPage {
 
 		echo '</tbody></table>';
 
-		echo '<h3>' . esc_html__( 'Migration path', 'sidrena-cijena-eu' ) . '</h3><ol style="margin-left:20px;">';
+		echo '<h3>' . esc_html__( 'Migration path', 'sidrena-cijena-eu' ) . '</h3><ol class="sidrena-migration-steps">';
 
 		foreach ( MigrationDetector::guidance() as $step ) {
 			echo '<li>' . esc_html( $step ) . '</li>';
@@ -462,13 +462,13 @@ class ImportPage {
 
 		Pagination::render( $page, count( $rows ), self::PREVIEW_PER_PAGE );
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" style="margin-top:1em;">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-import-commit-form sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_COMMIT ) . '" />';
 		echo '<input type="hidden" name="batch_id" value="' . esc_attr( (string) $preview['batch_id'] ) . '" />';
 		wp_nonce_field( self::ACTION_COMMIT, 'sidrena_cijena_import_nonce' );
 		echo '<p><label><input type="checkbox" name="confirm_overwrite" value="1" /> ' . esc_html__( 'I confirm replacing existing anchor records listed above.', 'sidrena-cijena-eu' ) . '</label></p>';
 		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'sidrena-cijena-eu' ) . '</label></p>';
-		submit_button( __( 'Commit import', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
+		submit_button( __( 'Commit import', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		$report = get_transient( self::transient_key( (string) $preview['batch_id'] ) . 'report' );

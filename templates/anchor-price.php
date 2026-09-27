@@ -32,7 +32,7 @@ $sidrena_size          = min( 160, max( 40, (int) \SidrenaCijena\Support\Setting
 	<?php if ( $show_anchor ) : ?>
 		<span class="sidrena-cijena__anchor">
 			<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
-			<span class="sidrena-cijena__anchor-value" data-sidrena-cijena-anchor><?php echo esc_html( $anchor_display ); ?></span>
+			<span class="sidrena-cijena__anchor-value" data-sidrena-cijena-anchor aria-live="polite"><?php echo esc_html( $anchor_display ); ?></span>
 			<?php if ( $reference_date_display ) : ?>
 				<span class="sidrena-cijena__reference-date" data-sidrena-cijena-reference-date><?php echo esc_html( sprintf( $sidrena_date_template, $reference_date_display ) ); ?></span>
 			<?php endif; ?>

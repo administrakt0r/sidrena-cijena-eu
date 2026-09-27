@@ -69,6 +69,13 @@ class PublicPage {
 	const ARCHIVE_LIMIT = 50;
 
 	/**
+	 * Maximum items per page on the public price list.
+	 *
+	 * @var int
+	 */
+	const LIST_PER_PAGE = 50;
+
+	/**
 	 * Whether the table styles were already printed on this request.
 	 *
 	 * @var bool
@@ -86,6 +93,7 @@ class PublicPage {
 
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'template_redirect', array( $this, 'serve' ), 0 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'wp_footer', array( $this, 'footer_link' ) );
 		add_action( 'wp_sitemaps_init', array( $this, 'register_sitemap_provider' ) );
 
@@ -172,6 +180,20 @@ class PublicPage {
 	}
 
 	/**
+	 * Enqueue stylesheet on the frontend.
+	 *
+	 * @return void
+	 */
+	public function enqueue_assets() {
+		wp_enqueue_style(
+			'sidrena-cijena-frontend',
+			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+			array(),
+			SIDRENA_CIJENA_VERSION
+		);
+	}
+
+	/**
 	 * Register the archive URL in the WordPress sitemap.
 	 *
 	 * @param \WP_Sitemaps $sitemaps Sitemap registry.
@@ -203,12 +225,13 @@ class PublicPage {
 	/**
 	 * Render the price list table.
 	 *
-	 * @param array<mixed> $args `q`, `type`.
+	 * @param array<mixed> $args `q`, `type`, `paged`.
 	 * @return string
 	 */
 	public function render_list( array $args = array() ) {
 		$query = isset( $args['q'] ) ? trim( (string) $args['q'] ) : '';
 		$type  = isset( $args['type'] ) ? (string) $args['type'] : '';
+		$paged = isset( $args['paged'] ) ? max( 1, (int) $args['paged'] ) : 1;
 
 		if ( ! in_array( $type, array( 'proizvod', 'usluga' ), true ) ) {
 			$type = '';
@@ -226,6 +249,7 @@ class PublicPage {
 				'location' => $location ? (int) $location['id'] : 0,
 				'q'        => $query,
 				'type'     => $type,
+				'paged'    => $paged,
 			)
 		);
 		$cached = $cache->get( $key );
@@ -263,14 +287,25 @@ class PublicPage {
 			$filtered[] = $this->display_row( $row );
 		}
 
+		$total_items = count( $filtered );
+		$per_page    = self::LIST_PER_PAGE;
+		$total_pages = max( 1, (int) ceil( $total_items / $per_page ) );
+		$paged       = min( $paged, $total_pages );
+		$offset      = ( $paged - 1 ) * $per_page;
+		$page_rows   = array_slice( $filtered, $offset, $per_page );
+
 		$html = $this->partial(
 			'public-price-list.php',
 			array(
-				'rows'        => $filtered,
+				'rows'        => $page_rows,
 				'meta'        => $meta,
 				'location'    => $location,
 				'q'           => $query,
 				'type'        => $type,
+				'paged'       => $paged,
+				'per_page'    => $per_page,
+				'total_items' => $total_items,
+				'total_pages' => $total_pages,
 				'feed_xml'    => home_url( '/' . PublicFeed::STEM . '.xml' ),
 				'feed_csv'    => home_url( '/' . PublicFeed::STEM . '.csv' ),
 				'archive_url' => home_url( '/' . self::STEM_ARCHIVE . '/' ),
@@ -332,17 +367,27 @@ class PublicPage {
 	public function shortcode_list( $atts ) {
 		$atts = shortcode_atts(
 			array(
-				'q'    => '',
-				'type' => '',
+				'q'     => '',
+				'type'  => '',
+				'paged' => 0,
 			),
 			$atts,
 			'sidrena-cjenik'
 		);
 
+		$paged = (int) $atts['paged'];
+		if ( $paged <= 0 && isset( $_GET['paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
+			$paged = max( 1, absint( wp_unslash( $_GET['paged'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
+		}
+		if ( $paged <= 0 ) {
+			$paged = 1;
+		}
+
 		return $this->render_list(
 			array(
-				'q'    => (string) $atts['q'],
-				'type' => (string) $atts['type'],
+				'q'     => (string) $atts['q'],
+				'type'  => (string) $atts['type'],
+				'paged' => $paged,
 			)
 		);
 	}
@@ -367,10 +412,12 @@ class PublicPage {
 	protected function request_args() {
 		$query = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['q'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
 		$type  = isset( $_GET['type'] ) ? sanitize_key( wp_unslash( (string) $_GET['type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
+		$paged = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public filter.
 
 		return array(
-			'q'    => $query,
-			'type' => $type,
+			'q'     => $query,
+			'type'  => $type,
+			'paged' => $paged,
 		);
 	}
 

@@ -245,6 +245,8 @@ class PublicationsPage {
 			return '—';
 		}
 
-		return Dates::from_utc( (string) $datetime )->format( 'Y-m-d H:i' );
+		$formatted = Dates::format_datetime_display( $datetime );
+
+		return '' !== $formatted ? $formatted : '—';
 	}
 }

@@ -45,6 +45,33 @@ class DatesTest extends TestCase {
 	}
 
 	/**
+	 * Datetimes are converted from UTC to site time and formatted as Croatian d.m.Y. H:i.
+	 *
+	 * @return void
+	 */
+	public function test_format_datetime_display() {
+		$GLOBALS['sidrena_test_timezone'] = new \DateTimeZone( 'Europe/Zagreb' );
+
+		// UTC 10:30 on 10 Sept (CEST = UTC+2) becomes 12:30 in Zagreb.
+		$this->assertSame( '10.09.2026. 12:30', Dates::format_datetime_display( '2026-09-10 10:30:00' ) );
+		$this->assertSame( '10.09.2026. 12:30', Dates::format_datetime_display( '2026-09-10 10:30' ) );
+
+		// Winter time: UTC 10:30 on 15 Jan (CET = UTC+1) becomes 11:30 in Zagreb.
+		$this->assertSame( '15.01.2026. 11:30', Dates::format_datetime_display( '2026-01-15 10:30:00' ) );
+
+		// Numeric timestamp.
+		$ts = gmmktime( 8, 15, 0, 9, 10, 2026 );
+		$this->assertSame( '10.09.2026. 10:15', Dates::format_datetime_display( $ts ) );
+
+		// Empty and invalid values.
+		$this->assertSame( '', Dates::format_datetime_display( '' ) );
+		$this->assertSame( '', Dates::format_datetime_display( null ) );
+		$this->assertSame( '', Dates::format_datetime_display( 'not-a-datetime' ) );
+
+		unset( $GLOBALS['sidrena_test_timezone'] );
+	}
+
+	/**
 	 * Calendar arithmetic crosses month boundaries.
 	 *
 	 * @return void
