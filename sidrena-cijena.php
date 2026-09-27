@@ -3,7 +3,7 @@
  * Plugin Name:       Sidrena Cijena EU
  * Plugin URI:        https://github.com/administrakt0r/sidrena-cijena-eu
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), the daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
- * Version:           2.0.7
+ * Version:           2.0.8
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            administrakt0r
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.7' );
+defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.8' );
 defined( 'SIDRENA_CIJENA_FILE' ) || define( 'SIDRENA_CIJENA_FILE', __FILE__ );
 defined( 'SIDRENA_CIJENA_DIR' ) || define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
 defined( 'SIDRENA_CIJENA_URL' ) || define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
@@ -60,10 +60,7 @@ function sidrena_cijena_load_textdomain() {
 
 	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
 		load_textdomain( 'sidrena-cijena-eu', SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' );
-		return;
 	}
-
-	load_plugin_textdomain( 'sidrena-cijena-eu', false, dirname( SIDRENA_CIJENA_BASENAME ) . '/languages' );
 }
 add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );
 

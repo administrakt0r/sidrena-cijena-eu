@@ -70,6 +70,7 @@ class LogRepository {
 
 		$level = in_array( $level, self::LEVELS, true ) ? $level : 'info';
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
 			$this->table,
 			array(
@@ -127,10 +128,10 @@ class LogRepository {
 		$query_params = array_merge( array( $this->table ), $params );
 		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
 
 		$items = array();
@@ -159,9 +160,9 @@ class LogRepository {
 
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( max( 1, (int) $days ) * DAY_IN_SECONDS ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->query(
-			$wpdb->prepare( "DELETE FROM {$this->table} WHERE created_at < %s", $cutoff )
+			$wpdb->prepare( 'DELETE FROM %i WHERE created_at < %s', $this->table, $cutoff )
 		);
 	}
 
@@ -173,7 +174,7 @@ class LogRepository {
 	public function count_all() {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$this->table}" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $this->table ) );
 	}
 }

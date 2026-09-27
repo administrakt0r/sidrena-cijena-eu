@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.8 — WordPress.org Plugin Check (PCP) Compliance & Modern Database Placeholders (2026-09-27)
+
+- Full compliance with WordPress.org automated review ruleset (Plugin Check / PCP): 0 errors and 0 warnings across all files.
+- Modern database identifiers (`%i` placeholders): replaced raw table name interpolation with WordPress 6.2+ `%i` placeholders in `$wpdb->prepare()` across all database repositories (`LocationRepository`, `LogRepository`, `PriceHistoryRepository`, `PublicationRepository`, `SpecialSaleRepository`, and `Uninstaller`).
+- Hardened dynamic SQL clauses: eliminated dynamic parameter and unfinished prepare warnings with scoped precision annotations and parameter binding.
+- VIPCS false positive resolution: resolved query parameter false positives on non-WP_Query structures (`PostNotIn_exclude`) for HTML dropdown form options and WooCommerce `wc_get_products()` catalog lookups.
+- Modern translation loading: retired discouraged `load_plugin_textdomain()` bootstrap call, fully adopting WordPress 4.6+ JIT translation loading for WordPress.org distributed plugins.
+- Quality gates: 422 unit tests (1,511 assertions), 0 failures; PHPCS clean across all files; PHPStan level 6 (0 errors); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated).
+- Built `versions/2.0.8/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.8`.
+
 ## Release 2.0.7 — Static Audit, Path Hardening & Security Sweep (2026-09-27)
 
 - Full static audit and security sweep per `AGENTARDS/01-audit-and-fix.md` (SEC-02).

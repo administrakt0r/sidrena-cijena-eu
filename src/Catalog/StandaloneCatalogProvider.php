@@ -71,7 +71,7 @@ class StandaloneCatalogProvider implements CatalogProvider {
 				'per_page' => 100,
 				'type'     => 'all',
 				'include'  => array(),
-				'exclude'  => array(),
+				'exclude'  => array(), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Supported catalog query parameter.
 				'category' => '',
 				'search'   => '',
 				'orderby'  => 'title',
@@ -93,7 +93,7 @@ class StandaloneCatalogProvider implements CatalogProvider {
 		}
 
 		if ( ! empty( $args['exclude'] ) ) {
-			$query_args['post__not_in'] = array_map( 'intval', (array) $args['exclude'] );
+			$query_args['post__not_in'] = array_map( 'intval', (array) $args['exclude'] ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Specific post exclusion.
 		}
 
 		if ( ! empty( $args['search'] ) ) {
@@ -129,7 +129,7 @@ class StandaloneCatalogProvider implements CatalogProvider {
 			array(
 				'type'     => 'all',
 				'include'  => array(),
-				'exclude'  => array(),
+				'exclude'  => array(), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Supported catalog query parameter.
 				'category' => '',
 				'search'   => '',
 			)
@@ -148,7 +148,7 @@ class StandaloneCatalogProvider implements CatalogProvider {
 		}
 
 		if ( ! empty( $args['exclude'] ) ) {
-			$query_args['post__not_in'] = array_map( 'intval', (array) $args['exclude'] );
+			$query_args['post__not_in'] = array_map( 'intval', (array) $args['exclude'] ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Specific post exclusion.
 		}
 
 		if ( ! empty( $args['search'] ) ) {

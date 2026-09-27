@@ -246,3 +246,11 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | --- | --- | --- | --- |
 | SEC-02 | `done` | Static audit & security sweep: audited administrative action authorization (`Capabilities::current_user_can()`) and nonce authentication across all plugin endpoints; audited prepared SQL and output escaping; added regression tests for import path directory traversal rejection and REST request suppression of welcome banner activation redirect | `CsvParserEncodingTest::test_parse_file_rejects_temp_dir_path_traversal` and `WelcomeTest::test_maybe_redirect_guards_against_rest_request`; 422 unit tests passing |
 | REL-19 | `done` | Package and verify release 2.0.7 archive | `tools/build-zip.sh 2.0.7` built `versions/2.0.7/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+## WordPress.org Plugin Check & Database Standards (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SEC-03 | `done` | WordPress.org Plugin Check compliance: resolved all 71 static issues flagged by WordPress.org submission check (PCP); migrated database queries to `%i` identifier placeholders across all repositories; resolved unescaped DB parameter false positives; resolved VIPCS `PostNotIn_exclude` warnings; modernized translation loading to core JIT | `./vendor/bin/phpcs` across custom ruleset and full PCP ruleset: 0 errors, 0 warnings; 422 unit tests passing |
+| REL-20 | `done` | Package and verify release 2.0.8 archive | `tools/build-zip.sh 2.0.8` built `versions/2.0.8/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+

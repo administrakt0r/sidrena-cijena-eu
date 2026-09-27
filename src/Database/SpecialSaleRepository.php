@@ -69,6 +69,7 @@ class SpecialSaleRepository {
 		$row                    = $this->normalize( $data );
 		$this->active_map_cache = null;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $this->table, $row, $this->formats() );
 
 		return (int) $wpdb->insert_id;
@@ -93,6 +94,7 @@ class SpecialSaleRepository {
 		$row                    = $this->normalize( array_merge( $existing, $data ) );
 		$this->active_map_cache = null;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
 
 		return false !== $result;
@@ -122,8 +124,9 @@ class SpecialSaleRepository {
 	public function get( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table} WHERE id = %d", (int) $id ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $this->table, (int) $id ),
 			ARRAY_A
 		);
 
@@ -159,7 +162,7 @@ class SpecialSaleRepository {
 			$params = array_merge( $params, $statuses );
 		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query clauses use safe placeholders and parameters.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i WHERE product_id = %d AND {$variation_sql}{$status_sql} ORDER BY start_date DESC", $params ), ARRAY_A );
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
@@ -204,18 +207,18 @@ class SpecialSaleRepository {
 
 		$at = $at ? $at : Dates::now_site()->format( 'Y-m-d H:i:s' );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$prepared = $wpdb->prepare(
-			"SELECT * FROM {$this->table}
+			"SELECT * FROM %i
 			WHERE status IN ('scheduled','active')
 			AND start_date <= %s
 			AND ( end_date IS NULL OR end_date >= %s )
 			ORDER BY start_date DESC",
+			$this->table,
 			$at,
 			$at
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $prepared, ARRAY_A );
 
 		$map = array();
@@ -247,22 +250,24 @@ class SpecialSaleRepository {
 
 		$now = $now ? $now : Dates::now_site()->format( 'Y-m-d H:i:s' );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$activated = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$this->table} SET status = 'active', updated_at = %s
+				"UPDATE %i SET status = 'active', updated_at = %s
 				WHERE status = 'scheduled' AND start_date <= %s AND ( end_date IS NULL OR end_date >= %s )",
+				$this->table,
 				Dates::now_utc(),
 				$now,
 				$now
 			)
 		);
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$ended = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$this->table} SET status = 'ended', updated_at = %s
+				"UPDATE %i SET status = 'ended', updated_at = %s
 				WHERE status IN ('scheduled','active') AND end_date IS NOT NULL AND end_date < %s",
+				$this->table,
 				Dates::now_utc(),
 				$now
 			)
@@ -285,8 +290,8 @@ class SpecialSaleRepository {
 	public function count_by_status() {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( "SELECT status, COUNT(*) AS total FROM {$this->table} GROUP BY status", ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT status, COUNT(*) AS total FROM %i GROUP BY status', $this->table ), ARRAY_A );
 
 		$counts = array();
 

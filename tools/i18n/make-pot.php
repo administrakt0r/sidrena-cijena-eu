@@ -18,6 +18,7 @@
 $root = dirname( __DIR__, 2 );
 $bootstrap = file_get_contents( $root . '/sidrena-cijena.php' );
 if ( ! preg_match( '/Version:\\s+([0-9]+\\.[0-9]+\\.[0-9]+)/', $bootstrap, $version_match ) ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- CLI script writing to STDERR.
 	fwrite( STDERR, "Cannot read plugin version.\n" );
 	exit( 1 );
 }
@@ -75,6 +76,7 @@ if ( '' !== $locale ) {
 	$translations_file = $root . '/tools/i18n/' . $locale . '.php';
 
 	if ( ! is_file( $translations_file ) ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- CLI script writing to STDERR.
 		fwrite( STDERR, "No translation dictionary found at {$translations_file}\n" );
 		exit( 1 );
 	}

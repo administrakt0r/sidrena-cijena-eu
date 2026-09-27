@@ -71,6 +71,7 @@ class PriceHistoryRepository {
 
 		$row = $this->normalize( $data );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$inserted = $wpdb->insert( $this->table, $row, $this->formats( $row ) );
 
 		if ( false === $inserted || (int) $wpdb->insert_id <= 0 ) {
@@ -124,8 +125,9 @@ class PriceHistoryRepository {
 	public function get( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table} WHERE id = %d", (int) $id ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $this->table, (int) $id ),
 			ARRAY_A
 		);
 
@@ -187,7 +189,7 @@ class PriceHistoryRepository {
 
 		// Select only each item's greatest ledger ID. Corrections are appended,
 		// so this preserves the existing latest-by-ID rule without loading history.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$sql = $wpdb->prepare(
 			"SELECT history.* FROM {$this->table} AS history
 			INNER JOIN (
@@ -199,8 +201,9 @@ class PriceHistoryRepository {
 			ORDER BY history.id ASC",
 			$params
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $sql, ARRAY_A );
 
 		$map = array();
@@ -235,7 +238,7 @@ class PriceHistoryRepository {
 
 		// The first non-null price after the latest closure identifies this offer;
 		// later reductions keep the same start row and reference window.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$sql = $wpdb->prepare(
 			"SELECT history.product_id, COALESCE(history.variation_id, 0) AS variation_id, history.price, history.valid_from, closure_event.valid_from AS prior_closure_at
 			FROM {$this->table} AS history
@@ -256,8 +259,9 @@ class PriceHistoryRepository {
 			ORDER BY history.id ASC",
 			$params
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $sql, ARRAY_A );
 		$map  = array();
 
@@ -291,13 +295,14 @@ class PriceHistoryRepository {
 		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
 		$params       = array_merge( array( $price_type ), $product_ids );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$sql = $wpdb->prepare(
 			"SELECT DISTINCT product_id, variation_id FROM {$this->table} WHERE price_type = %s AND product_id IN ({$placeholders})",
 			$params
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $sql, ARRAY_A );
 
 		$map = array();
@@ -331,7 +336,7 @@ class PriceHistoryRepository {
 
 		$params = array_merge( array( $this->table ), $params, array( $limit, $offset ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where and $orderby are validated against strict whitelists and values bound by prepare().
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $params ), ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
@@ -350,7 +355,7 @@ class PriceHistoryRepository {
 
 		$params = array_merge( array( $this->table ), $params );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is validated against strict conditions and values bound by prepare().
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
 	}
 
@@ -377,7 +382,8 @@ class PriceHistoryRepository {
 
 		$params = array_merge( array( $this->table, (int) $product_id ), $variation_params, array( $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Safe parameters bound by prepare().
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM %i
@@ -391,6 +397,7 @@ class PriceHistoryRepository {
 			),
 			ARRAY_A
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		return is_array( $rows ) ? $rows : array();
 	}

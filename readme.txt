@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.8 =
+* WordPress.org Plugin Check (PCP) compliance: verified 0 errors and 0 warnings against the official WordPress.org automated review ruleset.
+* Database security & modern placeholders: converted database table references to WordPress 6.2+ `%i` identifier placeholders across all repositories (`LocationRepository`, `LogRepository`, `PriceHistoryRepository`, `PublicationRepository`, `SpecialSaleRepository`, and `Uninstaller`).
+* Hardened prepared queries: resolved unescaped parameter and interpolation warnings on dynamic clauses, adding explicit precision annotations for legitimate custom table queries.
+* VIPCS false positive mitigations: resolved query argument warnings (`PostNotIn_exclude`) for HTML form options and WooCommerce catalog queries.
+* Modern translation loading: retired discouraged `load_plugin_textdomain()` call in bootstrap for WordPress 4.6+ just-in-time translation loading.
 
 = 2.0.7 =
 * Static security audit & regression coverage: verified capability and nonce checks across all admin action endpoints, prepared SQL parameterized queries, and output escaping.

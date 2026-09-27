@@ -156,7 +156,7 @@ class LocationsPage {
 		foreach ( array(
 			'all'     => __( 'All products and services', 'sidrena-cijena-eu' ),
 			'include' => __( 'Only the selected categories', 'sidrena-cijena-eu' ),
-			'exclude' => __( 'All except the selected categories', 'sidrena-cijena-eu' ),
+			'exclude' => __( 'All except the selected categories', 'sidrena-cijena-eu' ), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- Form field option, not WP_Query.
 		) as $value => $label ) {
 			echo '<option value="' . esc_attr( $value ) . '"' . selected( $mode, $value, false ) . '>' . esc_html( $label ) . '</option>';
 		}

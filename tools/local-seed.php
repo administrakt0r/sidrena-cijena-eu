@@ -344,6 +344,7 @@ if ( $ulje_item ) {
 			if ( is_wp_error( $recomputed ) ) {
 				echo '30-day recompute failed: ' . $recomputed->get_error_message() . "\n";
 			} else {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- Development seed CLI script.
 				echo '30-day price recomputed: ' . var_export( $recomputed, true ) . "\n";
 			}
 		}

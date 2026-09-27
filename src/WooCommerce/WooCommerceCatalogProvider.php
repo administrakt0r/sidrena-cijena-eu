@@ -130,7 +130,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 				'per_page'           => 100,
 				'type'               => 'all',
 				'include'            => array(),
-				'exclude'            => array(),
+				'exclude'            => array(), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- WooCommerce wc_get_products argument.
 				'category'           => '',
 				'search'             => '',
 				'orderby'            => 'title',
@@ -160,7 +160,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		}
 
 		if ( ! empty( $args['exclude'] ) ) {
-			$query['exclude'] = array_map( 'intval', (array) $args['exclude'] );
+			$query['exclude'] = array_map( 'intval', (array) $args['exclude'] ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- WooCommerce wc_get_products argument.
 		}
 
 		if ( ! empty( $args['search'] ) ) {
@@ -242,7 +242,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			array(
 				'type'     => 'all',
 				'include'  => array(),
-				'exclude'  => array(),
+				'exclude'  => array(), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- WooCommerce count query parameter.
 				'category' => '',
 				'search'   => '',
 			)
@@ -262,7 +262,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			}
 
 			if ( ! empty( $args['exclude'] ) ) {
-				$query['exclude'] = array_map( 'intval', (array) $args['exclude'] );
+				$query['exclude'] = array_map( 'intval', (array) $args['exclude'] ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- WooCommerce count query parameter.
 			}
 
 			if ( ! empty( $args['search'] ) ) {

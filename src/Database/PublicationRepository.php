@@ -69,6 +69,7 @@ class PublicationRepository {
 
 		$row = $this->normalize( $data );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $this->table, $row, $this->formats() );
 
 		return (int) $wpdb->insert_id;
@@ -87,6 +88,7 @@ class PublicationRepository {
 		$existing = $this->get( $id );
 		$row      = $this->normalize( array_merge( $existing ? $existing : array(), $data ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
 
 		return false !== $result;
@@ -117,8 +119,9 @@ class PublicationRepository {
 	public function get( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table} WHERE id = %d", (int) $id ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $this->table, (int) $id ),
 			ARRAY_A
 		);
 
@@ -146,12 +149,12 @@ class PublicationRepository {
 
 		$params = array_merge( array( $this->table, (int) $location_id, (string) $format ), $statuses );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			$wpdb->prepare(
-				"SELECT * FROM %i
-			WHERE location_id = %d AND format = %s AND status IN ({$placeholders})
-			ORDER BY id DESC LIMIT 1",
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Status placeholders are generated safely and bound dynamically.
+				"SELECT * FROM %i WHERE location_id = %d AND format = %s AND status IN ({$placeholders}) ORDER BY id DESC LIMIT 1",
 				$params
 			),
 			ARRAY_A
@@ -182,10 +185,11 @@ class PublicationRepository {
 	public function supersede( $location_id, $format, $except_id ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$this->table} SET status = 'superseded' WHERE location_id = %d AND format = %s AND id != %d AND status = 'published'",
+				"UPDATE %i SET status = 'superseded' WHERE location_id = %d AND format = %s AND id != %d AND status = 'published'",
+				$this->table,
 				(int) $location_id,
 				(string) $format,
 				(int) $except_id
@@ -231,10 +235,10 @@ class PublicationRepository {
 		$query_params = array_merge( array( $this->table ), $params );
 		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY published_at DESC, id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
 
 		$items = array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
@@ -254,13 +258,13 @@ class PublicationRepository {
 	public function expired_candidates( $now_utc ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$prepared = $wpdb->prepare(
-			"SELECT * FROM {$this->table} WHERE expires_at IS NOT NULL AND expires_at <= %s AND expired_at IS NULL AND status IN ('published','superseded') ORDER BY expires_at ASC LIMIT 500",
+			"SELECT * FROM %i WHERE expires_at IS NOT NULL AND expires_at <= %s AND expired_at IS NULL AND status IN ('published','superseded') ORDER BY expires_at ASC LIMIT 500",
+			$this->table,
 			(string) $now_utc
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $prepared, ARRAY_A );
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
@@ -275,6 +279,7 @@ class PublicationRepository {
 	public function mark_expired( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update(
 			$this->table,
 			array(
@@ -299,10 +304,10 @@ class PublicationRepository {
 		global $wpdb;
 
 		if ( $location_id ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE published_at IS NOT NULL AND location_id = %d ORDER BY published_at DESC LIMIT 1', $this->table, (int) $location_id ), ARRAY_A );
 		} else {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE published_at IS NOT NULL ORDER BY published_at DESC LIMIT 1', $this->table ), ARRAY_A );
 		}
 
@@ -340,8 +345,8 @@ class PublicationRepository {
 	public function count_by_status() {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( "SELECT status, COUNT(*) AS total FROM {$this->table} GROUP BY status", ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT status, COUNT(*) AS total FROM %i GROUP BY status', $this->table ), ARRAY_A );
 
 		$counts = array();
 
@@ -362,14 +367,14 @@ class PublicationRepository {
 	public function for_location( $location_id, $limit = 20 ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$prepared = $wpdb->prepare(
-			"SELECT * FROM {$this->table} WHERE location_id = %d ORDER BY id DESC LIMIT %d",
+			'SELECT * FROM %i WHERE location_id = %d ORDER BY id DESC LIMIT %d',
+			$this->table,
 			(int) $location_id,
 			max( 1, (int) $limit )
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $prepared, ARRAY_A );
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );

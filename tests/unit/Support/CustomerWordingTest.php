@@ -286,12 +286,11 @@ class CustomerWordingTest extends TestCase {
 		sidrena_cijena_load_textdomain();
 		$this->assertSame( $first_loaded, $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
 
-		// 3. In en_US locale, respects locale and loads standard plugin textdomain.
+		// 3. In en_US locale, Croatian catalog is not loaded (WP core handles translations JIT).
 		unload_textdomain( 'sidrena-cijena-eu' );
 		$GLOBALS['sidrena_test_locale'] = 'en_US';
 		sidrena_cijena_load_textdomain();
-		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
-		$this->assertStringNotContainsString( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+		$this->assertFalse( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
 
 		// 4. In en_US locale with filter forcing Croatian -> loads Croatian catalog.
 		unload_textdomain( 'sidrena-cijena-eu' );

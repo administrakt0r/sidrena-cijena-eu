@@ -57,16 +57,19 @@ class LocationRepository {
 	public function all( $active_only = false ) {
 		global $wpdb;
 
-		$sql = "SELECT * FROM {$this->table}";
-
 		if ( $active_only ) {
-			$sql .= ' WHERE active = 1';
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$rows = $wpdb->get_results(
+				$wpdb->prepare( 'SELECT * FROM %i WHERE active = 1 ORDER BY id ASC', $this->table ),
+				ARRAY_A
+			);
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$rows = $wpdb->get_results(
+				$wpdb->prepare( 'SELECT * FROM %i ORDER BY id ASC', $this->table ),
+				ARRAY_A
+			);
 		}
-
-		$sql .= ' ORDER BY id ASC';
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
-		$rows = $wpdb->get_results( $sql, ARRAY_A );
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
@@ -80,8 +83,9 @@ class LocationRepository {
 	public function get( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table} WHERE id = %d", (int) $id ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $this->table, (int) $id ),
 			ARRAY_A
 		);
 
@@ -97,8 +101,9 @@ class LocationRepository {
 	public function find_by_identifier( $identifier ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table} WHERE identifier = %s", (string) $identifier ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( 'SELECT * FROM %i WHERE identifier = %s', $this->table, (string) $identifier ),
 			ARRAY_A
 		);
 
@@ -121,6 +126,7 @@ class LocationRepository {
 			return 0;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $this->table, $row, array( '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%d', '%s', '%s' ) );
 
 		return (int) $wpdb->insert_id;
@@ -144,6 +150,7 @@ class LocationRepository {
 
 		$row = $this->normalize( array_merge( $existing, $data ), $existing );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update(
 			$this->table,
 			$row,
@@ -164,6 +171,7 @@ class LocationRepository {
 	public function delete( $id ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (bool) $wpdb->delete( $this->table, array( 'id' => (int) $id ), array( '%d' ) );
 	}
 
@@ -176,8 +184,15 @@ class LocationRepository {
 	public function next_sequence( $id ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$wpdb->query( $wpdb->prepare( "UPDATE {$this->table} SET sequence_no = sequence_no + 1, updated_at = %s WHERE id = %d", Dates::now_utc(), (int) $id ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare(
+				'UPDATE %i SET sequence_no = sequence_no + 1, updated_at = %s WHERE id = %d',
+				$this->table,
+				Dates::now_utc(),
+				(int) $id
+			)
+		);
 
 		$location = $this->get( $id );
 

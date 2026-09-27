@@ -129,7 +129,7 @@ final class Uninstaller {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared -- The table name is built from the trusted WordPress prefix and the placeholder list from EVIDENCE_TYPES.
 		$sql = $wpdb->prepare( "DELETE FROM `{$table}` WHERE price_type NOT IN ({$placeholders})", self::EVIDENCE_TYPES );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql was safely prepared with $wpdb->prepare above.
 		return (int) $wpdb->query( $sql );
 	}
 
