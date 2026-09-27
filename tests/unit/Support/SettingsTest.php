@@ -25,6 +25,8 @@ class SettingsTest extends TestCase {
 
 		$GLOBALS['sidrena_test_options']    = array();
 		$GLOBALS['sidrena_test_transients'] = array();
+		Settings::reset_cache();
+		Settings::register();
 	}
 
 	/**
@@ -192,5 +194,29 @@ class SettingsTest extends TestCase {
 		$this->assertTrue( $sanitized['display_variations'] );
 		$this->assertFalse( $sanitized['only_when_different'] );
 		$this->assertFalse( $sanitized['delete_data_on_uninstall'] );
+	}
+
+	/**
+	 * Settings are memoized per request and invalidated on change.
+	 *
+	 * @return void
+	 */
+	public function test_settings_memoization_and_invalidation() {
+		// Prime memoization with default value.
+		$first = Settings::all();
+		$this->assertSame( 'Sidrena cijena', Settings::get( 'anchor_label' ) );
+
+		// Repeated call returns identical memoized array instance.
+		$second = Settings::all();
+		$this->assertSame( $first, $second );
+
+		// Invalidation via action clears the memoized cache.
+		do_action( 'sidrena_cijena_settings_changed', array(), array() );
+		$third = Settings::all();
+		$this->assertSame( 'Sidrena cijena', $third['anchor_label'] );
+
+		// Settings::update() automatically invalidates and updates the cache.
+		Settings::update( array( 'anchor_label' => 'Updated via API' ) );
+		$this->assertSame( 'Updated via API', Settings::get( 'anchor_label' ) );
 	}
 }

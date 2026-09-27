@@ -38,6 +38,7 @@ use SidrenaCijena\Database\Migrator;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\PublicationRepository;
 use SidrenaCijena\Database\SpecialSaleRepository;
+use SidrenaCijena\Support\Settings;
 use SidrenaCijena\WooCommerce\PriceHistoryRecorder;
 use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 use SidrenaCijena\WooCommerce\WooCommerceDetector;
@@ -205,6 +206,7 @@ final class Plugin {
 		add_action( 'init', array( TemplateFunctions::class, 'register' ) );
 		add_action( 'init', array( $this, 'register_public_feed' ) );
 		add_action( 'init', array( $this, 'register_public_pages' ), 0 );
+		Settings::register();
 		add_action( 'admin_init', array( SettingsPage::class, 'register_settings' ) );
 		add_action( 'add_meta_boxes', array( AnchorMetaBox::class, 'register' ) );
 		add_action( 'add_meta_boxes', array( SpecialSaleMetaBox::class, 'register' ) );

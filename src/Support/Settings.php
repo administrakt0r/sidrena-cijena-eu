@@ -59,6 +59,40 @@ final class Settings {
 	}
 
 	/**
+	 * Request-local memoized settings.
+	 *
+	 * @var array<mixed>|null
+	 */
+	private static $memo = null;
+
+	/**
+	 * Raw stored option matching memoized settings.
+	 *
+	 * @var mixed
+	 */
+	private static $memo_source = null;
+
+	/**
+	 * Reset the in-memory memoized settings.
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$memo        = null;
+		self::$memo_source = null;
+	}
+
+	/**
+	 * Hook settings change invalidation.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		add_action( 'sidrena_cijena_settings_changed', array( __CLASS__, 'reset_cache' ) );
+		add_action( 'update_option_' . self::OPTION, array( __CLASS__, 'reset_cache' ) );
+	}
+
+	/**
 	 * All settings merged over defaults.
 	 *
 	 * @return array<mixed>
@@ -70,11 +104,18 @@ final class Settings {
 			$stored = array();
 		}
 
+		if ( null !== self::$memo && self::$memo_source === $stored ) {
+			return self::$memo;
+		}
+
 		if ( isset( $stored['thirty_day_label'] ) && 'Lowest price in the last 30 days' === $stored['thirty_day_label'] ) {
 			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' );
 		}
 
-		return wp_parse_args( $stored, self::defaults() );
+		self::$memo_source = $stored;
+		self::$memo        = wp_parse_args( $stored, self::defaults() );
+
+		return self::$memo;
 	}
 
 	/**
@@ -108,6 +149,7 @@ final class Settings {
 		}
 
 		update_option( self::OPTION, $new, false );
+		self::reset_cache();
 
 		self::log_changes( $old, $new, $user_id );
 
