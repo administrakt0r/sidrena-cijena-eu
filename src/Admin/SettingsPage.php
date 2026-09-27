@@ -40,6 +40,7 @@ final class SettingsPage {
 				'type'              => 'array',
 				'sanitize_callback' => array( Settings::class, 'sanitize' ),
 				'default'           => Settings::defaults(),
+				'capability'        => Capabilities::capability(),
 			)
 		);
 
@@ -50,6 +51,7 @@ final class SettingsPage {
 				'type'              => 'array',
 				'sanitize_callback' => array( RuleConfig::class, 'sanitize' ),
 				'default'           => RuleConfig::defaults(),
+				'capability'        => Capabilities::capability(),
 			)
 		);
 
