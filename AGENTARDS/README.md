@@ -76,9 +76,10 @@ Every completed run ships a new version archive following the repository convent
    php tools/i18n/make-pot.php --locale=hr_HR
    # Verify 0 untranslated strings in languages/hr_HR.po
    ```
-4. **Build release archive**:
+4. **Build release archive and publish**:
    ```bash
    tools/build-zip.sh <version>
+   # Builds package, commits to public repo, and publishes GitHub release (pass --no-upload to skip)
    unzip -t versions/<version>/sidrena-cijena-eu.zip
    ```
 5. **Update documentation**:
