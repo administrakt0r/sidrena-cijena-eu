@@ -1974,6 +1974,24 @@ if ( ! function_exists( 'sanitize_html_class' ) ) {
 	}
 }
 
+if ( ! function_exists( 'register_setting' ) ) {
+	/**
+	 * Settings registration stub.
+	 *
+	 * @param string       $option_group Option group.
+	 * @param string       $option_name  Option name.
+	 * @param array<mixed> $args         Arguments.
+	 * @return void
+	 */
+	function register_setting( $option_group, $option_name, $args = array() ) {
+		if ( ! isset( $GLOBALS['sidrena_test_registered_settings'] ) ) {
+			$GLOBALS['sidrena_test_registered_settings'] = array();
+		}
+
+		$GLOBALS['sidrena_test_registered_settings'][ $option_group ][ $option_name ] = $args;
+	}
+}
+
 if ( ! function_exists( 'add_settings_section' ) ) {
 	/**
 	 * Settings section stub.
