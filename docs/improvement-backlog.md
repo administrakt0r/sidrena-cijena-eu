@@ -185,3 +185,10 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | REL-11 | `done` | The release needed a distinctive public-facing name, accurate directory metadata and owner-only submission steps | Version 2.0.0 uses “Sidrena Cijena EU”; metadata and SEO README updated; private submission instructions are locally excluded and omitted from the release ZIP |
 | REL-12 | `done` | Final committed 2.0.0 archive and package-only Plugin Check scan | Final ZIP checksum verified; exact-package Plugin Check reported 0 errors and 63 reviewed warnings; source and ZIP/checksum assets published at https://github.com/administrakt0r/sidrena-cijena-eu/releases/tag/v2.0.0 |
 | REL-09 | `done` | `Contributors:` used display name instead of WordPress.org username | Profile checked; changed to `titanworks`; publishing steps documented |
+
+## Static audit and security regression pass (2026-09-27)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| SEC-01 | `done` | Full static audit sweep (capabilities, nonces, output escaping, prepared SQL, allowed upload paths, log context sanitization, welcome redirect guards) | `CsvParserEncodingTest` regression tests for allowed path checking and `WelcomeTest` regression tests for capability, cron, ajax, and network admin guards; 370 unit tests passing |
+| REL-13 | `done` | Package and verify release 2.0.1 archive | `tools/build-zip.sh 2.0.1` built `versions/2.0.1/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |

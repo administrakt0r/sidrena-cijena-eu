@@ -1,6 +1,6 @@
 # Prompt 1 — Audit and fix (no Docker needed)
 
-> **Status (v2.0.0):** COMPLETED. Full static audit pass completed, verified, and shipped.
+> **Status (v2.0.1):** COMPLETED. Full static audit pass completed, verified, and shipped.
 
 ```
 You are maintaining the WordPress plugin in the current directory
@@ -21,7 +21,7 @@ Steps:
      (PHPCompatibilityWP, testVersion 7.4-).
    - Static analysis: PHPStan level 6 via phpstan.neon.dist.
    - JS Lint: ESLint via .eslintrc.js (browser environment, ES6).
-   - Unit tests must stay green (361+ tests / 1296+ assertions); if a test encodes a bug,
+   - Unit tests must stay green (370+ tests / 1314+ assertions); if a test encodes a bug,
      fix the implementation, not the test - unless the test contradicts docs/legal-rules.md,
      in which case stop and report it.
 3. Check translations:
@@ -49,5 +49,5 @@ Steps:
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
    - Commit everything including versions/<version>/ and push to origin master.
 
-Done when: unit suite passes (361 unit tests / 1296 assertions), lint exits 0 (PHPCS clean across 175 files), PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0 (ESLint clean in assets/js), translations are complete (705 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built and pushed.
+Done when: unit suite passes (370 unit tests / 1314 assertions), lint exits 0 (PHPCS clean across 175 files), PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0 (ESLint clean in assets/js), translations are complete (705 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built and pushed.
 ```

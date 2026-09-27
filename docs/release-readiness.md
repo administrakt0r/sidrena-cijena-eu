@@ -1,5 +1,13 @@
 # Release verification
 
+## Release 2.0.1 — Audit & Fix Pass (2026-09-27)
+
+- Full static audit and security sweep per `AGENTARDS/01-audit-and-fix.md`.
+- Added unit regression tests for upload path validation in `CsvParser` (`test_parse_file_rejects_empty_path`, `test_parse_file_rejects_path_traversal`, `test_parse_file_rejects_nonexistent_file`, `test_parse_file_rejects_file_outside_allowed_roots`, `test_parse_file_accepts_file_in_allowed_root`).
+- Added unit regression tests for `WelcomeBanner::maybe_redirect()` security guards against missing capabilities, cron execution, AJAX requests, and network admin contexts.
+- Quality gates: 370 unit tests (1,314 assertions), 0 failures; PHPCS clean across 175 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (705 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.1/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.1` and verified with `unzip -t`.
+
 ## Release 2.0.0 — Sidrena Cijena EU (2026-09-26)
 
 - Renamed the public-facing plugin to **Sidrena Cijena EU** and synchronized the

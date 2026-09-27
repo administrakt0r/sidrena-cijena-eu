@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,11 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.1 =
+* Security audit: add unit regression tests for CsvParser allowed upload and temp path validation.
+* Security audit: add unit regression tests for WelcomeBanner post-activation redirect guards (missing capability, cron runs, AJAX requests, network admin).
+* Quality gates verified clean: 370 unit tests (1,314 assertions), PHPCS clean (175 files), PHPStan level 6 (0 errors across 117 files), ESLint clean, and 0 untranslated strings in languages/hr_HR.po.
 
 = 2.0.0 =
 * Rename the plugin to Sidrena Cijena EU.
