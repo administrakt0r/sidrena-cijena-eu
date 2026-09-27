@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.10 — Static Audit, Database Hardening & Strict Type Guarding (2026-09-27)
+
+- Full static audit pass per `AGENTARDS/01-audit-and-fix.md` (SEC-05).
+- Database hardening (`src/Import/MigrationDetector.php`): converted table identifier interpolation and count queries to `%i` placeholders in `$wpdb->prepare()`.
+- Robust type safety & error handling: hardened `LowestPriceExplainer` against array-to-string notices when `$sale_or_date` lacks `start_date`, ensured `PriceDisplay::block_product()` returns `WC_Product|null`, safely checked `mb_convert_encoding()` return in `CsvParser`, guarded `strtotime` parsing before `gmdate` in `Publisher` and `PriceListController`, and validated `preg_split` result in `LocationsPage`.
+- Filesystem & query checks: verified `WP_Filesystem_Base` instance in `Uninstaller` and `WP_Query` instance in public feeds/pages.
+- Unit testing: added complete unit test coverage for `MigrationDetector` (`tests/unit/Import/MigrationDetectorTest.php`, 7 tests, 18 assertions) and `LowestPriceExplainer`.
+- Quality gates: 436 unit tests (1,543 assertions), 0 failures; PHPCS clean across 180 files; PHPStan Level 7 clean (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.10/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.10` and verified with `unzip -t`.
+
 ## Release 2.0.9 — Static Audit, Attribute Escaping & Permission Rejection Coverage (2026-09-27)
 
 - Full static audit and security pass per `AGENTARDS/01-audit-and-fix.md` (SEC-04).

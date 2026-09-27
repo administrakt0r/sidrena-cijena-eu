@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.9
+Stable tag: 2.0.10
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.10 =
+* Static audit & database hardening: prepared queries with modern `%i` table identifier placeholders in `MigrationDetector` across own history table, schema inspection tables, and postmeta queries.
+* Robust error and type safety: hardened `LowestPriceExplainer` against array-to-string conversion notices when sale array lacks `start_date`, ensured `PriceDisplay::block_product` strictly returns `WC_Product|null`, safely handled `mb_convert_encoding` failure in `CsvParser`, guarded `strtotime` parsing before `gmdate` in `Publisher` and `PriceListController`, and validated `preg_split` return in `LocationsPage`.
+* Filesystem and query typing: strictly verified `WP_Filesystem_Base` instance in `Uninstaller` and `WP_Query` in public feeds/pages.
+* Static analysis & tests: PHPStan Level 7 completely clean (0 errors), Level 6 clean (117 files), PHPCS clean (180 files), and added unit test suite for `MigrationDetector` (436 tests, 1,543 assertions).
 
 = 2.0.9 =
 * Static audit & security hardening: escaped active navigation tab CSS class attribute in settings page.

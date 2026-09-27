@@ -6,7 +6,7 @@ is self-contained, completely up to date, and states its own done-criteria.
 
 | # | File | Purpose | Needs Docker? | Status |
 |---|------|---------|---------------|--------|
-| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.9 |
+| 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.10 |
 | 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.0 |
 | 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** | ✅ v2.0.0 |
 | 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.0 |
@@ -23,16 +23,16 @@ UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventio
 `IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
 session that changes the codebase) to keep every prompt honest.
 
-## Current green baseline (v2.0.9)
+## Current green baseline (v2.0.10)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
 `tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
 on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 429 tests / 1525 assertions (`composer test:unit`).
+- Unit suite: 436 tests / 1543 assertions (`composer test:unit`).
 - Integration suite: 96 tests / 454 assertions (`composer test:integration` in wp-env).
 - E2E: 42 Playwright specs against port 8889 (`npm run test:e2e`).
-- PHPStan level 6: 0 errors across 117 files · PHPCS clean (179 files) · ESLint clean · `./local.sh` exits 0.
+- PHPStan level 6: 0 errors across 117 files · PHPCS clean (180 files) · ESLint clean · `./local.sh` exits 0.
 - Croatian catalog complete: 749 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
 
 ## Hard rules for every prompt
