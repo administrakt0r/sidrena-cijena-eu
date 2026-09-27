@@ -258,6 +258,33 @@ class PublicPage {
 	 * @return void
 	 */
 	public function enqueue_assets() {
+		$page    = (string) get_query_var( self::QUERY_VAR );
+		$is_page = in_array( $page, array( self::PAGE_LIST, self::PAGE_ARCHIVE ), true );
+
+		if ( ! $is_page ) {
+			$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request = '' !== $raw_uri ? self::parse_path( $raw_uri ) : '';
+			$home    = self::parse_path( home_url() );
+			if ( '' !== $home && 0 === strpos( $request, $home ) ) {
+				$request = trim( (string) substr( $request, strlen( $home ) ), '/' );
+			}
+
+			if ( self::STEM_ARCHIVE === $request || self::STEM_LIST === $request ) {
+				$is_page = true;
+			}
+		}
+
+		if ( ! $is_page && function_exists( 'is_singular' ) && is_singular() ) {
+			global $post;
+			if ( is_object( $post ) && isset( $post->post_content ) && ( false !== strpos( (string) $post->post_content, 'sidrena-cjenik' ) || false !== strpos( (string) $post->post_content, 'sidrena-arhiva' ) ) ) {
+				$is_page = true;
+			}
+		}
+
+		if ( ! $is_page ) {
+			return;
+		}
+
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
 			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',

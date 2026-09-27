@@ -1995,3 +1995,70 @@ if ( ! function_exists( 'add_settings_field' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_enqueue_style' ) ) {
+	/**
+	 * Enqueue style stub.
+	 *
+	 * @param string      $handle Handle.
+	 * @param string      $src    Source.
+	 * @param string[]    $deps   Dependencies.
+	 * @param string|bool $ver    Version.
+	 * @param string      $media  Media.
+	 * @return void
+	 */
+	function wp_enqueue_style( $handle, $src = '', $deps = array(), $ver = false, $media = 'all' ) {
+		if ( ! isset( $GLOBALS['sidrena_test_enqueued_styles'] ) ) {
+			$GLOBALS['sidrena_test_enqueued_styles'] = array();
+		}
+
+		$GLOBALS['sidrena_test_enqueued_styles'][ $handle ] = array(
+			'src'   => $src,
+			'deps'  => $deps,
+			'ver'   => $ver,
+			'media' => $media,
+		);
+	}
+}
+
+if ( ! function_exists( 'wp_enqueue_script' ) ) {
+	/**
+	 * Enqueue script stub.
+	 *
+	 * @param string      $handle    Handle.
+	 * @param string      $src       Source.
+	 * @param string[]    $deps      Dependencies.
+	 * @param string|bool $ver       Version.
+	 * @param bool        $in_footer In footer.
+	 * @return void
+	 */
+	function wp_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
+		if ( ! isset( $GLOBALS['sidrena_test_enqueued_scripts'] ) ) {
+			$GLOBALS['sidrena_test_enqueued_scripts'] = array();
+		}
+
+		$GLOBALS['sidrena_test_enqueued_scripts'][ $handle ] = array(
+			'src'       => $src,
+			'deps'      => $deps,
+			'ver'       => $ver,
+			'in_footer' => $in_footer,
+		);
+	}
+}
+
+if ( ! function_exists( 'wp_script_is' ) ) {
+	/**
+	 * Script is stub.
+	 *
+	 * @param string $handle Handle.
+	 * @param string $list   List.
+	 * @return bool
+	 */
+	function wp_script_is( $handle, $list = 'enqueued' ) {
+		if ( 'registered' === $list && isset( $GLOBALS['sidrena_test_registered_scripts'][ $handle ] ) ) {
+			return true;
+		}
+
+		return ! empty( $GLOBALS['sidrena_test_enqueued_scripts'][ $handle ] );
+	}
+}
+

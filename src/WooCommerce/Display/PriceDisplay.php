@@ -345,6 +345,36 @@ class PriceDisplay {
 			return;
 		}
 
+		$is_product_page     = function_exists( 'is_product' ) && is_product();
+		$is_archive          = ( function_exists( 'is_shop' ) && is_shop() )
+			|| ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() )
+			|| ( function_exists( 'is_post_type_archive' ) && is_post_type_archive( 'product' ) );
+		$is_cart_or_checkout = ( function_exists( 'is_cart' ) && is_cart() ) || ( function_exists( 'is_checkout' ) && is_checkout() );
+
+		$should_enqueue = false;
+
+		if ( $is_product_page && Settings::get( 'display_product_pages' ) ) {
+			$should_enqueue = true;
+		} elseif ( $is_archive && Settings::get( 'display_archives' ) ) {
+			$should_enqueue = true;
+		} elseif ( $is_cart_or_checkout ) {
+			$should_enqueue = true;
+		}
+
+		/**
+		 * Filters whether to enqueue the frontend stylesheet and script.
+		 *
+		 * Allows themes and page builders (Divi, Elementor, etc.) to force asset loading
+		 * when custom product templates or price elements are rendered on non-standard pages.
+		 *
+		 * @param bool $should_enqueue Whether to enqueue assets.
+		 */
+		$should_enqueue = (bool) apply_filters( 'sidrena_cijena_enqueue_frontend_assets', $should_enqueue );
+
+		if ( ! $should_enqueue ) {
+			return;
+		}
+
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
 			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
