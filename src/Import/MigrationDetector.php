@@ -49,7 +49,7 @@ final class MigrationDetector {
 		$sources = array();
 		$wpdb    = $GLOBALS['wpdb'];
 
-		$own = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'sidrena_price_history' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table.
+		$own = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $wpdb->prefix . 'sidrena_price_history' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Plugin-owned table.
 
 		$sources[] = array(
 			'id'          => 'sidrena_history',
@@ -62,6 +62,8 @@ final class MigrationDetector {
 		$tables = $wpdb->get_col( 'SHOW TABLES' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema inspection for migration detection.
 
 		foreach ( (array) $tables as $table ) {
+			$table = (string) $table;
+
 			if ( 0 === strpos( $table, $wpdb->prefix . 'sidrena_' ) ) {
 				continue;
 			}
@@ -70,7 +72,7 @@ final class MigrationDetector {
 				continue;
 			}
 
-			$count = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM `' . esc_sql( $table ) . '`' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Counting rows for migration detection.
+			$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Counting rows for migration detection.
 
 			$sources[] = array(
 				'id'          => 'table:' . $table,
@@ -96,7 +98,7 @@ final class MigrationDetector {
 		}
 
 		foreach ( self::known_meta_keys() as $meta_key => $label ) {
-			$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->postmeta . ' WHERE meta_key = %s', $meta_key ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Counting rows for migration detection.
+			$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE meta_key = %s', $wpdb->postmeta, $meta_key ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Counting rows for migration detection.
 
 			if ( $count > 0 ) {
 				$sources[] = array(

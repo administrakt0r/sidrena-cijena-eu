@@ -161,7 +161,7 @@ class PublicFeed {
 		}
 
 		global $wp_query;
-		if ( is_object( $wp_query ) ) {
+		if ( $wp_query instanceof \WP_Query ) {
 			$wp_query->is_404 = false;
 		}
 

@@ -293,7 +293,7 @@ final class Uninstaller {
 			WP_Filesystem();
 		}
 
-		if ( is_object( $wp_filesystem ) && $wp_filesystem->is_dir( $directory ) ) {
+		if ( $wp_filesystem instanceof \WP_Filesystem_Base && $wp_filesystem->is_dir( $directory ) ) {
 			$wp_filesystem->rmdir( $directory, false );
 		}
 

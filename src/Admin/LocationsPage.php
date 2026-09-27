@@ -288,7 +288,10 @@ class LocationsPage {
 		$identifier = isset( $_POST['identifier'] ) ? sanitize_text_field( wp_unslash( $_POST['identifier'] ) ) : '';
 
 		$applies_categories = isset( $_POST['applies_categories'] ) ? sanitize_text_field( wp_unslash( $_POST['applies_categories'] ) ) : '';
-		$categories         = array_values( array_filter( array_map( 'sanitize_title', preg_split( '/[\s,;]+/', $applies_categories ) ) ) );
+		$split_cats         = preg_split( '/[\s,;]+/', $applies_categories );
+		$categories         = is_array( $split_cats )
+			? array_values( array_filter( array_map( 'sanitize_title', $split_cats ) ) )
+			: array();
 
 		$formats = isset( $_POST['formats'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['formats'] ) ) : array();
 		$formats = array_values( array_intersect( array( 'csv', 'xml' ), $formats ) );

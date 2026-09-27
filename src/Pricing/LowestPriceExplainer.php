@@ -56,9 +56,11 @@ class LowestPriceExplainer {
 	 * @return array<string,mixed>
 	 */
 	public function explain( CatalogItem $item, $sale_or_date, $history = null ) {
-		$sale_start = is_array( $sale_or_date ) && isset( $sale_or_date['start_date'] )
-			? (string) $sale_or_date['start_date']
-			: (string) $sale_or_date;
+		if ( is_array( $sale_or_date ) ) {
+			$sale_start = isset( $sale_or_date['start_date'] ) ? (string) $sale_or_date['start_date'] : '';
+		} else {
+			$sale_start = (string) $sale_or_date;
+		}
 
 		if ( '' === $sale_start || '0000-00-00' === $sale_start ) {
 			$sale_start = Dates::today();

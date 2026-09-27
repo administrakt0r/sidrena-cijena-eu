@@ -274,7 +274,9 @@ class PriceDisplay {
 		$queried = function_exists( 'get_queried_object' ) ? get_queried_object() : null;
 
 		if ( $queried instanceof \WP_Post && function_exists( 'wc_get_product' ) ) {
-			return wc_get_product( (int) $queried->ID );
+			$product = wc_get_product( (int) $queried->ID );
+
+			return $product instanceof \WC_Product ? $product : null;
 		}
 
 		return $this->current_product();

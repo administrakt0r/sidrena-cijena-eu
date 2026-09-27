@@ -39,6 +39,8 @@ final class AdminMenu {
 		);
 
 		foreach ( self::pages() as $slug => $page ) {
+			$callback = array( $page[0], 'render' );
+
 			add_submenu_page(
 				self::PARENT,
 				/* translators: %s: screen title. */
@@ -46,7 +48,7 @@ final class AdminMenu {
 				$page[1],
 				$capability,
 				$slug,
-				array( $page[0], 'render' )
+				is_callable( $callback ) ? $callback : ''
 			);
 		}
 	}
@@ -54,7 +56,7 @@ final class AdminMenu {
 	/**
 	 * Registered pages: slug => [class, label].
 	 *
-	 * @return array<string,array{0:string,1:string}>
+	 * @return array<string,array{0:class-string,1:string}>
 	 */
 	public static function pages() {
 		return array(

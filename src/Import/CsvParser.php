@@ -135,7 +135,11 @@ final class CsvParser {
 		}
 
 		if ( function_exists( 'mb_convert_encoding' ) ) {
-			return mb_convert_encoding( $contents, 'UTF-8', $encoding );
+			$converted = @mb_convert_encoding( $contents, 'UTF-8', $encoding ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Invalid input bytes are expected for non-UTF-8 files.
+
+			if ( false !== $converted ) {
+				return $converted;
+			}
 		}
 
 		return null;

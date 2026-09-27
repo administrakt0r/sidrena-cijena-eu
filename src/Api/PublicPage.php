@@ -209,14 +209,14 @@ class PublicPage {
 		global $wp_query;
 
 		if ( self::PAGE_ARCHIVE === $page && ! Settings::get( 'public_archive_enabled', true ) ) {
-			if ( is_object( $wp_query ) ) {
+			if ( $wp_query instanceof \WP_Query ) {
 				$wp_query->set_404();
 			}
 			status_header( 404 );
 			return;
 		}
 
-		if ( is_object( $wp_query ) ) {
+		if ( $wp_query instanceof \WP_Query ) {
 			$wp_query->is_404 = false;
 		}
 

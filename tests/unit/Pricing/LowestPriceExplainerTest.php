@@ -338,4 +338,17 @@ class LowestPriceExplainerTest extends TestCase {
 		$this->assertStringContainsString( 'sidrena-cijena-source-records', $html );
 		$this->assertStringContainsString( 'Determining lowest price', $html );
 	}
+
+	/**
+	 * Verify explain handles an array missing start_date without warning or notice.
+	 *
+	 * @return void
+	 */
+	public function test_explain_handles_array_without_start_date() {
+		$item        = $this->item();
+		$explanation = $this->explainer->explain( $item, array( 'sale_type' => 'akcija' ), array() );
+
+		$this->assertIsArray( $explanation );
+		$this->assertArrayHasKey( 'lowest_price', $explanation );
+	}
 }

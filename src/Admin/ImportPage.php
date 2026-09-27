@@ -78,6 +78,8 @@ class ImportPage {
 
 		if ( is_wp_error( $file ) ) {
 			self::redirect( 'error', $file->get_error_message() );
+
+			return;
 		}
 
 		$args    = self::posted_args();
@@ -86,6 +88,8 @@ class ImportPage {
 
 		if ( is_wp_error( $preview ) ) {
 			self::redirect( 'error', $preview->get_error_message() );
+
+			return;
 		}
 
 		$key = self::transient_key( $preview['batch_id'] );
@@ -120,6 +124,8 @@ class ImportPage {
 
 		if ( ! is_array( $stored ) || empty( $stored['path'] ) ) {
 			self::redirect( 'error', __( 'The import session expired. Upload the file again.', 'sidrena-cijena-eu' ) );
+
+			return;
 		}
 
 		$args = $stored['args'];
@@ -133,6 +139,8 @@ class ImportPage {
 
 		if ( is_wp_error( $report ) ) {
 			self::redirect( 'error', $report->get_error_message(), $batch_id );
+
+			return;
 		}
 
 		set_transient( self::transient_key( $batch_id ) . 'report', $report, self::TRANSIENT_TTL );
@@ -180,6 +188,8 @@ class ImportPage {
 
 		if ( ! is_array( $report ) ) {
 			self::redirect( 'error', __( 'No report is available for this import.', 'sidrena-cijena-eu' ) );
+
+			return;
 		}
 
 		$csv = self::service()->report_csv( $report );

@@ -122,7 +122,8 @@ class Publisher {
 
 		$published = Dates::now_utc();
 		$days      = max( 30, (int) Settings::get( 'retention_days', 30 ) );
-		$expires   = gmdate( 'Y-m-d H:i:s', strtotime( $published . ' +' . $days . ' days' ) );
+		$timestamp = strtotime( $published . ' +' . $days . ' days' );
+		$expires   = gmdate( 'Y-m-d H:i:s', false !== $timestamp ? $timestamp : time() + ( $days * DAY_IN_SECONDS ) );
 
 		$id = $this->publications->insert(
 			array(

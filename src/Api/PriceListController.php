@@ -626,7 +626,8 @@ class PriceListController {
 		$response->header( 'X-Robots-Tag', 'noindex' );
 
 		$generated = isset( $payload['meta']['generated_at'] ) ? (string) $payload['meta']['generated_at'] : '';
-		$modified  = $generated ? strtotime( $generated ) : time();
+		$time      = $generated ? strtotime( $generated ) : false;
+		$modified  = false !== $time ? $time : time();
 
 		$response->header( 'Last-Modified', gmdate( 'D, d M Y H:i:s', $modified ) . ' GMT' );
 
