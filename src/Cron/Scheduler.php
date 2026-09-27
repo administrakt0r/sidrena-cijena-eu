@@ -40,6 +40,11 @@ final class Scheduler {
 	const HOOK_CLEANUP = 'sidrena_cijena_daily_cleanup';
 
 	/**
+	 * Queued catch-up generation hook.
+	 */
+	const HOOK_CATCHUP = 'sidrena_cijena_catchup_generation';
+
+	/**
 	 * Action Scheduler group.
 	 */
 	const AS_GROUP = 'sidrena-cijena';
@@ -62,6 +67,7 @@ final class Scheduler {
 	public static function register() {
 		add_action( self::HOOK_DAILY, array( DailyGeneration::class, 'run_scheduled' ) );
 		add_action( self::HOOK_SERVICE, array( DailyGeneration::class, 'run_service_regeneration' ) );
+		add_action( self::HOOK_CATCHUP, array( __CLASS__, 'handle_catchup_event' ) );
 		add_action( self::HOOK_CLEANUP, array( CleanupJob::class, 'run' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'maybe_notice' ) );
 		add_action( 'admin_post_' . self::DISMISS_FAILURE_ACTION, array( __CLASS__, 'handle_dismiss_failure' ) );
@@ -127,11 +133,41 @@ final class Scheduler {
 	public static function unschedule_all() {
 		wp_clear_scheduled_hook( self::HOOK_DAILY );
 		wp_clear_scheduled_hook( self::HOOK_SERVICE );
+		wp_clear_scheduled_hook( self::HOOK_CATCHUP );
 		wp_clear_scheduled_hook( self::HOOK_CLEANUP );
 
 		if ( function_exists( 'as_unschedule_all_actions' ) ) {
 			as_unschedule_all_actions( self::HOOK_SERVICE, array(), self::AS_GROUP );
+			as_unschedule_all_actions( self::HOOK_CATCHUP, array(), self::AS_GROUP );
 		}
+	}
+
+	/**
+	 * Queue catch-up generation in Action Scheduler or WP-Cron.
+	 *
+	 * @return void
+	 */
+	public static function queue_catchup() {
+		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'sidrena_cijena_use_action_scheduler', true ) ) {
+			as_schedule_single_action( time(), self::HOOK_CATCHUP, array(), self::AS_GROUP );
+
+			return;
+		}
+
+		wp_schedule_single_event( time(), self::HOOK_CATCHUP );
+
+		if ( function_exists( 'spawn_cron' ) ) {
+			spawn_cron();
+		}
+	}
+
+	/**
+	 * Handle queued catch-up cron event.
+	 *
+	 * @return void
+	 */
+	public static function handle_catchup_event() {
+		DailyGeneration::run_catchup();
 	}
 
 	/**
@@ -332,6 +368,10 @@ final class Scheduler {
 	/**
 	 * Run catch-up generation if a run was missed today.
 	 *
+	 * Front-end requests skip this check to save per-pageview DB queries.
+	 * In admin requests, catch-up is offloaded to the background queue so
+	 * visitors/administrators are not blocked by full generation inline.
+	 *
 	 * @return void
 	 */
 	public static function maybe_catchup() {
@@ -339,17 +379,27 @@ final class Scheduler {
 			return;
 		}
 
-		if ( ! self::is_missed_run_today() ) {
+		// Ordinary front-end requests skip catch-up checks to save per-pageview queries.
+		if ( ! is_admin() && ! ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) ) {
 			return;
 		}
 
+		// Fail fast if a catch-up run is locked or recently attempted before querying database.
 		if ( get_transient( self::CATCHUP_LOCK ) ) {
+			return;
+		}
+
+		if ( ! self::is_missed_run_today() ) {
 			return;
 		}
 
 		set_transient( self::CATCHUP_LOCK, 1, 300 );
 
-		DailyGeneration::run_catchup();
+		if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+			DailyGeneration::run_catchup();
+		} else {
+			self::queue_catchup();
+		}
 	}
 
 	/**

@@ -91,6 +91,34 @@ class SchedulerTest extends TestCase {
 	}
 
 	/**
+	 * Ordinary frontend requests skip catchup checks to avoid per-request queries.
+	 *
+	 * @return void
+	 */
+	public function test_catchup_skips_ordinary_frontend_requests() {
+		$GLOBALS['sidrena_test_is_admin'] = false;
+
+		Scheduler::maybe_catchup();
+
+		$this->assertFalse( get_transient( Scheduler::CATCHUP_LOCK ) );
+	}
+
+	/**
+	 * Queue catchup schedules a single event for background execution.
+	 *
+	 * @return void
+	 */
+	public function test_queue_catchup_schedules_event() {
+		wp_clear_scheduled_hook( Scheduler::HOOK_CATCHUP );
+
+		Scheduler::queue_catchup();
+
+		$this->assertNotFalse( wp_next_scheduled( Scheduler::HOOK_CATCHUP ) );
+
+		wp_clear_scheduled_hook( Scheduler::HOOK_CATCHUP );
+	}
+
+	/**
 	 * Reschedule daily clears the hook and reschedules.
 	 *
 	 * @return void
