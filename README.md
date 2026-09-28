@@ -7,7 +7,7 @@
 Besplatan WordPress dodatak za hrvatske trgovce — radi s WooCommerceom ili s ugrađenim samostalnim katalogom.
 
 [![Preuzmi dodatak](https://img.shields.io/badge/preuzmi-sidrena--cijena--eu.zip-1d6b55?style=flat-square)](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip)
-[![Verzija 2.0.17](https://img.shields.io/badge/verzija-2.0.17-1d6b55?style=flat-square)](https://github.com/administrakt0r/sidrena-cijena-eu/releases)
+[![Verzija 2.0.18](https://img.shields.io/badge/verzija-2.0.18-1d6b55?style=flat-square)](https://github.com/administrakt0r/sidrena-cijena-eu/releases)
 [![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)](https://wordpress.org/)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?style=flat-square&logo=php&logoColor=white)](https://www.php.net/)
 [![Licenca GPL-2.0-or-later](https://img.shields.io/badge/licenca-GPL--2.0--or--later-1d6b55?style=flat-square)](https://www.gnu.org/licenses/gpl-2.0.html)
