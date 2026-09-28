@@ -90,11 +90,21 @@ jobs:
             npx playwright install --with-deps chromium
       - run:
           name: Start wp-env
-          command: npx wp-env start
+          command: |
+            for attempt in 1 2 3; do
+              echo "Starting wp-env (attempt $attempt)..."
+              if npx wp-env start; then
+                echo "wp-env started successfully!"
+                break
+              fi
+              echo "wp-env start attempt $attempt failed; waiting 12s for database container to initialize..."
+              sleep 12
+            done
       - run:
           name: Run PHPUnit Integration Tests in wp-env
           command: |
-            npx wp-env run tests-cli wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration
+            npx wp-env clean tests
+            npx wp-env run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration
       - run:
           name: Run Playwright E2E Tests on Port 8889
           command: |
