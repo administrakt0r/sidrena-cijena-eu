@@ -306,4 +306,34 @@ class GenerationServiceTest extends TestCase {
 		$this->assertIsArray( $result );
 		$this->assertTrue( $result['has_errors'] );
 	}
+
+	/**
+	 * When store identifier is missing and not forced, generation is blocked with missing_store_identifier.
+	 *
+	 * @return void
+	 */
+	public function test_missing_store_identifier_blocks_when_not_forced() {
+		$catalog      = $this->createMock( CatalogProvider::class );
+		$locations    = $this->createMock( LocationRepository::class );
+		$publications = $this->createMock( PublicationRepository::class );
+		$history      = $this->createMock( PriceHistoryRepository::class );
+		$sales        = $this->createMock( SpecialSaleRepository::class );
+
+		$locations->method( 'get' )->with( 3 )->willReturn(
+			array(
+				'id'         => 3,
+				'name'       => 'No ID Shop',
+				'identifier' => '',
+				'type'       => 'webshop',
+				'address'    => 'Ilica 1',
+				'city'       => 'Zagreb',
+			)
+		);
+
+		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
+		$result  = $service->generate( 3, 'csv', array( 'force' => false ) );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'missing_store_identifier', $result->get_error_code() );
+	}
 }
