@@ -105,11 +105,15 @@ else
 		languages \
 		-o "$OUT/sidrena-cijena-eu.zip"
 
+	# Strip translation .po and .mo files to comply with WordPress.org packaging guidelines
+	# (WordPress.org manages translations via translate.wordpress.org).
+	zip -d "$OUT/sidrena-cijena-eu.zip" "sidrena-cijena-eu/languages/*.po" "sidrena-cijena-eu/languages/*.mo" 2>/dev/null || true
+
 	ENTRIES="$(unzip -l "$OUT/sidrena-cijena-eu.zip" | awk 'NR>3' | head -n -2)"
-	LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "sidrena-cijena-eu/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md)" || true)"
+	LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "sidrena-cijena-eu/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md|\.po$|\.mo$)" || true)"
 
 	if [ -n "$LEAKS" ]; then
-		echo "error: dev-only files leaked into the zip:" >&2
+		echo "error: disallowed or dev-only files leaked into the zip:" >&2
 		echo "$LEAKS" >&2
 		exit 1
 	fi

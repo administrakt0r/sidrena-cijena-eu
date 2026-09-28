@@ -389,11 +389,21 @@ class PublicPageTest extends TestCase {
 		$this->reset_state();
 	}
 
+	/**
+	 * Tear down test fixtures.
+	 *
+	 * @return void
+	 */
 	protected function tearDown(): void {
 		$this->reset_state();
 		parent::tearDown();
 	}
 
+	/**
+	 * Reset shared plugin mocks and test state.
+	 *
+	 * @return void
+	 */
 	private function reset_state() {
 		PluginSwap::swap( 'catalog', null );
 		PluginSwap::swap( 'history', null );
@@ -669,17 +679,22 @@ class PublicPageTest extends TestCase {
 	}
 
 	/**
-	 * Styles are emitted once per request.
+	 * Styles are enqueued once per request.
 	 *
 	 * @return void
 	 */
 	public function test_styles_are_emitted_once() {
 		$this->reset_state();
+		$GLOBALS['sidrena_test_enqueued_styles'] = array();
 
 		$probe = new PublicPageProbe();
 
-		$this->assertStringContainsString( '<style>', $probe->styles() );
 		$this->assertSame( '', $probe->styles() );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+
+		unset( $GLOBALS['sidrena_test_enqueued_styles']['sidrena-cijena-frontend'] );
+		$this->assertSame( '', $probe->styles() );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
 	}
 
 	/**

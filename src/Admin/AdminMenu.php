@@ -93,6 +93,40 @@ final class AdminMenu {
 	}
 
 	/**
+	 * Whether the current request is on a plugin or product screen.
+	 *
+	 * Scopes admin notices and styles strictly to plugin screens to comply
+	 * with WordPress.org Guideline 11.
+	 *
+	 * @param bool $include_product Whether to include WooCommerce product edit screens.
+	 * @return bool
+	 */
+	public static function is_plugin_screen( $include_product = false ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( '' !== $page && ( 0 === strpos( $page, 'sidrena-cijena' ) || 0 === strpos( $page, 'sidrena_item' ) ) ) {
+			return true;
+		}
+
+		if ( function_exists( 'get_current_screen' ) ) {
+			$screen = get_current_screen();
+
+			if ( $screen ) {
+				if ( false !== strpos( (string) $screen->id, 'sidrena-cijena' ) || false !== strpos( (string) $screen->id, 'sidrena_item' ) ) {
+					return true;
+				}
+
+				if ( $include_product && in_array( $screen->base, array( 'post', 'post-new' ), true ) && in_array( $screen->post_type, array( 'product', 'sidrena_item' ), true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Enqueue admin assets on plugin screens.
 	 *
 	 * @param string $hook_suffix Current screen hook.

@@ -25,17 +25,17 @@ class StandalonePostTypeTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_POST                                  = array();
-		$GLOBALS['sidrena_test_options']        = array();
-		$GLOBALS['sidrena_test_posts']          = array();
-		$GLOBALS['sidrena_test_post_meta']      = array();
-		$GLOBALS['sidrena_test_post_terms']     = array();
-		$GLOBALS['sidrena_test_post_types']     = array();
-		$GLOBALS['sidrena_test_taxonomies']     = array();
-		$GLOBALS['sidrena_test_terms']          = array();
-		$GLOBALS['sidrena_test_meta_boxes']     = array();
-		$GLOBALS['sidrena_test_history']        = array();
-		$GLOBALS['sidrena_test_actions']        = array();
+		$_POST                                   = array();
+		$GLOBALS['sidrena_test_options']         = array();
+		$GLOBALS['sidrena_test_posts']           = array();
+		$GLOBALS['sidrena_test_post_meta']       = array();
+		$GLOBALS['sidrena_test_post_terms']      = array();
+		$GLOBALS['sidrena_test_post_types']      = array();
+		$GLOBALS['sidrena_test_taxonomies']      = array();
+		$GLOBALS['sidrena_test_terms']           = array();
+		$GLOBALS['sidrena_test_meta_boxes']      = array();
+		$GLOBALS['sidrena_test_history']         = array();
+		$GLOBALS['sidrena_test_actions']         = array();
 		$GLOBALS['sidrena_test_current_user_id'] = 1;
 
 		Plugin::instance()->set_catalog( new StandaloneCatalogProvider() );
@@ -140,6 +140,7 @@ class StandalonePostTypeTest extends TestCase {
 	 */
 	public function test_save_persists_meta_and_captures_history(): void {
 		$post_id = 45;
+
 		$GLOBALS['sidrena_test_posts'][ $post_id ] = new WP_Post(
 			array(
 				'ID'          => $post_id,

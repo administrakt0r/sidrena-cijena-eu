@@ -363,6 +363,10 @@ final class AnchorMetaBox {
 			return;
 		}
 
+		if ( ! AdminMenu::is_plugin_screen( true ) ) {
+			return;
+		}
+
 		// Our own screens render the notice themselves, with the type that
 		// belongs to their own action instead of a plain success/error.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended

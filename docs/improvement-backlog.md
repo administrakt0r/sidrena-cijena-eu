@@ -299,3 +299,11 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | --- | --- | --- | --- |
 | ROB-05 | `done` | Achieved full test coverage for Admin AuditPage, LogsPage, standalone item hydration, query filtering, and meta-box saving. Hardened $user_id extraction and unified user label fallbacks in logs. Added unit test suites for CleanupJob and LogRepository::prune. All tests passing flawlessly. | 478 unit tests passing; PHPStan and PHPCS clean. |
 | REL-25 | `done` | Package and verify release 2.0.14 archive | `tools/build-zip.sh 2.0.14` built `versions/2.0.14/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+
+## WordPress.org Review & Compliance Remediation (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| WPORG-01 | `done` | Address WordPress.org pre-review findings: replace PublicPage inline style with standard wp_enqueue_style, sanitize RuleConfig legacy category IDs with absint() and slugs with sanitize_title(), remove post-activation redirect and scope admin notices to plugin screens (Guideline 11), strip .po and .mo files from release archives via .gitattributes export-ignore and build-zip.sh, and align author header with titanworks. | 480 unit tests passing; PHPCS clean across all modified files; build-zip.sh verified leak-free. |
+| REL-26 | `done` | Package and verify release 2.0.15 archive | `tools/build-zip.sh 2.0.15 --no-upload` builds `versions/2.0.15/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+

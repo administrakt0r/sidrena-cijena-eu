@@ -30,6 +30,18 @@ class SchedulerTest extends TestCase {
 		$GLOBALS['sidrena_test_options']    = array();
 		$GLOBALS['sidrena_test_transients'] = array();
 		$GLOBALS['sidrena_test_is_admin']   = true;
+		$_GET['page']                       = 'sidrena-cijena-publications';
+	}
+
+	/**
+	 * Tear down test globals after each test.
+	 *
+	 * @return void
+	 */
+	protected function tearDown(): void {
+		parent::tearDown();
+
+		unset( $_GET['page'] );
 	}
 
 	/**

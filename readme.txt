@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.14
+Stable tag: 2.0.15
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.15 =
+* Enqueue compliance: replaced PublicPage inline style tag with standard wp_enqueue_style calls adhering to WordPress.org guidelines.
+* Settings sanitization: sanitized legacy category IDs with absint() and category slugs with sanitize_title() in RuleConfig Settings API sanitizer.
+* Admin dashboard moderation: removed post-activation redirect and scoped welcome banner and admin notices strictly to plugin admin screens (Guideline 11).
+* Internationalization packaging: configured .gitattributes export-ignore and build script stripping for .po and .mo files to let translate.wordpress.org manage community translations.
+* Plugin author alignment: aligned Author header with WordPress.org submission username titanworks.
 
 = 2.0.14 =
 * Test coverage & robustness: achieved full test coverage for Admin AuditPage, LogsPage, standalone item hydration, query filtering, and meta-box saving. Hardened `$user_id` extraction and unified user label fallbacks in logs. Added unit test suites for `CleanupJob` and `LogRepository::prune`. All tests passing flawlessly (478 unit tests).

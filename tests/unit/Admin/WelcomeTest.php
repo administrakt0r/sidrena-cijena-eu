@@ -28,6 +28,7 @@ class WelcomeTest extends TestCase {
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
 		$GLOBALS['sidrena_test_options'] = array();
+		$_GET['page']                    = 'sidrena-cijena-guide';
 	}
 
 	/**
@@ -54,7 +55,7 @@ class WelcomeTest extends TestCase {
 	}
 
 	/**
-	 * Banner shows until dismissed.
+	 * Banner shows until dismissed when on plugin screens.
 	 *
 	 * @return void
 	 */
@@ -63,6 +64,19 @@ class WelcomeTest extends TestCase {
 
 		update_option( WelcomeBanner::DISMISSED_OPTION, 1, false );
 
+		$this->assertFalse( WelcomeBanner::should_show() );
+	}
+
+	/**
+	 * Banner is not shown on foreign admin screens (Guideline 11).
+	 *
+	 * @return void
+	 */
+	public function test_banner_not_shown_on_foreign_screens() {
+		$_GET['page'] = 'plugins';
+		$this->assertFalse( WelcomeBanner::should_show() );
+
+		unset( $_GET['page'] );
 		$this->assertFalse( WelcomeBanner::should_show() );
 	}
 
@@ -80,7 +94,7 @@ class WelcomeTest extends TestCase {
 			$GLOBALS['sidrena_test_doing_cron'],
 			$GLOBALS['sidrena_test_is_network_admin']
 		);
-		unset( $_GET['activate-multi'] );
+		unset( $_GET['activate-multi'], $_GET['page'] );
 	}
 
 	/**

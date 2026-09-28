@@ -653,12 +653,12 @@ class PublicPage {
 	}
 
 	/**
-	 * Minimal table styles, printed once per request.
+	 * Enqueue table styles once per request.
 	 *
-	 * The public pages must survive any theme, so the tables carry their own
-	 * few rules instead of depending on a stylesheet the theme may not load.
+	 * Uses standard wp_enqueue_style so assets are registered and printed
+	 * according to WordPress theme and plugin standards.
 	 *
-	 * @return string
+	 * @return string Empty string for backward compatibility with template concatenation.
 	 */
 	protected function style() {
 		if ( self::$styled ) {
@@ -667,6 +667,15 @@ class PublicPage {
 
 		self::$styled = true;
 
-		return '<style>.sidrena-cijena-table{width:100%;border-collapse:collapse;margin:1rem 0}.sidrena-cijena-table caption{text-align:left;font-weight:600;margin-bottom:.5rem}.sidrena-cijena-table th,.sidrena-cijena-table td{padding:.4rem .5rem;border-bottom:1px solid #dcdcde;text-align:left;vertical-align:top}.sidrena-cijena-cjenik__meta,.sidrena-cijena-cjenik__links{margin:.5rem 0}.sidrena-cijena-cjenik__search{display:flex;gap:.5rem;align-items:center;margin:.5rem 0}</style>';
+		if ( function_exists( 'wp_enqueue_style' ) ) {
+			wp_enqueue_style(
+				'sidrena-cijena-frontend',
+				SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+				array(),
+				SIDRENA_CIJENA_VERSION
+			);
+		}
+
+		return '';
 	}
 }

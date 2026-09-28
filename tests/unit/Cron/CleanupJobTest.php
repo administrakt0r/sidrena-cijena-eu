@@ -65,9 +65,9 @@ class CleanupJobTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_db_queries'] = array();
+		$GLOBALS['sidrena_test_db_queries']      = array();
 		$GLOBALS['sidrena_test_db_query_result'] = 0;
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['sidrena_test_options']         = array();
 	}
 
 	/**
@@ -100,8 +100,14 @@ class CleanupJobTest extends TestCase {
 		// file2 won't exist.
 
 		$pub->candidates = array(
-			array( 'id' => 10, 'path' => $file1 ),
-			array( 'id' => 20, 'path' => $file2 ), // does not exist, but will still be marked expired.
+			array(
+				'id'   => 10,
+				'path' => $file1,
+			),
+			array(
+				'id'   => 20,
+				'path' => $file2,
+			), // does not exist, but will still be marked expired.
 		);
 
 		// wp_delete_file uses unlink, so the file should be deleted.
@@ -127,6 +133,7 @@ class CleanupJobTest extends TestCase {
 	 */
 	public function test_prune_query() {
 		$repo = new LogRepository();
+
 		$GLOBALS['sidrena_test_db_query_result'] = 10;
 
 		$deleted = $repo->prune( 30 );
@@ -134,7 +141,7 @@ class CleanupJobTest extends TestCase {
 		$this->assertSame( 10, $deleted );
 		$queries = $GLOBALS['sidrena_test_db_queries'];
 		$this->assertCount( 1, $queries );
-		
+
 		// The query should use 30 days cutoff.
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( 30 * DAY_IN_SECONDS ) );
 		$this->assertStringContainsString( $cutoff, $queries[0] );

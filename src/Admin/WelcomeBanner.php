@@ -56,12 +56,14 @@ final class WelcomeBanner {
 	 */
 	public static function register() {
 		add_action( 'admin_notices', array( __CLASS__, 'render' ) );
-		add_action( 'admin_init', array( __CLASS__, 'maybe_redirect' ) );
 		add_action( 'admin_post_' . self::DISMISS_ACTION, array( __CLASS__, 'handle_dismiss' ) );
 	}
 
 	/**
 	 * Whether the banner should be shown.
+	 *
+	 * Notices are strictly limited to plugin screens to comply with
+	 * WordPress.org Guideline 11.
 	 *
 	 * @return bool
 	 */
@@ -71,6 +73,10 @@ final class WelcomeBanner {
 		}
 
 		if ( get_option( self::DISMISSED_OPTION, false ) ) {
+			return false;
+		}
+
+		if ( ! AdminMenu::is_plugin_screen() ) {
 			return false;
 		}
 
@@ -155,22 +161,9 @@ final class WelcomeBanner {
 			self::DISMISS_ACTION
 		);
 
-		echo '<div class="notice notice-info sidrena-welcome-banner">';
+		echo '<div class="notice notice-info sidrena-welcome-banner is-dismissible">';
 		echo '<h2>' . esc_html__( 'Welcome to Sidrena cijena!', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes.', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<p>' . esc_html__( 'Made by administrakt0r.', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<ul class="sidrena-welcome-banner__projects">';
-
-		foreach ( self::links() as $link ) {
-			printf(
-				'<li><a href="%1$s" target="_blank" rel="noopener"><strong>%2$s</strong></a> — %3$s</li>',
-				esc_url( $link['url'] ),
-				esc_html( $link['title'] ),
-				esc_html( $link['description'] )
-			);
-		}
-
-		echo '</ul>';
 		$docs_url = AdminMenu::url( DocumentationPage::SLUG );
 
 		printf(

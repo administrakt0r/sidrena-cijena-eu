@@ -64,7 +64,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * get_item returns null for missing, non-standalone, or trashed posts.
+	 * Verify get_item returns null for missing, non-standalone, or trashed posts.
 	 *
 	 * @return void
 	 */
@@ -94,12 +94,13 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * get_item hydates a complete CatalogItem from post data, meta, and terms.
+	 * Verify get_item hydrates a complete CatalogItem from post data, meta, and terms.
 	 *
 	 * @return void
 	 */
 	public function test_get_item_hydrates_product(): void {
 		$id = 101;
+
 		$GLOBALS['sidrena_test_posts'][ $id ] = new WP_Post(
 			array(
 				'ID'          => $id,
@@ -124,8 +125,18 @@ class StandaloneCatalogProviderTest extends TestCase {
 
 		$GLOBALS['sidrena_test_post_terms'][ $id ] = array(
 			StandalonePostType::TAX_TYPE  => array( 'product' ),
-			StandalonePostType::TAX_BRAND => array( array( 'name' => 'Sirana Gorski', 'slug' => 'sirana-gorski' ) ),
-			'category'                    => array( array( 'name' => 'Mliječni proizvodi', 'slug' => 'mlijecni-proizvodi' ) ),
+			StandalonePostType::TAX_BRAND => array(
+				array(
+					'name' => 'Sirana Gorski',
+					'slug' => 'sirana-gorski',
+				),
+			),
+			'category'                    => array(
+				array(
+					'name' => 'Mliječni proizvodi',
+					'slug' => 'mlijecni-proizvodi',
+				),
+			),
 		);
 
 		$provider = new StandaloneCatalogProvider();
@@ -161,6 +172,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 */
 	public function test_get_item_service_classification(): void {
 		$id = 102;
+
 		$GLOBALS['sidrena_test_posts'][ $id ] = new WP_Post(
 			array(
 				'ID'          => $id,
@@ -201,7 +213,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * get_items filters and returns catalog items.
+	 * Verify get_items filters and returns catalog items.
 	 *
 	 * @return void
 	 */
@@ -238,7 +250,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * count_items delegates to WP_Query.
+	 * Verify count_items delegates to WP_Query.
 	 *
 	 * @return void
 	 */
@@ -250,7 +262,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * get_categories returns mapped term descriptors.
+	 * Verify get_categories returns mapped term descriptors.
 	 *
 	 * @return void
 	 */
@@ -273,7 +285,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	}
 
 	/**
-	 * iterate yields items across pagination pages.
+	 * Verify iterate yields items across pagination pages.
 	 *
 	 * @return void
 	 */

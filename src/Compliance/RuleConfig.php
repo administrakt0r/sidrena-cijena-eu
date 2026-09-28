@@ -150,8 +150,10 @@ final class RuleConfig {
 				$value = self::sanitize_date( $value, $old[ $key ] );
 			}
 
-			if ( 'legacy_category_ids' === $key || 'legacy_category_slugs' === $key ) {
-				$value = array_values( array_unique( array_filter( array_map( 'strval', (array) $value ) ) ) );
+			if ( 'legacy_category_ids' === $key ) {
+				$value = array_values( array_unique( array_filter( array_map( 'absint', (array) $value ) ) ) );
+			} elseif ( 'legacy_category_slugs' === $key ) {
+				$value = array_values( array_unique( array_filter( array_map( 'sanitize_title', (array) $value ) ) ) );
 			}
 
 			if ( 'legacy_enabled' === $key ) {

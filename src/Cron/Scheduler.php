@@ -11,6 +11,7 @@
 
 namespace SidrenaCijena\Cron;
 
+use SidrenaCijena\Admin\AdminMenu;
 use SidrenaCijena\Admin\Capabilities;
 use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Plugin;
@@ -222,6 +223,10 @@ final class Scheduler {
 	 */
 	public static function maybe_notice() {
 		if ( ! is_admin() || ! Capabilities::current_user_can() ) {
+			return;
+		}
+
+		if ( ! AdminMenu::is_plugin_screen() ) {
 			return;
 		}
 
