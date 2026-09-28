@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.13
+Stable tag: 2.0.14
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,9 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.14 =
+* Test coverage & robustness: achieved full test coverage for Admin AuditPage, LogsPage, standalone item hydration, query filtering, and meta-box saving. Hardened `$user_id` extraction and unified user label fallbacks in logs. Added unit test suites for `CleanupJob` and `LogRepository::prune`. All tests passing flawlessly (478 unit tests).
 
 = 2.0.13 =
 * UI/UX improvements & button busy states: added busy form handling (`sidrena-busy-form` and `sidrena-btn-busy`) to long-running administrative submit actions ("Run compliance check", "Generate now", and shop-wide bulk anchor setting), preventing duplicate submissions and giving clear visual feedback.

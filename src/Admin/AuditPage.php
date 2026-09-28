@@ -174,7 +174,9 @@ class AuditPage {
 
 		foreach ( $rows as $row ) {
 			$context = isset( $row['context'] ) && is_array( $row['context'] ) ? $row['context'] : array();
-			$user_id = isset( $context['user_id'] ) ? (int) $context['user_id'] : 0;
+			$user_id = isset( $row['user_id'] ) && null !== $row['user_id']
+				? (int) $row['user_id']
+				: ( isset( $context['user_id'] ) ? (int) $context['user_id'] : 0 );
 
 			echo '<tr>';
 			echo '<td>' . esc_html( Dates::format_datetime_display( (string) $row['created_at'] ) ) . '</td>';
@@ -234,6 +236,10 @@ class AuditPage {
 
 		$user = get_userdata( $user_id );
 
-		return $user ? $user->display_name : '#' . $user_id;
+		if ( ! $user ) {
+			return '#' . $user_id;
+		}
+
+		return ! empty( $user->display_name ) ? $user->display_name : ( ! empty( $user->user_login ) ? $user->user_login : '#' . $user_id );
 	}
 }

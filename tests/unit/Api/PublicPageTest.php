@@ -380,10 +380,20 @@ class PublicPageProbe extends PublicPage {
 class PublicPageTest extends TestCase {
 
 	/**
-	 * Reset shared test state.
+	 * Reset shared test state before and after each test.
 	 *
 	 * @return void
 	 */
+	protected function setUp(): void {
+		parent::setUp();
+		$this->reset_state();
+	}
+
+	protected function tearDown(): void {
+		$this->reset_state();
+		parent::tearDown();
+	}
+
 	private function reset_state() {
 		PluginSwap::swap( 'catalog', null );
 		PluginSwap::swap( 'history', null );

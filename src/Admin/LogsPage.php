@@ -134,7 +134,10 @@ class LogsPage {
 	 * @return string
 	 */
 	protected static function user_label( array $row ) {
-		$user_id = isset( $row['user_id'] ) ? (int) $row['user_id'] : 0;
+		$context = isset( $row['context'] ) && is_array( $row['context'] ) ? $row['context'] : array();
+		$user_id = isset( $row['user_id'] ) && null !== $row['user_id']
+			? (int) $row['user_id']
+			: ( isset( $context['user_id'] ) ? (int) $context['user_id'] : 0 );
 
 		if ( $user_id <= 0 ) {
 			return __( 'system', 'sidrena-cijena-eu' );
@@ -142,7 +145,11 @@ class LogsPage {
 
 		$user = get_userdata( $user_id );
 
-		return $user ? $user->user_login : '#' . $user_id;
+		if ( ! $user ) {
+			return '#' . $user_id;
+		}
+
+		return ! empty( $user->display_name ) ? $user->display_name : ( ! empty( $user->user_login ) ? $user->user_login : '#' . $user_id );
 	}
 
 	/**

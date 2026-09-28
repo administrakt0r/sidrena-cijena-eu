@@ -528,8 +528,12 @@ if ( ! function_exists( 'get_option' ) ) {
 	 * @return mixed
 	 */
 	function get_option( $option, $default = false ) {
-		return array_key_exists( $option, $GLOBALS['sidrena_test_options'] )
-			? $GLOBALS['sidrena_test_options'][ $option ]
+		$options = isset( $GLOBALS['sidrena_test_options'] ) && is_array( $GLOBALS['sidrena_test_options'] )
+			? $GLOBALS['sidrena_test_options']
+			: array();
+
+		return array_key_exists( $option, $options )
+			? $options[ $option ]
 			: $default;
 	}
 }
@@ -848,9 +852,134 @@ if ( ! function_exists( 'get_posts' ) ) {
 	 * @return array
 	 */
 	function get_posts( $args = array() ) {
-		unset( $args );
+		if ( isset( $GLOBALS['sidrena_test_posts'] ) && is_array( $GLOBALS['sidrena_test_posts'] ) ) {
+			$posts       = array();
+			$post_type   = isset( $args['post_type'] ) ? $args['post_type'] : '';
+			$post_status = isset( $args['post_status'] ) ? $args['post_status'] : '';
+			$post_in     = isset( $args['post__in'] ) ? (array) $args['post__in'] : array();
+			$post_not_in = isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array();
+
+			foreach ( $GLOBALS['sidrena_test_posts'] as $id => $data ) {
+				$p = $data instanceof WP_Post ? $data : new WP_Post( $data );
+				if ( $post_type && $p->post_type !== $post_type ) {
+					continue;
+				}
+				if ( $post_status && $p->post_status !== $post_status ) {
+					continue;
+				}
+				if ( ! empty( $post_in ) && ! in_array( (int) $p->ID, $post_in, true ) ) {
+					continue;
+				}
+				if ( ! empty( $post_not_in ) && in_array( (int) $p->ID, $post_not_in, true ) ) {
+					continue;
+				}
+				$posts[] = $p;
+			}
+			return $posts;
+		}
 
 		return array();
+	}
+}
+
+if ( ! function_exists( 'get_post_meta' ) ) {
+	/**
+	 * Get post meta stub.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $key     Meta key.
+	 * @param bool   $single  Whether to return a single value.
+	 * @return mixed
+	 */
+	function get_post_meta( $post_id, $key = '', $single = false ) {
+		$post_id = (int) $post_id;
+
+		if ( isset( $GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ] ) ) {
+			$value = $GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ];
+			return $single ? $value : array( $value );
+		}
+
+		if ( isset( $GLOBALS['sidrena_test_wc_products'][ $post_id ]['meta'][ $key ] ) ) {
+			$value = $GLOBALS['sidrena_test_wc_products'][ $post_id ]['meta'][ $key ];
+			return $single ? $value : array( $value );
+		}
+
+		return $single ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'update_post_meta' ) ) {
+	/**
+	 * Update post meta stub.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $key     Meta key.
+	 * @param mixed  $value   Meta value.
+	 * @return bool
+	 */
+	function update_post_meta( $post_id, $key, $value ) {
+		$post_id = (int) $post_id;
+
+		if ( ! isset( $GLOBALS['sidrena_test_post_meta'] ) ) {
+			$GLOBALS['sidrena_test_post_meta'] = array();
+		}
+
+		if ( ! isset( $GLOBALS['sidrena_test_post_meta'][ $post_id ] ) ) {
+			$GLOBALS['sidrena_test_post_meta'][ $post_id ] = array();
+		}
+
+		$GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ] = $value;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_get_post_terms' ) ) {
+	/**
+	 * Post terms stub.
+	 *
+	 * @param int    $post_id  Post ID.
+	 * @param string $taxonomy Taxonomy.
+	 * @param array  $args     Arguments.
+	 * @return array
+	 */
+	function wp_get_post_terms( $post_id, $taxonomy, $args = array() ) {
+		$post_id = (int) $post_id;
+
+		if ( isset( $GLOBALS['sidrena_test_post_terms'][ $post_id ][ $taxonomy ] ) ) {
+			$terms = $GLOBALS['sidrena_test_post_terms'][ $post_id ][ $taxonomy ];
+			if ( isset( $args['fields'] ) && 'slugs' === $args['fields'] ) {
+				return array_map( function( $t ) { return is_array( $t ) ? $t['slug'] : (string) $t; }, $terms );
+			}
+			if ( isset( $args['fields'] ) && 'names' === $args['fields'] ) {
+				return array_map( function( $t ) { return is_array( $t ) ? $t['name'] : (string) $t; }, $terms );
+			}
+			return $terms;
+		}
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'wp_set_object_terms' ) ) {
+	/**
+	 * Set object terms stub.
+	 *
+	 * @param int          $object_id Object ID.
+	 * @param string|array $terms     Terms.
+	 * @param string       $taxonomy  Taxonomy.
+	 * @return array
+	 */
+	function wp_set_object_terms( $object_id, $terms, $taxonomy ) {
+		$object_id = (int) $object_id;
+
+		if ( ! isset( $GLOBALS['sidrena_test_post_terms'] ) ) {
+			$GLOBALS['sidrena_test_post_terms'] = array();
+		}
+
+		$GLOBALS['sidrena_test_post_terms'][ $object_id ][ $taxonomy ] = (array) $terms;
+
+		return (array) $terms;
 	}
 }
 
@@ -895,7 +1024,54 @@ if ( ! function_exists( 'get_terms' ) ) {
 	function get_terms( $args = array() ) {
 		unset( $args );
 
+		if ( isset( $GLOBALS['sidrena_test_taxonomy_terms'] ) ) {
+			return $GLOBALS['sidrena_test_taxonomy_terms'];
+		}
+
 		return array();
+	}
+}
+
+if ( ! class_exists( 'WP_Query' ) ) {
+	/**
+	 * WP_Query stub for unit tests.
+	 */
+	class WP_Query {
+		/**
+		 * Found posts count.
+		 *
+		 * @var int
+		 */
+		public $found_posts = 0;
+
+		/**
+		 * Posts array.
+		 *
+		 * @var array
+		 */
+		public $posts = array();
+
+		/**
+		 * Post count.
+		 *
+		 * @var int
+		 */
+		public $post_count = 0;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param array $args Query arguments.
+		 */
+		public function __construct( $args = array() ) {
+			unset( $args );
+
+			if ( isset( $GLOBALS['sidrena_test_wp_query_found_posts'] ) ) {
+				$this->found_posts = (int) $GLOBALS['sidrena_test_wp_query_found_posts'];
+			} elseif ( isset( $GLOBALS['sidrena_test_posts'] ) && is_array( $GLOBALS['sidrena_test_posts'] ) ) {
+				$this->found_posts = count( $GLOBALS['sidrena_test_posts'] );
+			}
+		}
 	}
 }
 
@@ -1250,7 +1426,16 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 *
 		 * @return int
 		 */
-		public function query() {
+		public function query( $query = '' ) {
+			if ( ! isset( $GLOBALS['sidrena_test_db_queries'] ) ) {
+				$GLOBALS['sidrena_test_db_queries'] = array();
+			}
+			$GLOBALS['sidrena_test_db_queries'][] = $query;
+
+			if ( isset( $GLOBALS['sidrena_test_db_query_result'] ) ) {
+				return $GLOBALS['sidrena_test_db_query_result'];
+			}
+
 			return 0;
 		}
 
@@ -1260,6 +1445,10 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 * @return mixed
 		 */
 		public function get_var() {
+			if ( isset( $GLOBALS['sidrena_test_db_var'] ) ) {
+				return $GLOBALS['sidrena_test_db_var'];
+			}
+
 			return null;
 		}
 
@@ -1278,6 +1467,10 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 * @return array
 		 */
 		public function get_results() {
+			if ( isset( $GLOBALS['sidrena_test_db_results'] ) ) {
+				return (array) $GLOBALS['sidrena_test_db_results'];
+			}
+
 			return array();
 		}
 
@@ -1354,7 +1547,33 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return int
 	 */
 	function get_current_user_id() {
-		return 0;
+		return isset( $GLOBALS['sidrena_test_current_user_id'] ) ? (int) $GLOBALS['sidrena_test_current_user_id'] : 0;
+	}
+
+	if ( ! function_exists( 'get_userdata' ) ) {
+		/**
+		 * User data stub.
+		 *
+		 * @param int $user_id User ID.
+		 * @return object|false
+		 */
+		function get_userdata( $user_id ) {
+			$id = (int) $user_id;
+
+			if ( isset( $GLOBALS['sidrena_test_users'][ $id ] ) ) {
+				return (object) $GLOBALS['sidrena_test_users'][ $id ];
+			}
+
+			if ( $id > 0 ) {
+				return (object) array(
+					'ID'           => $id,
+					'user_login'   => 'user' . $id,
+					'display_name' => 'User ' . $id,
+				);
+			}
+
+			return false;
+		}
 	}
 
 	/**
@@ -1710,6 +1929,20 @@ if ( ! function_exists( 'wp_nonce_field' ) ) {
 		}
 
 		return $html;
+	}
+}
+
+if ( ! function_exists( 'wp_create_nonce' ) ) {
+	/**
+	 * Create a cryptographic token tied to an action.
+	 *
+	 * @param string|int $action Action name.
+	 * @return string
+	 */
+	function wp_create_nonce( $action = -1 ) {
+		unset( $action );
+
+		return 'test-nonce';
 	}
 }
 
@@ -2086,6 +2319,125 @@ if ( ! function_exists( 'post_type_exists' ) ) {
 		$registered = isset( $GLOBALS['sidrena_test_post_types'] ) && is_array( $GLOBALS['sidrena_test_post_types'] ) ? $GLOBALS['sidrena_test_post_types'] : array();
 
 		return in_array( (string) $post_type, $registered, true );
+	}
+}
+
+if ( ! function_exists( 'register_post_type' ) ) {
+	/**
+	 * Register post type stub.
+	 *
+	 * @param string $post_type Post type name.
+	 * @param array  $args      Arguments.
+	 * @return bool
+	 */
+	function register_post_type( $post_type, $args = array() ) {
+		unset( $args );
+
+		if ( ! isset( $GLOBALS['sidrena_test_post_types'] ) ) {
+			$GLOBALS['sidrena_test_post_types'] = array();
+		}
+
+		$GLOBALS['sidrena_test_post_types'][] = (string) $post_type;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'register_taxonomy' ) ) {
+	/**
+	 * Register taxonomy stub.
+	 *
+	 * @param string $taxonomy    Taxonomy.
+	 * @param string $object_type Object type.
+	 * @param array  $args        Arguments.
+	 * @return bool
+	 */
+	function register_taxonomy( $taxonomy, $object_type, $args = array() ) {
+		unset( $object_type, $args );
+
+		if ( ! isset( $GLOBALS['sidrena_test_taxonomies'] ) ) {
+			$GLOBALS['sidrena_test_taxonomies'] = array();
+		}
+
+		$GLOBALS['sidrena_test_taxonomies'][] = (string) $taxonomy;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'register_taxonomy_for_object_type' ) ) {
+	/**
+	 * Register taxonomy for object type stub.
+	 *
+	 * @param string $taxonomy    Taxonomy.
+	 * @param string $object_type Object type.
+	 * @return bool
+	 */
+	function register_taxonomy_for_object_type( $taxonomy, $object_type ) {
+		unset( $taxonomy, $object_type );
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'term_exists' ) ) {
+	/**
+	 * Term exists stub.
+	 *
+	 * @param string $term     Term slug or name.
+	 * @param string $taxonomy Taxonomy.
+	 * @param int    $parent   Parent term ID.
+	 * @return mixed
+	 */
+	function term_exists( $term, $taxonomy = '', $parent = null ) {
+		unset( $parent );
+
+		return ! empty( $GLOBALS['sidrena_test_terms'][ $taxonomy ][ $term ] );
+	}
+}
+
+if ( ! function_exists( 'wp_insert_term' ) ) {
+	/**
+	 * Insert term stub.
+	 *
+	 * @param string $term     Term name.
+	 * @param string $taxonomy Taxonomy.
+	 * @param array  $args     Arguments.
+	 * @return array
+	 */
+	function wp_insert_term( $term, $taxonomy, $args = array() ) {
+		unset( $args );
+
+		if ( ! isset( $GLOBALS['sidrena_test_terms'] ) ) {
+			$GLOBALS['sidrena_test_terms'] = array();
+		}
+
+		if ( ! isset( $GLOBALS['sidrena_test_terms'][ $taxonomy ] ) ) {
+			$GLOBALS['sidrena_test_terms'][ $taxonomy ] = array();
+		}
+
+		$data = array(
+			'term_id'          => rand( 1, 999 ),
+			'term_taxonomy_id' => rand( 1, 999 ),
+		);
+
+		$GLOBALS['sidrena_test_terms'][ $taxonomy ][ $term ] = $data;
+
+		return $data;
+	}
+}
+
+if ( ! function_exists( 'wp_is_post_revision' ) ) {
+	/**
+	 * Post revision check stub.
+	 *
+	 * @param int|object $post Post.
+	 * @return false
+	 */
+	function wp_is_post_revision( $post ) {
+		unset( $post );
+
+		return false;
 	}
 }
 

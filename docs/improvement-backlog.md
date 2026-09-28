@@ -292,3 +292,10 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | --- | --- | --- | --- |
 | CI-01 | `done` | Offload heavy CPU and test execution to CircleCI: configured `.circleci/config.yml` with `verify` (PHP 8.4 container, PHPUnit unit tests, PHPCS coding standards across 184 files, PHPStan level 6, ESLint, and Croatian catalog completeness) and `integration_and_e2e` (Ubuntu 24.04 VM, `wp-env start`, containerized integration tests, Playwright browser E2E tests) running concurrently; fixed PHP version mismatch (`cimg/php:8.4-node` satisfying `doctrine/instantiator 2.1.0` dependency in `composer.lock`); kept release packaging (`tools/build-zip.sh`) local on host; created `AGENTS.md` and updated `AGENTARDS/*.md` prompts with explicit offloading protocols to keep host machine quiet | `circleci config validate` passes; `AGENTS.md` created; `AGENTARDS/README.md` and prompts 01, 03, 04, 05, 09, 10 updated; 456 unit tests green |
 
+
+## Test coverage & robustness (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| ROB-05 | `done` | Achieved full test coverage for Admin AuditPage, LogsPage, standalone item hydration, query filtering, and meta-box saving. Hardened $user_id extraction and unified user label fallbacks in logs. Added unit test suites for CleanupJob and LogRepository::prune. All tests passing flawlessly. | 478 unit tests passing; PHPStan and PHPCS clean. |
+| REL-25 | `done` | Package and verify release 2.0.14 archive | `tools/build-zip.sh 2.0.14` built `versions/2.0.14/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
