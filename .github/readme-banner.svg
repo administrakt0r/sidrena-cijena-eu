@@ -1,75 +1,166 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
-  <title id="title">Sidrena Cijena EU — referentne cijene i javni cjenici</title>
-  <desc id="desc">Hrvatski WordPress dodatak za prikaz referentnih cijena, izračun najniže cijene u 30 dana i objavu cjenika.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="banner-title banner-desc">
+  <title id="banner-title">Sidrena Cijena EU — hrvatski WordPress dodatak za sidrenu cijenu, najnižu cijenu u 30 dana i javne cjenike</title>
+  <desc id="banner-desc">Naslovna slika s hrvatskom zastavom i grbom sa šahovnicom te primjerom javnog cjenika: aktualna cijena, sidrena cijena i najniža cijena u zadnjih 30 dana.</desc>
+
   <defs>
-    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#102337"/>
-      <stop offset=".58" stop-color="#123c46"/>
-      <stop offset="1" stop-color="#17615c"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1c2e"/>
+      <stop offset=".55" stop-color="#0f2f42"/>
+      <stop offset="1" stop-color="#12494c"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" x2="1">
-      <stop offset="0" stop-color="#f6d77c"/>
-      <stop offset="1" stop-color="#f2ad56"/>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7d67f"/>
+      <stop offset="1" stop-color="#e6a44c"/>
     </linearGradient>
     <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fffefb"/>
-      <stop offset="1" stop-color="#edf6f2"/>
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#edf5f1"/>
     </linearGradient>
-    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
-      <path d="M34 0H0V34" fill="none" stroke="#fff" stroke-opacity=".035" stroke-width="1"/>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#ffffff" stroke-opacity=".05" stroke-width="1"/>
     </pattern>
-    <filter id="shadow" x="-.2" y="-.2" width="1.4" height="1.5">
-      <feDropShadow dx="0" dy="12" stdDeviation="13" flood-color="#071a25" flood-opacity=".25"/>
+    <filter id="card-shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#04121c" flood-opacity=".34"/>
     </filter>
+
+    <!-- Hrvatski grb: kruna od pet štitova iznad glavnog štita sa šahovnicom -->
+    <clipPath id="coa-main-clip">
+      <path d="M4 14H36V31c0 9.6-6 14.4-16 17-10-2.6-16-7.4-16-17Z"/>
+    </clipPath>
+    <g id="hr-coa">
+      <!-- 1. Hrvatska -->
+      <path d="M4.7 2h5.4v6.2c0 3.5-1.2 5.3-2.7 6-1.5-.7-2.7-2.5-2.7-6Z" fill="#171796"/>
+      <path d="M7.4 2 7.8 2.91 8.79 2.8 8.2 3.6 8.79 4.4 7.8 4.29 7.4 5.2 7 4.29 6.01 4.4 6.6 3.6 6.01 2.8 7 2.91Z" fill="#f7d67f"/>
+      <circle cx="7.4" cy="8.7" r="1.5" fill="#e9e9f4"/>
+      <circle cx="7.4" cy="7.95" r="1.25" fill="#171796"/>
+      <!-- 2. Dubrovnik -->
+      <path d="M11 2h5.4v6.2c0 3.5-1.2 5.3-2.7 6-1.5-.7-2.7-2.5-2.7-6Z" fill="#171796"/>
+      <rect x="11.1" y="3.6" width="5.2" height="1.5" fill="#ff0000"/>
+      <rect x="11.1" y="6.4" width="5.2" height="1.5" fill="#ff0000"/>
+      <!-- 3. Dalmacija -->
+      <path d="M17.3 2h5.4v6.2c0 3.5-1.2 5.3-2.7 6-1.5-.7-2.7-2.5-2.7-6Z" fill="#171796"/>
+      <circle cx="18.8" cy="3.6" r="1.05" fill="#f7d67f"/>
+      <circle cx="21.2" cy="3.6" r="1.05" fill="#f7d67f"/>
+      <circle cx="20" cy="6.8" r="1.05" fill="#f7d67f"/>
+      <!-- 4. Istra -->
+      <path d="M23.6 2h5.4v6.2c0 3.5-1.2 5.3-2.7 6-1.5-.7-2.7-2.5-2.7-6Z" fill="#171796"/>
+      <ellipse cx="26.6" cy="7.1" rx="1.7" ry="1.1" fill="#f7d67f"/>
+      <circle cx="25.1" cy="5.6" r=".8" fill="#f7d67f"/>
+      <path d="M24.6 4.6 24 3.5M25.6 4.6 26 3.5" stroke="#ff0000" stroke-width=".7" stroke-linecap="round"/>
+      <path d="M25.6 8.2v1.4M27.5 8.2v1.4" stroke="#ff0000" stroke-width=".7" stroke-linecap="round"/>
+      <!-- 5. Slavonija -->
+      <path d="M29.9 2h5.4v6.2c0 3.5-1.2 5.3-2.7 6-1.5-.7-2.7-2.5-2.7-6Z" fill="#171796"/>
+      <path d="M32.6 2.5 33 3.6 34.1 3.6 33.2 4.3 33.5 5.4 32.6 4.7 31.7 5.4 32 4.3 31.1 3.6 32.2 3.6Z" fill="#f7d67f"/>
+      <rect x="30" y="6.2" width="5.2" height="1.2" fill="#e9e9f4"/>
+      <rect x="30" y="7.8" width="5.2" height="1.8" fill="#ff0000"/>
+      <rect x="30" y="9.9" width="5.2" height="1.2" fill="#e9e9f4"/>
+
+      <!-- Glavni štit: šahovnica, prvo polje crveno -->
+      <g clip-path="url(#coa-main-clip)">
+        <rect x="4" y="14" width="32" height="34" fill="#ffffff"/>
+        <g fill="#ff0000">
+          <rect x="4" y="14" width="6.4" height="6.8"/>
+          <rect x="16.8" y="14" width="6.4" height="6.8"/>
+          <rect x="29.6" y="14" width="6.4" height="6.8"/>
+          <rect x="10.4" y="20.8" width="6.4" height="6.8"/>
+          <rect x="23.2" y="20.8" width="6.4" height="6.8"/>
+          <rect x="4" y="27.6" width="6.4" height="6.8"/>
+          <rect x="16.8" y="27.6" width="6.4" height="6.8"/>
+          <rect x="29.6" y="27.6" width="6.4" height="6.8"/>
+          <rect x="10.4" y="34.4" width="6.4" height="6.8"/>
+          <rect x="23.2" y="34.4" width="6.4" height="6.8"/>
+          <rect x="4" y="41.2" width="6.4" height="6.8"/>
+          <rect x="16.8" y="41.2" width="6.4" height="6.8"/>
+          <rect x="29.6" y="41.2" width="6.4" height="6.8"/>
+        </g>
+      </g>
+      <path d="M4 14H36V31c0 9.6-6 14.4-16 17-10-2.6-16-7.4-16-17Z" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.1"/>
+    </g>
+
+    <!-- Hrvatska zastava: omjer 2:1, crveno-bijelo-plava s grbom -->
+    <clipPath id="hr-flag-clip">
+      <rect width="72" height="36" rx="5"/>
+    </clipPath>
+    <g id="hr-flag">
+      <g clip-path="url(#hr-flag-clip)">
+        <rect width="72" height="12" fill="#ff0000"/>
+        <rect y="12" width="72" height="12" fill="#ffffff"/>
+        <rect y="24" width="72" height="12" fill="#171796"/>
+        <use href="#hr-coa" xlink:href="#hr-coa" transform="translate(26 6) scale(.5)"/>
+      </g>
+      <rect x=".5" y=".5" width="71" height="35" rx="5" fill="none" stroke="#ffffff" stroke-opacity=".35"/>
+    </g>
+
+    <clipPath id="card-clip">
+      <rect x="700" y="48" width="420" height="324" rx="22"/>
+    </clipPath>
   </defs>
 
-  <rect width="1200" height="300" rx="28" fill="url(#background)"/>
-  <rect width="1200" height="300" rx="28" fill="url(#grid)"/>
-  <circle cx="1102" cy="34" r="214" fill="#fff" opacity=".035"/>
-  <circle cx="1078" cy="43" r="160" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="1.5"/>
-  <path d="M0 277C231 244 427 305 669 275s357-14 531-61v86H0Z" fill="#081d2b" opacity=".2"/>
+  <!-- Pozadina -->
+  <rect width="1200" height="400" rx="26" fill="url(#bg)"/>
+  <rect width="1200" height="400" rx="26" fill="url(#grid)"/>
+  <circle cx="1092" cy="58" r="236" fill="#ffffff" opacity=".035"/>
+  <circle cx="1108" cy="44" r="172" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="1.5"/>
+  <path d="M0 330c226-32 386 26 626 6 210-18 382-38 574-72v136H0Z" fill="#04121c" opacity=".22"/>
 
-  <rect x="78" y="43" width="290" height="34" rx="17" fill="#fff" fill-opacity=".1" stroke="#fff" stroke-opacity=".17"/>
-  <g transform="translate(94 54)">
-    <path d="M0 0h18v4H0z" fill="#e5484d"/>
-    <path d="M0 4h18v4H0z" fill="#fff"/>
-    <path d="M0 8h18v4H0z" fill="#4e76c8"/>
-  </g>
-  <text x="122" y="65" fill="#e8f1ef" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.2">HRVATSKI WORDPRESS DODATAK</text>
+  <!-- Oznaka s hrvatskom zastavom -->
+  <rect x="80" y="48" width="372" height="52" rx="26" fill="#ffffff" fill-opacity=".08" stroke="#ffffff" stroke-opacity=".16"/>
+  <use href="#hr-flag" xlink:href="#hr-flag" transform="translate(96 56)"/>
+  <text x="184" y="80" fill="#eaf3f0" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="1.5">HRVATSKI WORDPRESS DODATAK</text>
 
-  <text x="78" y="142" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="51" font-weight="760" letter-spacing="-1.7">Sidrena Cijena EU</text>
-  <text x="81" y="181" fill="#dcebe7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="500">Referentne cijene i javni cjenici</text>
-  <text x="82" y="211" fill="#b9d2cf" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="450">Za WordPress i WooCommerce trgovine</text>
+  <!-- Naslov -->
+  <text x="80" y="176" fill="#ffffff" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="62" font-weight="800" letter-spacing="-1.6">Sidrena Cijena EU</text>
+  <text x="80" y="216" fill="#d6e7e3" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="20" font-weight="500">Referentna (sidrena) cijena i najniža cijena u zadnjih 30 dana</text>
+  <text x="80" y="248" fill="#a9c6c2" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="20" font-weight="500">te dnevni javni cjenici za WordPress i WooCommerce</text>
 
-  <g font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing=".7">
-    <rect x="80" y="231" width="157" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
-    <text x="96" y="250" fill="#f6d77c">REFERENTNE CIJENE</text>
-    <rect x="246" y="231" width="161" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
-    <text x="262" y="250" fill="#f6d77c">NAJNIŽA U 30 DANA</text>
-    <rect x="416" y="231" width="118" height="30" rx="15" fill="#fff" fill-opacity=".1"/>
-    <text x="434" y="250" fill="#f6d77c">CSV · XML</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="804" y="37" width="322" height="226" rx="20" fill="url(#card)"/>
-    <path d="M824 37h282a20 20 0 0 1 20 20v3H804v-3a20 20 0 0 1 20-20Z" fill="url(#gold)"/>
-    <circle cx="838" cy="83" r="19" fill="#17615c"/>
-    <path d="M838 70v21m-8-14h16m-16 14c0 9 16 9 16 0m-24 8h32" fill="none" stroke="#f6d77c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="869" y="80" fill="#17454a" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="750" letter-spacing="1.2">JAVNI CJENIK</text>
-    <text x="869" y="98" fill="#66817d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="500">Pregled cijena na jednom mjestu</text>
-    <path d="M827 117h276" stroke="#dce8e3" stroke-width="1.4"/>
-    <text x="831" y="140" fill="#819791" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1">PROIZVOD</text>
-    <text x="1030" y="140" fill="#819791" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1">CIJENA</text>
-    <text x="831" y="164" fill="#193a3e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="650">Primjer proizvoda</text>
-    <text x="1030" y="164" fill="#193a3e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700">12,50 €</text>
-    <path d="M827 177h276" stroke="#e2ebe7" stroke-width="1.2"/>
-    <text x="831" y="199" fill="#66817d" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="500">Referentna cijena</text>
-    <text x="1030" y="199" fill="#b45a3b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">10,00 €</text>
-    <rect x="831" y="216" width="82" height="24" rx="12" fill="#e2f0e9"/>
-    <circle cx="844" cy="228" r="3" fill="#228064"/>
-    <text x="853" y="232" fill="#26705c" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing=".5">CSV · XML</text>
-    <text x="1027" y="232" fill="#829792" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9" font-weight="600">PRIMJER PRIKAZA</text>
+  <!-- Oznake mogućnosti -->
+  <g font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing=".9">
+    <rect x="80" y="286" width="142" height="34" rx="17" fill="#ffffff" fill-opacity=".1"/>
+    <text x="98" y="308" fill="#f7d67f">SIDRENA CIJENA</text>
+    <rect x="232" y="286" width="176" height="34" rx="17" fill="#ffffff" fill-opacity=".1"/>
+    <text x="250" y="308" fill="#f7d67f">NAJNIŽA U 30 DANA</text>
+    <rect x="418" y="286" width="110" height="34" rx="17" fill="#ffffff" fill-opacity=".1"/>
+    <text x="436" y="308" fill="#f7d67f">CSV · XML</text>
+    <rect x="538" y="286" width="112" height="34" rx="17" fill="#ffffff" fill-opacity=".1"/>
+    <text x="556" y="308" fill="#f7d67f">REST API</text>
   </g>
 
-  <path d="M0 293h1200" stroke="url(#gold)" stroke-width="5"/>
+  <!-- Primjer javnog cjenika -->
+  <g filter="url(#card-shadow)">
+    <rect x="700" y="48" width="420" height="324" rx="22" fill="url(#card)"/>
+    <g clip-path="url(#card-clip)">
+      <rect x="700" y="48" width="420" height="9" fill="url(#gold)"/>
+    </g>
+
+    <rect x="728" y="84" width="54" height="54" rx="15" fill="url(#gold)"/>
+    <use href="#hr-coa" xlink:href="#hr-coa" transform="translate(740 93) scale(.75)"/>
+
+    <text x="798" y="108" fill="#12333c" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="19.5" font-weight="700">Javni cjenik</text>
+    <text x="798" y="130" fill="#7b9490" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="11.5" font-weight="500">Ažuriran svaki dan u 08:00 · svi prodajni objekti</text>
+
+    <path d="M728 156h364" stroke="#dfeae6" stroke-width="1.4"/>
+    <text x="728" y="180" fill="#9ab0ac" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2">PROIZVOD</text>
+    <text x="1092" y="180" text-anchor="end" fill="#9ab0ac" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2">CIJENA</text>
+
+    <text x="728" y="204" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="14.5" font-weight="600">Mlijeko 1 L</text>
+    <text x="1092" y="204" text-anchor="end" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="15.5" font-weight="700">1,29 €</text>
+    <text x="728" y="222" fill="#7f9490" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="11">Sidrena cijena: <tspan fill="#b3542e" font-weight="700">1,49 €</tspan></text>
+    <path d="M728 236h364" stroke="#e6efeb" stroke-width="1.2"/>
+
+    <text x="728" y="260" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="14.5" font-weight="600">Kava mljevena 250 g</text>
+    <text x="1092" y="260" text-anchor="end" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="15.5" font-weight="700">4,99 €</text>
+    <text x="728" y="278" fill="#7f9490" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="11">Najniža cijena u zadnjih 30 dana: <tspan fill="#1f7a5f" font-weight="700">4,49 €</tspan></text>
+    <path d="M728 292h364" stroke="#e6efeb" stroke-width="1.2"/>
+
+    <text x="728" y="316" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="14.5" font-weight="600">Kruh bijeli 500 g</text>
+    <text x="1092" y="316" text-anchor="end" fill="#16333a" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="15.5" font-weight="700">1,10 €</text>
+    <text x="728" y="334" fill="#7f9490" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="11">Bez posebnog oblika prodaje</text>
+
+    <rect x="728" y="346" width="146" height="22" rx="11" fill="#e2efe9"/>
+    <circle cx="742" cy="357" r="3" fill="#228064"/>
+    <text x="752" y="361" fill="#26705c" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="9.5" font-weight="700" letter-spacing=".6">CSV · XML · REST</text>
+    <text x="1092" y="361" text-anchor="end" fill="#9ab0ac" font-family="Inter, Segoe UI, Roboto, Arial, sans-serif" font-size="9.5" font-weight="600" letter-spacing=".6">PRIMJER PRIKAZA</text>
+  </g>
+
+  <rect x="60" y="386" width="1080" height="4" rx="2" fill="url(#gold)"/>
 </svg>
