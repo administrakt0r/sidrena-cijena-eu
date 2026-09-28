@@ -103,7 +103,7 @@ final class Finding {
 		$this->context        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : array();
 		$this->proposal       = isset( $args['proposal'] ) && '' !== (string) $args['proposal']
 			? (string) $args['proposal']
-			: RemediationProposer::propose( $this->code, $this->context, $this->message );
+			: RemediationProposer::propose( $this->code, $this->context );
 	}
 
 	/**

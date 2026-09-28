@@ -22,10 +22,9 @@ class RemediationProposer {
 	 *
 	 * @param string       $code    Finding code.
 	 * @param array<mixed> $context Additional structured finding context.
-	 * @param string       $message Original finding message.
 	 * @return string Actionable proposal text.
 	 */
-	public static function propose( $code, array $context = array(), $message = '' ) {
+	public static function propose( $code, array $context = array() ) {
 		$code = (string) $code;
 
 		switch ( $code ) {

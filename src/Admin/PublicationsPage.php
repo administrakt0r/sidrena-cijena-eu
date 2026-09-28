@@ -151,7 +151,17 @@ class PublicationsPage {
 			echo '<td>';
 			echo '<span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( Labels::publication_status( (string) $row['status'] ) ) . '</span>';
 			if ( $err_count > 0 && 'published' === (string) $row['status'] ) {
-				echo ' <span class="sidrena-cijena-status sidrena-cijena-status--warning" title="' . esc_attr( sprintf( __( '%d compliance findings', 'sidrena-cijena-eu' ), $err_count ) ) . '">' . sprintf( esc_html__( '%d warnings', 'sidrena-cijena-eu' ), $err_count ) . '</span>';
+				$warning_title = sprintf(
+					/* translators: %d: number of compliance findings */
+					__( '%d compliance findings', 'sidrena-cijena-eu' ),
+					$err_count
+				);
+				$warning_label = sprintf(
+					/* translators: %d: number of compliance warnings */
+					__( '%d warnings', 'sidrena-cijena-eu' ),
+					$err_count
+				);
+				echo ' <span class="sidrena-cijena-status sidrena-cijena-status--warning" title="' . esc_attr( $warning_title ) . '">' . esc_html( $warning_label ) . '</span>';
 			}
 			echo '</td>';
 			echo '</tr>';

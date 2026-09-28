@@ -35,27 +35,27 @@ final class OperationsSettingsPage {
 		);
 
 		$fields = array(
-			'public_archive_enabled'   => array(
+			'public_archive_enabled'       => array(
 				'label' => __( 'Public price-list archive', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
-			'archive_footer_link'      => array(
+			'archive_footer_link'          => array(
 				'label' => __( 'Link from the site footer', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
-			'archive_sitemap_link'     => array(
+			'archive_sitemap_link'         => array(
 				'label' => __( 'Include in the WordPress sitemap', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
-			'deadline'                 => array(
+			'deadline'                     => array(
 				'label' => __( 'Daily publication deadline', 'sidrena-cijena-eu' ),
 				'type'  => 'time',
 			),
-			'retention_days'           => array(
+			'retention_days'               => array(
 				'label' => __( 'Price-list retention (days)', 'sidrena-cijena-eu' ),
 				'type'  => 'number',
 			),
-			'log_retention_days'       => array(
+			'log_retention_days'           => array(
 				'label' => __( 'Log retention (days)', 'sidrena-cijena-eu' ),
 				'type'  => 'number',
 			),

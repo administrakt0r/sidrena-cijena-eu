@@ -167,11 +167,11 @@ class GenerationService {
 
 		// Ensure address and city are populated for filename generation.
 		if ( empty( $location['address'] ) ) {
-			$wc_addr = (string) get_option( 'woocommerce_store_address', '' );
+			$wc_addr             = (string) get_option( 'woocommerce_store_address', '' );
 			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'sidrena-cijena-eu' );
 		}
 		if ( empty( $location['city'] ) ) {
-			$wc_city = (string) get_option( 'woocommerce_store_city', '' );
+			$wc_city          = (string) get_option( 'woocommerce_store_city', '' );
 			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'sidrena-cijena-eu' );
 		}
 
@@ -188,10 +188,10 @@ class GenerationService {
 		$proposals = array();
 		foreach ( $all_blockers as &$b_finding ) {
 			if ( empty( $b_finding['proposal'] ) ) {
-				$code                 = isset( $b_finding['code'] ) ? (string) $b_finding['code'] : '';
-				$ctx                  = isset( $b_finding['context'] ) && is_array( $b_finding['context'] ) ? $b_finding['context'] : array();
-				$msg                  = isset( $b_finding['message'] ) ? (string) $b_finding['message'] : '';
-				$b_finding['proposal'] = RemediationProposer::propose( $code, $ctx, $msg );
+				$code = isset( $b_finding['code'] ) ? (string) $b_finding['code'] : '';
+				$ctx  = isset( $b_finding['context'] ) && is_array( $b_finding['context'] ) ? $b_finding['context'] : array();
+
+				$b_finding['proposal'] = RemediationProposer::propose( $code, $ctx );
 			}
 			if ( ! empty( $b_finding['proposal'] ) ) {
 				$proposals[] = $b_finding['proposal'];

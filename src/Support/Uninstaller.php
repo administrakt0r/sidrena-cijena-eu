@@ -296,7 +296,7 @@ final class Uninstaller {
 		if ( $wp_filesystem instanceof \WP_Filesystem_Base && $wp_filesystem->is_dir( $directory ) ) {
 			$wp_filesystem->rmdir( $directory, false );
 		} elseif ( is_dir( $directory ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Fallback when WP_Filesystem is not initialized.
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir, WordPress.PHP.NoSilencedErrors.Discouraged -- Fallback when WP_Filesystem is not initialized.
 			@rmdir( $directory );
 		}
 

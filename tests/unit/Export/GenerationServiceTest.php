@@ -77,11 +77,13 @@ class GenerationServiceTest extends TestCase {
 			$path = $dir . '/' . $file;
 			if ( is_dir( $path ) ) {
 				self::delete_dir( $path );
-			} else {
-				@unlink( $path );
+			} elseif ( file_exists( $path ) ) {
+				unlink( $path );
 			}
 		}
-		@rmdir( $dir );
+		if ( is_dir( $dir ) ) {
+			rmdir( $dir );
+		}
 	}
 
 	/**
