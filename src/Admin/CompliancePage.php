@@ -167,8 +167,7 @@ class CompliancePage {
 				? (string) $finding['proposal']
 				: RemediationProposer::propose(
 					isset( $finding['code'] ) ? (string) $finding['code'] : '',
-					isset( $finding['context'] ) && is_array( $finding['context'] ) ? $finding['context'] : array(),
-					isset( $finding['message'] ) ? (string) $finding['message'] : ''
+					isset( $finding['context'] ) && is_array( $finding['context'] ) ? $finding['context'] : array()
 				);
 
 			echo '<tr>';
