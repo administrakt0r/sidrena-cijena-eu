@@ -43,7 +43,7 @@ class CleanupCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute in dry-run mode previews expired candidates.
+	 * Execute in dry-run mode previews expired candidates.
 	 *
 	 * @return void
 	 */
@@ -66,7 +66,7 @@ class CleanupCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute runs cleanup job and reports success.
+	 * Execute runs cleanup job and reports success.
 	 *
 	 * @return void
 	 */
@@ -85,7 +85,7 @@ class CleanupCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute catches Throwable and returns code 2 on unexpected failure.
+	 * Execute catches Throwable and returns code 2 on unexpected failure.
 	 *
 	 * @return void
 	 */

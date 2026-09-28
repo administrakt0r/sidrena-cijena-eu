@@ -43,7 +43,7 @@ class ValidateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute rejects invalid format option.
+	 * Execute rejects invalid format option.
 	 *
 	 * @return void
 	 */
@@ -57,7 +57,7 @@ class ValidateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs clean result and returns code 0 when no errors.
+	 * Execute outputs clean result and returns code 0 when no errors.
 	 *
 	 * @return void
 	 */
@@ -79,7 +79,7 @@ class ValidateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute returns code 1 when compliance ERROR findings exist.
+	 * Execute returns code 1 when compliance ERROR findings exist.
 	 *
 	 * @return void
 	 */
@@ -103,7 +103,7 @@ class ValidateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs valid JSON structure when requested.
+	 * Execute outputs valid JSON structure when requested.
 	 *
 	 * @return void
 	 */
@@ -132,7 +132,7 @@ class ValidateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute catches Throwable and returns code 2 on unexpected failure.
+	 * Execute catches Throwable and returns code 2 on unexpected failure.
 	 *
 	 * @return void
 	 */

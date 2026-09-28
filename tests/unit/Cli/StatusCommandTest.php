@@ -46,7 +46,7 @@ class StatusCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs human-readable table by default.
+	 * Execute outputs human-readable table by default.
 	 *
 	 * @return void
 	 */
@@ -86,7 +86,7 @@ class StatusCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs valid JSON when requested.
+	 * Execute outputs valid JSON when requested.
 	 *
 	 * @return void
 	 */
@@ -111,7 +111,7 @@ class StatusCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute catches Throwable and returns code 2 on unexpected failure.
+	 * Execute catches Throwable and returns code 2 on unexpected failure.
 	 *
 	 * @return void
 	 */

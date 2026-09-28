@@ -101,7 +101,12 @@ class ImportServiceTest extends TestCase {
 
 		$parser->method( 'parse_file' )->willReturn(
 			array(
-				'rows'      => array( array( 'sku' => 'SKU1', 'price' => '10.00' ) ),
+				'rows'      => array(
+					array(
+						'sku'   => 'SKU1',
+						'price' => '10.00',
+					),
+				),
 				'errors'    => array(),
 				'headers'   => array( 'sku', 'price' ),
 				'delimiter' => ';',
@@ -114,7 +119,11 @@ class ImportServiceTest extends TestCase {
 					array(
 						'index'  => 0,
 						'status' => 'valid',
-						'values' => array( 'sku' => 'SKU1', 'price' => 10.00, 'reference_date' => '2026-09-10' ),
+						'values' => array(
+							'sku'            => 'SKU1',
+							'price'          => 10.00,
+							'reference_date' => '2026-09-10',
+						),
 						'errors' => array(),
 					),
 				),
@@ -213,7 +222,13 @@ class ImportServiceTest extends TestCase {
 		);
 
 		$service = new ImportService( $parser, $validator, $anchors );
-		$result  = $service->commit( '/tmp/test.csv', array( 'dry_run' => true, 'confirm_overwrite' => true ) );
+		$result  = $service->commit(
+			'/tmp/test.csv',
+			array(
+				'dry_run'           => true,
+				'confirm_overwrite' => true,
+			)
+		);
 
 		$this->assertIsArray( $result );
 		$this->assertTrue( $result['dry_run'] );
@@ -370,7 +385,7 @@ class ImportServiceTest extends TestCase {
 	}
 
 	/**
-	 * report_csv generates standard CSV and neutralises formula injection attacks.
+	 * Report_csv generates standard CSV and neutralises formula injection attacks.
 	 *
 	 * @return void
 	 */

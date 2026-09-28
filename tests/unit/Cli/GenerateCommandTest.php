@@ -44,7 +44,7 @@ class GenerateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute generates price lists for all locations and reports success.
+	 * Execute generates price lists for all locations and reports success.
 	 *
 	 * @return void
 	 */
@@ -76,7 +76,7 @@ class GenerateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute generates price list for a single specified location.
+	 * Execute generates price list for a single specified location.
 	 *
 	 * @return void
 	 */
@@ -90,7 +90,13 @@ class GenerateCommandTest extends TestCase {
 		);
 		PluginSwap::swap( 'generation', $generation );
 
-		$code   = GenerateCommand::execute( array(), array( 'location' => 1, 'format' => 'csv' ) );
+		$code   = GenerateCommand::execute(
+			array(),
+			array(
+				'location' => 1,
+				'format'   => 'csv',
+			)
+		);
 		$buffer = Cli::buffer();
 
 		$this->assertSame( 0, $code );
@@ -100,7 +106,7 @@ class GenerateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute handles generation failure and returns code 1.
+	 * Execute handles generation failure and returns code 1.
 	 *
 	 * @return void
 	 */
@@ -123,7 +129,7 @@ class GenerateCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute catches Throwable and returns code 2 on unexpected failure.
+	 * Execute catches Throwable and returns code 2 on unexpected failure.
 	 *
 	 * @return void
 	 */

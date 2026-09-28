@@ -42,7 +42,7 @@ class HistoryCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute without product_id returns usage error and code 1.
+	 * Execute without product_id returns usage error and code 1.
 	 *
 	 * @return void
 	 */
@@ -56,7 +56,7 @@ class HistoryCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute when no history exists returns warning and code 1.
+	 * Execute when no history exists returns warning and code 1.
 	 *
 	 * @return void
 	 */
@@ -74,7 +74,7 @@ class HistoryCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs history records in table format.
+	 * Execute outputs history records in table format.
 	 *
 	 * @return void
 	 */
@@ -104,7 +104,7 @@ class HistoryCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute outputs JSON when format-output=json.
+	 * Execute outputs JSON when format-output=json.
 	 *
 	 * @return void
 	 */
@@ -131,7 +131,7 @@ class HistoryCommandTest extends TestCase {
 	}
 
 	/**
-	 * execute catches Throwable and returns code 2 on unexpected failure.
+	 * Execute catches Throwable and returns code 2 on unexpected failure.
 	 *
 	 * @return void
 	 */

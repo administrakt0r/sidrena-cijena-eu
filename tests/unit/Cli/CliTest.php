@@ -77,12 +77,15 @@ class CliTest extends TestCase {
 	}
 
 	/**
-	 * as_json encodes data and handles non-string returns.
+	 * As_json encodes data and handles non-string returns.
 	 *
 	 * @return void
 	 */
 	public function test_as_json() {
-		$data = array( 'status' => 'ok', 'count' => 5 );
+		$data = array(
+			'status' => 'ok',
+			'count'  => 5,
+		);
 		$json = Cli::as_json( $data );
 
 		$this->assertJson( $json );
@@ -90,7 +93,7 @@ class CliTest extends TestCase {
 	}
 
 	/**
-	 * register does nothing without WP_CLI class.
+	 * Register does nothing without WP_CLI class.
 	 *
 	 * @return void
 	 */
