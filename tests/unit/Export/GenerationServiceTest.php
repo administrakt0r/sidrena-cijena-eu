@@ -308,11 +308,11 @@ class GenerationServiceTest extends TestCase {
 	}
 
 	/**
-	 * When store identifier is missing and errors are disallowed, generation is blocked with missing_store_identifier.
+	 * When store identifier is missing and not forced, generation is blocked with missing_store_identifier.
 	 *
 	 * @return void
 	 */
-	public function test_missing_store_identifier_blocks_when_errors_disallowed() {
+	public function test_missing_store_identifier_blocks_when_not_forced() {
 		$catalog      = $this->createMock( CatalogProvider::class );
 		$locations    = $this->createMock( LocationRepository::class );
 		$publications = $this->createMock( PublicationRepository::class );
@@ -330,14 +330,6 @@ class GenerationServiceTest extends TestCase {
 			)
 		);
 
-		update_option(
-			Settings::OPTION,
-			array(
-				'allow_generation_with_errors' => false,
-			)
-		);
-		Settings::reset_cache();
-
 		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
 		$result  = $service->generate( 3, 'csv', array( 'force' => false ) );
 
@@ -346,11 +338,11 @@ class GenerationServiceTest extends TestCase {
 	}
 
 	/**
-	 * When store identifier is missing but allow_generation_with_errors is enabled, generation proceeds with fallback.
+	 * When store identifier is missing but forced, generation proceeds with fallback P1.
 	 *
 	 * @return void
 	 */
-	public function test_missing_store_identifier_proceeds_when_allow_with_errors_enabled() {
+	public function test_missing_store_identifier_proceeds_when_forced() {
 		$catalog      = $this->createMock( CatalogProvider::class );
 		$locations    = $this->createMock( LocationRepository::class );
 		$publications = $this->createMock( PublicationRepository::class );
@@ -372,14 +364,6 @@ class GenerationServiceTest extends TestCase {
 		$publications->method( 'latest' )->willReturn( null );
 		$publications->method( 'insert' )->willReturn( 1 );
 
-		update_option(
-			Settings::OPTION,
-			array(
-				'allow_generation_with_errors' => true,
-			)
-		);
-		Settings::reset_cache();
-
 		$validator = $this->createMock( Validator::class );
 		$validator->method( 'validate' )->willReturn(
 			array(
@@ -390,7 +374,7 @@ class GenerationServiceTest extends TestCase {
 		PluginSwap::swap( 'validator', $validator );
 
 		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
-		$result  = $service->generate( 4, 'csv', array( 'force' => false ) );
+		$result  = $service->generate( 4, 'csv', array( 'force' => true ) );
 
 		$this->assertIsArray( $result );
 		$this->assertTrue( $result['has_errors'] );

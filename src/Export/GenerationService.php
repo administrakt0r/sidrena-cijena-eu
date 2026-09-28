@@ -155,13 +155,13 @@ class GenerationService {
 				'rule_reference' => 'FR-040',
 			);
 
-			if ( ! $allow_with_errors ) {
+			if ( ! $force ) {
 				$this->record_failure( $location_id, $format, $findings );
 
 				return new \WP_Error( 'missing_store_identifier', $findings[0]['message'], array( 'findings' => $findings ) );
 			}
 
-			// Safe fallback identifier for filename and price list export when allowed with errors or forced.
+			// Safe fallback identifier for filename and price list export when forced.
 			$location['identifier'] = 'P1';
 		}
 
