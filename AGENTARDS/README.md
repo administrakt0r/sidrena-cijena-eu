@@ -37,6 +37,8 @@ on Docker hosts); see `docs/testing.md`.
 
 ## Hard rules for every prompt
 
+- **Heavy CPU Offload to CircleCI (Keep Host PC Quiet):** Do NOT run full heavy CPU/RAM commands locally (`composer lint` over 184 files, full `composer analyse`, local `wp-env` integration or Playwright E2E suites). Run only fast local sanity checks (`php -l`, `composer test:unit -- --filter ...`, `composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`). Heavy gates (`verify` and `integration_and_e2e`) run in the cloud via CircleCI pipelines on push. Check status using `circleci run list` and `circleci run get <id>`.
+- **Local Release Packaging:** Release zip creation and publishing to the public repository `sidrena-cijena-eu` is handled locally via `tools/build-zip.sh <version>`. Never offload release packaging to CircleCI.
 - **Plugin boundaries:** Work **only** inside this plugin (`src/`, `assets/`, `tests/`, `languages/`, `docs/`, `tools/`, root config files). Never touch WordPress core, theme or WooCommerce files.
 - **Legal semantics:** Never change legal behavior silently: reference dates (general **2026-09-10**, legacy **2025-05-02**), the 30-day lowest-price window (`start-30` → `start-1`, start excluded), filename pattern (`{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`), 30+ day archive, and blocking publication gate are governed by `docs/legal-rules.md`.
 - **Append-only history:** Never invent or guess historical prices; history tables (`wp_sidrena_price_history`) are append-only legal evidence.
@@ -56,39 +58,27 @@ Every completed run ships a new version archive following the repository convent
    - `sidrena-cijena.php` (header `Version:` and constant `SIDRENA_CIJENA_VERSION`)
    - `readme.txt` (`Stable tag:` and `= X.Y.Z =` changelog entry)
    - `package.json` (`"version": "X.Y.Z"`)
-2. **Ensure all quality gates pass**:
+2. **Run fast local sanity checks**:
    ```bash
-   composer test:unit          # PHPUnit unit suite
-   composer lint               # PHPCS WordPress Coding Standards
-   composer analyse            # PHPStan level 6 (0 errors)
-   npm run lint:js             # ESLint for assets/js
+   composer test:unit          # PHPUnit fast unit suite (~6s)
+   php tools/i18n/make-pot.php --locale=hr_HR # Verify 0 untranslated strings in languages/hr_HR.po
    ```
-   When Docker is available:
-   ```bash
-   npx wp-env clean tests
-   composer test:integration   # PHPUnit integration suite in wp-env
-   ./local.sh                  # One-command local setup, must exit 0
-   npx wp-env start
-   npm run test:e2e            # Playwright E2E on port 8889 only
-   ```
-3. **Regenerate translations** if `__()` strings changed:
-   ```bash
-   php tools/i18n/make-pot.php --locale=hr_HR
-   # Verify 0 untranslated strings in languages/hr_HR.po
-   ```
-4. **Build release archive and publish**:
+   *(Heavy static gates: PHPCS, PHPStan, integration tests, and Playwright E2E are verified automatically via CircleCI pipelines).*
+3. **Build release archive and publish locally**:
    ```bash
    tools/build-zip.sh <version>
-   # Builds package, commits to public repo, and publishes GitHub release (pass --no-upload to skip)
+   # Builds package, computes SHA256 checksums, and syncs/publishes to public repo sidrena-cijena-eu
    unzip -t versions/<version>/sidrena-cijena-eu.zip
    ```
-5. **Update documentation**:
+4. **Update documentation**:
    - Add verification notes to `docs/release-readiness.md`.
    - Update `docs/improvement-backlog.md` with closed items.
-6. **Commit and push**:
+5. **Commit, push, and verify CircleCI**:
    Commit the release archive and push to `origin master`:
    ```bash
    git add versions/<version>/
    git commit -m "chore: archive installable <version> release"
    git push origin master
+   circleci run list  # Ensure CircleCI pipeline runs and passes green
    ```
+

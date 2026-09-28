@@ -86,16 +86,15 @@ After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
 `php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 768 translated strings / 0 untranslated in
 languages/hr_HR.po.
 
-Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
-with Docker also `npm run test:e2e` (42 Playwright specs, port 8889 only — never point Playwright at 8888) and
-update specs when markup intentionally changes.
+Gates: fast local unit test suite `composer test:unit`; heavy static gates (PHPCS across 184 files, PHPStan)
+and integration/E2E tests are offloaded to CircleCI on git push (per AGENTS.md).
 
-Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
-`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`,
-update docs/improvement-backlog.md (UX-xx items) and docs/release-readiness.md, commit and
-push to origin master.
+Release (mandatory per AGENTS.md / AGENTARDS/README.md): bump the version in all 4 places, run
+`tools/build-zip.sh <version>` locally to build and publish release archive to sidrena-cijena-eu,
+verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`, update docs/improvement-backlog.md (UX-xx items)
+and docs/release-readiness.md, commit and push to origin master, and verify CircleCI passes green.
 
 Done when: the chosen items are fixed and tested, no raw slugs remain in the touched
-screens, translations are complete (0 untranslated), all gates green, and the release
-archive is built and pushed.
+screens, translations are complete (0 untranslated), local checks pass, CircleCI pipeline passes green,
+and the release archive is built locally, verified, and pushed.
 ```

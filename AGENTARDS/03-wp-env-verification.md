@@ -14,7 +14,10 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    Run `./local.sh` (starts wp-env on http://localhost:8888, activates WooCommerce + Sidrena Cijena,
    configures EUR and Europe/Zagreb timezone, seeds demo products, anchors, a sale, and seeds
    17 compliance scenarios). Stop with `./stoplocal.sh`.
-2. Isolated testing environment:
+2. Isolated testing environment & CircleCI:
+   Heavy integration and Playwright E2E suites can be run locally on port 8889 or offloaded
+   to CircleCI (`integration_and_e2e` job) to spare the host PC CPU and RAM (see AGENTS.md).
+   When running locally:
    Start the automated test site on port 8889:
    `npx wp-env start`
 3. Integration testing:
@@ -27,7 +30,7 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
 4. End-to-End testing:
    Run Playwright tests exclusively against the port 8889 test instance (42 specs passing):
    `npm run test:e2e`
-   (Do NOT point Playwright at the 8888 demo shop).
+   (Do NOT point Playwright at the 8888 demo shop). CircleCI runs this automatically in headless Chromium.
 5. 7-point live verification checklist:
    - 1. Install & Onboarding flow: Activation redirects to Setup Guide (wp-admin/admin.php?page=sidrena-cijena-setup).
         Welcome banner shows once with author project links and is dismissible. "Mark setup complete" dismisses it.

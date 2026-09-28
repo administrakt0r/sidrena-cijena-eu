@@ -10,12 +10,9 @@ WordPress core, themes or WooCommerce; price-history tables are append-only;
 commit each logical fix separately with conventional messages (fix:/test:/docs:/chore:).
 
 Steps:
-1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing),
-   then in order run all four static gates:
-   `composer test:unit`
-   `composer lint`
-   `composer analyse`
-   `npm run lint:js`
+1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing).
+   Run fast local unit tests: `composer test:unit`. Heavy gates (full PHPCS across 184 files, PHPStan)
+   can be offloaded to CircleCI pipelines to keep host PC quiet (per AGENTS.md).
 2. Record every failure, warning and risky test. Fix them one by one:
    - Lint: WordPress Coding Standards via phpcs.xml.dist
      (PHPCompatibilityWP, testVersion 7.4-).
@@ -29,7 +26,7 @@ Steps:
    update tools/i18n/en_US.php and tools/i18n/hr_HR.php, then run
    `php tools/i18n/make-pot.php --locale=hr_HR` to regenerate
    languages/sidrena-cijena-eu.pot, languages/hr_HR.po, and languages/sidrena-cijena-eu-hr.mo.
-   Confirm 0 untranslated strings (baseline: 749 translated strings / 0 untranslated in languages/hr_HR.po).
+   Confirm 0 untranslated strings (baseline: 768 translated strings / 0 untranslated in languages/hr_HR.po).
 4. Security sweep:
    - Every admin action requires capability check (manage_sidrena_cijena) + valid nonce.
    - Every echo is properly escaped (esc_html, esc_attr, esc_url).
@@ -39,15 +36,17 @@ Steps:
    - Post-activation redirect in WelcomeBanner::maybe_redirect() guards against bulk activation
      ($_GET['activate-multi']), network admin, cron, and REST requests.
    Add a regression test for each gap found.
-5. Finish with clean static gates:
-   `composer test:unit && composer lint && composer analyse && npm run lint:js`
-6. Packaging (mandatory after every completed run per AGENTARDS/README.md):
+5. Quality verification & CircleCI:
+   Run fast unit suite (`composer test:unit`). Heavy static gates (PHPCS across 184 files, PHPStan)
+   are verified via CircleCI in the cloud on git push (per AGENTS.md).
+6. Packaging (mandatory after every completed run per AGENTS.md / AGENTARDS/README.md):
    - Bump version in all 4 places: sidrena-cijena.php (header Version and SIDRENA_CIJENA_VERSION constant),
      readme.txt (Stable tag and = X.Y.Z = changelog), and package.json.
-   - Run `tools/build-zip.sh <version>`.
+   - Run `tools/build-zip.sh <version>` locally to produce release archive and upload to sidrena-cijena-eu.
    - Verify archive with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
    - Commit everything including versions/<version>/ and push to origin master.
+   - Verify pipeline passes on CircleCI (`circleci run list`).
 
-Done when: unit suite passes (438 unit tests / 1557 assertions), lint exits 0 (PHPCS clean across 181 files), PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0 (ESLint clean in assets/js), translations are complete (749 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built and pushed.
+Done when: unit suite passes (456 unit tests / 1623 assertions), lint exits 0, PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0, translations are complete (768 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built locally and CircleCI pipeline passes green.
 ```

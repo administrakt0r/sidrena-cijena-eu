@@ -81,21 +81,22 @@ UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and thei
 3. **Translations:**
    - If strings are added or edited, update `tools/i18n/en_US.php` and `tools/i18n/hr_HR.php`, then run:
      `php tools/i18n/make-pot.php --locale=hr_HR`
-   - Confirm 0 untranslated strings in `languages/hr_HR.po` (baseline: 705 translated strings / 0 untranslated).
+   - Confirm 0 untranslated strings in `languages/hr_HR.po` (baseline: 768 translated strings / 0 untranslated).
 4. **Mandatory Release Procedure:**
    - Bump version in all 4 places:
      - `sidrena-cijena.php` (header `Version:` and `SIDRENA_CIJENA_VERSION`)
      - `readme.txt` (`Stable tag:` and changelog entry)
      - `package.json` (`"version": "X.Y.Z"`)
-   - Ensure all quality gates pass.
-   - Build archive: `tools/build-zip.sh <version>`.
+   - Fast local unit suite check (`composer test:unit`); heavy gates (PHPCS across 184 files, PHPStan, integration, E2E) run on CircleCI.
+   - Build archive locally: `tools/build-zip.sh <version>`.
    - Verify archive: `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
    - Update `docs/release-readiness.md` and `docs/improvement-backlog.md`.
    - Commit all changes including `versions/<version>/` and push to `origin master`.
+   - Verify CircleCI pipeline passes green (`circleci run list`).
 
 ## Definition of done
 
-* All gates green.
+* Fast local checks pass; CircleCI pipeline passes 100% green.
 * Zero untranslated strings in Croatian catalog.
-* Installable ZIP archive built under `versions/<version>/`, verified, committed, and pushed.
+* Installable ZIP archive built locally under `versions/<version>/`, verified, committed, pushed, and published to `sidrena-cijena-eu`.
 * Complete report summarizing completed work, gate results, release version, and confirmation of legal rule integrity.

@@ -37,16 +37,16 @@ Work items:
    values.
 3. Conventions and policy. The backlog conventions quoted in prompts (`FIX-`,
    `IMP-`, `REL-`, `PERF-`, `UX-xx`) must match docs/improvement-backlog.md. The
-   release procedure must match AGENTARDS/README.md and tools/build-zip.sh:
+   release procedure must match AGENTS.md, AGENTARDS/README.md and tools/build-zip.sh:
    version in 4 places (`Version:` header + `SIDRENA_CIJENA_VERSION` in
    sidrena-cijena.php, `Stable tag:` + a changelog entry in readme.txt,
-   `"version"` in package.json), then `tools/build-zip.sh <version>`, then
+   `"version"` in package.json), then `tools/build-zip.sh <version>` locally, then
    `unzip -t versions/<version>/sidrena-cijena-eu.zip`, then docs updates
    (docs/improvement-backlog.md, docs/release-readiness.md), then push to origin
-   master. The hard rules (append-only price history, reference dates general
-   2026-09-10 / legacy 2025-05-02, 30-day window, filename pattern, 30+ day
-   archive, blocking publication gate, functional with and without WooCommerce,
-   never `wp plugin install --force`, E2E only on port 8889 — never 8888) must
+   master and verify CircleCI green. The hard rules (heavy CPU tasks offloaded to CircleCI,
+   append-only price history, reference dates general 2026-09-10 / legacy 2025-05-02,
+   30-day window, filename pattern, 30+ day archive, blocking publication gate, functional
+   with and without WooCommerce, never `wp plugin install --force`, E2E only on port 8889 — never 8888) must
    read identically wherever they appear.
 4. Work items versus reality. When a prompt's work items have shipped, the prompt
    must say so: cross-check each prompt against docs/improvement-backlog.md and
@@ -56,11 +56,10 @@ Work items:
 5. The README table. Filenames, numbering, purposes and the "Needs Docker?"
    column must match the files actually present — add a row for every new prompt
    (including this one) and keep the intro paragraph describing the current set.
-6. Repair, prove, ship. Fix what you find, re-run the host gates to prove the
-   repository still matches what the prompts claim
-   (`composer test:unit && composer lint && composer analyse && npm run lint:js`),
+6. Repair, prove, ship. Fix what you find, verify via fast local unit tests and CircleCI
+   pipeline (`verify` and `integration_and_e2e`),
    and after any string change regenerate the catalogs
-   (`php tools/i18n/make-pot.php --locale=hr_HR`) and confirm 705 translated strings / 0 untranslated in
+   (`php tools/i18n/make-pot.php --locale=hr_HR`) and confirm 768 translated strings / 0 untranslated in
    languages/hr_HR.po. Commit atomically (docs:) and push to origin master.
 
 Done when: every path, class, command and number referenced by AGENTARDS/*.md

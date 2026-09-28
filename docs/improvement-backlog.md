@@ -286,9 +286,9 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 
 | ID | Status | Item | Verification |
 | --- | --- | --- | --- |
-| UX-14 | `done` | UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md`: added busy form state handling (`sidrena-busy-form` and `sidrena-btn-busy`) to long-running actions ("Run compliance check", "Generate now", and shop-wide bulk anchor setting) to prevent double clicks and provide clear feedback; unified datetime and date presentation using Croatian-first display helpers (`Dates::format_datetime_display()` and `Dates::format_date_display()`) across compliance report generated timestamp, public price list generation metadata, Setup Guide legal reference dates, Documentation guide tables, and CSV import preview rows; added `inputmode="decimal"` and placeholder to bulk anchor inputs; standardized `LogsPage::PER_PAGE = 50`; added unit test suites for `CompliancePage` and `PublicationsPage` | `CompliancePageTest` (3 tests, 11 assertions), `PublicationsPageTest` (2 tests, 6 assertions); 456 unit tests passing (1,623 assertions); PHPStan level 6 clean (0 errors across 117 files); PHPCS clean (184 files); ESLint clean; Croatian translations 100% complete (768 translated / 0 untranslated) |
-| REL-25 | `done` | Package and verify release 2.0.13 archive | `tools/build-zip.sh 2.0.13` built `versions/2.0.13/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
+## CircleCI pipelines & heavy CPU offloading (2026-09-28)
 
-
-
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| CI-01 | `done` | Offload heavy CPU and test execution to CircleCI: configured `.circleci/config.yml` with `verify` (PHP 8.4 container, PHPUnit unit tests, PHPCS coding standards across 184 files, PHPStan level 6, ESLint, and Croatian catalog completeness) and `integration_and_e2e` (Ubuntu 24.04 VM, `wp-env start`, containerized integration tests, Playwright browser E2E tests) running concurrently; fixed PHP version mismatch (`cimg/php:8.4-node` satisfying `doctrine/instantiator 2.1.0` dependency in `composer.lock`); kept release packaging (`tools/build-zip.sh`) local on host; created `AGENTS.md` and updated `AGENTARDS/*.md` prompts with explicit offloading protocols to keep host machine quiet | `circleci config validate` passes; `AGENTS.md` created; `AGENTARDS/README.md` and prompts 01, 03, 04, 05, 09, 10 updated; 456 unit tests green |
 

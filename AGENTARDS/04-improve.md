@@ -50,17 +50,18 @@ This pass focuses on robustness and compatibility:
    - Log completed items in `docs/improvement-backlog.md` (FIX-xx/IMP-xx/REL-xx) and add
      verification notes to `docs/release-readiness.md`.
 4. Quality gates & release:
-   - Run all four static gates:
-     `composer test:unit && composer lint && composer analyse && npm run lint:js`
+   - Run fast unit tests locally (`composer test:unit`). Heavy static gates (PHPCS across 184 files, PHPStan)
+     and integration/E2E tests are offloaded to CircleCI on git push (per AGENTS.md).
    - If translation strings were updated, regenerate catalogs:
-     `php tools/i18n/make-pot.php --locale=hr_HR` (705 translated strings / 0 untranslated in languages/hr_HR.po).
-   - Follow the release procedure in AGENTARDS/README.md:
+     `php tools/i18n/make-pot.php --locale=hr_HR` (768 translated strings / 0 untranslated in languages/hr_HR.po).
+   - Follow the release procedure in AGENTS.md / AGENTARDS/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
-     2. Run `tools/build-zip.sh <version>`.
+     2. Run `tools/build-zip.sh <version>` locally to produce release zip and publish to sidrena-cijena-eu.
      3. Verify with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
      4. Append release notes to docs/release-readiness.md and update docs/improvement-backlog.md.
      5. Commit all changes including versions/<version>/ and push to origin master.
+     6. Verify CircleCI pipeline passes (`circleci run list`).
 
-Done when: improvements and tests are committed, all gates pass cleanly, translations are
-complete if strings changed, and a new version archive is built, verified, and pushed.
+Done when: improvements and tests are committed, gates pass cleanly (locally & in CircleCI), translations are
+complete if strings changed, and a new version archive is built locally, verified, and pushed.
 ```
