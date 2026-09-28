@@ -222,6 +222,9 @@ class PublicPage {
 
 		status_header( 200 );
 		nocache_headers();
+		do_action( 'litespeed_control_set_nocache', 'sidrena-cijena-public' );
+
+		self::ensure_croatian_catalog();
 
 		get_header();
 
@@ -329,6 +332,8 @@ class PublicPage {
 	 * @return string
 	 */
 	public function render_list( array $args = array() ) {
+		self::ensure_croatian_catalog();
+
 		$query = isset( $args['q'] ) ? trim( (string) $args['q'] ) : '';
 		$type  = isset( $args['type'] ) ? (string) $args['type'] : '';
 		$paged = isset( $args['paged'] ) ? max( 1, (int) $args['paged'] ) : 1;
@@ -351,6 +356,7 @@ class PublicPage {
 				array(
 					'build'    => 'public_list',
 					'location' => (int) $location['id'],
+					'v'        => SIDRENA_CIJENA_VERSION,
 				)
 			);
 			$cached    = $cache->get( $build_key );
@@ -421,6 +427,8 @@ class PublicPage {
 	 * @return string
 	 */
 	public function render_archive( array $args = array() ) {
+		self::ensure_croatian_catalog();
+
 		$paged = isset( $args['paged'] ) ? max( 1, (int) $args['paged'] ) : 1;
 		if ( 1 === $paged && isset( $_GET['paged'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public pagination.
 			$paged = max( 1, absint( wp_unslash( $_GET['paged'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only public pagination.
@@ -434,6 +442,7 @@ class PublicPage {
 				'page'     => 'public_archive',
 				'location' => $location ? (int) $location['id'] : 0,
 				'paged'    => $paged,
+				'v'        => SIDRENA_CIJENA_VERSION,
 			)
 		);
 
@@ -677,5 +686,24 @@ class PublicPage {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Guarantee Croatian translation catalog is loaded for statutory price list displays.
+	 *
+	 * @return void
+	 */
+	public static function ensure_croatian_catalog() {
+		$candidates = array(
+			SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
+			SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
+		);
+
+		foreach ( $candidates as $mo_file ) {
+			if ( file_exists( $mo_file ) ) {
+				load_textdomain( 'sidrena-cijena-eu', $mo_file );
+				break;
+			}
+		}
 	}
 }

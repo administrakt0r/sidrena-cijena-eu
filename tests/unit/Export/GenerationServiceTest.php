@@ -308,11 +308,11 @@ class GenerationServiceTest extends TestCase {
 	}
 
 	/**
-	 * When store identifier is missing and not forced, generation is blocked with missing_store_identifier.
+	 * When store identifier is missing and errors are disallowed, generation is blocked with missing_store_identifier.
 	 *
 	 * @return void
 	 */
-	public function test_missing_store_identifier_blocks_when_not_forced() {
+	public function test_missing_store_identifier_blocks_when_errors_disallowed() {
 		$catalog      = $this->createMock( CatalogProvider::class );
 		$locations    = $this->createMock( LocationRepository::class );
 		$publications = $this->createMock( PublicationRepository::class );
@@ -330,10 +330,71 @@ class GenerationServiceTest extends TestCase {
 			)
 		);
 
+		update_option(
+			Settings::OPTION,
+			array(
+				'allow_generation_with_errors' => false,
+			)
+		);
+		Settings::reset_cache();
+
 		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
 		$result  = $service->generate( 3, 'csv', array( 'force' => false ) );
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
 		$this->assertSame( 'missing_store_identifier', $result->get_error_code() );
+	}
+
+	/**
+	 * When store identifier is missing but allow_generation_with_errors is enabled, generation proceeds with fallback.
+	 *
+	 * @return void
+	 */
+	public function test_missing_store_identifier_proceeds_when_allow_with_errors_enabled() {
+		$catalog      = $this->createMock( CatalogProvider::class );
+		$locations    = $this->createMock( LocationRepository::class );
+		$publications = $this->createMock( PublicationRepository::class );
+		$history      = $this->createMock( PriceHistoryRepository::class );
+		$sales        = $this->createMock( SpecialSaleRepository::class );
+
+		$locations->method( 'get' )->with( 4 )->willReturn(
+			array(
+				'id'         => 4,
+				'name'       => 'Fallback Shop',
+				'identifier' => '',
+				'type'       => 'webshop',
+				'address'    => 'Ilica 1',
+				'city'       => 'Zagreb',
+			)
+		);
+		$locations->method( 'next_sequence' )->willReturn( 1 );
+		$catalog->method( 'iterate' )->willReturn( new \ArrayIterator( array() ) );
+		$publications->method( 'latest' )->willReturn( null );
+		$publications->method( 'insert' )->willReturn( 1 );
+
+		update_option(
+			Settings::OPTION,
+			array(
+				'allow_generation_with_errors' => true,
+			)
+		);
+		Settings::reset_cache();
+
+		$validator = $this->createMock( Validator::class );
+		$validator->method( 'validate' )->willReturn(
+			array(
+				'findings' => array(),
+				'warnings' => 0,
+			)
+		);
+		PluginSwap::swap( 'validator', $validator );
+
+		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
+		$result  = $service->generate( 4, 'csv', array( 'force' => false ) );
+
+		$this->assertIsArray( $result );
+		$this->assertTrue( $result['has_errors'] );
+		$this->assertArrayHasKey( 'proposals', $result );
+		$this->assertNotEmpty( $result['proposals'] );
 	}
 }

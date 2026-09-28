@@ -1,7 +1,4 @@
-# Exclude development, test, and translation binary/source files from distribution archives.
-# WordPress.org manages translations via translate.wordpress.org.
-languages/*.po export-ignore
-languages/*.mo export-ignore
+# Exclude development and test files from distribution archives.
 tests/ export-ignore
 tools/ export-ignore
 docs/ export-ignore

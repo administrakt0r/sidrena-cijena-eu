@@ -325,4 +325,14 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | SYNC-01 | `done` | Store settings & address inheritance: auto-populated default location address and city from WooCommerce store settings (`woocommerce_store_address`, `woocommerce_store_city`), preventing false `missing_location_address` errors and filename failures on stores configured properly in WooCommerce. | `LocationRepository::hydrate`, `PublicationRules::missing_location_address` |
 | REL-28 | `done` | Package and verify release 2.0.17 archive | `tools/build-zip.sh 2.0.17` |
 
+## Croatian Language Delivery & Public Price-List Translation Guarantee (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| I18N-01 | `done` | Mandatory Croatian language delivery: bundled compiled binary translation files (`sidrena-cijena-eu-hr.mo` and `sidrena-cijena-eu-hr_HR.mo`) and PO catalogs in release zip packages; removed stripping of translations from `tools/build-zip.sh` and `.gitattributes`. | Inspecting zip contents confirms `sidrena-cijena-eu-hr.mo` and `sidrena-cijena-eu-hr_HR.mo` present |
+| I18N-02 | `done` | Public statutory price-list translation guarantee: enforced Croatian translation catalog loading on public `/arhiva-sidrene-cijene/` and `/sidrena-cjenik/` pages and shortcodes regardless of visitor or default site locale. | `PublicPage::serve`, `PublicPage::render_archive`, `PublicPage::render_list` |
+| I18N-03 | `done` | Public archive cache invalidation: versioned frontend template cache keys (`'v' => SIDRENA_CIJENA_VERSION`) and added LiteSpeed Cache no-cache controls, ensuring updated Croatian tables display immediately without stale cached English HTML. | `PublicPage::render_archive`, `PublicPage::render_list` |
+| REL-29 | `done` | Package and verify release 2.0.18 archive | `tools/build-zip.sh 2.0.18` |
+
+
 

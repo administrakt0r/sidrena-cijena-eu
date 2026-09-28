@@ -23,13 +23,13 @@ UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventio
 `IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
 session that changes the codebase) to keep every prompt honest.
 
-## Current green baseline (v2.0.17)
+## Current green baseline (v2.0.18)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
 `tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
 on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 528 tests / 1890 assertions (`composer test:unit`).
+- Unit suite: 530 tests / 1896 assertions (`composer test:unit`).
 - Integration suite: 96 tests / 454 assertions (`composer test:integration` in wp-env).
 - E2E: 42 Playwright specs against port 8889 (`npm run test:e2e`).
 - PHPStan level 6: 0 errors across 117 files · PHPCS clean · ESLint clean · `./local.sh` exits 0.

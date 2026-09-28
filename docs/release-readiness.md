@@ -1,5 +1,14 @@
 # Release verification
 
+## Release 2.0.18 — Guaranteed Croatian Translation Catalogs & Unblocked Statutory Generation (2026-09-28)
+
+- Guaranteed Croatian translation catalogs in release archives: bundled compiled binary Croatian catalog files (`languages/sidrena-cijena-eu-hr.mo` and `languages/sidrena-cijena-eu-hr_HR.mo`) directly inside installable release packages. Removed `.gitattributes` and `tools/build-zip.sh` exclusions that previously stripped `.mo` translation catalogs from release zip distribution.
+- Statutory language guarantee on public price lists & archives: enforced Croatian textdomain catalog loading in `src/Api/PublicPage.php` (`ensure_croatian_catalog()`), guaranteeing that public customer-facing price lists and archive tables (`/sidrena-cjenik/`, `/arhiva-sidrene-cijene/`) render strictly in the Croatian language in compliance with statutory decrees (NN 101/2026-1212 & NN 101/2026-1213 / Pravilnik o cjenicima), regardless of site default or visitor session locale.
+- Cache invalidation & LiteSpeed Cache integration: versioned internal page cache keys with `SIDRENA_CIJENA_VERSION` in `PublicPage::render_list()` and `render_archive()`, instantly clearing stale English cached fragments upon plugin upgrade; dispatched `litespeed_control_set_nocache` action on public endpoints.
+- Unblocked price list generation with compliance warnings: aligned `GenerationService::generate()` so that when `allow_generation_with_errors` is enabled (default `true`), generation is not blocked even if facility identifier or catalog items have compliance issues; uses safe fallback identifier `'P1'`, records compliance findings with actionable remediation proposals, and ensures daily statutory price lists are published on time.
+- Test coverage & quality: 530 unit tests (1,896 assertions), 0 failures; Croatian translation catalog complete (797 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.18/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.18` and verified with `unzip -t`.
+
 ## Release 2.0.17 — Mandatory Price-List Generation, Remediation Proposals & Store Settings Inheritance (2026-09-28)
 
 - Mandatory statutory price list generation: ensured daily price lists are always published even when compliance or catalog validation findings exist (`allow_generation_with_errors` setting, enabled by default, plus `--force`), safeguarding merchants from statutory penalties under Croatian law (NN 101/2026-1213 / Pravilnik o cjenicima) where failing to publish daily price lists before 08:00 is subject to severe fines.

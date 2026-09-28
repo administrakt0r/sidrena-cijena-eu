@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.17
+Stable tag: 2.0.18
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.18 =
+* Mandatory Croatian language delivery: bundled compiled binary translation files (`sidrena-cijena-eu-hr.mo` and `sidrena-cijena-eu-hr_HR.mo`) directly in the release archive, preventing external sites from rendering fallback English strings.
+* Public statutory price-list translation guarantee: enforced Croatian translation catalog loading on public `/arhiva-sidrene-cijene/` and `/sidrena-cjenik/` pages and shortcodes regardless of visitor or default site locale.
+* Public archive cache invalidation: versioned frontend template cache keys and added LiteSpeed Cache no-cache controls, ensuring updated Croatian tables display immediately without stale cached English HTML.
+* Packaging hardening: updated `.gitattributes` and `tools/build-zip.sh` so compiled translations are never stripped or treated as leaks in release archives.
 
 = 2.0.17 =
 * Mandatory price-list generation: ensured daily price lists are always generated and published even when catalog compliance errors exist (`allow_generation_with_errors`), safeguarding merchants from statutory non-publication penalties under Croatian law (NN 101/2026-1213).
