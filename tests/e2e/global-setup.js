@@ -6,7 +6,7 @@
  * baseline `./local.sh` gives the demo shop, so a spec never fails because of
  * an unconfigured permalink, currency or a shop hidden behind "coming soon".
  */
-const { wpCli } = require( './helpers' );
+const { wpCli, getContainerPluginPath } = require( './helpers' );
 
 /**
  * Run a WP-CLI command, tolerating a failure that does not matter.
@@ -42,5 +42,5 @@ module.exports = async () => {
 	// webshop is created without one, which would make every generation fail.
 	// This lives in a PHP file: wp-env rebuilds the command line before it
 	// reaches the container, so PHP with quotes cannot survive `wp eval`.
-	wpCli( [ 'eval-file', '/var/www/html/wp-content/plugins/sidrena-cijena/tools/e2e-setup.php' ] );
+	wpCli( [ 'eval-file', getContainerPluginPath( 'tools/e2e-setup.php' ) ] );
 };

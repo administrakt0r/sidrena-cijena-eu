@@ -69,4 +69,27 @@ async function login( page, username = 'admin', password = 'password' ) {
 	await page.waitForURL( ( url ) => ! url.pathname.includes( 'wp-login.php' ) );
 }
 
-module.exports = { wpCli, wpEval, login, REPO_ROOT, WP_ENV_CLI };
+let cachedPluginPath = null;
+
+/**
+ * Resolve the absolute path of the plugin (or a file inside it) inside the wp-env container.
+ *
+ * @param {string} [relPath] Path relative to the plugin root.
+ * @return {string} Absolute path inside the container.
+ */
+function getContainerPluginPath( relPath = '' ) {
+	if ( ! cachedPluginPath ) {
+		try {
+			const res = wpCli( [
+				'eval',
+				'echo dirname( glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" )[0] ?? ( WP_PLUGIN_DIR . "/sidrena-cijena" ) );',
+			] );
+			cachedPluginPath = res.trim();
+		} catch {
+			cachedPluginPath = '/var/www/html/wp-content/plugins/sidrena-cijena';
+		}
+	}
+	return relPath ? `${ cachedPluginPath }/${ relPath.replace( /^\/+/, '' ) }` : cachedPluginPath;
+}
+
+module.exports = { wpCli, wpEval, login, getContainerPluginPath, REPO_ROOT, WP_ENV_CLI };
