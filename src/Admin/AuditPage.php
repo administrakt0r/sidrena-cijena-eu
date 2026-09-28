@@ -174,7 +174,7 @@ class AuditPage {
 
 		foreach ( $rows as $row ) {
 			$context = isset( $row['context'] ) && is_array( $row['context'] ) ? $row['context'] : array();
-			$user_id = isset( $row['user_id'] ) && null !== $row['user_id']
+			$user_id = isset( $row['user_id'] )
 				? (int) $row['user_id']
 				: ( isset( $context['user_id'] ) ? (int) $context['user_id'] : 0 );
 
