@@ -111,7 +111,7 @@ class Test_Publication extends WP_UnitTestCase {
 
 		foreach ( array( $anchor_html, $sale_html ) as $html ) {
 			$this->assertStringNotContainsString( '<form', $html, 'Meta-box controls must not create invalid nested product-editor forms.' );
-			$this->assertStringContainsString( 'formaction="' . esc_url( admin_url( 'admin-post.php' ) ) . '"', $html );
+			$this->assertStringContainsString( 'formaction="' . esc_url( admin_url( 'admin-post.php' ) ), $html );
 			$this->assertStringNotContainsString( 'type="hidden" name="action"', $html, 'Normal Update must retain the editor action.' );
 		}
 		$this->assertStringContainsString( 'name="sidrena_cijena_anchor_nonce"', $anchor_html );
