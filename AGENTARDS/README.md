@@ -9,7 +9,7 @@ is self-contained, completely up to date, and states its own done-criteria.
 | 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.11 |
 | 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.0 |
 | 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** | ✅ v2.0.0 |
-| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.16 |
+| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.17 |
 | 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: WordPress.org readiness, plugin audit & release | Optional | ✅ v2.0.0 |
 | 6 | [06-performance-db-queries.md](06-performance-db-queries.md) | Performance 1: query tuning, N+1 removal, indexes, COUNT hotspots | Optional (measurements) | ✅ v2.0.0 |
 | 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) | ✅ v2.0.0 |
@@ -23,17 +23,17 @@ UI/UX work as `UX-xx` items in `docs/improvement-backlog.md` (existing conventio
 `IMP-`, `REL-`). Prompt 10 audits the pack itself — run it any time (especially after a
 session that changes the codebase) to keep every prompt honest.
 
-## Current green baseline (v2.0.14)
+## Current green baseline (v2.0.17)
 
 Verify against this before claiming a regression; if a gate is red when you start, fix that first.
 `tools/verify.sh` runs the whole host gate set in one command (add `--with-integration --with-e2e`
 on Docker hosts); see `docs/testing.md`.
 
-- Unit suite: 456 tests / 1623 assertions (`composer test:unit`).
+- Unit suite: 528 tests / 1890 assertions (`composer test:unit`).
 - Integration suite: 96 tests / 454 assertions (`composer test:integration` in wp-env).
 - E2E: 42 Playwright specs against port 8889 (`npm run test:e2e`).
-- PHPStan level 6: 0 errors across 117 files · PHPCS clean (184 files) · ESLint clean · `./local.sh` exits 0.
-- Croatian catalog complete: 768 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
+- PHPStan level 6: 0 errors across 117 files · PHPCS clean · ESLint clean · `./local.sh` exits 0.
+- Croatian catalog complete: 797 strings, 0 untranslated (`php tools/i18n/make-pot.php --locale=hr_HR`).
 
 ## Hard rules for every prompt
 

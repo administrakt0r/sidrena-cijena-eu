@@ -8,6 +8,7 @@
 namespace SidrenaCijena\Export;
 
 use SidrenaCijena\Catalog\CatalogProvider;
+use SidrenaCijena\Compliance\RemediationProposer;
 use SidrenaCijena\Database\LocationRepository;
 use SidrenaCijena\Database\PriceHistoryRepository;
 use SidrenaCijena\Database\PublicationRepository;
@@ -135,31 +136,68 @@ class GenerationService {
 			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'sidrena-cijena-eu' ) );
 		}
 
-		$source = isset( $args['source'] ) ? (string) $args['source'] : 'manual';
-		$event  = 'scheduled' === $source ? 'export_scheduled' : 'export_manual';
+		$source            = isset( $args['source'] ) ? (string) $args['source'] : 'manual';
+		$event             = 'scheduled' === $source ? 'export_scheduled' : 'export_manual';
+		$force             = ! empty( $args['force'] );
+		$allow_with_errors = $force || (bool) Settings::get( 'allow_generation_with_errors', true );
 
-		if ( empty( $location['identifier'] ) ) {
-			$findings = array(
-				array(
-					'code'     => 'missing_store_identifier',
-					'severity' => 'ERROR',
-					'message'  => __( 'The sales location has no facility identifier.', 'sidrena-cijena-eu' ),
-				),
+		$identifier = isset( $location['identifier'] ) ? trim( (string) $location['identifier'] ) : '';
+		$findings   = array();
+
+		if ( '' === $identifier ) {
+			$findings[] = array(
+				'code'           => 'missing_store_identifier',
+				'severity'       => 'ERROR',
+				'message'        => __( 'The sales location has no facility identifier.', 'sidrena-cijena-eu' ),
+				'proposal'       => RemediationProposer::propose( 'missing_store_identifier', array( 'name' => $location['name'] ) ),
+				'entity_type'    => 'location',
+				'entity_id'      => (int) $location_id,
+				'rule_reference' => 'FR-040',
 			);
 
-			$this->record_failure( $location_id, $format, $findings );
+			if ( ! $allow_with_errors ) {
+				$this->record_failure( $location_id, $format, $findings );
 
-			return new \WP_Error( 'missing_store_identifier', $findings[0]['message'], array( 'findings' => $findings ) );
+				return new \WP_Error( 'missing_store_identifier', $findings[0]['message'], array( 'findings' => $findings ) );
+			}
+
+			// Safe fallback identifier for filename and price list export.
+			$location['identifier'] = 'P1';
 		}
 
-		$validation = $this->catalog_report( $location_id );
-		$findings   = self::publication_blockers( $validation['errors'] );
-
-		if ( ! empty( $findings ) ) {
-			$this->record_failure( $location_id, $format, $findings );
-
-			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'sidrena-cijena-eu' ), array( 'findings' => $findings ) );
+		// Ensure address and city are populated for filename generation.
+		if ( empty( $location['address'] ) ) {
+			$wc_addr = (string) get_option( 'woocommerce_store_address', '' );
+			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'sidrena-cijena-eu' );
 		}
+		if ( empty( $location['city'] ) ) {
+			$wc_city = (string) get_option( 'woocommerce_store_city', '' );
+			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'sidrena-cijena-eu' );
+		}
+
+		$validation   = $this->catalog_report( $location_id );
+		$blockers     = self::publication_blockers( $validation['errors'] );
+		$all_blockers = array_merge( $findings, $blockers );
+
+		if ( ! empty( $all_blockers ) && ! $allow_with_errors ) {
+			$this->record_failure( $location_id, $format, $all_blockers );
+
+			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'sidrena-cijena-eu' ), array( 'findings' => $all_blockers ) );
+		}
+
+		$proposals = array();
+		foreach ( $all_blockers as &$b_finding ) {
+			if ( empty( $b_finding['proposal'] ) ) {
+				$code                 = isset( $b_finding['code'] ) ? (string) $b_finding['code'] : '';
+				$ctx                  = isset( $b_finding['context'] ) && is_array( $b_finding['context'] ) ? $b_finding['context'] : array();
+				$msg                  = isset( $b_finding['message'] ) ? (string) $b_finding['message'] : '';
+				$b_finding['proposal'] = RemediationProposer::propose( $code, $ctx, $msg );
+			}
+			if ( ! empty( $b_finding['proposal'] ) ) {
+				$proposals[] = $b_finding['proposal'];
+			}
+		}
+		unset( $b_finding );
 
 		$build = $this->builder()->build( $location, $args );
 
@@ -181,10 +219,12 @@ class GenerationService {
 				'item_count'         => count( $items ),
 				'rule_version'       => (string) $meta['rule_version'],
 				'validation_summary' => array(
-					'errors'   => 0,
-					'warnings' => (int) $validation['warnings'] + count( $validation['errors'] ) - count( $findings ),
+					'errors'    => count( $all_blockers ),
+					'warnings'  => (int) $validation['warnings'] + count( $validation['errors'] ) - count( $blockers ),
+					'findings'  => $all_blockers,
+					'proposals' => $proposals,
 				),
-				'force'              => ! empty( $args['force'] ),
+				'force'              => $force,
 			)
 		);
 
@@ -211,17 +251,32 @@ class GenerationService {
 			return $result;
 		}
 
-		Logger::info(
-			$event,
-			empty( $result['skipped'] ) ? 'Price list published.' : 'Price list unchanged; the current version was kept.',
-			array(
-				'location_id' => (int) $location_id,
-				'format'      => $format,
-				'filename'    => isset( $result['filename'] ) ? $result['filename'] : '',
-				'items'       => count( $items ),
-				'skipped'     => ! empty( $result['skipped'] ),
-			)
-		);
+		if ( ! empty( $all_blockers ) ) {
+			Logger::warning(
+				'export_warning',
+				'Price list generated with compliance findings. Remediation proposed.',
+				array(
+					'location_id' => (int) $location_id,
+					'format'      => $format,
+					'filename'    => isset( $result['filename'] ) ? $result['filename'] : '',
+					'items'       => count( $items ),
+					'findings'    => count( $all_blockers ),
+					'proposals'   => count( $proposals ),
+				)
+			);
+		} else {
+			Logger::info(
+				$event,
+				empty( $result['skipped'] ) ? 'Price list published.' : 'Price list unchanged; the current version was kept.',
+				array(
+					'location_id' => (int) $location_id,
+					'format'      => $format,
+					'filename'    => isset( $result['filename'] ) ? $result['filename'] : '',
+					'items'       => count( $items ),
+					'skipped'     => ! empty( $result['skipped'] ),
+				)
+			);
+		}
 
 		return array(
 			'location_id' => (int) $location_id,
@@ -230,6 +285,9 @@ class GenerationService {
 			'item_count'  => count( $items ),
 			'skipped'     => ! empty( $result['skipped'] ),
 			'publication' => isset( $result['publication'] ) ? $result['publication'] : null,
+			'has_errors'  => ! empty( $all_blockers ),
+			'findings'    => $all_blockers,
+			'proposals'   => $proposals,
 		);
 	}
 

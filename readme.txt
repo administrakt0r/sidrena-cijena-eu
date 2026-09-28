@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.16
+Stable tag: 2.0.17
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,14 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.17 =
+* Mandatory price-list generation: ensured daily price lists are always generated and published even when catalog compliance errors exist (`allow_generation_with_errors`), safeguarding merchants from statutory non-publication penalties under Croatian law (NN 101/2026-1213).
+* Actionable remediation proposals: introduced `RemediationProposer` engine generating concrete, contextual guidance for every compliance finding across admin screens, WP-CLI output, and published archive records.
+* WooCommerce store settings inheritance: auto-populated default location address and city from WooCommerce store settings (`woocommerce_store_address`, `woocommerce_store_city`), eliminating false `missing_location_address` errors on standard stores.
+* Admin UI and CLI feedback: added "Proposed change" column to the Compliance check report, rendered actionable remediation notices in WP-CLI `wp sidrena-cijena generate`, and added status notices on the Publications screen.
+* Safe uninstaller fallback: added filesystem check in `Uninstaller::delete_directory()` preventing missing file errors during unit tests.
+* Unit test expansion & complete translations: added unit tests for `RemediationProposer` and `GenerationService` (528 tests, 1,890 assertions, 0 errors); 100% complete Croatian translations (797 translated / 0 untranslated).
 
 = 2.0.16 =
 * CSV formula injection protection: neutralised formula prefixes (`=`, `+`, `-`, `@`) in `ImportService::report_csv()` on user-supplied values (such as SKU and error messages).

@@ -74,8 +74,16 @@ final class Finding {
 	/**
 	 * Additional structured context.
 	 *
-	 * @var array<mixed>     */
+	 * @var array<mixed>
+	 */
 	public $context;
+
+	/**
+	 * Actionable remediation proposal.
+	 *
+	 * @var string
+	 */
+	public $proposal;
 
 	/**
 	 * Constructor.
@@ -83,7 +91,7 @@ final class Finding {
 	 * @param string $severity  Severity constant.
 	 * @param string $code      Stable code.
 	 * @param string $message   Message.
-	 * @param array  $args      Optional `entity_type`, `entity_id`, `rule_reference`, `context`.
+	 * @param array  $args      Optional `entity_type`, `entity_id`, `rule_reference`, `context`, `proposal`.
 	 */
 	public function __construct( $severity, $code, $message, array $args = array() ) {
 		$this->severity       = in_array( $severity, array( self::ERROR, self::WARNING, self::INFO ), true ) ? $severity : self::INFO;
@@ -93,6 +101,9 @@ final class Finding {
 		$this->entity_id      = isset( $args['entity_id'] ) ? (int) $args['entity_id'] : 0;
 		$this->rule_reference = isset( $args['rule_reference'] ) ? (string) $args['rule_reference'] : '';
 		$this->context        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : array();
+		$this->proposal       = isset( $args['proposal'] ) && '' !== (string) $args['proposal']
+			? (string) $args['proposal']
+			: RemediationProposer::propose( $this->code, $this->context, $this->message );
 	}
 
 	/**
@@ -137,7 +148,7 @@ final class Finding {
 	 * @return array<mixed>
 	 */
 	public function to_array() {
-		return array(
+		$data = array(
 			'severity'       => $this->severity,
 			'code'           => $this->code,
 			'entity_type'    => $this->entity_type,
@@ -146,5 +157,11 @@ final class Finding {
 			'rule_reference' => $this->rule_reference,
 			'context'        => $this->context,
 		);
+
+		if ( '' !== $this->proposal ) {
+			$data['proposal'] = $this->proposal;
+		}
+
+		return $data;
 	}
 }

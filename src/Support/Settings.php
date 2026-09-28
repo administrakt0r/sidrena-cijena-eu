@@ -50,8 +50,9 @@ final class Settings {
 			'deadline'                 => '08:00',
 			'retention_days'           => 30,
 			'log_retention_days'       => 180,
-			'delete_data_on_uninstall' => false,
-			'sale_types'               => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
+			'delete_data_on_uninstall'     => false,
+			'allow_generation_with_errors' => true,
+			'sale_types'                   => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
 			'filename_separator'       => '_',
 			'filename_case'            => 'upper',
 			'thirty_day_label'         => __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ),
@@ -262,7 +263,7 @@ final class Settings {
 		// of the submitted tab must keep its stored value; the hidden companion
 		// input rendered by SettingsFields::checkbox() makes present flags
 		// always visible to the sanitizer, including an unchecked one.
-		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall', 'public_archive_enabled', 'archive_footer_link', 'archive_sitemap_link' ) as $flag ) {
+		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall', 'allow_generation_with_errors', 'public_archive_enabled', 'archive_footer_link', 'archive_sitemap_link' ) as $flag ) {
 			if ( array_key_exists( $flag, $input ) ) {
 				$output[ $flag ] = ! empty( $input[ $flag ] );
 			}

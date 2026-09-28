@@ -145,7 +145,15 @@ class PublicationsPage {
 			echo '<td>' . esc_html( self::site_time( $row['expires_at'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) (int) $row['item_count'] ) . '</td>';
 			echo '<td><code>' . esc_html( substr( (string) $row['checksum'], 0, 12 ) ) . '</code></td>';
-			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( Labels::publication_status( (string) $row['status'] ) ) . '</span></td>';
+			$summary   = isset( $row['validation_summary'] ) && is_array( $row['validation_summary'] ) ? $row['validation_summary'] : array();
+			$err_count = ! empty( $summary['errors'] ) ? (int) $summary['errors'] : ( ! empty( $summary['findings'] ) ? count( $summary['findings'] ) : 0 );
+
+			echo '<td>';
+			echo '<span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( (string) $row['status'] ) . '">' . esc_html( Labels::publication_status( (string) $row['status'] ) ) . '</span>';
+			if ( $err_count > 0 && 'published' === (string) $row['status'] ) {
+				echo ' <span class="sidrena-cijena-status sidrena-cijena-status--warning" title="' . esc_attr( sprintf( __( '%d compliance findings', 'sidrena-cijena-eu' ), $err_count ) ) . '">' . sprintf( esc_html__( '%d warnings', 'sidrena-cijena-eu' ), $err_count ) . '</span>';
+			}
+			echo '</td>';
 			echo '</tr>';
 		}
 
@@ -175,8 +183,9 @@ class PublicationsPage {
 			)
 		);
 
-		$published = 0;
-		$failed    = 0;
+		$published     = 0;
+		$failed        = 0;
+		$with_findings = 0;
 
 		foreach ( $results as $location ) {
 			if ( is_wp_error( $location ) ) {
@@ -189,6 +198,9 @@ class PublicationsPage {
 					++$failed;
 				} else {
 					++$published;
+					if ( ! empty( $result['has_errors'] ) ) {
+						++$with_findings;
+					}
 				}
 			}
 		}
@@ -196,9 +208,10 @@ class PublicationsPage {
 		$url = add_query_arg(
 			array(
 				'page'                  => self::SLUG,
-				'sidrena_cijena_notice' => $failed ? 'error' : 'success',
+				'sidrena_cijena_notice' => $failed ? 'error' : ( $with_findings ? 'warning' : 'success' ),
 				'generated'             => $published,
 				'failed'                => $failed,
+				'with_findings'         => $with_findings,
 			),
 			admin_url( 'admin.php' )
 		);
@@ -220,18 +233,42 @@ class PublicationsPage {
 			return;
 		}
 
-		$generated = isset( $_GET['generated'] ) ? absint( wp_unslash( $_GET['generated'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$failed    = isset( $_GET['failed'] ) ? absint( wp_unslash( $_GET['failed'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$generated     = isset( $_GET['generated'] ) ? absint( wp_unslash( $_GET['generated'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$failed        = isset( $_GET['failed'] ) ? absint( wp_unslash( $_GET['failed'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$with_findings = isset( $_GET['with_findings'] ) ? absint( wp_unslash( $_GET['with_findings'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		Notice::render(
-			'error' === $notice ? 'error' : 'success',
-			sprintf(
-				/* translators: 1: number of generated price lists, 2: number of failures. */
-				__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena-eu' ),
-				(int) $generated,
-				(int) $failed
-			)
-		);
+		if ( 'error' === $notice ) {
+			Notice::render(
+				'error',
+				sprintf(
+					/* translators: 1: number of generated price lists, 2: number of failures. */
+					__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena-eu' ),
+					(int) $generated,
+					(int) $failed
+				)
+			);
+		} elseif ( 'warning' === $notice || $with_findings > 0 ) {
+			$compliance_url = AdminMenu::url( 'sidrena-cijena-compliance' );
+			Notice::render(
+				'warning',
+				sprintf(
+					/* translators: 1: number of generated price lists, 2: number of price lists with findings, 3: compliance check URL. */
+					__( 'Price lists published successfully: %1$d files created (%2$d with compliance warnings). <a href="%3$s">Review the Compliance report</a> for proposed fixes.', 'sidrena-cijena-eu' ),
+					(int) $generated,
+					(int) $with_findings,
+					esc_url( $compliance_url )
+				)
+			);
+		} else {
+			Notice::render(
+				'success',
+				sprintf(
+					/* translators: 1: number of generated price lists. */
+					__( 'Generation finished: %1$d price lists generated.', 'sidrena-cijena-eu' ),
+					(int) $generated
+				)
+			);
+		}
 	}
 
 	/**

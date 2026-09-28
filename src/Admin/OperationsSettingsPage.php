@@ -59,11 +59,15 @@ final class OperationsSettingsPage {
 				'label' => __( 'Log retention (days)', 'sidrena-cijena-eu' ),
 				'type'  => 'number',
 			),
-			'formats'                  => array(
+			'formats'                      => array(
 				'label' => __( 'Export formats', 'sidrena-cijena-eu' ),
 				'type'  => 'formats',
 			),
-			'delete_data_on_uninstall' => array(
+			'allow_generation_with_errors' => array(
+				'label' => __( 'Mandatory price-list generation', 'sidrena-cijena-eu' ),
+				'type'  => 'checkbox',
+			),
+			'delete_data_on_uninstall'     => array(
 				'label' => __( 'Delete data on uninstall', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
@@ -160,15 +164,25 @@ final class OperationsSettingsPage {
 					$label = __( 'Show a link to the archive in the site footer', 'sidrena-cijena-eu' );
 				} elseif ( 'archive_sitemap_link' === $key ) {
 					$label = __( 'Add the archive URL to the WordPress XML sitemap', 'sidrena-cijena-eu' );
+				} elseif ( 'allow_generation_with_errors' === $key ) {
+					$label = __( 'Generate and publish daily price lists even if catalog validation errors exist', 'sidrena-cijena-eu' );
 				} else {
 					$label = __( 'Yes, delete all plugin data on uninstall', 'sidrena-cijena-eu' );
 				}
+
+				$description = '';
+				if ( 'delete_data_on_uninstall' === $key ) {
+					$description = __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data.', 'sidrena-cijena-eu' );
+				} elseif ( 'allow_generation_with_errors' === $key ) {
+					$description = __( 'Mandatory under Croatian law: daily price lists must be published every morning before 08:00. When enabled, generation will never be blocked by catalog compliance errors; valid data is exported and actionable remediation proposals are attached.', 'sidrena-cijena-eu' );
+				}
+
 				$fields->checkbox(
 					$key,
 					$value,
 					array(
 						'label'       => $label,
-						'description' => 'delete_data_on_uninstall' === $key ? __( 'Danger: with this enabled, uninstalling deletes price history, publications and settings. Without it, uninstall keeps the historical and audit data. The anchor prices and the 30-day lowest prices are the legal evidence and are kept either way; delete the wp_sidrena_price_history table by hand to remove them too. Never touches WooCommerce or WordPress data.', 'sidrena-cijena-eu' ) : '',
+						'description' => $description,
 					)
 				);
 				break;

@@ -84,11 +84,13 @@ sale.
 * The CSV decimal convention is not prescribed; the plugin uses `;`
   delimiters with comma decimals (Croatian convention), documented in
   `docs/price-list-format.md`.
-* New items require the merchant to record the price applied on first offer and the first-offer date from business records. The catalog creation date is only a suggestion, not proof. The plugin blocks publication when an anchor is missing, and for post-reference items it accepts a verified first-offer date on or after the statutory baseline; the law does not permit publishing a blank anchor for these items.
+* New items require the merchant to record the price applied on first offer and the first-offer date from business records. The catalog creation date is only a suggestion, not proof. For post-reference items it accepts a verified first-offer date on or after the statutory baseline; the law does not permit publishing a blank anchor for these items.
 
-The publication gate requires a positive current retail price and a dated
-anchor for each item. Missing catalog identifiers such as SKU or barcode and
-other compliance findings remain visible in the validator but do not prevent
-file generation. A location still needs the components required to form its
-publication filename. Merchants must review the full compliance report before
-using a generated cjenik.
+## Publication gate and statutory compliance
+
+Under NN 101/2026-1213, merchants are legally required to publish daily price lists every working day before 08:00. Failing to publish daily lists carries severe statutory penalties. To prevent total publication failure when catalog entries contain validation errors or missing anchor data, the plugin:
+* Generates and publishes valid daily cjenik files (`allow_generation_with_errors` enabled by default, or `--force` via CLI).
+* Automatically inherits location address and city from WooCommerce store settings (`woocommerce_store_address`, `woocommerce_store_city`), and uses deterministic facility fallbacks (`P1`) so strict statutory filename conventions are never broken.
+* Provides concrete, actionable remediation proposals ("Prijedlog izmjene") for every compliance finding across the Admin Compliance report, Publications overview, and CLI output, directing the merchant exactly what catalog or configuration value must be corrected.
+* Merchants must continuously review the compliance report to resolve any underlying catalog findings.
+

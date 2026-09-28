@@ -211,11 +211,16 @@ class LocationRepository {
 			return (int) $existing[0]['id'];
 		}
 
+		$address = (string) get_option( 'woocommerce_store_address', '' );
+		$city    = (string) get_option( 'woocommerce_store_city', '' );
+
 		return $this->insert(
 			array(
 				'name'       => __( 'Webshop', 'sidrena-cijena-eu' ),
 				'type'       => 'webshop',
 				'identifier' => 'P1',
+				'address'    => '' !== $address ? $address : __( 'Online', 'sidrena-cijena-eu' ),
+				'city'       => '' !== $city ? $city : __( 'Hrvatska', 'sidrena-cijena-eu' ),
 				'active'     => true,
 			)
 		);
@@ -275,6 +280,20 @@ class LocationRepository {
 		$row['sequence_no']       = (int) $row['sequence_no'];
 		$row['applies_to']        = $this->decode_json( $row['applies_to'] );
 		$row['price_list_config'] = $this->decode_json( $row['price_list_config'] );
+
+		if ( empty( $row['address'] ) ) {
+			$wc_address = (string) get_option( 'woocommerce_store_address', '' );
+			if ( '' !== $wc_address ) {
+				$row['address'] = $wc_address;
+			}
+		}
+
+		if ( empty( $row['city'] ) ) {
+			$wc_city = (string) get_option( 'woocommerce_store_city', '' );
+			if ( '' !== $wc_city ) {
+				$row['city'] = $wc_city;
+			}
+		}
 
 		return $row;
 	}

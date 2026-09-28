@@ -177,6 +177,29 @@ final class GenerateCommand {
 			)
 		);
 
+		if ( ! empty( $result['findings'] ) ) {
+			Cli::out(
+				sprintf(
+					'Notice: Location #%d %s generated with %d compliance finding(s):',
+					isset( $result['location_id'] ) ? (int) $result['location_id'] : 0,
+					isset( $result['format'] ) ? strtoupper( (string) $result['format'] ) : '',
+					count( $result['findings'] )
+				),
+				'warning'
+			);
+
+			if ( ! empty( $result['proposals'] ) ) {
+				Cli::out( 'Proposed changes to resolve compliance findings:', 'warning' );
+				$unique_proposals = array_values( array_unique( (array) $result['proposals'] ) );
+				foreach ( array_slice( $unique_proposals, 0, 5 ) as $proposal ) {
+					Cli::out( '  - ' . $proposal, 'warning' );
+				}
+				if ( count( $unique_proposals ) > 5 ) {
+					Cli::out( sprintf( '  ... and %d more. Run `wp sidrena-cijena validate` to review all.', count( $unique_proposals ) - 5 ), 'warning' );
+				}
+			}
+		}
+
 		return 0;
 	}
 }

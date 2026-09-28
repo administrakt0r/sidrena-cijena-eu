@@ -316,4 +316,13 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | ROB-08 | `done` | Admin redirect safety & comprehensive test coverage: hardened `AnchorMetaBox::redirect_back()` with safe fallback to `admin_url()` when edit post link is unavailable; authored full unit test suites for `ImportService` and `Cli` commands, bringing unit test suite to 512 tests (1,853 assertions). | `ProductEditorSaveTest::test_anchor_record_redirects_safely_when_item_not_found`, full unit test suite 512/512 passing |
 | REL-27 | `done` | Package and verify release 2.0.16 archive | `tools/build-zip.sh 2.0.16` |
 
+## Mandatory Price-List Generation, Remediation Proposals & Store Settings Inheritance (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| STAT-01 | `done` | Mandatory statutory price-list generation: ensured daily price lists are always published even when catalog validation errors exist (`allow_generation_with_errors`, enabled by default and supported with `--force`), safeguarding merchants from statutory non-publication penalties under Croatian law (NN 101/2026-1213). | `GenerationServiceTest::test_generate_succeeds_with_proposals_when_errored`, `GenerationServiceTest::test_generate_forced_bypasses_blocking` |
+| REM-01 | `done` | Concrete actionable remediation proposals: implemented `RemediationProposer` engine generating specific advice on what to change for every catalog and publication finding code. Integrated proposals into `Finding`, `CompliancePage` report table ("Proposed change" column), `GenerateCommand` CLI warnings, and publication summaries. | `RemediationProposerTest` (10 tests, 18 assertions), `GenerateCommandTest::test_execute_generate_with_findings_and_proposals` |
+| SYNC-01 | `done` | Store settings & address inheritance: auto-populated default location address and city from WooCommerce store settings (`woocommerce_store_address`, `woocommerce_store_city`), preventing false `missing_location_address` errors and filename failures on stores configured properly in WooCommerce. | `LocationRepository::hydrate`, `PublicationRules::missing_location_address` |
+| REL-28 | `done` | Package and verify release 2.0.17 archive | `tools/build-zip.sh 2.0.17` |
+
 

@@ -285,7 +285,7 @@ final class Uninstaller {
 
 		global $wp_filesystem;
 
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
+		if ( ! function_exists( 'WP_Filesystem' ) && file_exists( ABSPATH . 'wp-admin/includes/file.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
 
@@ -295,6 +295,9 @@ final class Uninstaller {
 
 		if ( $wp_filesystem instanceof \WP_Filesystem_Base && $wp_filesystem->is_dir( $directory ) ) {
 			$wp_filesystem->rmdir( $directory, false );
+		} elseif ( is_dir( $directory ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Fallback when WP_Filesystem is not initialized.
+			@rmdir( $directory );
 		}
 
 		return $deleted;

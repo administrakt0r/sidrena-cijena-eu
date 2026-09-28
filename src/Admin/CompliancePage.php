@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Compliance\ComplianceReport;
 use SidrenaCijena\Compliance\Finding;
+use SidrenaCijena\Compliance\RemediationProposer;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
@@ -157,15 +158,25 @@ class CompliancePage {
 		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena-eu' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena-eu' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Proposed change', 'sidrena-cijena-eu' ) . '</th>';
 		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $slice as $finding ) {
+			$proposal = isset( $finding['proposal'] ) && '' !== $finding['proposal']
+				? (string) $finding['proposal']
+				: RemediationProposer::propose(
+					isset( $finding['code'] ) ? (string) $finding['code'] : '',
+					isset( $finding['context'] ) && is_array( $finding['context'] ) ? $finding['context'] : array(),
+					isset( $finding['message'] ) ? (string) $finding['message'] : ''
+				);
+
 			echo '<tr>';
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( (string) $finding['severity'] ) ) . '">' . esc_html( Labels::severity( (string) $finding['severity'] ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( (string) $finding['code'] ) . '</code></td>';
 			echo '<td>' . esc_html( Labels::entity_type( (string) $finding['entity_type'] ) . ' #' . (int) $finding['entity_id'] ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['message'] ) . '</td>';
+			echo '<td>' . ( '' !== $proposal ? '<strong>' . esc_html( $proposal ) . '</strong>' : '—' ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['rule_reference'] ) . '</td>';
 			echo '</tr>';
 		}

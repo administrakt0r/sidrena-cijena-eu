@@ -2,9 +2,9 @@
 # This file is distributed under the GPL-2.0-or-later license.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sidrena cijena 2.0.15\n"
+"Project-Id-Version: Sidrena cijena 2.0.17\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-09-28T07:07:33+00:00\n"
+"POT-Creation-Date: 2026-09-28T12:55:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,6 +17,9 @@ msgstr ""
 msgid "%1$s (%2$s) — %3$s"
 msgstr ""
 
+msgid "%d compliance findings"
+msgstr ""
+
 msgid "%d further findings are not shown; run the compliance check for the full report."
 msgstr ""
 
@@ -27,6 +30,9 @@ msgid "%d price lists failed to publish."
 msgstr ""
 
 msgid "%d row(s) would overwrite existing anchor records. Confirm overwriting to continue."
+msgstr ""
+
+msgid "%d warnings"
 msgstr ""
 
 msgid "%s - Sidrena cijena"
@@ -161,6 +167,9 @@ msgstr ""
 msgid "A database table that appears to store price history."
 msgstr ""
 
+msgid "Add a barcode (EAN/GTIN) if required for this product category."
+msgstr ""
+
 msgid "Add catalog item"
 msgstr ""
 
@@ -291,6 +300,9 @@ msgid "Are you sure you want to set anchor prices for all products in your shop 
 msgstr ""
 
 msgid "A special form of sale must be classified with a sale type (FR-023)."
+msgstr ""
+
+msgid "Assign a SKU (product code) in the product inventory settings."
 msgstr ""
 
 msgid "A staff-facing name to recognize this shop, for example “Zagreb — Vlaška 68”."
@@ -431,6 +443,9 @@ msgstr ""
 msgid "Cjenici se moraju objaviti prije 08:00 sati svakog dana:"
 msgstr ""
 
+msgid "Classify this promotional price by selecting a statutory sale type (\"akcija\", \"sniženje\", \"sezonsko sniženje\", or \"rasprodaja\") in the special sale metabox."
+msgstr ""
+
 msgid "Cleanup"
 msgstr ""
 
@@ -456,6 +471,9 @@ msgid "Compliance check finished: %1$d errors and %2$d warnings."
 msgstr ""
 
 msgid "Compliance findings"
+msgstr ""
+
+msgid "Consolidate duplicate catalog entries sharing the same SKU or identifier."
 msgstr ""
 
 msgid "Control when daily price lists are generated, how long publications and logs are kept, and what happens to compliance data when the plugin is uninstalled. Deactivation never deletes data."
@@ -686,6 +704,9 @@ msgstr ""
 msgid "Enter a product ID."
 msgstr ""
 
+msgid "Enter a valid product title/name in the product editor."
+msgstr ""
+
 msgid "Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically."
 msgstr ""
 
@@ -696,6 +717,9 @@ msgid "Enter the city name as it should appear in the published filename."
 msgstr ""
 
 msgid "Enter the new price."
+msgstr ""
+
+msgid "Enter the official street address, house number, and city in Sidrena cijena → Prodajna mjesta or in WooCommerce → Settings → General."
 msgstr ""
 
 msgid "Enter the official street address and house number; this is used in the generated price-list filename."
@@ -830,7 +854,16 @@ msgstr ""
 msgid "General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them."
 msgstr ""
 
+msgid "Generate a fresh daily price list (click \"Generate now\" or run `wp sidrena-cijena generate`) to maintain current daily compliance before 08:00."
+msgstr ""
+
+msgid "Generate and publish daily price lists even if catalog validation errors exist"
+msgstr ""
+
 msgid "Generate a price list for this location."
+msgstr ""
+
+msgid "Generate a price list for this sales location to initiate the mandatory 30-day compliance archive."
 msgstr ""
 
 msgid "Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately."
@@ -843,6 +876,9 @@ msgid "Generate now"
 msgstr ""
 
 msgid "Generation finished: %1$d price lists generated, %2$d failed."
+msgstr ""
+
+msgid "Generation finished: %1$d price lists generated."
 msgstr ""
 
 msgid "Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta."
@@ -858,6 +894,9 @@ msgid "History correction"
 msgstr ""
 
 msgid "Hrana, piće, kozmetika, higijenske potrepštine, sredstva za čišćenje i kućanstvo. Slugeve ovih kategorija obavezno mapirajte u Postavke → Pravna pravila."
+msgstr ""
+
+msgid "Hrvatska"
 msgstr ""
 
 msgid "I confirm replacing existing anchor records listed above."
@@ -1058,6 +1097,12 @@ msgstr ""
 msgid "Manage locations"
 msgstr ""
 
+msgid "Mandatory price-list generation"
+msgstr ""
+
+msgid "Mandatory under Croatian law: daily price lists must be published every morning before 08:00. When enabled, generation will never be blocked by catalog compliance errors; valid data is exported and actionable remediation proposals are attached."
+msgstr ""
+
 msgid "Manual entry"
 msgstr ""
 
@@ -1256,6 +1301,9 @@ msgstr ""
 msgid "One type per line. Each type is used to classify a special sale and is published in the price list. Defaults: akcija, snizenje, sezonsko_snizenje, rasprodaja."
 msgstr ""
 
+msgid "Online"
+msgstr ""
+
 msgid "Only for products missing an anchor price (recommended)"
 msgstr ""
 
@@ -1397,6 +1445,9 @@ msgstr ""
 msgid "Price lists"
 msgstr ""
 
+msgid "Price lists published successfully: %1$d files created (%2$d with compliance warnings). <a href=\"%3$s\">Review the Compliance report</a> for proposed fixes."
+msgstr ""
+
 msgid "Price lists stay publicly available at least 30 days; lower values are raised to 30."
 msgstr ""
 
@@ -1466,6 +1517,9 @@ msgstr ""
 msgid "Promotional selling price if currently discounted."
 msgstr ""
 
+msgid "Proposed change"
+msgstr ""
+
 msgid "Publication"
 msgstr ""
 
@@ -1499,6 +1553,9 @@ msgstr ""
 msgid "Record a correction"
 msgstr ""
 
+msgid "Record an anchor price for this item for reference date %s. In the product editor under the \"Sidrena cijena\" box, enter the retail price valid on that date, or use CSV import to record anchors in bulk."
+msgstr ""
+
 msgid "Record anchor price"
 msgstr ""
 
@@ -1517,10 +1574,16 @@ msgstr ""
 msgid "Recorded special sales"
 msgstr ""
 
+msgid "Record or calculate the lowest price applied during the 30 days prior to the start of this special sale."
+msgstr ""
+
 msgid "Records"
 msgstr ""
 
 msgid "Record special sale"
+msgstr ""
+
+msgid "Reduce the promotional sale price so that it is strictly lower than the lowest price applied in the prior 30 days, or verify the 30-day reference price."
 msgstr ""
 
 msgid "Reference date"
@@ -1545,6 +1608,12 @@ msgid "Referentni datum"
 msgstr ""
 
 msgid "Referentni datumi po kategorijama"
+msgstr ""
+
+msgid "Regenerate the CSV price list to ensure semicolon delimiters, UTF-8 encoding, and comma decimals."
+msgstr ""
+
+msgid "Regenerate the XML price list to ensure valid root and item elements."
 msgstr ""
 
 msgid "Regular price"
@@ -1671,6 +1740,18 @@ msgid "Set anchor prices for all products at once (from current price)"
 msgstr ""
 
 msgid "Set anchor prices for all products in shop"
+msgstr ""
+
+msgid "Set a unique facility identifier (e.g. \"P1\") for this sales location under Sidrena cijena → Prodajna mjesta."
+msgstr ""
+
+msgid "Set a valid retail price greater than 0,00 € for this item in the product editor."
+msgstr ""
+
+msgid "Set the stock availability status (\"available\" or \"unavailable\") for this item."
+msgstr ""
+
+msgid "Set the store and product currency to EUR in WooCommerce or WordPress settings."
 msgstr ""
 
 msgid "Setting"
@@ -2159,6 +2240,9 @@ msgstr ""
 msgid "unknown error"
 msgstr ""
 
+msgid "Update the anchor reference date to the statutory date (%1$s, or %2$s for legacy categories) with a mandatory correction reason."
+msgstr ""
+
 msgid "Upload and preview"
 msgstr ""
 
@@ -2217,6 +2301,12 @@ msgid "Variations"
 msgstr ""
 
 msgid "Važna pravna napomena o nepromjenjivosti dokaza:"
+msgstr ""
+
+msgid "Verify that the recorded anchor price matches your historical price records for the designated reference date."
+msgstr ""
+
+msgid "Verify the sales location type, address, and facility identifier to ensure a compliant price-list filename can be formed."
 msgstr ""
 
 msgid "View price lists"

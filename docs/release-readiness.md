@@ -1,6 +1,14 @@
 # Release verification
 
-## Release 2.0.14 — UI/UX Improvements, Button Busy States & Formatting Consistency Pass (2026-09-28)
+## Release 2.0.17 — Mandatory Price-List Generation, Remediation Proposals & Store Settings Inheritance (2026-09-28)
+
+- Mandatory statutory price list generation: ensured daily price lists are always published even when compliance or catalog validation findings exist (`allow_generation_with_errors` setting, enabled by default, plus `--force`), safeguarding merchants from statutory penalties under Croatian law (NN 101/2026-1213 / Pravilnik o cjenicima) where failing to publish daily price lists before 08:00 is subject to severe fines.
+- Actionable remediation proposals engine (`src/Compliance/RemediationProposer.php`): attached concrete proposals ("Prijedlog izmjene") for every finding code explaining exactly what to change in the store or catalog. Rendered in WP Admin Compliance report findings table ("Proposed change" / "Prijedlog izmjene" column), WP-CLI `wp sidrena-cijena generate` output, and generation results.
+- WooCommerce store settings auto-inheritance: `LocationRepository` and `PublicationRules` now automatically inherit store address and city from WooCommerce core settings (`woocommerce_store_address`, `woocommerce_store_city`), preventing false `missing_location_address` findings and ensuring filename tokens have valid fallbacks.
+- Uninstaller hardening (`src/Support/Uninstaller.php`): guarded `ABSPATH . 'wp-admin/includes/file.php'` include with `file_exists()` check and `@rmdir()` fallback.
+- Test coverage & quality: 528 unit tests (1,890 assertions), 0 failures; Croatian translation catalog complete (797 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Built `versions/2.0.17/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.17` and verified with `unzip -t`.
+
 
 - UI/UX improvements pass per `AGENTARDS/09-ui-ux-improvements.md` (UX-14).
 - Button busy states & long-running form handling: added `sidrena-busy-form` class and `sidrena-btn-busy` styling to "Run compliance check" (`src/Admin/CompliancePage.php`), "Generate now" (`src/Admin/PublicationsPage.php`), and shop-wide bulk anchor setting (`src/Admin/BulkAnchorEntryPage.php`), preventing duplicate accidental submissions and providing immediate visual feedback during long operations.

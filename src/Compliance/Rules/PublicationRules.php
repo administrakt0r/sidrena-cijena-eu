@@ -97,7 +97,10 @@ class PublicationRules {
 		$findings = array();
 
 		foreach ( $context['locations'] as $location ) {
-			if ( '' !== trim( (string) $location['address'] ) && '' !== trim( (string) $location['city'] ) ) {
+			$address = '' !== trim( (string) $location['address'] ) ? trim( (string) $location['address'] ) : (string) get_option( 'woocommerce_store_address', '' );
+			$city    = '' !== trim( (string) $location['city'] ) ? trim( (string) $location['city'] ) : (string) get_option( 'woocommerce_store_city', '' );
+
+			if ( '' !== $address && '' !== $city ) {
 				continue;
 			}
 
