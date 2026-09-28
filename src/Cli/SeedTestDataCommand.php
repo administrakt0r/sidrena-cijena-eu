@@ -111,7 +111,7 @@ final class SeedTestDataCommand {
 			Cli::out( sprintf( 'Seeding finished: %d scenario(s) created, %d skipped (already present or unavailable).', $created, $skipped ), 'success' );
 
 			return 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Seeding failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

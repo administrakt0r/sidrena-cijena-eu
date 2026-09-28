@@ -474,4 +474,27 @@ class ProductEditorSaveTest extends TestCase {
 
 		$this->assertGreaterThan( $initial_insert_id, $wpdb->insert_id );
 	}
+
+	/**
+	 * AnchorMetaBox::handle_record safely redirects to admin_url when item cannot be loaded and edit link is absent.
+	 *
+	 * @return void
+	 */
+	public function test_anchor_record_redirects_safely_when_item_not_found() {
+		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider->method( 'get_item' )->willReturn( null );
+		PluginSwap::swap( 'catalog', $provider );
+
+		$_POST['sidrena_cijena_anchor_nonce'] = 'test-nonce';
+		$_POST['product_id']                  = '999999';
+
+		try {
+			AnchorMetaBox::handle_record();
+			$this->fail( 'Expected redirect exception was not thrown.' );
+		} catch ( \RuntimeException $e ) {
+			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
+			$this->assertStringContainsString( 'sidrena_cijena_notice=error', $e->getMessage() );
+			$this->assertStringContainsString( admin_url(), $e->getMessage() );
+		}
+	}
 }

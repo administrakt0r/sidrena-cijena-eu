@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.15
+Stable tag: 2.0.16
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.16 =
+* CSV formula injection protection: neutralised formula prefixes (`=`, `+`, `-`, `@`) in `ImportService::report_csv()` on user-supplied values (such as SKU and error messages).
+* CLI error resilience: modernized exception handling across all WP-CLI commands (`StatusCommand`, `GenerateCommand`, `ValidateCommand`, `HistoryCommand`, `ImportCommand`, `CleanupCommand`, `SeedTestDataCommand`) and `Dates::format_datetime_display()` from `\Exception` to `\Throwable`, properly capturing PHP `\Error` and `\TypeError` failures with clean error messages and structured exit codes.
+* Admin redirect safety: hardened `AnchorMetaBox::redirect_back()` with safe fallback to `admin_url()` when edit post link is unavailable.
+* Test coverage expansion: added complete unit test suites for `ImportService` (transactional commits, rollbacks, overwrite confirmations, formula neutralization) and `Cli` commands (`CliTest`, `StatusCommandTest`, `CleanupCommandTest`, `HistoryCommandTest`, `ValidateCommandTest`, `GenerateCommandTest`); suite grew from 480 to 512 tests (1,853 assertions) with 0 errors.
 
 = 2.0.15 =
 * Enqueue compliance: replaced PublicPage inline style tag with standard wp_enqueue_style calls adhering to WordPress.org guidelines.

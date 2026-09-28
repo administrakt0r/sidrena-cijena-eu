@@ -56,7 +56,7 @@ final class CleanupCommand {
 			Cli::out( sprintf( 'Cleanup finished: %d publication(s) expired.', count( $candidates ) ), 'success' );
 
 			return 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Cleanup failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

@@ -85,7 +85,7 @@ final class GenerateCommand {
 			Cli::out( $failed > 0 ? sprintf( 'Generation finished with %d failure(s).', $failed ) : 'Generation finished successfully.', $failed > 0 ? 'warning' : 'success' );
 
 			return $failed > 0 ? 1 : 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Generation failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

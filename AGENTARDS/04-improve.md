@@ -1,6 +1,6 @@
 # Prompt 4 — General improvement pass (no Docker needed)
 
-> **Status (v2.0.12):** COMPLETED. Product editor save workflows, nonce safety, form ergonomics, and regression coverage shipped.
+> **Status (v2.0.16):** COMPLETED. CSV formula injection protection, modernized CLI Throwable error resilience, admin redirect safety, and comprehensive unit test expansion (512 unit tests, 1,853 assertions) shipped.
 
 ```
 You are improving the WordPress plugin in the current directory (sidrena-cijena.php is

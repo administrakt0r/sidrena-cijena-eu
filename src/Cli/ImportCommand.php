@@ -97,7 +97,7 @@ final class ImportCommand {
 			}
 
 			return 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Import failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

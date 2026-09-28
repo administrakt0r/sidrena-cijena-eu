@@ -190,7 +190,7 @@ final class Dates {
 			$parsed = new \DateTimeImmutable( $value );
 
 			return $parsed->setTimezone( self::timezone() )->format( 'd.m.Y. H:i' );
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			return '';
 		}
 	}

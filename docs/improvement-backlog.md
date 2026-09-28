@@ -307,3 +307,13 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | WPORG-01 | `done` | Address WordPress.org pre-review findings: replace PublicPage inline style with standard wp_enqueue_style, sanitize RuleConfig legacy category IDs with absint() and slugs with sanitize_title(), remove post-activation redirect and scope admin notices to plugin screens (Guideline 11), strip .po and .mo files from release archives via .gitattributes export-ignore and build-zip.sh, and align author header with titanworks. | 480 unit tests passing; PHPCS clean across all modified files; build-zip.sh verified leak-free. |
 | REL-26 | `done` | Package and verify release 2.0.15 archive | `tools/build-zip.sh 2.0.15 --no-upload` builds `versions/2.0.15/sidrena-cijena-eu.zip`; `unzip -t` and checksum verified |
 
+## Robustness, CLI error resilience & CSV formula protection (2026-09-28)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| ROB-06 | `done` | CSV formula injection protection: neutralised formula injection prefixes (`=`, `+`, `-`, `@`) in `ImportService::report_csv()` on user-supplied values (such as SKU and error messages) using `CsvWriter::neutralise_formula()`. | `ImportServiceTest::test_report_csv_neutralises_formulas` |
+| ROB-07 | `done` | Modernized CLI exception handling & error resilience: updated catch blocks across all WP-CLI commands (`StatusCommand`, `GenerateCommand`, `ValidateCommand`, `HistoryCommand`, `ImportCommand`, `CleanupCommand`, `SeedTestDataCommand`) and `Dates::format_datetime_display()` from `\Exception` to `\Throwable`, preventing unhandled PHP 7.4-8.4 fatal errors/TypeErrors from bypassing CLI output formatting and exit codes. | Unit tests in `CliTest`, `StatusCommandTest`, `CleanupCommandTest`, `HistoryCommandTest`, `ValidateCommandTest`, and `GenerateCommandTest` |
+| ROB-08 | `done` | Admin redirect safety & comprehensive test coverage: hardened `AnchorMetaBox::redirect_back()` with safe fallback to `admin_url()` when edit post link is unavailable; authored full unit test suites for `ImportService` and `Cli` commands, bringing unit test suite to 512 tests (1,853 assertions). | `ProductEditorSaveTest::test_anchor_record_redirects_safely_when_item_not_found`, full unit test suite 512/512 passing |
+| REL-27 | `done` | Package and verify release 2.0.16 archive | `tools/build-zip.sh 2.0.16` |
+
+

@@ -646,3 +646,15 @@ filename pattern and the append-only history contract are untouched.
 - WordPress.org profile `@titanworks` displays `administrakt0r`; corrected `readme.txt` Contributors to the account username and documented submission and SVN steps in `docs/wordpress-org-publishing.md`.
 - Verification: `composer test:unit` 315 tests / 1103 assertions; PHPCS 164 files clean; PHPStan 114 files with 0 errors; ESLint clean; WordPress integration 82 tests / 374 assertions; Playwright E2E 33/33 passed on the test site. Croatian catalog 663/663 strings translated, 0 untranslated.
 - Archive: `versions/1.0.18/sidrena-cijena.zip`, 304,534 bytes; `unzip -t` reports no errors. SHA-256 `31007d900569fccb20e1120bf094b19839764ec5cb4a70be948fe1cf7f6ddea7`.
+
+## Release 2.0.16 (2026-09-28)
+
+Robustness, CLI error resilience, CSV formula protection, and comprehensive test coverage. No legal semantics were changed: reference dates, the 30-day window, the filename pattern, retention and the append-only history are untouched, and `docs/legal-rules.md` is unchanged.
+
+- **CSV formula injection protection**: `ImportService::report_csv()` now neutralises spreadsheet formula execution prefixes (`=`, `+`, `-`, `@`) on user-supplied values (such as SKU and error messages) using `CsvWriter::neutralise_formula()`.
+- **CLI error resilience**: modernized exception handling across all WP-CLI commands (`StatusCommand`, `GenerateCommand`, `ValidateCommand`, `HistoryCommand`, `ImportCommand`, `CleanupCommand`, `SeedTestDataCommand`) and `Dates::format_datetime_display()` from `\Exception` to `\Throwable`, preventing unhandled PHP 7.4-8.4 fatal errors/TypeErrors from bypassing CLI output formatting and exit codes.
+- **Admin redirect safety**: hardened `AnchorMetaBox::redirect_back()` with safe fallback to `admin_url()` when edit post link is unavailable.
+- **Unit test coverage**: added complete unit test suites for `ImportService` (transactional commits, rollbacks, overwrite confirmations, formula neutralization) and `Cli` commands (`CliTest`, `StatusCommandTest`, `CleanupCommandTest`, `HistoryCommandTest`, `ValidateCommandTest`, `GenerateCommandTest`); suite grew from 480 to 512 tests (1,853 assertions) with 0 errors.
+- **Translations**: Croatian translation catalog complete (767 translated / 0 untranslated).
+- **Archive**: built locally via `tools/build-zip.sh 2.0.16` into `versions/2.0.16/sidrena-cijena-eu.zip` and verified with `unzip -t`.
+

@@ -97,7 +97,7 @@ final class HistoryCommand {
 			}
 
 			return 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'History lookup failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

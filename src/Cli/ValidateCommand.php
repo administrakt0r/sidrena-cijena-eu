@@ -94,7 +94,7 @@ final class ValidateCommand {
 			}
 
 			return $errors > 0 ? 1 : 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Validation failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

@@ -105,7 +105,7 @@ final class StatusCommand {
 			}
 
 			return 0;
-		} catch ( \Exception $exception ) {
+		} catch ( \Throwable $exception ) {
 			Cli::out( 'Status failed: ' . $exception->getMessage(), 'error' );
 
 			return 2;

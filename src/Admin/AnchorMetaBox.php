@@ -336,9 +336,8 @@ final class AnchorMetaBox {
 	 * @return void
 	 */
 	private static function redirect_back( $product_id, $message, $type = 'error' ) {
-		$url = $product_id
-			? get_edit_post_link( $product_id, 'raw' )
-			: admin_url();
+		$target = $product_id ? get_edit_post_link( $product_id, 'raw' ) : '';
+		$url    = ! empty( $target ) ? $target : admin_url();
 
 		$url = add_query_arg(
 			array(

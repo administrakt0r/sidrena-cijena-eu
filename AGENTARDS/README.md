@@ -9,7 +9,7 @@ is self-contained, completely up to date, and states its own done-criteria.
 | 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.11 |
 | 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.0 |
 | 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist | **Yes** | ✅ v2.0.0 |
-| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.12 |
+| 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.16 |
 | 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: WordPress.org readiness, plugin audit & release | Optional | ✅ v2.0.0 |
 | 6 | [06-performance-db-queries.md](06-performance-db-queries.md) | Performance 1: query tuning, N+1 removal, indexes, COUNT hotspots | Optional (measurements) | ✅ v2.0.0 |
 | 7 | [07-performance-caching-runtime.md](07-performance-caching-runtime.md) | Performance 2: caching, per-request work, asset loading | Optional (measurements) | ✅ v2.0.0 |

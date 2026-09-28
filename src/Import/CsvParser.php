@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Reads import files and normalizes their headers and values.
  */
-final class CsvParser {
+class CsvParser {
 
 	const MAX_ROWS = 20000;
 

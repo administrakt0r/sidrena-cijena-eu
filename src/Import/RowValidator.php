@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Validates parsed import rows against the catalog and the stored history.
  */
-final class RowValidator {
+class RowValidator {
 
 	/**
 	 * Catalog provider.

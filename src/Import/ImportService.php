@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Import;
 
+use SidrenaCijena\Export\CsvWriter;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Pricing\AnchorPriceService;
 
@@ -247,8 +248,8 @@ final class ImportService {
 				array(
 					isset( $error['row'] ) ? (int) $error['row'] : '',
 					isset( $error['code'] ) ? (string) $error['code'] : '',
-					$this->quote( isset( $error['message'] ) ? (string) $error['message'] : '' ),
-					$this->quote( isset( $error['sku'] ) ? (string) $error['sku'] : '' ),
+					$this->quote( CsvWriter::neutralise_formula( isset( $error['message'] ) ? (string) $error['message'] : '' ) ),
+					$this->quote( CsvWriter::neutralise_formula( isset( $error['sku'] ) ? (string) $error['sku'] : '' ) ),
 					isset( $error['product_id'] ) ? (int) $error['product_id'] : '',
 					isset( $error['reference_date'] ) ? (string) $error['reference_date'] : '',
 					isset( $error['price'] ) ? (string) $error['price'] : '',
