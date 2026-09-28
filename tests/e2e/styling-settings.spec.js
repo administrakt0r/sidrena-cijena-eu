@@ -12,7 +12,7 @@ test('legal settings save and styling previews work in wp-admin', async ({ page 
 	await expect(page.locator('input[name="sidrena_cijena_rule_config[rule_version]"]')).toHaveValue('2026-10-01-preview');
 
 	await page.goto('wp-admin/admin.php?page=sidrena-cijena-settings&tab=styling');
-	await expect(page.locator('.sidrena-style-choice')).toHaveCount(9);
+	await expect(page.locator('.sidrena-style-choice')).toHaveCount(14);
 	await page.locator('input[value="pill"][type="radio"]').check();
 	await page.locator('#sidrena-display-size').fill('80');
 	await expect(page.locator('#sidrena-display-size-value')).toHaveText('80%');

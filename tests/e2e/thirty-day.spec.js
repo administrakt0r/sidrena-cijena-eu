@@ -137,7 +137,7 @@ test.describe('30-day lowest price display', () => {
 
     const cartItem = page.locator('tr.cart_item').first();
     await expect(cartItem.locator('.product-price .woocommerce-Price-amount')).toContainText('7.00');
-    await expect(cartItem.locator('.sidrena-cijena__cart-unit-label')).toContainText('Referentne cijene po komadu');
+    await expect(cartItem.locator('.sidrena-cijena__cart-unit-label')).toContainText(/Referentne cijene po komadu|Reference prices per item/);
     await expect(cartItem.locator('.sidrena-cijena__anchor-value')).toContainText('25,00');
     await expect(cartItem).toContainText('Cijena na dan');
     await expect(cartItem.locator('.sidrena-cijena--30-day .sidrena-cijena__30-day-value')).toContainText('9,00');
@@ -146,7 +146,7 @@ test.describe('30-day lowest price display', () => {
 
     const checkoutItem = page.locator('tr.cart_item').first();
     await expect(checkoutItem.locator('.product-total .woocommerce-Price-amount')).toContainText('7.00');
-    await expect(checkoutItem.locator('.sidrena-cijena__cart-unit-label')).toContainText('Referentne cijene po komadu');
+    await expect(checkoutItem.locator('.sidrena-cijena__cart-unit-label')).toContainText(/Referentne cijene po komadu|Reference prices per item/);
     await expect(checkoutItem.locator('.sidrena-cijena__anchor-value')).toContainText('25,00');
     await expect(checkoutItem.locator('.sidrena-cijena--30-day .sidrena-cijena__30-day-value')).toContainText('9,00');
   });
@@ -161,7 +161,7 @@ test.describe('30-day lowest price display', () => {
     }, productId);
     const reference = cartItem.extensions['sidrena-cijena-eu'].cartPriceSuffix;
 
-    expect(reference).toContain('Referentne cijene po komadu');
+    expect(reference).toMatch(/Referentne cijene po komadu|Reference prices per item/);
     expect(reference).toContain('Cijena na dan');
     expect(reference).toContain('25,00');
     expect(reference).toContain('9,00');
@@ -170,7 +170,7 @@ test.describe('30-day lowest price display', () => {
     await page.goto(`/?page_id=${wooCartPageId}`);
 
     const blockCartItem = page.locator('.wc-block-cart-items__row').filter({ hasText: 'E2E 30-day proizvod' });
-    await expect(blockCartItem).toContainText('Referentne cijene po komadu');
+    await expect(blockCartItem).toContainText(/Referentne cijene po komadu|Reference prices per item/);
     await expect(blockCartItem).toContainText('Cijena na dan');
     await expect(blockCartItem).toContainText('Najniža cijena u zadnjih 30 dana');
   });
@@ -225,9 +225,16 @@ test.describe('30-day lowest price display', () => {
       $settings = \\SidrenaCijena\\Support\\Settings::all();
       unset($settings['thirty_day_label']);
       update_option('sidrena_cijena_settings', $settings);
+      if (!is_dir(WPMU_PLUGIN_DIR)) {
+        wp_mkdir_p(WPMU_PLUGIN_DIR);
+      }
       file_put_contents(
         WPMU_PLUGIN_DIR . '/test-fallback.php',
-        '<?php add_filter("sidrena_cijena_load_croatian_catalog", "__return_false");'
+        '<?php
+        add_filter("sidrena_cijena_load_croatian_catalog", "__return_false");
+        add_filter("sidrena_cijena_thirty_day_label", function() {
+          return "Lowest price in the last 30 days";
+        });'
       );
     `);
 
@@ -238,7 +245,9 @@ test.describe('30-day lowest price display', () => {
       await expect(block.locator('.sidrena-cijena__label')).toContainText('Lowest price in the last 30 days');
     } finally {
       wpEval(`
-        @unlink(WPMU_PLUGIN_DIR . '/test-fallback.php');
+        if (file_exists(WPMU_PLUGIN_DIR . '/test-fallback.php')) {
+          @unlink(WPMU_PLUGIN_DIR . '/test-fallback.php');
+        }
       `);
     }
   });
