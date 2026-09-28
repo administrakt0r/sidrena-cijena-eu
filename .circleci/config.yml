@@ -104,7 +104,7 @@ jobs:
           name: Run PHPUnit Integration Tests in wp-env
           command: |
             npx wp-env clean tests
-            npx wp-env run tests-cli -- wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration
+            npx wp-env run tests-cli -- bash -c 'PHPUNIT=$(find wp-content/plugins -name phpunit -type f | grep "vendor/bin/phpunit" | head -n 1); $PHPUNIT -c $(dirname $(dirname $(dirname "$PHPUNIT")))/phpunit.xml.dist --testsuite=integration'
       - run:
           name: Run Playwright E2E Tests on Port 8889
           command: |
