@@ -485,7 +485,15 @@ class PriceDisplay {
 
 		if ( null !== $anchor_price
 			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
-			$label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
+			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
+
+			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+			$date_parts             = explode( '-', $reference_date );
+			$reference_date_display = 3 === count( $date_parts )
+				? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
+				: '';
+
+			$label = self::format_anchor_label( $raw_label, $reference_date_display, $reference_date );
 
 			/**
 			 * Filters the anchor-price label.
@@ -495,16 +503,13 @@ class PriceDisplay {
 			 */
 			$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
 
-			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-			$date_parts             = explode( '-', $reference_date );
-			$reference_date_display = 3 === count( $date_parts )
-				? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
-				: '';
+			$anchor_title = self::format_anchor_title( $label, $reference_date_display );
 
 			$template_args = array(
 				'item'                   => $item,
 				'context'                => $context,
 				'label'                  => $label,
+				'label_template'         => $raw_label,
 				'anchor_price'           => $anchor_price,
 				'anchor_display'         => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 				'current_price'          => $current_price,
@@ -513,11 +518,11 @@ class PriceDisplay {
 				'show_anchor'            => $show_anchor,
 				'reference_date'         => $reference_date,
 				'reference_date_display' => $reference_date_display,
-				'anchor_title'           => '' !== $reference_date_display ? sprintf( '%s (%s)', $label, $reference_date_display ) : $label,
+				'anchor_title'           => $anchor_title,
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
 				'style'                  => (string) Settings::get( 'product_display_style', 'tooltip' ),
 				'date_mode'              => (string) Settings::get( 'anchor_date_mode', 'tooltip' ),
-				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.', 'sidrena-cijena-eu' ) ),
+				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ) ),
 				'font_weight'            => (string) Settings::get( 'anchor_font_weight', 'normal' ),
 				'product_id'             => (int) $item->id,
 				'variation_id'           => (int) $item->variation_id,
@@ -731,5 +736,59 @@ class PriceDisplay {
 		}
 
 		return (float) wc_get_price_to_display( $product, array( 'price' => $amount ) );
+	}
+
+	/**
+	 * Formats the anchor price label by resolving dynamic date tokens.
+	 *
+	 * Supported tokens:
+	 * - {datum} or {date}: Formatted reference date (e.g. "10. 9. 2026." or "2. 5. 2025.")
+	 * - {datum_iso}: Raw ISO date string (e.g. "2026-09-10")
+	 *
+	 * @param string $label                  Raw label text.
+	 * @param string $reference_date_display Formatted date display.
+	 * @param string $reference_date         Raw ISO date string.
+	 * @return string
+	 */
+	public static function format_anchor_label( $label, $reference_date_display, $reference_date = '' ) {
+		if ( false === strpos( $label, '{' ) ) {
+			return $label;
+		}
+
+		$replacements = array(
+			'{datum}'     => $reference_date_display,
+			'{date}'      => $reference_date_display,
+			'{datum_iso}' => $reference_date,
+		);
+
+		$formatted = str_replace( array_keys( $replacements ), array_values( $replacements ), $label );
+
+		// Clean up dangling spacing or punctuation if reference date was empty.
+		if ( empty( $reference_date_display ) ) {
+			$formatted = preg_replace( '/\s+/', ' ', $formatted );
+			$formatted = trim( (string) $formatted, " \t\n\r\0\x0B:()" );
+		}
+
+		return trim( (string) $formatted );
+	}
+
+	/**
+	 * Formats the anchor element title attribute, avoiding date duplication.
+	 *
+	 * @param string $label                  Formatted label.
+	 * @param string $reference_date_display Formatted date display.
+	 * @return string
+	 */
+	public static function format_anchor_title( $label, $reference_date_display ) {
+		if ( '' === $reference_date_display ) {
+			return $label;
+		}
+
+		// If the label already contains the reference date, avoid duplicating it in parentheses.
+		if ( false !== strpos( $label, $reference_date_display ) ) {
+			return $label;
+		}
+
+		return sprintf( '%s (%s)', $label, $reference_date_display );
 	}
 }

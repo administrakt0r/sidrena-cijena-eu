@@ -27,7 +27,7 @@ final class StyleSettingsPage {
 		$font_weight = (string) Settings::get( 'anchor_font_weight', 'normal' );
 		$size        = (int) Settings::get( 'display_size', 40 );
 		$label_text  = (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
-		$tooltip_txt = (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.', 'sidrena-cijena-eu' ) );
+		$tooltip_txt = (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ) );
 
 		echo '<h2>' . esc_html__( 'Anchor display styles', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Choose a compact preset. Each preview shows a current price, its anchor and the reference date.', 'sidrena-cijena-eu' ) . '</p>';

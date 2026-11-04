@@ -38,6 +38,21 @@
 				? template.replace( '%s', date )
 				: date;
 		}
+
+		var labelNodes = root.querySelectorAll( '[data-sidrena-cijena-label]' );
+		for ( var k = 0; k < labelNodes.length; k++ ) {
+			var labelWrapper = labelNodes[ k ].closest
+				? labelNodes[ k ].closest( '[data-sidrena-cijena-label-template]' )
+				: null;
+
+			if ( labelWrapper ) {
+				var labelTemplate = labelWrapper.getAttribute( 'data-sidrena-cijena-label-template' ) || '';
+				if ( labelTemplate ) {
+					var replaced = labelTemplate.replace( /\{datum\}|\{date\}/g, date );
+					labelNodes[ k ].textContent = replaced;
+				}
+			}
+		}
 	}
 
 	function closeAllTooltips() {

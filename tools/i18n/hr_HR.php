@@ -823,5 +823,18 @@ return array (
   'Update the anchor reference date to the statutory date (%1$s, or %2$s for legacy categories) with a mandatory correction reason.' => 'Ažurirajte referentni datum sidrene cijene na zakonski propisani datum (%1$s, ili %2$s za naslijeđene kategorije) uz obvezan razlog ispravka.',
   'Verify that the recorded anchor price matches your historical price records for the designated reference date.' => 'Provjerite podudara li se zabilježena sidrena cijena s vašom povijesnom evidencijom cijena za navedeni referentni datum.',
   'Verify the sales location type, address, and facility identifier to ensure a compliant price-list filename can be formed.' => 'Provjerite vrstu prodajnog mjesta, adresu i oznaku poslovnog prostora kako bi se mogao formirati zakonski usklađen naziv datoteke cjenika.',
+  'Bazna cijena' => 'Bazna cijena',
+  'Cijena na dan {datum}' => 'Cijena na dan {datum}',
+  'Cijena na {datum}' => 'Cijena na {datum}',
+  'Dodatna cijena' => 'Dodatna cijena',
+  'Hrana / piće / kućanstvo:' => 'Hrana / piće / kućanstvo:',
+  'Najniža redovna cijena ({datum})' => 'Najniža redovna cijena ({datum})',
+  'Odaberite predloženi naziv ili upišite vlastiti:' => 'Odaberite predloženi naziv ili upišite vlastiti:',
+  'Odjeća / tehnika / usluge:' => 'Odjeća / tehnika / usluge:',
+  'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (2. 5. 2025. za hranu, 10. 9. 2026. za ostalu robu i usluge).' => 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (2. 5. 2025. za hranu, 10. 9. 2026. za ostalu robu i usluge).',
+  'Prikaz u trgovini (pregled uživo):' => 'Prikaz u trgovini (pregled uživo):',
+  'Referentna cijena' => 'Referentna cijena',
+  'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.' => 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.',
+  'Umetni oznaku za datum' => 'Umetni oznaku za datum',
 );
 

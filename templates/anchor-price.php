@@ -35,6 +35,9 @@ $sidrena_size = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( '
 	data-product-id="<?php echo esc_attr( (string) $product_id ); ?>"
 	data-variation-id="<?php echo esc_attr( (string) $variation_id ); ?>"
 	data-sidrena-cijena-date-template="<?php echo esc_attr( $sidrena_date_template ); ?>"
+	<?php if ( isset( $label_template ) && false !== strpos( $label_template, '{' ) ) : ?>
+	data-sidrena-cijena-label-template="<?php echo esc_attr( $label_template ); ?>"
+	<?php endif; ?>
 	data-sidrena-date-mode="<?php echo esc_attr( $sidrena_date_mode ); ?>">
 	<?php if ( $show_current && $current_display ) : ?>
 		<span class="sidrena-cijena__current">
@@ -44,7 +47,7 @@ $sidrena_size = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( '
 
 	<?php if ( $show_anchor ) : ?>
 		<span class="sidrena-cijena__anchor">
-			<span class="sidrena-cijena__label"><?php echo esc_html( $label ); ?></span>
+			<span class="sidrena-cijena__label" data-sidrena-cijena-label><?php echo esc_html( $label ); ?></span>
 			<?php if ( 'tooltip' === $sidrena_date_mode || 'tooltip' === $sidrena_style ) : ?>
 				<span class="sidrena-cijena__tooltip-wrap">
 					<span role="button" tabindex="0" class="sidrena-cijena__help-trigger" aria-label="<?php esc_attr_e( 'Objašnjenje sidrene cijene', 'sidrena-cijena-eu' ); ?>" aria-expanded="false" data-sidrena-cijena-tooltip-trigger>(?)</span>

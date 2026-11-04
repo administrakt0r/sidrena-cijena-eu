@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.18
+Stable tag: 2.0.19
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,14 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.19 =
+* Statutory rollout alignment: updated documentation and legal rules guidance reflecting the postponement to 17 November 2026 under NN 110/2026.
+* Competitor-grade anchor label presets: added merchant-selectable preset labels ("Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan {datum}", "Cijena na {datum}", "Najniža redovna cijena ({datum})") and custom input.
+* Dynamic statutory date tokens: introduced automatic token resolution (`{datum}`, `{date}`, `{datum_iso}`) dynamically rendering the exact category reference date (2. 5. 2025. for grocery/cleaning vs 10. 9. 2026. for general retail/services) on storefront cards, single product pages, and dynamic variation swaps.
+* Admin live preview: added interactive preset selectors, quick-insert `{datum}` button, and real-time live preview of both statutory category dates in Display Settings.
+* Tooltip description correction: updated default anchor tooltip explanation to accurately describe the statutory benchmark price under Government direct price control measures rather than confusing it with the 30-day lowest price rule.
+* Complete Croatian translations: rebuilt translation catalogs with 100% coverage (810 translated / 0 untranslated).
 
 = 2.0.18 =
 * Mandatory Croatian language delivery: bundled compiled binary translation files (`sidrena-cijena-eu-hr.mo` and `sidrena-cijena-eu-hr_HR.mo`) directly in the release archive, preventing external sites from rendering fallback English strings.

@@ -10,7 +10,8 @@
 
 * **NN 101/2026-1212** — [*Odluka o isticanju dodatne cijene kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1212.html). Defines the anchor ("sidrena") price and duty to display it with the retail price at the point of sale/service and in advertising, including online advertising.
 * **NN 101/2026-1213** — [*Odluka o objavi cjenika proizvoda i usluga kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1213.html). Defines machine-readable `.csv`/`.xml` lists, content, filename, 30-day availability, and real-time automated retrieval.
-* [Ministry of Economy clarification (22 September 2026)](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440), including the linked explanatory letter, clarifies new listings, website scope and location-specific lists.
+* **NN 110/2026-1309** & **NN 110/2026** — *Odluke o izmjenama Odluka* (29 September 2026). Postpones the enforcement rollout date from 1 October 2026 to **17 November 2026**, while keeping reference dates unchanged.
+* [Ministry of Economy clarification (22 September 2026)](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440), including the linked explanatory letter, clarifies new listings, website scope, permitted wording (e.g. "Bazna cijena", "Cijena na [datum]"), and location-specific lists.
 * Consumer-protection rules on the **lowest price in the last 30 days**
   for special forms of sale (akcija, sniženje, sezonsko sniženje,
   rasprodaja and equivalents).

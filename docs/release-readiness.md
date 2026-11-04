@@ -1,5 +1,15 @@
 # Release verification
 
+## Release 2.0.19 — Competitor-Grade Label Presets, Dynamic Date Tokens & NN 110/2026 Alignment (2026-11-04)
+
+- Competitor-grade anchor label presets & quick selectors: added merchant-selectable preset labels ("Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan {datum}", "Cijena na {datum}", "Najniža redovna cijena ({datum})") and custom input in `Settings::anchor_label_presets()` and `DisplaySettingsPage`.
+- Dynamic statutory date tokens engine: introduced automatic token resolution (`{datum}`, `{date}`, `{datum_iso}`) in `PriceDisplay::format_anchor_label()`, dynamically rendering the exact category reference date (2. 5. 2025. for grocery/cleaning vs 10. 9. 2026. for general retail/services) on storefront cards, single product pages, and dynamic variation swaps in `frontend.js`.
+- Title deduplication: hardened `PriceDisplay::format_anchor_title()` so HTML title attributes avoid repeating dates in parentheses when the date is already part of the label.
+- Admin live preview: added interactive preset selector pills, quick-insert `{datum}` button, and real-time live preview of both statutory category dates in Display Settings (`DisplaySettingsPage::render_anchor_label_field()`).
+- Tooltip description correction: corrected default anchor tooltip explanation to accurately describe the statutory benchmark price under Government direct price control measures (NN 101/2026, NN 110/2026) rather than confusing it with the 30-day lowest price rule.
+- Statutory rollout alignment: updated documentation and legal guidelines reflecting the postponement to 17 November 2026 under NN 110/2026.
+- Test coverage & quality: 533 unit tests (1,913 assertions), 0 failures; JavaScript linting clean; Croatian translation catalog complete (810 translated strings / 0 untranslated in `languages/hr_HR.po`).
+
 ## Release 2.0.18 — Guaranteed Croatian Translation Catalogs & Unblocked Statutory Generation (2026-09-28)
 
 - Guaranteed Croatian translation catalogs in release archives: bundled compiled binary Croatian catalog files (`languages/sidrena-cijena-eu-hr.mo` and `languages/sidrena-cijena-eu-hr_HR.mo`) directly inside installable release packages. Removed `.gitattributes` and `tools/build-zip.sh` exclusions that previously stripped `.mo` translation catalogs from release zip distribution.

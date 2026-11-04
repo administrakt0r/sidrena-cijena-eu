@@ -34,7 +34,7 @@ final class Settings {
 			'display_location'             => 'price_html',
 			'product_display_style'        => 'tooltip',
 			'anchor_date_mode'             => 'tooltip',
-			'anchor_tooltip_text'          => __( 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.', 'sidrena-cijena-eu' ),
+			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ),
 			'anchor_font_weight'           => 'normal',
 			'display_size'                 => 40,
 			'display_priority'             => 20,
@@ -56,6 +56,27 @@ final class Settings {
 			'filename_separator'           => '_',
 			'filename_case'                => 'upper',
 			'thirty_day_label'             => __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ),
+		);
+	}
+
+	/**
+	 * Presets for the storefront anchor label.
+	 *
+	 * Merchants may choose a preset or customize their own text.
+	 * Supports dynamic tokens: {datum} / {date} for the formatted reference date,
+	 * and {datum_iso} for the ISO format.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function anchor_label_presets() {
+		return array(
+			'sidrena'         => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			'bazna'           => __( 'Bazna cijena', 'sidrena-cijena-eu' ),
+			'referentna'      => __( 'Referentna cijena', 'sidrena-cijena-eu' ),
+			'dodatna'         => __( 'Dodatna cijena', 'sidrena-cijena-eu' ),
+			'cijena_na_dan'   => __( 'Cijena na dan {datum}', 'sidrena-cijena-eu' ),
+			'cijena_na'       => __( 'Cijena na {datum}', 'sidrena-cijena-eu' ),
+			'najniza_redovna' => __( 'Najniža redovna cijena ({datum})', 'sidrena-cijena-eu' ),
 		);
 	}
 

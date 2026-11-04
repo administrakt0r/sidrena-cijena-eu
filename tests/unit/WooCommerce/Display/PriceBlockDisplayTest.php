@@ -118,4 +118,87 @@ class PriceBlockDisplayTest extends TestCase {
 
 		$this->assertSame( $content, $out );
 	}
+
+	/**
+	 * Presets defined in Settings match expectations.
+	 *
+	 * @return void
+	 */
+	public function test_settings_anchor_label_presets() {
+		$presets = \SidrenaCijena\Support\Settings::anchor_label_presets();
+
+		$this->assertArrayHasKey( 'sidrena', $presets );
+		$this->assertArrayHasKey( 'bazna', $presets );
+		$this->assertArrayHasKey( 'referentna', $presets );
+		$this->assertArrayHasKey( 'dodatna', $presets );
+		$this->assertArrayHasKey( 'cijena_na_dan', $presets );
+		$this->assertArrayHasKey( 'cijena_na', $presets );
+		$this->assertArrayHasKey( 'najniza_redovna', $presets );
+		$this->assertSame( 'Bazna cijena', $presets['bazna'] );
+	}
+
+	/**
+	 * PriceDisplay formats static and dynamic date tokens in anchor labels.
+	 *
+	 * @return void
+	 */
+	public function test_format_anchor_label_resolves_tokens() {
+		// Static label
+		$this->assertSame( 'Bazna cijena', PriceDisplay::format_anchor_label( 'Bazna cijena', '10. 9. 2026.', '2026-09-10' ) );
+
+		// Dynamic {datum} token with general 2026 reference date
+		$this->assertSame(
+			'Cijena na dan 10. 9. 2026.',
+			PriceDisplay::format_anchor_label( 'Cijena na dan {datum}', '10. 9. 2026.', '2026-09-10' )
+		);
+
+		// Dynamic {datum} token with legacy 2025 grocery reference date
+		$this->assertSame(
+			'Cijena na 2. 5. 2025.',
+			PriceDisplay::format_anchor_label( 'Cijena na {datum}', '2. 5. 2025.', '2025-05-02' )
+		);
+
+		// Dynamic {date} synonym token
+		$this->assertSame(
+			'Cijena na 10. 9. 2026.',
+			PriceDisplay::format_anchor_label( 'Cijena na {date}', '10. 9. 2026.', '2026-09-10' )
+		);
+
+		// Dynamic {datum_iso} token
+		$this->assertSame(
+			'Referentna cijena (2026-09-10)',
+			PriceDisplay::format_anchor_label( 'Referentna cijena ({datum_iso})', '10. 9. 2026.', '2026-09-10' )
+		);
+
+		// Graceful fallback when reference date is empty
+		$this->assertSame(
+			'Cijena na dan',
+			PriceDisplay::format_anchor_label( 'Cijena na dan {datum}', '', '' )
+		);
+	}
+
+	/**
+	 * PriceDisplay title attribute avoids date duplication.
+	 *
+	 * @return void
+	 */
+	public function test_format_anchor_title_avoids_duplication() {
+		// Date not in label -> appends (date)
+		$this->assertSame(
+			'Bazna cijena (10. 9. 2026.)',
+			PriceDisplay::format_anchor_title( 'Bazna cijena', '10. 9. 2026.' )
+		);
+
+		// Date already in label -> does not duplicate
+		$this->assertSame(
+			'Cijena na dan 10. 9. 2026.',
+			PriceDisplay::format_anchor_title( 'Cijena na dan 10. 9. 2026.', '10. 9. 2026.' )
+		);
+
+		// Empty date -> returns label unchanged
+		$this->assertSame(
+			'Bazna cijena',
+			PriceDisplay::format_anchor_title( 'Bazna cijena', '' )
+		);
+	}
 }
