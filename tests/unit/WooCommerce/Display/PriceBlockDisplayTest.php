@@ -120,6 +120,28 @@ class PriceBlockDisplayTest extends TestCase {
 	}
 
 	/**
+	 * A price block in an archive query loop gets product context from WP_Block instance.
+	 *
+	 * @return void
+	 */
+	public function test_collection_block_resolves_product_from_block_instance() {
+		$this->reset_state();
+
+		$block_instance = (object) array(
+			'context' => array( 'postId' => 6 ),
+		);
+
+		$out = ( new PriceBlockDisplay() )->filter_price_block(
+			'<span class="product-price">€12.00</span>',
+			array( 'blockName' => 'woocommerce/product-price' ),
+			$block_instance
+		);
+
+		$this->assertStringContainsString( 'data-reference-product="6"', $out );
+		$this->assertStringContainsString( 'data-display-context="archive"', $out );
+	}
+
+	/**
 	 * Presets defined in Settings match expectations.
 	 *
 	 * @return void

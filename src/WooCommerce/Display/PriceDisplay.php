@@ -47,7 +47,7 @@ class PriceDisplay {
 		add_filter( 'woocommerce_cart_item_price', array( $this, 'filter_cart_item_price' ), 20, 3 );
 		add_filter( 'woocommerce_cart_item_subtotal', array( $this, 'filter_checkout_item_subtotal' ), 20, 3 );
 		add_filter( 'woocommerce_widget_cart_item_quantity', array( $this, 'filter_widget_cart_item_quantity' ), 20, 3 );
-		add_filter( 'render_block', array( $this, 'filter_price_block' ), 20, 2 );
+		add_filter( 'render_block', array( $this, 'filter_price_block' ), 20, 3 );
 		add_action( 'woocommerce_single_product_summary', array( $this, 'render_single_summary' ), (int) Settings::get( 'display_priority', 20 ) );
 		add_action( 'woocommerce_after_shop_loop_item_title', array( $this, 'render_archive_item' ), (int) Settings::get( 'display_priority', 20 ) );
 		if ( did_action( 'woocommerce_blocks_loaded' ) ) {
@@ -212,7 +212,7 @@ class PriceDisplay {
 	 * @param array  $block   Parsed block.
 	 * @return string
 	 */
-	public function filter_price_block( $content, $block ) {
+	public function filter_price_block( $content, $block, $block_instance = null ) {
 		if ( 'price_html' !== Settings::get( 'display_location' ) ) {
 			return $content;
 		}
@@ -227,7 +227,7 @@ class PriceDisplay {
 			return $content;
 		}
 
-		$product = $this->block_product( $block );
+		$product = $this->block_product( $block, $block_instance );
 
 		if ( ! $product ) {
 			return $content;
@@ -245,10 +245,16 @@ class PriceDisplay {
 	 * Product a price block belongs to.
 	 *
 	 * @param array $block Parsed block.
+	 * @param \WP_Block|null $block_instance Rendered block instance.
 	 * @return \WC_Product|null
 	 */
-	protected function block_product( array $block ) {
-		$block_context = isset( $block['context'] ) && is_array( $block['context'] ) ? $block['context'] : array();
+	protected function block_product( array $block, $block_instance = null ) {
+		$block_context = array();
+		if ( is_object( $block_instance ) && isset( $block_instance->context ) && is_array( $block_instance->context ) ) {
+			$block_context = $block_instance->context;
+		} elseif ( isset( $block['context'] ) && is_array( $block['context'] ) ) {
+			$block_context = $block['context'];
+		}
 
 		foreach ( array( 'productId', 'postId', 'product_id' ) as $key ) {
 			if ( ! empty( $block_context[ $key ] ) && function_exists( 'wc_get_product' ) ) {
@@ -260,26 +266,36 @@ class PriceDisplay {
 			}
 		}
 
-		// WooCommerce Blocks pass no context with the price block, so the block has
-		// to declare whose price it is. Only a price inside a single-product
-		// template belongs to the product being viewed: guessing there would put
-		// this product's anchor next to another product's price (upsells, related
-		// products, collection items), which is worse than showing nothing.
+		if ( ! empty( $block['attrs']['productId'] ) && function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( (int) $block['attrs']['productId'] );
+			if ( $product ) {
+				return $product;
+			}
+		}
+
 		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
 
-		if ( empty( $attrs['isDescendentOfSingleProductTemplate'] ) ) {
-			return null;
+		if ( ! empty( $attrs['isDescendentOfSingleProductTemplate'] ) ) {
+			$queried = function_exists( 'get_queried_object' ) ? get_queried_object() : null;
+
+			if ( $queried instanceof \WP_Post && function_exists( 'wc_get_product' ) ) {
+				$product = wc_get_product( (int) $queried->ID );
+
+				return $product instanceof \WC_Product ? $product : null;
+			}
+
+			return $this->current_product();
 		}
 
-		$queried = function_exists( 'get_queried_object' ) ? get_queried_object() : null;
-
-		if ( $queried instanceof \WP_Post && function_exists( 'wc_get_product' ) ) {
-			$product = wc_get_product( (int) $queried->ID );
-
-			return $product instanceof \WC_Product ? $product : null;
+		global $post;
+		if ( $post instanceof \WP_Post && 'product' === $post->post_type && function_exists( 'wc_get_product' ) ) {
+			$product = wc_get_product( $post->ID );
+			if ( $product instanceof \WC_Product ) {
+				return $product;
+			}
 		}
 
-		return $this->current_product();
+		return null;
 	}
 
 	/**

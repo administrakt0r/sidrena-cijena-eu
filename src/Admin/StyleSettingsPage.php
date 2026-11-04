@@ -39,7 +39,7 @@ final class StyleSettingsPage {
 			echo '<span class="sidrena-style-choice__price">12,00 EUR</span>';
 			echo '<span class="sidrena-cijena sidrena-cijena--style-' . esc_attr( $style ) . ' sidrena-style-preview" style="--sidrena-size:' . esc_attr( (string) ( $size / 100 ) ) . '">';
 			if ( 'tooltip' === $style || 'minimal' === $style ) {
-				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__tooltip-wrap"><span class="sidrena-cijena__help-trigger">(?)</span></span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span></span>';
+				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__tooltip-wrap"><span class="sidrena-cijena__help-trigger">?</span></span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span></span>';
 			} elseif ( 'subtle' === $style ) {
 				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span></span>';
 			} else {

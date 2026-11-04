@@ -219,4 +219,25 @@ class SettingsTest extends TestCase {
 		Settings::update( array( 'anchor_label' => 'Updated via API' ) );
 		$this->assertSame( 'Updated via API', Settings::get( 'anchor_label' ) );
 	}
+
+	/**
+	 * Legacy false tooltip text is automatically migrated to the accurate legal definition.
+	 *
+	 * @return void
+	 */
+	public function test_legacy_tooltip_text_migration() {
+		update_option(
+			Settings::OPTION,
+			array(
+				'anchor_tooltip_text' => 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.',
+			)
+		);
+		Settings::reset_cache();
+
+		$migrated = Settings::get( 'anchor_tooltip_text' );
+		$this->assertSame(
+			'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.',
+			$migrated
+		);
+	}
 }

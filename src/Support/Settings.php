@@ -134,6 +134,16 @@ final class Settings {
 			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' );
 		}
 
+		$legacy_tooltip_texts = array(
+			'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.',
+			'Sidrena cijena je najniza cijena u zadnjih 30 dana prije pocetka posebnog oblika prodaje.',
+			'Anchor price is the lowest price in the last 30 days before the sale.',
+			'Anchor price is the lowest price in the last 30 days before the start of a special form of sale.',
+		);
+		if ( isset( $stored['anchor_tooltip_text'] ) && in_array( trim( (string) $stored['anchor_tooltip_text'] ), $legacy_tooltip_texts, true ) ) {
+			$stored['anchor_tooltip_text'] = __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' );
+		}
+
 		self::$memo_source = $stored;
 		self::$memo        = wp_parse_args( $stored, self::defaults() );
 

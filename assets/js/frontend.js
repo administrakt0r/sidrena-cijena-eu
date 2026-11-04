@@ -55,10 +55,37 @@
 		}
 	}
 
+	function repositionTooltip( popup ) {
+		if ( ! popup || ! popup.getBoundingClientRect ) {
+			return;
+		}
+
+		popup.classList.remove( 'sidrena-cijena__tooltip-popup--flipped-down' );
+		popup.style.left = '';
+
+		var rect = popup.getBoundingClientRect();
+		var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+		if ( rect.top < 10 ) {
+			popup.classList.add( 'sidrena-cijena__tooltip-popup--flipped-down' );
+			rect = popup.getBoundingClientRect();
+		}
+
+		if ( rect.left < 8 ) {
+			var shiftLeft = 8 - rect.left;
+			popup.style.left = 'calc(50% + ' + Math.round( shiftLeft ) + 'px)';
+		} else if ( rect.right > viewportWidth - 8 ) {
+			var shiftRight = rect.right - ( viewportWidth - 8 );
+			popup.style.left = 'calc(50% - ' + Math.round( shiftRight ) + 'px)';
+		}
+	}
+
 	function closeAllTooltips() {
 		var activePopups = document.querySelectorAll( '.sidrena-cijena__tooltip-popup.is-active' );
 		for ( var k = 0; k < activePopups.length; k++ ) {
 			activePopups[ k ].classList.remove( 'is-active' );
+			activePopups[ k ].classList.remove( 'sidrena-cijena__tooltip-popup--flipped-down' );
+			activePopups[ k ].style.left = '';
 			activePopups[ k ].setAttribute( 'aria-hidden', 'true' );
 		}
 		var activeTriggers = document.querySelectorAll( '[data-sidrena-cijena-tooltip-trigger][aria-expanded="true"]' );
@@ -90,6 +117,7 @@
 			popup.classList.add( 'is-active' );
 			popup.setAttribute( 'aria-hidden', 'false' );
 			trigger.setAttribute( 'aria-expanded', 'true' );
+			repositionTooltip( popup );
 		}
 	}
 

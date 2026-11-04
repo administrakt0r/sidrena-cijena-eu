@@ -323,7 +323,7 @@ class CustomerWordingTest extends TestCase {
 			'disclaimer'             => '',
 			'style'                  => 'tooltip',
 			'date_mode'              => 'tooltip',
-			'tooltip_text'           => 'Sidrena cijena je najniža cijena u zadnjih 30 dana prije početka posebnog oblika prodaje.',
+			'tooltip_text'           => 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.',
 			'font_weight'            => 'normal',
 			'product_id'             => 10,
 			'variation_id'           => 0,
@@ -333,7 +333,7 @@ class CustomerWordingTest extends TestCase {
 
 		$this->assertStringContainsString( 'sidrena-cijena--style-tooltip', $html );
 		$this->assertStringContainsString( 'sidrena-cijena__help-trigger', $html );
-		$this->assertStringContainsString( '(?)', $html );
+		$this->assertStringContainsString( '?', $html );
 		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-trigger', $html );
 		$this->assertStringContainsString( 'sidrena-cijena__tooltip-popup', $html );
 		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-popup', $html );
