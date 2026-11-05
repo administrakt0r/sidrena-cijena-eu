@@ -21,9 +21,9 @@ caching would risk stale admin pagination without a robust invalidation contract
 | PERF-08 | `GenerationService::generate_location()` shares validation report and built catalog rows across format writers (`csv` + `xml`), eliminating duplicate validation sweeps and redundant row mappings per generation. | done |
 | PERF-09 | `PriceListBuilder::fingerprint()` hashes catalog items incrementally row-by-row via `hash_init`/`hash_update`, preventing whole-catalog payload duplication and giant JSON string allocations in memory while guaranteeing byte-identical hashes. | done |
 | PERF-10 | Streaming price-list export in `CsvWriter::write_stream()`, `XmlWriter::write_stream()`, and `Publisher::publish()`. Avoids in-memory document string accumulation, and computes SHA-256 checksum and file size during write, eliminating `hash_file('sha256')` disk re-reads. | done |
-| PERF-11 | `LocationRepository::next_sequence()` collapsed to a single atomic query using `LAST_INSERT_ID(sequence_no + 1)` with direct integer fallback, removing full row SELECT and JSON hydration. | done |
+| PERF-11 | `LocationRepository::next_sequence()` collapsed to direct atomic UPDATE + SELECT sequence_no query, avoiding full SELECT * and JSON hydration. | done |
 | PERF-12 | `CleanupJob` and `PublicationRepository` batch expiration: candidate expired IDs are updated via a single `UPDATE ... WHERE id IN (...)` query instead of N individual updates, and `PublicationRepository::update()` accepts an existing row to skip redundant `get()` queries. | done |
-| PERF-13 | `PriceListController::download()` caches serialized CSV and XML documents in `RestCache` and serves existing published files directly from disk for unfiltered downloads, avoiding full catalog re-serialization on every REST download. | done |
+| PERF-13 | `PriceListController::download()` caches serialized CSV and XML documents in `RestCache`, avoiding full catalog re-serialization on every REST download. | done |
 
 Tracked gaps and competitor findings for **Sidrena Cijena**. Items are worked one at a
 time; every item gets a status, the date it was closed and (where applicable) a test.

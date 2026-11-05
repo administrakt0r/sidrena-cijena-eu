@@ -397,31 +397,8 @@ class PriceListController {
 			);
 		}
 
-		// When serving unfiltered ('all') catalog and a valid published file exists, serve file directly.
-		if ( ( '' === $type || 'all' === $type ) && $loc_id > 0 ) {
-			$latest = Plugin::instance()->publications()->latest( $loc_id, $format );
-			if ( $latest && ! empty( $latest['path'] ) && file_exists( $latest['path'] ) ) {
-				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Serves published price-list file.
-				$file_content = file_get_contents( $latest['path'] );
-				if ( false !== $file_content ) {
-					$cache->set( $cache_key, $file_content );
-
-					return new \WP_REST_Response(
-						array(
-							'sidrena_download' => array(
-								'content'      => $file_content,
-								'content_type' => $content_type,
-								'filename'     => $filename,
-							),
-						),
-						200
-					);
-				}
-			}
-		}
-
 		$args  = array(
-			'type' => $type,
+			'type' => ! empty( $type ) ? $type : 'all',
 		);
 		$build = self::cached_build( $location, $args );
 		$items = $build['items'];
