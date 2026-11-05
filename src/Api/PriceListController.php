@@ -366,23 +366,74 @@ class PriceListController {
 			return $location;
 		}
 
-		$args = array(
-			'type' => (string) $request->get_param( 'type' ),
+		$type         = (string) $request->get_param( 'type' );
+		$loc_id       = isset( $location['id'] ) ? (int) $location['id'] : 0;
+		$content_type = 'xml' === $format
+			? 'application/xml; charset=utf-8'
+			: 'text/csv; charset=utf-8';
+
+		$filename = self::filename( $location, $format );
+
+		$cache     = Plugin::instance()->rest_cache();
+		$cache_key = $cache->key(
+			array(
+				'download_doc' => $format,
+				'location'     => $loc_id,
+				'type'         => '' === $type ? 'all' : $type,
+			)
 		);
 
+		$cached_content = $cache->get( $cache_key );
+		if ( is_string( $cached_content ) && '' !== $cached_content ) {
+			return new \WP_REST_Response(
+				array(
+					'sidrena_download' => array(
+						'content'      => $cached_content,
+						'content_type' => $content_type,
+						'filename'     => $filename,
+					),
+				),
+				200
+			);
+		}
+
+		// When serving unfiltered ('all') catalog and a valid published file exists, serve file directly.
+		if ( ( '' === $type || 'all' === $type ) && $loc_id > 0 ) {
+			$latest = Plugin::instance()->publications()->latest( $loc_id, $format );
+			if ( $latest && ! empty( $latest['path'] ) && file_exists( $latest['path'] ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Serves published price-list file.
+				$file_content = file_get_contents( $latest['path'] );
+				if ( false !== $file_content ) {
+					$cache->set( $cache_key, $file_content );
+
+					return new \WP_REST_Response(
+						array(
+							'sidrena_download' => array(
+								'content'      => $file_content,
+								'content_type' => $content_type,
+								'filename'     => $filename,
+							),
+						),
+						200
+					);
+				}
+			}
+		}
+
+		$args  = array(
+			'type' => $type,
+		);
 		$build = self::cached_build( $location, $args );
 		$items = $build['items'];
 		$meta  = $build['meta'];
 
 		if ( 'xml' === $format ) {
-			$content      = ( new XmlWriter() )->to_string( $items, $location, $meta );
-			$content_type = 'application/xml; charset=utf-8';
+			$content = ( new XmlWriter() )->to_string( $items, $location, $meta );
 		} else {
-			$content      = ( new CsvWriter() )->to_string( $items );
-			$content_type = 'text/csv; charset=utf-8';
+			$content = ( new CsvWriter() )->to_string( $items );
 		}
 
-		$filename = self::filename( $location, $format );
+		$cache->set( $cache_key, $content );
 
 		return new \WP_REST_Response(
 			array(
