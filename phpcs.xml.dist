@@ -12,6 +12,7 @@
 	<exclude-pattern>/tools/*</exclude-pattern>
 	<exclude-pattern>/tests/unit/wp-stubs.php</exclude-pattern>
 	<exclude-pattern>/tests/unit/wc-stubs.php</exclude-pattern>
+	<exclude-pattern>/.taskless/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>
