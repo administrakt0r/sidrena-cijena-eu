@@ -34,9 +34,13 @@
 				template = wrapper.getAttribute( 'data-sidrena-cijena-date-template' ) || '';
 			}
 
-			dateNodes[ j ].textContent = date && template
-				? template.replace( '%s', date )
-				: date;
+			if ( date ) {
+				dateNodes[ j ].textContent = template ? template.replace( '%s', date ) : date;
+				dateNodes[ j ].style.display = '';
+			} else {
+				dateNodes[ j ].textContent = '';
+				dateNodes[ j ].style.display = 'none';
+			}
 		}
 
 		var labelNodes = root.querySelectorAll( '[data-sidrena-cijena-label]' );
@@ -52,6 +56,11 @@
 					labelNodes[ k ].textContent = replaced;
 				}
 			}
+		}
+
+		var anchorBlocks = root.querySelectorAll( '.sidrena-cijena__anchor' );
+		for ( var a = 0; a < anchorBlocks.length; a++ ) {
+			anchorBlocks[ a ].style.display = display ? '' : 'none';
 		}
 	}
 
