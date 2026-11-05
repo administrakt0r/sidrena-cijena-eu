@@ -105,7 +105,7 @@ class CsvWriter {
 		}
 
 		foreach ( $items as $item ) {
-			$line    = $this->line( $this->fields( $item ) );
+			$line = $this->line( $this->fields( $item ) );
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
 			$written = fwrite( $handle, $line );
 			if ( false !== $written ) {

@@ -188,9 +188,9 @@ class XmlWriterTest extends TestCase {
 		$expected_string = $writer->to_string( $items, $this->location(), $this->meta() );
 		$expected_hash   = hash( 'sha256', $expected_string );
 
-		$stream   = fopen( 'php://memory', 'w+b' );
-		$hash_ctx = hash_init( 'sha256' );
-		$bytes    = $writer->write_stream( $stream, $items, $this->location(), $this->meta(), $hash_ctx );
+		$stream      = fopen( 'php://memory', 'w+b' );
+		$hash_ctx    = hash_init( 'sha256' );
+		$bytes       = $writer->write_stream( $stream, $items, $this->location(), $this->meta(), $hash_ctx );
 		$actual_hash = hash_final( $hash_ctx );
 
 		rewind( $stream );

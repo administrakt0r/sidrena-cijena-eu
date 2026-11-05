@@ -25,12 +25,22 @@ class PublisherTest extends TestCase {
 	 */
 	private $temp_dir;
 
+	/**
+	 * Set up temporary test directory.
+	 *
+	 * @return void
+	 */
 	protected function setUp(): void {
 		parent::setUp();
 		$this->temp_dir = sys_get_temp_dir() . '/sidrena_pub_test_' . uniqid();
 		mkdir( $this->temp_dir, 0777, true );
 	}
 
+	/**
+	 * Clean up temporary test directory.
+	 *
+	 * @return void
+	 */
 	protected function tearDown(): void {
 		if ( is_dir( $this->temp_dir ) ) {
 			$files = glob( $this->temp_dir . '/*' );
@@ -101,11 +111,11 @@ class PublisherTest extends TestCase {
 			)
 		);
 
-		$payload  = "vrsta;naziv\nproizvod;Kava\n";
+		$payload       = "vrsta;naziv\nproizvod;Kava\n";
 		$expected_hash = hash( 'sha256', $payload );
 
 		$callable_invoked = false;
-		$content = function ( $handle, $hash_ctx ) use ( $payload, &$callable_invoked ) {
+		$content          = function ( $handle, $hash_ctx ) use ( $payload, &$callable_invoked ) {
 			$callable_invoked = true;
 			fwrite( $handle, $payload );
 			hash_update( $hash_ctx, $payload );
@@ -160,7 +170,7 @@ class PublisherTest extends TestCase {
 		$publisher = new Publisher( $locations, $publications, $filenames );
 
 		$callable_invoked = false;
-		$content = function () use ( &$callable_invoked ) {
+		$content          = function () use ( &$callable_invoked ) {
 			$callable_invoked = true;
 		};
 

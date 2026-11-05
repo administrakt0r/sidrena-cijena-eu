@@ -64,16 +64,16 @@ class Publisher {
 	/**
 	 * Publish a price list.
 	 *
-	 * @param array<mixed> $location Location row.
-	 * @param string       $format   Format (`csv` or `xml`).
-	 * @param string       $content  Generated file content.
-	 * @param array<mixed> $meta     Meta: `fingerprint`, `item_count`, `rule_version`, `force`.
+	 * @param array<mixed>             $location Location row.
+	 * @param string                   $format   Format (`csv` or `xml`).
+	 * @param string|callable|resource $content  Generated file content or stream writer.
+	 * @param array<mixed>             $meta     Meta: `fingerprint`, `item_count`, `rule_version`, `force`.
 	 * @return array<mixed>|\WP_Error
 	 */
 	public function publish( array $location, $format, $content, array $meta = array() ) {
 		$format      = strtolower( (string) $format );
 		$location_id = isset( $location['id'] ) ? (int) $location['id'] : 0;
-		$fingerprint = isset( $meta['fingerprint'] ) ? (string) $meta['fingerprint'] : hash( 'sha256', (string) $content );
+		$fingerprint = isset( $meta['fingerprint'] ) ? (string) $meta['fingerprint'] : ( is_string( $content ) ? hash( 'sha256', $content ) : '' );
 		$force       = ! empty( $meta['force'] );
 
 		$latest = $this->publications->latest( $location_id, $format );

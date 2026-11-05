@@ -198,7 +198,7 @@ class LocationRepository {
 			return (int) $wpdb->insert_id;
 		}
 
-		// Fallback when driver does not populate insert_id on UPDATE:
+		// Fallback when driver does not populate insert_id on UPDATE.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->get_var(
 			$wpdb->prepare( 'SELECT sequence_no FROM %i WHERE id = %d', $this->table, (int) $id )

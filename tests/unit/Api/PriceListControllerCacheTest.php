@@ -639,7 +639,7 @@ class PriceListControllerCacheTest extends TestCase {
 		);
 		PluginSwap::swap( 'locations', $locs );
 
-		$temp_file = sys_get_temp_dir() . '/published_test_' . uniqid() . '.csv';
+		$temp_file         = sys_get_temp_dir() . '/published_test_' . uniqid() . '.csv';
 		$published_content = "vrsta;naziv\nproizvod;PublishedDirect\n";
 		file_put_contents( $temp_file, $published_content );
 

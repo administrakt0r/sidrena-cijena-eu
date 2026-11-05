@@ -298,7 +298,7 @@ class PriceListBuilder {
 	 * @return string
 	 */
 	public function fingerprint( array $items, array $location, $format, $rule_version ) {
-		$ctx = hash_init( 'sha256' );
+		$ctx    = hash_init( 'sha256' );
 		$header = sprintf(
 			'{"location":%d,"format":%s,"rule_version":%s,"items":[',
 			isset( $location['id'] ) ? (int) $location['id'] : 0,

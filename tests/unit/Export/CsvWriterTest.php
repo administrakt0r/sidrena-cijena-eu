@@ -180,16 +180,26 @@ class CsvWriterTest extends TestCase {
 	public function test_write_stream_byte_identical_to_to_string_and_hashes_incrementally() {
 		$writer = new CsvWriter();
 		$items  = array(
-			$this->item( array( 'sifra' => 'SKU-1', 'naziv' => 'First Product' ) ),
-			$this->item( array( 'sifra' => 'SKU-2', 'naziv' => 'Second Product' ) ),
+			$this->item(
+				array(
+					'sifra' => 'SKU-1',
+					'naziv' => 'First Product',
+				)
+			),
+			$this->item(
+				array(
+					'sifra' => 'SKU-2',
+					'naziv' => 'Second Product',
+				)
+			),
 		);
 
 		$expected_string = $writer->to_string( $items );
 		$expected_hash   = hash( 'sha256', $expected_string );
 
-		$stream   = fopen( 'php://memory', 'w+b' );
-		$hash_ctx = hash_init( 'sha256' );
-		$bytes    = $writer->write_stream( $stream, $items, $hash_ctx );
+		$stream      = fopen( 'php://memory', 'w+b' );
+		$hash_ctx    = hash_init( 'sha256' );
+		$bytes       = $writer->write_stream( $stream, $items, $hash_ctx );
 		$actual_hash = hash_final( $hash_ctx );
 
 		rewind( $stream );

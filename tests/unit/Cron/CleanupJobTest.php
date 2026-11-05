@@ -157,7 +157,7 @@ class CleanupJobTest extends TestCase {
 	 * @return void
 	 */
 	public function test_mark_expired_batch_query() {
-		$repo = new \SidrenaCijena\Database\PublicationRepository();
+		$repo                               = new \SidrenaCijena\Database\PublicationRepository();
 		$GLOBALS['sidrena_test_db_queries'] = array();
 
 		$result = $repo->mark_expired( array( 101, 102, 103 ) );
