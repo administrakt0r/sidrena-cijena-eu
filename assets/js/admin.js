@@ -169,12 +169,65 @@
 		}
 	}
 
+	function bindLabelPresets() {
+		var input = document.getElementById( 'anchor_label' ) || document.getElementById( 'sidrena-anchor-label-input' );
+		if ( ! input ) {
+			return;
+		}
+
+		var previewFood = document.getElementById( 'sidrena-preview-food' );
+		var previewGeneral = document.getElementById( 'sidrena-preview-general' );
+		var presetBtns = document.querySelectorAll( '.sidrena-preset-btn' );
+		var tokenBtn = document.querySelector( '.sidrena-token-btn' );
+
+		function updatePreview() {
+			var val = input.value || input.getAttribute( 'placeholder' ) || 'Sidrena cijena';
+			if ( previewFood ) {
+				previewFood.textContent = val.replace( /\{datum\}|\{date\}/g, '2. 5. 2025.' ).replace( /\{datum_iso\}/g, '2025-05-02' );
+			}
+			if ( previewGeneral ) {
+				previewGeneral.textContent = val.replace( /\{datum\}|\{date\}/g, '10. 9. 2026.' ).replace( /\{datum_iso\}/g, '2026-09-10' );
+			}
+
+			for ( var i = 0; i < presetBtns.length; i++ ) {
+				if ( presetBtns[ i ].getAttribute( 'data-preset' ) === input.value ) {
+					presetBtns[ i ].classList.add( 'is-active' );
+				} else {
+					presetBtns[ i ].classList.remove( 'is-active' );
+				}
+			}
+		}
+
+		input.addEventListener( 'input', updatePreview );
+		updatePreview();
+
+		for ( var j = 0; j < presetBtns.length; j++ ) {
+			presetBtns[ j ].addEventListener( 'click', function () {
+				input.value = this.getAttribute( 'data-preset' );
+				updatePreview();
+				input.focus();
+			} );
+		}
+
+		if ( tokenBtn ) {
+			tokenBtn.addEventListener( 'click', function () {
+				var token = this.getAttribute( 'data-token' ) || '{datum}';
+				if ( input.value.indexOf( token ) === -1 ) {
+					input.value = input.value ? ( input.value + ' ' + token ) : token;
+					updatePreview();
+				}
+				input.focus();
+			} );
+		}
+	}
+
 	function init() {
 		focusFeedback();
 		bindStylePreviews();
 		bindBulkAnchorSelection();
 		bindTimeInputs();
 		bindEvidenceForms();
+		bindLabelPresets();
 	}
 
 	if ( 'loading' === document.readyState ) {

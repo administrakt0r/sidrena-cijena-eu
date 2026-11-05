@@ -2549,6 +2549,18 @@ if ( ! function_exists( 'add_settings_field' ) ) {
 	}
 }
 
+if ( ! function_exists( 'do_settings_sections' ) ) {
+	/**
+	 * Settings sections rendering stub.
+	 *
+	 * @param string $page Page slug.
+	 * @return void
+	 */
+	function do_settings_sections( $page ) {
+		// No-op stub for unit tests.
+	}
+}
+
 if ( ! function_exists( 'wp_enqueue_style' ) ) {
 	/**
 	 * Enqueue style stub.

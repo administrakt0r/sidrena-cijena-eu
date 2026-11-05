@@ -353,4 +353,94 @@ button.is-busy {
 	font-weight: bold;
 }
 
+/* Label presets and live preview (Display Settings) */
+.sidrena-label-presets-wrap {
+	max-width: 620px;
+}
+
+.sidrena-label-presets-heading {
+	margin: 0 0 6px 0;
+	font-weight: 500;
+}
+
+.sidrena-label-presets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.sidrena-preset-btn {
+	cursor: pointer;
+	font-size: 12px;
+	padding: 2px 8px;
+	border-radius: 3px;
+	background: #f6f7f7;
+	color: #2c3338;
+	border: 1px solid #c3c4c7;
+}
+
+.sidrena-preset-btn:hover {
+	background: #f0f0f1;
+	border-color: #8c8f94;
+	color: #1d2327;
+}
+
+.sidrena-preset-btn.is-active {
+	background: #2271b1 !important;
+	color: #fff !important;
+	border-color: #2271b1 !important;
+}
+
+.sidrena-preset-btn:focus-visible,
+.sidrena-token-btn:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+.sidrena-label-input-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.sidrena-label-input-row input.regular-text {
+	max-width: 320px;
+}
+
+.sidrena-token-btn {
+	cursor: pointer;
+}
+
+.sidrena-label-preview-box {
+	margin-top: 8px;
+	padding: 10px 14px;
+	background: #f0f6fc;
+	border-left: 4px solid #2271b1;
+	border-radius: 2px;
+	font-size: 13px;
+	max-width: 620px;
+}
+
+.sidrena-label-preview-title {
+	margin: 0 0 6px 0;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.sidrena-label-preview-row {
+	margin: 2px 0;
+}
+
+.sidrena-label-preview-val {
+	color: #2271b1;
+	font-weight: 500;
+}
+
+.sidrena-label-presets-help {
+	margin-top: 6px;
+	max-width: 620px;
+}
+
 
