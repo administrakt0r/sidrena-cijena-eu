@@ -187,16 +187,22 @@ class LocationRepository {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
 			$wpdb->prepare(
-				'UPDATE %i SET sequence_no = sequence_no + 1, updated_at = %s WHERE id = %d',
+				'UPDATE %i SET sequence_no = LAST_INSERT_ID(sequence_no + 1), updated_at = %s WHERE id = %d',
 				$this->table,
 				Dates::now_utc(),
 				(int) $id
 			)
 		);
 
-		$location = $this->get( $id );
+		if ( ! empty( $wpdb->insert_id ) ) {
+			return (int) $wpdb->insert_id;
+		}
 
-		return $location ? (int) $location['sequence_no'] : 0;
+		// Fallback when driver does not populate insert_id on UPDATE:
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return (int) $wpdb->get_var(
+			$wpdb->prepare( 'SELECT sequence_no FROM %i WHERE id = %d', $this->table, (int) $id )
+		);
 	}
 
 	/**
