@@ -381,4 +381,112 @@ class GenerationServiceTest extends TestCase {
 		$this->assertArrayHasKey( 'proposals', $result );
 		$this->assertNotEmpty( $result['proposals'] );
 	}
+
+	/**
+	 * Verify that catalog items are hydrated once per generation and shared across validation and build.
+	 *
+	 * @return void
+	 */
+	public function test_generate_hydrates_catalog_once_and_shares_batch() {
+		$catalog      = $this->createMock( CatalogProvider::class );
+		$locations    = $this->createMock( LocationRepository::class );
+		$publications = $this->createMock( PublicationRepository::class );
+		$history      = $this->createMock( PriceHistoryRepository::class );
+		$sales        = $this->createMock( SpecialSaleRepository::class );
+
+		$locations->method( 'get' )->with( 5 )->willReturn(
+			array(
+				'id'         => 5,
+				'name'       => 'Cached Shop',
+				'identifier' => 'CS1',
+				'type'       => 'supermarket',
+				'address'    => 'Ilica 10',
+				'city'       => 'Zagreb',
+			)
+		);
+		$locations->method( 'next_sequence' )->willReturn( 1 );
+		$publications->method( 'latest' )->willReturn( null );
+		$publications->method( 'insert' )->willReturn( 1 );
+
+		// The catalog should be iterated exactly once.
+		$catalog->expects( $this->once() )
+			->method( 'iterate' )
+			->willReturn( new \ArrayIterator( array() ) );
+
+		$validator = $this->createMock( Validator::class );
+		$validator->expects( $this->once() )
+			->method( 'validate' )
+			->with(
+				$this->callback(
+					static function ( $args ) {
+						return isset( $args['items'] ) && is_array( $args['items'] );
+					}
+				)
+			)
+			->willReturn(
+				array(
+					'findings' => array(),
+					'warnings' => 0,
+				)
+			);
+		PluginSwap::swap( 'validator', $validator );
+
+		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
+		$result  = $service->generate( 5, 'csv', array( 'force' => true ) );
+
+		$this->assertIsArray( $result );
+		$this->assertFalse( $result['has_errors'] );
+	}
+
+	/**
+	 * Verify that passing pre-hydrated items in args bypasses catalog iteration completely.
+	 *
+	 * @return void
+	 */
+	public function test_generate_uses_passed_items_without_calling_iterate() {
+		$catalog      = $this->createMock( CatalogProvider::class );
+		$locations    = $this->createMock( LocationRepository::class );
+		$publications = $this->createMock( PublicationRepository::class );
+		$history      = $this->createMock( PriceHistoryRepository::class );
+		$sales        = $this->createMock( SpecialSaleRepository::class );
+
+		$locations->method( 'get' )->with( 6 )->willReturn(
+			array(
+				'id'         => 6,
+				'name'       => 'Preloaded Shop',
+				'identifier' => 'PS1',
+				'type'       => 'supermarket',
+				'address'    => 'Ilica 20',
+				'city'       => 'Zagreb',
+			)
+		);
+		$locations->method( 'next_sequence' )->willReturn( 1 );
+		$publications->method( 'latest' )->willReturn( null );
+		$publications->method( 'insert' )->willReturn( 1 );
+
+		// Should NOT iterate since items are preloaded.
+		$catalog->expects( $this->never() )->method( 'iterate' );
+
+		$validator = $this->createMock( Validator::class );
+		$validator->method( 'validate' )->willReturn(
+			array(
+				'findings' => array(),
+				'warnings' => 0,
+			)
+		);
+		PluginSwap::swap( 'validator', $validator );
+
+		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
+		$result  = $service->generate(
+			6,
+			'csv',
+			array(
+				'force' => true,
+				'items' => array(),
+			)
+		);
+
+		$this->assertIsArray( $result );
+		$this->assertFalse( $result['has_errors'] );
+	}
 }

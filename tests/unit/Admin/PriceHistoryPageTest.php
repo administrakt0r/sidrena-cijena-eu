@@ -10,6 +10,8 @@ namespace SidrenaCijena\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Admin\FormState;
 use SidrenaCijena\Admin\PriceHistoryPage;
+use SidrenaCijena\Database\PriceHistoryRepository;
+use SidrenaCijena\Tests\Support\PluginSwap;
 
 /**
  * Probe exposing the protected correction form renderer.
@@ -106,5 +108,44 @@ class PriceHistoryPageTest extends TestCase {
 		$this->assertStringContainsString( 'aria-describedby="sidrena-history-price-error"', $html );
 		$this->assertStringContainsString( 'The price is not a valid amount.', $html );
 		$this->assertStringNotContainsString( 'sidrena-history-reason-error', $html );
+	}
+
+	/**
+	 * Render() derives total from fetched rows without calling count() when first page has fewer rows than PER_PAGE.
+	 *
+	 * @return void
+	 */
+	public function test_render_bypasses_count_query_when_first_page_has_fewer_than_per_page_rows() {
+		$history = $this->createMock( PriceHistoryRepository::class );
+		$history->expects( $this->once() )
+			->method( 'query' )
+			->willReturn(
+				array(
+					array(
+						'id'             => 1,
+						'product_id'     => 10,
+						'variation_id'   => 0,
+						'price_type'     => 'regular',
+						'price'          => '9.99',
+						'currency'       => 'EUR',
+						'reference_date' => '2026-09-10',
+						'source'         => 'manual',
+						'created_at'     => '2026-11-01 10:00:00',
+					),
+				)
+			);
+		// count() must NEVER be called because page 1 has 1 row < PER_PAGE.
+		$history->expects( $this->never() )->method( 'count' );
+
+		PluginSwap::swap( 'history', $history );
+
+		$_GET = array();
+
+		ob_start();
+		PriceHistoryPage::render();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'Sidrena cijena: Price history', $html );
+		PluginSwap::swap( 'history', null );
 	}
 }

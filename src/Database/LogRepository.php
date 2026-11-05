@@ -84,6 +84,8 @@ class LogRepository {
 			array( '%s', '%s', '%s', '%s', '%d', '%s' )
 		);
 
+		delete_transient( 'sidrena_log_cnt_all' );
+
 		return (int) $wpdb->insert_id;
 	}
 
@@ -129,14 +131,19 @@ class LogRepository {
 		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
+		$rows       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
+		$rows_array = is_array( $rows ) ? $rows : array();
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
+		if ( 1 === $page && count( $rows_array ) < $per_page ) {
+			$total = count( $rows_array );
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
+			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
+		}
 
 		$items = array();
 
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		foreach ( $rows_array as $row ) {
 			$row['id']      = (int) $row['id'];
 			$row['user_id'] = null === $row['user_id'] ? null : (int) $row['user_id'];
 			$row['context'] = ! empty( $row['context'] ) ? json_decode( (string) $row['context'], true ) : array();
@@ -160,6 +167,8 @@ class LogRepository {
 
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( max( 1, (int) $days ) * DAY_IN_SECONDS ) );
 
+		delete_transient( 'sidrena_log_cnt_all' );
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->query(
 			$wpdb->prepare( 'DELETE FROM %i WHERE created_at < %s', $this->table, $cutoff )
@@ -172,9 +181,17 @@ class LogRepository {
 	 * @return int
 	 */
 	public function count_all() {
+		$cached = get_transient( 'sidrena_log_cnt_all' );
+		if ( false !== $cached && is_numeric( $cached ) ) {
+			return (int) $cached;
+		}
+
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $this->table ) );
+		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $this->table ) );
+		set_transient( 'sidrena_log_cnt_all', $total, 30 );
+
+		return $total;
 	}
 }

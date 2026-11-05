@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Export;
 
+use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Compliance\RemediationProposer;
 use SidrenaCijena\Database\LocationRepository;
@@ -83,6 +84,10 @@ class GenerationService {
 	 * @return array<mixed>
 	 */
 	public function generate_all( array $args = array() ) {
+		if ( ! isset( $args['items'] ) ) {
+			$args['items'] = $this->hydrate_catalog( $args );
+		}
+
 		$results = array();
 
 		foreach ( $this->locations->all( true ) as $location ) {
@@ -104,6 +109,10 @@ class GenerationService {
 
 		if ( ! $location ) {
 			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ) );
+		}
+
+		if ( ! isset( $args['items'] ) ) {
+			$args['items'] = $this->hydrate_catalog( $args );
 		}
 
 		$results = array();
@@ -175,7 +184,11 @@ class GenerationService {
 			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'sidrena-cijena-eu' );
 		}
 
-		$validation   = $this->catalog_report( $location_id );
+		if ( ! isset( $args['items'] ) ) {
+			$args['items'] = $this->hydrate_catalog( $args );
+		}
+
+		$validation   = $this->catalog_report( $location_id, $args['items'] );
 		$blockers     = self::publication_blockers( $validation['errors'] );
 		$all_blockers = array_merge( $findings, $blockers );
 
@@ -313,18 +326,23 @@ class GenerationService {
 	/**
 	 * Catalog-level findings for a location, split by severity.
 	 *
-	 * @param int $location_id Location ID.
+	 * @param int                                                   $location_id Location ID.
+	 * @param array<int,CatalogItem>|\Traversable<CatalogItem>|null $items       Optional pre-hydrated catalog items.
 	 * @return array{errors:array<mixed>,warnings:int}
 	 */
-	protected function catalog_report( $location_id ) {
+	protected function catalog_report( $location_id, $items = null ) {
 		$validator = Plugin::instance()->validator();
 
-		$report = $validator->validate(
-			array(
-				'scope'       => 'catalog',
-				'location_id' => (int) $location_id,
-			)
+		$validate_args = array(
+			'scope'       => 'catalog',
+			'location_id' => (int) $location_id,
 		);
+
+		if ( is_array( $items ) || $items instanceof \Traversable ) {
+			$validate_args['items'] = $items;
+		}
+
+		$report = $validator->validate( $validate_args );
 
 		$errors   = array();
 		$warnings = 0;
@@ -342,6 +360,38 @@ class GenerationService {
 			'errors'   => $errors,
 			'warnings' => $warnings,
 		);
+	}
+
+	/**
+	 * Hydrate catalog items into an array once for reuse.
+	 *
+	 * @param array<mixed> $args Arguments.
+	 * @return array<int,CatalogItem>
+	 */
+	protected function hydrate_catalog( array $args = array() ) {
+		$type = isset( $args['type'] ) ? (string) $args['type'] : 'all';
+
+		/** @var mixed $iter */
+		$iter = $this->catalog->iterate(
+			array(
+				'type'               => $type,
+				'include_variations' => true,
+			)
+		);
+
+		if ( ! is_iterable( $iter ) ) {
+			return array();
+		}
+
+		$items = array();
+
+		foreach ( $iter as $item ) {
+			if ( $item instanceof CatalogItem ) {
+				$items[] = $item;
+			}
+		}
+
+		return $items;
 	}
 
 	/**

@@ -38,7 +38,7 @@ class DisplaySettingsPageTest extends TestCase {
 		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['sidrena_test_settings_sections'] );
 		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['sidrena_test_settings_fields'] );
 
-		$fields = $GLOBALS['sidrena_test_settings_fields'][ DisplaySettingsPage::PAGE ];
+		$fields             = $GLOBALS['sidrena_test_settings_fields'][ DisplaySettingsPage::PAGE ];
 		$anchor_label_field = null;
 
 		foreach ( $fields as $field ) {

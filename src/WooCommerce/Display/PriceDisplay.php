@@ -208,8 +208,9 @@ class PriceDisplay {
 	 * `woocommerce_get_price_html`, so the anchor price would not be displayed
 	 * there at all (FR-011).
 	 *
-	 * @param string $content Rendered block content.
-	 * @param array  $block   Parsed block.
+	 * @param string                   $content        Rendered block content.
+	 * @param array<mixed>             $block          Parsed block.
+	 * @param \WP_Block|\stdClass|null $block_instance Rendered block instance.
 	 * @return string
 	 */
 	public function filter_price_block( $content, $block, $block_instance = null ) {
@@ -244,8 +245,8 @@ class PriceDisplay {
 	/**
 	 * Product a price block belongs to.
 	 *
-	 * @param array $block Parsed block.
-	 * @param \WP_Block|null $block_instance Rendered block instance.
+	 * @param array                    $block          Parsed block.
+	 * @param \WP_Block|\stdClass|null $block_instance Rendered block instance.
 	 * @return \WC_Product|null
 	 */
 	protected function block_product( array $block, $block_instance = null ) {

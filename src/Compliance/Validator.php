@@ -195,12 +195,16 @@ class Validator {
 			$count = 0;
 			$batch = array();
 
-			foreach ( $this->catalog->iterate(
-				array(
-					'per_page'           => max( 1, (int) $args['per_page'] ),
-					'include_variations' => true,
-				)
-			) as $item ) {
+			$iterator = isset( $args['items'] ) && ( is_array( $args['items'] ) || $args['items'] instanceof \Traversable )
+				? $args['items']
+				: $this->catalog->iterate(
+					array(
+						'per_page'           => max( 1, (int) $args['per_page'] ),
+						'include_variations' => true,
+					)
+				);
+
+			foreach ( $iterator as $item ) {
 				if ( ! empty( $args['product_id'] ) && (int) $item->id !== (int) $args['product_id'] ) {
 					continue;
 				}
