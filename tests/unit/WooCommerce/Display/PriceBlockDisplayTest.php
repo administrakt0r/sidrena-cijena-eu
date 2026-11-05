@@ -165,34 +165,34 @@ class PriceBlockDisplayTest extends TestCase {
 	 * @return void
 	 */
 	public function test_format_anchor_label_resolves_tokens() {
-		// Static label
+		// Static label.
 		$this->assertSame( 'Bazna cijena', PriceDisplay::format_anchor_label( 'Bazna cijena', '10. 9. 2026.', '2026-09-10' ) );
 
-		// Dynamic {datum} token with general 2026 reference date
+		// Dynamic {datum} token with general 2026 reference date.
 		$this->assertSame(
 			'Cijena na dan 10. 9. 2026.',
 			PriceDisplay::format_anchor_label( 'Cijena na dan {datum}', '10. 9. 2026.', '2026-09-10' )
 		);
 
-		// Dynamic {datum} token with legacy 2025 grocery reference date
+		// Dynamic {datum} token with legacy 2025 grocery reference date.
 		$this->assertSame(
 			'Cijena na 2. 5. 2025.',
 			PriceDisplay::format_anchor_label( 'Cijena na {datum}', '2. 5. 2025.', '2025-05-02' )
 		);
 
-		// Dynamic {date} synonym token
+		// Dynamic {date} synonym token.
 		$this->assertSame(
 			'Cijena na 10. 9. 2026.',
 			PriceDisplay::format_anchor_label( 'Cijena na {date}', '10. 9. 2026.', '2026-09-10' )
 		);
 
-		// Dynamic {datum_iso} token
+		// Dynamic {datum_iso} token.
 		$this->assertSame(
 			'Referentna cijena (2026-09-10)',
 			PriceDisplay::format_anchor_label( 'Referentna cijena ({datum_iso})', '10. 9. 2026.', '2026-09-10' )
 		);
 
-		// Graceful fallback when reference date is empty
+		// Graceful fallback when reference date is empty.
 		$this->assertSame(
 			'Cijena na dan',
 			PriceDisplay::format_anchor_label( 'Cijena na dan {datum}', '', '' )
@@ -205,19 +205,19 @@ class PriceBlockDisplayTest extends TestCase {
 	 * @return void
 	 */
 	public function test_format_anchor_title_avoids_duplication() {
-		// Date not in label -> appends (date)
+		// Date not in label -> appends (date).
 		$this->assertSame(
 			'Bazna cijena (10. 9. 2026.)',
 			PriceDisplay::format_anchor_title( 'Bazna cijena', '10. 9. 2026.' )
 		);
 
-		// Date already in label -> does not duplicate
+		// Date already in label -> does not duplicate.
 		$this->assertSame(
 			'Cijena na dan 10. 9. 2026.',
 			PriceDisplay::format_anchor_title( 'Cijena na dan 10. 9. 2026.', '10. 9. 2026.' )
 		);
 
-		// Empty date -> returns label unchanged
+		// Empty date -> returns label unchanged.
 		$this->assertSame(
 			'Bazna cijena',
 			PriceDisplay::format_anchor_title( 'Bazna cijena', '' )
