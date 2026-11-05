@@ -39,32 +39,38 @@ final class LegalSettingsPage {
 
 		$fields = array(
 			'general_reference_date' => array(
-				'label' => __( 'General reference date', 'sidrena-cijena-eu' ),
-				'type'  => 'date',
+				'label'       => __( 'General reference date', 'sidrena-cijena-eu' ),
+				'type'        => 'date',
+				'description' => __( 'Statutory anchor reference date (default: 2026-09-10).', 'sidrena-cijena-eu' ),
 			),
 			'legacy_reference_date'  => array(
-				'label' => __( 'Legacy reference date', 'sidrena-cijena-eu' ),
-				'type'  => 'date',
+				'label'       => __( 'Legacy reference date', 'sidrena-cijena-eu' ),
+				'type'        => 'date',
+				'description' => __( 'Statutory anchor reference date for legacy categories (default: 2025-05-02).', 'sidrena-cijena-eu' ),
 			),
 			'legacy_enabled'         => array(
-				'label' => __( 'Enable legacy treatment', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Enable legacy treatment', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Apply the legacy reference date to items in designated legacy categories.', 'sidrena-cijena-eu' ),
 			),
 			'legacy_category_slugs'  => array(
-				'label' => __( 'Legacy categories', 'sidrena-cijena-eu' ),
-				'type'  => 'categories',
+				'label'       => __( 'Legacy categories', 'sidrena-cijena-eu' ),
+				'type'        => 'categories',
+				'description' => __( 'Product categories governed by the legacy reference date.', 'sidrena-cijena-eu' ),
 			),
 			'rule_version'           => array(
-				'label' => __( 'Legal-rule version', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'Legal-rule version', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'description' => __( 'Identifier for the legal rule-set configuration (e.g. 2026-09-10).', 'sidrena-cijena-eu' ),
 			),
 		);
 
 		foreach ( $fields as $key => $field ) {
 			$field_args = array(
-				'key'   => $key,
-				'type'  => $field['type'],
-				'label' => $field['label'],
+				'key'         => $key,
+				'type'        => $field['type'],
+				'label'       => $field['label'],
+				'description' => isset( $field['description'] ) ? $field['description'] : '',
 			);
 
 			if ( 'categories' !== $field['type'] ) {
@@ -135,6 +141,10 @@ final class LegalSettingsPage {
 			default:
 				$fields->text( $key, $value );
 				break;
+		}
+
+		if ( ! empty( $args['description'] ) ) {
+			echo '<p class="description">' . esc_html( $args['description'] ) . '</p>';
 		}
 	}
 

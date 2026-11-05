@@ -36,48 +36,59 @@ final class DisplaySettingsPage {
 
 		$fields = array(
 			'display_enabled'       => array(
-				'label' => __( 'Enable frontend display', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Enable frontend display', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Show anchor price and 30-day lowest price on the public storefront.', 'sidrena-cijena-eu' ),
 			),
 			'anchor_label'          => array(
-				'label' => __( 'Anchor price label', 'sidrena-cijena-eu' ),
-				'type'  => 'anchor_label_preset',
+				'label'       => __( 'Anchor price label', 'sidrena-cijena-eu' ),
+				'type'        => 'anchor_label_preset',
+				'description' => __( 'Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso}).', 'sidrena-cijena-eu' ),
 			),
 			'thirty_day_label'      => array(
-				'label' => __( 'Lowest 30-day price label', 'sidrena-cijena-eu' ),
-				'type'  => 'text',
+				'label'       => __( 'Lowest 30-day price label', 'sidrena-cijena-eu' ),
+				'type'        => 'text',
+				'description' => __( 'Statutory label for the lowest price applied in the 30 days before a promotion.', 'sidrena-cijena-eu' ),
 			),
 			'currency_display'      => array(
-				'label' => __( 'Currency display', 'sidrena-cijena-eu' ),
-				'type'  => 'select',
+				'label'       => __( 'Currency display', 'sidrena-cijena-eu' ),
+				'type'        => 'select',
+				'description' => __( 'Format used to display currency alongside the anchor price.', 'sidrena-cijena-eu' ),
 			),
 			'display_location'      => array(
-				'label' => __( 'Display position', 'sidrena-cijena-eu' ),
-				'type'  => 'select',
+				'label'       => __( 'Display position', 'sidrena-cijena-eu' ),
+				'type'        => 'select',
+				'description' => __( 'Placement of the anchor price relative to the regular product price HTML.', 'sidrena-cijena-eu' ),
 			),
 			'display_priority'      => array(
-				'label' => __( 'Display priority', 'sidrena-cijena-eu' ),
-				'type'  => 'number',
+				'label'       => __( 'Display priority', 'sidrena-cijena-eu' ),
+				'type'        => 'number',
+				'description' => __( 'Action hook priority (default 15; lower values render earlier).', 'sidrena-cijena-eu' ),
 			),
 			'display_product_pages' => array(
-				'label' => __( 'Product pages', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Product pages', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Render anchor price information on single product pages.', 'sidrena-cijena-eu' ),
 			),
 			'display_archives'      => array(
-				'label' => __( 'Archives and lists', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Archives and lists', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Render anchor price information on catalog loops, archives, and search results.', 'sidrena-cijena-eu' ),
 			),
 			'display_variations'    => array(
-				'label' => __( 'Variations', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Variations', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Dynamically update the anchor price when a variation is selected.', 'sidrena-cijena-eu' ),
 			),
 			'only_when_different'   => array(
-				'label' => __( 'Only when the anchor differs', 'sidrena-cijena-eu' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Only when the anchor differs', 'sidrena-cijena-eu' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Hide the anchor price if it equals the current selling price.', 'sidrena-cijena-eu' ),
 			),
 			'disclaimer'            => array(
-				'label' => __( 'Administrative disclaimer', 'sidrena-cijena-eu' ),
-				'type'  => 'textarea',
+				'label'       => __( 'Administrative disclaimer', 'sidrena-cijena-eu' ),
+				'type'        => 'textarea',
+				'description' => __( 'Optional text displayed alongside anchor prices informing buyers of statutory direct price controls.', 'sidrena-cijena-eu' ),
 			),
 		);
 
@@ -91,7 +102,7 @@ final class DisplaySettingsPage {
 				array(
 					'key'         => $key,
 					'type'        => $field['type'],
-					'description' => '',
+					'description' => isset( $field['description'] ) ? $field['description'] : '',
 					'label_for'   => $key,
 				)
 			);

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 2.0.21\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-11-05T17:08:09+00:00\n"
+"POT-Creation-Date: 2026-11-05T21:49:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -158,6 +158,9 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
+msgid "Action hook priority (default 15; lower values render earlier)."
+msgstr ""
+
 msgid "Actions"
 msgstr ""
 
@@ -276,6 +279,9 @@ msgid "Applicable products"
 msgstr ""
 
 msgid "Applicable reference date"
+msgstr ""
+
+msgid "Apply the legacy reference date to items in designated legacy categories."
 msgstr ""
 
 msgid "A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price."
@@ -635,6 +641,9 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
+msgid "Dynamically update the anchor price when a variation is selected."
+msgstr ""
+
 msgid "e.g. 9.99"
 msgstr ""
 
@@ -851,6 +860,9 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
+msgid "Format used to display currency alongside the anchor price."
+msgstr ""
+
 msgid "for sale starting %s"
 msgstr ""
 
@@ -899,6 +911,9 @@ msgstr ""
 msgid "Hidden from product box (accessible in title / description)"
 msgstr ""
 
+msgid "Hide the anchor price if it equals the current selling price."
+msgstr ""
+
 msgid "Historical price"
 msgstr ""
 
@@ -921,6 +936,9 @@ msgid "ID"
 msgstr ""
 
 msgid "Identifier"
+msgstr ""
+
+msgid "Identifier for the legal rule-set configuration (e.g. 2026-09-10)."
 msgstr ""
 
 msgid "If the promotion has a scheduled last day, enter it; otherwise leave this empty."
@@ -1382,6 +1400,9 @@ msgstr ""
 msgid "Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign."
 msgstr ""
 
+msgid "Optional text displayed alongside anchor prices informing buyers of statutory direct price controls."
+msgstr ""
+
 msgid "Optional WooCommerce variation ID. Leave blank or 0 for simple products and services."
 msgstr ""
 
@@ -1404,6 +1425,9 @@ msgid "Period"
 msgstr ""
 
 msgid "Pill"
+msgstr ""
+
+msgid "Placement of the anchor price relative to the regular product price HTML."
 msgstr ""
 
 msgid "Plain"
@@ -1518,6 +1542,9 @@ msgid "Product #%1$d (SKU: %2$s) — %3$s"
 msgstr ""
 
 msgid "Product cards"
+msgstr ""
+
+msgid "Product categories governed by the legacy reference date."
 msgstr ""
 
 msgid "Product ID"
@@ -1653,6 +1680,12 @@ msgid "Regular price"
 msgstr ""
 
 msgid "Regular selling price before discounts."
+msgstr ""
+
+msgid "Render anchor price information on catalog loops, archives, and search results."
+msgstr ""
+
+msgid "Render anchor price information on single product pages."
 msgstr ""
 
 msgid "Reopen setup"
@@ -1814,6 +1847,9 @@ msgstr ""
 msgid "Show a link to the archive in the site footer"
 msgstr ""
 
+msgid "Show anchor price and 30-day lowest price on the public storefront."
+msgstr ""
+
 msgid "Showing %1$d–%2$d of %3$d items."
 msgstr ""
 
@@ -1938,6 +1974,18 @@ msgid "Start date"
 msgstr ""
 
 msgid "Status"
+msgstr ""
+
+msgid "Statutory anchor reference date (default: 2026-09-10)."
+msgstr ""
+
+msgid "Statutory anchor reference date for legacy categories (default: 2025-05-02)."
+msgstr ""
+
+msgid "Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso})."
+msgstr ""
+
+msgid "Statutory label for the lowest price applied in the 30 days before a promotion."
 msgstr ""
 
 msgid "Stilovi i interaktivni tooltip:"

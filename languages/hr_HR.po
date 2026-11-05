@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sidrena cijena 2.0.21\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/sidrena-cijena-eu/issues\n"
-"POT-Creation-Date: 2026-11-05T17:08:09+00:00\n"
-"PO-Revision-Date: 2026-11-05T17:08:09+00:00\n"
+"POT-Creation-Date: 2026-11-05T21:51:56+00:00\n"
+"PO-Revision-Date: 2026-11-05T21:51:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -160,6 +160,9 @@ msgstr "Prihvaćeni stupci: sku ili product_id, variation_id, reference_date, an
 msgid "Action"
 msgstr "Akcija"
 
+msgid "Action hook priority (default 15; lower values render earlier)."
+msgstr "Prioritet izvršavanja kuke (zadano 15; niže vrijednosti izvršavaju se ranije)."
+
 msgid "Actions"
 msgstr "Radnje"
 
@@ -279,6 +282,9 @@ msgstr "Primjenjivi proizvodi"
 
 msgid "Applicable reference date"
 msgstr "Mjerodavni referentni datum"
+
+msgid "Apply the legacy reference date to items in designated legacy categories."
+msgstr "Primijeni raniji referentni datum na stavke u označenim kategorijama s ranijim datumom."
 
 msgid "A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price."
 msgstr "Prethodni posebni oblik prodaje završio je nedavno unutar 30-dnevnog prozora (završio %1$s, cijena %2$s) i uračunat je u najnižu 30-dnevnu cijenu."
@@ -637,6 +643,9 @@ msgstr "Probni prolaz završen. %d redaka bi se uvezlo; ništa nije zapisano."
 msgid "Duplicate"
 msgstr "Duplikat"
 
+msgid "Dynamically update the anchor price when a variation is selected."
+msgstr "Dinamički ažuriraj sidrenu cijenu prilikom odabira varijacije."
+
 msgid "e.g. 9.99"
 msgstr "npr. 9,99"
 
@@ -853,6 +862,9 @@ msgstr "Format"
 msgid "Formats"
 msgstr "Formati"
 
+msgid "Format used to display currency alongside the anchor price."
+msgstr "Oblik prikaza valute uz sidrenu cijenu."
+
 msgid "for sale starting %s"
 msgstr "za prodaju koja počinje %s"
 
@@ -901,6 +913,9 @@ msgstr "Generira i objavljuje novi dnevni cjenik za sva aktivna prodajna mjesta.
 msgid "Hidden from product box (accessible in title / description)"
 msgstr "Sakriveno iz okvira proizvoda (dostupno u opisu)"
 
+msgid "Hide the anchor price if it equals the current selling price."
+msgstr "Sakrij sidrenu cijenu ako je jednaka trenutnoj prodajnoj cijeni."
+
 msgid "Historical price"
 msgstr "Povijesna cijena"
 
@@ -924,6 +939,9 @@ msgstr "ID"
 
 msgid "Identifier"
 msgstr "Oznaka"
+
+msgid "Identifier for the legal rule-set configuration (e.g. 2026-09-10)."
+msgstr "Identifikator konfiguracije pravnih pravila (npr. 2026-09-10)."
 
 msgid "If the promotion has a scheduled last day, enter it; otherwise leave this empty."
 msgstr "Ako promocija ima unaprijed određen zadnji dan, unesite ga; u suprotnom ostavite polje prazno."
@@ -1384,6 +1402,9 @@ msgstr "Opis primjene"
 msgid "Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign."
 msgstr "Neobavezan naziv promocije vidljiv kupcima, primjerice „Proljetna akcija”. Ostavite prazno ako kampanja nema naziv."
 
+msgid "Optional text displayed alongside anchor prices informing buyers of statutory direct price controls."
+msgstr "Neobavezna napomena uz sidrenu cijenu koja obavještava kupce o mjerama izravne kontrole cijena."
+
 msgid "Optional WooCommerce variation ID. Leave blank or 0 for simple products and services."
 msgstr "Opcionalni WooCommerce ID varijacije. Ostavite prazno ili 0 za jednostavne proizvode i usluge."
 
@@ -1407,6 +1428,9 @@ msgstr "Razdoblje"
 
 msgid "Pill"
 msgstr "Zaobljena oznaka"
+
+msgid "Placement of the anchor price relative to the regular product price HTML."
+msgstr "Položaj sidrene cijene u odnosu na HTML redovne cijene proizvoda."
 
 msgid "Plain"
 msgstr "Jednostavno"
@@ -1521,6 +1545,9 @@ msgstr "Proizvod #%1$d (SKU: %2$s) — %3$s"
 
 msgid "Product cards"
 msgstr "Kartice proizvoda"
+
+msgid "Product categories governed by the legacy reference date."
+msgstr "Kategorije proizvoda na koje se primjenjuje raniji referentni datum."
 
 msgid "Product ID"
 msgstr "ID proizvoda"
@@ -1656,6 +1683,12 @@ msgstr "Redovna cijena"
 
 msgid "Regular selling price before discounts."
 msgstr "Redovna prodajna cijena prije popusta."
+
+msgid "Render anchor price information on catalog loops, archives, and search results."
+msgstr "Prikazuj sidrenu cijenu u kataloškim pregledima, arhivama i rezultatima pretraživanja."
+
+msgid "Render anchor price information on single product pages."
+msgstr "Prikazuj sidrenu cijenu na pojedinačnim stranicama proizvoda."
 
 msgid "Reopen setup"
 msgstr "Ponovno otvori postavljanje"
@@ -1816,6 +1849,9 @@ msgstr "Ozbiljnost"
 msgid "Show a link to the archive in the site footer"
 msgstr "Prikaži poveznicu na arhivu u podnožju stranice"
 
+msgid "Show anchor price and 30-day lowest price on the public storefront."
+msgstr "Prikazuj sidrenu cijenu i najnižu cijenu u 30 dana u javnoj trgovini."
+
 msgid "Showing %1$d–%2$d of %3$d items."
 msgstr "Prikazano %1$d–%2$d od %3$d stavki."
 
@@ -1941,6 +1977,18 @@ msgstr "Datum početka"
 
 msgid "Status"
 msgstr "Status"
+
+msgid "Statutory anchor reference date (default: 2026-09-10)."
+msgstr "Zakonski referentni datum za sidrenu cijenu (zadano: 10. 9. 2026.)."
+
+msgid "Statutory anchor reference date for legacy categories (default: 2025-05-02)."
+msgstr "Zakonski referentni datum za kategorije s ranijim datumom (zadano: 2. 5. 2025.)."
+
+msgid "Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso})."
+msgstr "Zakonski propisan naziv sidrene cijene. Odaberite predložak ili upišite vlastiti naziv uz dinamičke oznake ({datum}, {datum_iso})."
+
+msgid "Statutory label for the lowest price applied in the 30 days before a promotion."
+msgstr "Zakonski propisan naziv za najnižu cijenu primijenjenu u razdoblju od 30 dana prije posebnog oblika prodaje."
 
 msgid "Stilovi i interaktivni tooltip:"
 msgstr "Stilovi i interaktivni tooltip:"
