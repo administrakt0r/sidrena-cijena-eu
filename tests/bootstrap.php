@@ -34,17 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', sys_get_temp_dir() . '/sidrena-cijena-wordpress/' );
 }
 
-$sidrena_upgrade_file = ABSPATH . 'wp-admin/includes/upgrade.php';
-if ( ! is_dir( dirname( $sidrena_upgrade_file ) ) ) {
-	mkdir( dirname( $sidrena_upgrade_file ), 0777, true );
-}
-if ( ! file_exists( $sidrena_upgrade_file ) ) {
-	file_put_contents(
-		$sidrena_upgrade_file,
-		"<?php\nif ( ! function_exists( 'dbDelta' ) ) {\n\tfunction dbDelta( \$queries ) {\n\t\t\$GLOBALS['sidrena_test_dbdelta'][] = \$queries;\n\t\treturn array();\n\t}\n}\n"
-	);
-}
-
 define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__ ) . '/' );
 define( 'SIDRENA_CIJENA_VERSION', '1.0.0' );
 

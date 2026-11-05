@@ -13,6 +13,7 @@
 	<exclude-pattern>/tests/unit/wp-stubs.php</exclude-pattern>
 	<exclude-pattern>/tests/unit/wc-stubs.php</exclude-pattern>
 	<exclude-pattern>/.taskless/*</exclude-pattern>
+	<exclude-pattern>/.phpstan.cache/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>
