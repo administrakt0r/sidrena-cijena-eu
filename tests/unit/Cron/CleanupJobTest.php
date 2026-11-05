@@ -44,11 +44,15 @@ class CleanupJobFakePublication {
 	/**
 	 * Stub.
 	 *
-	 * @param int $id ID.
+	 * @param int|array<int> $id ID or list of IDs.
 	 * @return void
 	 */
 	public function mark_expired( $id ) {
-		$this->marked[] = $id;
+		if ( is_array( $id ) ) {
+			$this->marked = array_merge( $this->marked, $id );
+		} else {
+			$this->marked[] = $id;
+		}
 	}
 }
 
@@ -145,5 +149,23 @@ class CleanupJobTest extends TestCase {
 		// The query should use 30 days cutoff.
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( 30 * DAY_IN_SECONDS ) );
 		$this->assertStringContainsString( $cutoff, $queries[0] );
+	}
+
+	/**
+	 * Verify PublicationRepository::mark_expired with an array of IDs generates a single IN query.
+	 *
+	 * @return void
+	 */
+	public function test_mark_expired_batch_query() {
+		$repo = new \SidrenaCijena\Database\PublicationRepository();
+		$GLOBALS['sidrena_test_db_queries'] = array();
+
+		$result = $repo->mark_expired( array( 101, 102, 103 ) );
+
+		$this->assertTrue( $result );
+		$queries = $GLOBALS['sidrena_test_db_queries'];
+		$this->assertCount( 1, $queries );
+		$this->assertStringContainsString( "UPDATE `wp_sidrena_publications` SET status = 'expired'", $queries[0] );
+		$this->assertStringContainsString( 'WHERE id IN (101,102,103)', $queries[0] );
 	}
 }

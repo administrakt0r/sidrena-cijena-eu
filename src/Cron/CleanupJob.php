@@ -31,7 +31,8 @@ class CleanupJob {
 		$publications = Plugin::instance()->publications();
 		$candidates   = $publications->expired_candidates( Dates::now_utc() );
 
-		$deleted = 0;
+		$deleted   = 0;
+		$to_expire = array();
 
 		foreach ( $candidates as $row ) {
 			$path = isset( $row['path'] ) ? (string) $row['path'] : '';
@@ -49,7 +50,11 @@ class CleanupJob {
 				++$deleted;
 			}
 
-			$publications->mark_expired( (int) $row['id'] );
+			$to_expire[] = (int) $row['id'];
+		}
+
+		if ( ! empty( $to_expire ) ) {
+			$publications->mark_expired( $to_expire );
 		}
 
 		$log_days = max( 1, (int) Settings::get( 'log_retention_days', 180 ) );
