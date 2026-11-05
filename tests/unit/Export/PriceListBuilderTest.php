@@ -638,6 +638,34 @@ class PriceListBuilderTest extends TestCase {
 	}
 
 	/**
+	 * Verify that passing items explicitly bypasses catalog iteration.
+	 *
+	 * @return void
+	 */
+	public function test_build_uses_passed_items_without_calling_iterate() {
+		$catalog = $this->createMock( CatalogProvider::class );
+		$catalog->expects( $this->never() )->method( 'iterate' );
+
+		$history = new BuilderFakeHistory();
+		$sales   = new BuilderFakeSales();
+
+		$item = new CatalogItem(
+			array(
+				'id'            => 501,
+				'name'          => 'Pre-loaded Product',
+				'sku'           => 'PRE-501',
+				'regular_price' => '10.00',
+			)
+		);
+
+		$builder = new PriceListBuilder( $catalog, $history, $sales );
+		$result  = $builder->build( array( 'id' => 1 ), array( 'items' => array( $item ) ) );
+
+		$this->assertCount( 1, $result['items'] );
+		$this->assertSame( 501, $result['items'][0]['product_id'] );
+	}
+
+	/**
 	 * Build a list containing one parent variation item.
 	 *
 	 * @param array<string,array> $sales   Sale rows keyed by `product:variation`.

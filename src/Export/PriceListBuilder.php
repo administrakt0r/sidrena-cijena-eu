@@ -70,12 +70,20 @@ class PriceListBuilder {
 
 		$items = array();
 
-		foreach ( $this->catalog->iterate(
-			array(
-				'type'               => $type,
-				'include_variations' => true,
-			)
-		) as $item ) {
+		$source_items = isset( $args['items'] ) && ( is_array( $args['items'] ) || $args['items'] instanceof \Traversable )
+			? $args['items']
+			: $this->catalog->iterate(
+				array(
+					'type'               => $type,
+					'include_variations' => true,
+				)
+			);
+
+		foreach ( $source_items as $item ) {
+			if ( 'all' !== $type && ( $item->is_service() ? 'service' : 'product' ) !== $type ) {
+				continue;
+			}
+
 			if ( ! $this->applies( $item, $location ) ) {
 				continue;
 			}
