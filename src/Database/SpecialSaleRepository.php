@@ -177,6 +177,13 @@ class SpecialSaleRepository {
 	 * @return array|null
 	 */
 	public function active_for_item( $product_id, $variation_id = 0, $at = '' ) {
+		if ( '' === (string) $at ) {
+			$map = $this->active_map();
+			$key = (int) $product_id . ':' . (int) $variation_id;
+
+			return isset( $map[ $key ] ) ? $map[ $key ] : null;
+		}
+
 		$at = $at ? $at : Dates::now_site()->format( 'Y-m-d H:i:s' );
 
 		foreach ( $this->for_item( $product_id, $variation_id, array( 'active', 'scheduled' ) ) as $sale ) {
@@ -381,8 +388,8 @@ class SpecialSaleRepository {
 		$row['id']                  = (int) $row['id'];
 		$row['product_id']          = (int) $row['product_id'];
 		$row['variation_id']        = (int) $row['variation_id'];
-		$row['promo_price']         = null === $row['promo_price'] ? null : (float) $row['promo_price'];
-		$row['lowest_30_day_price'] = null === $row['lowest_30_day_price'] ? null : (float) $row['lowest_30_day_price'];
+		$row['promo_price']         = isset( $row['promo_price'] ) && null !== $row['promo_price'] ? (float) $row['promo_price'] : null;
+		$row['lowest_30_day_price'] = isset( $row['lowest_30_day_price'] ) && null !== $row['lowest_30_day_price'] ? (float) $row['lowest_30_day_price'] : null;
 
 		return $row;
 	}

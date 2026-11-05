@@ -42,6 +42,20 @@ class PriceHistoryRepository {
 	protected $table;
 
 	/**
+	 * Request-level memoized active sale period map.
+	 *
+	 * @var array<string,array<string,mixed>>
+	 */
+	protected $active_sale_period_cache = array();
+
+	/**
+	 * Product IDs whose active sale periods have been queried during this request.
+	 *
+	 * @var array<int,bool>
+	 */
+	protected $queried_sale_period_ids = array();
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -60,6 +74,16 @@ class PriceHistoryRepository {
 	}
 
 	/**
+	 * Clear the request-level query cache.
+	 *
+	 * @return void
+	 */
+	public function reset_cache() {
+		$this->active_sale_period_cache = array();
+		$this->queried_sale_period_ids  = array();
+	}
+
+	/**
 	 * Append a price history record.
 	 *
 	 * @param array<mixed> $data Record fields.
@@ -68,6 +92,8 @@ class PriceHistoryRepository {
 	 */
 	public function insert( array $data ) {
 		global $wpdb;
+
+		$this->reset_cache();
 
 		$row = $this->normalize( $data );
 
@@ -233,41 +259,61 @@ class PriceHistoryRepository {
 			return array();
 		}
 
-		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
-		$params       = array_merge( $product_ids, $product_ids );
+		$missing_ids = array();
+		foreach ( $product_ids as $pid ) {
+			if ( ! isset( $this->queried_sale_period_ids[ $pid ] ) ) {
+				$missing_ids[] = $pid;
+			}
+		}
 
-		// The first non-null price after the latest closure identifies this offer;
-		// later reductions keep the same start row and reference window.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$sql = $wpdb->prepare(
-			"SELECT history.product_id, COALESCE(history.variation_id, 0) AS variation_id, history.price, history.valid_from, closure_event.valid_from AS prior_closure_at
-			FROM {$this->table} AS history
-			INNER JOIN (
-				SELECT sale.product_id, sale.variation_id, MIN(sale.id) AS start_id, MAX(closure.closure_id) AS closure_id
-				FROM {$this->table} AS sale
-				LEFT JOIN (
-					SELECT product_id, variation_id, MAX(id) AS closure_id
-					FROM {$this->table}
-					WHERE price_type = 'sale' AND price IS NULL AND product_id IN ({$placeholders})
-					GROUP BY product_id, variation_id
-				) AS closure ON closure.product_id = sale.product_id AND closure.variation_id <=> sale.variation_id
-				WHERE sale.price_type = 'sale' AND sale.price IS NOT NULL AND sale.product_id IN ({$placeholders})
-				AND sale.id > COALESCE(closure.closure_id, 0)
-				GROUP BY sale.product_id, sale.variation_id
-			) AS period ON period.start_id = history.id
-			LEFT JOIN {$this->table} AS closure_event ON closure_event.id = period.closure_id
-			ORDER BY history.id ASC",
-			$params
-		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		if ( ! empty( $missing_ids ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $missing_ids ), '%d' ) );
+			$params       = array_merge( $missing_ids, $missing_ids );
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results( $sql, ARRAY_A );
-		$map  = array();
+			// The first non-null price after the latest closure identifies this offer;
+			// later reductions keep the same start row and reference window.
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$sql = $wpdb->prepare(
+				"SELECT history.product_id, COALESCE(history.variation_id, 0) AS variation_id, history.price, history.valid_from, closure_event.valid_from AS prior_closure_at
+				FROM {$this->table} AS history
+				INNER JOIN (
+					SELECT sale.product_id, sale.variation_id, MIN(sale.id) AS start_id, MAX(closure.closure_id) AS closure_id
+					FROM {$this->table} AS sale
+					LEFT JOIN (
+						SELECT product_id, variation_id, MAX(id) AS closure_id
+						FROM {$this->table}
+						WHERE price_type = 'sale' AND price IS NULL AND product_id IN ({$placeholders})
+						GROUP BY product_id, variation_id
+					) AS closure ON closure.product_id = sale.product_id AND closure.variation_id <=> sale.variation_id
+					WHERE sale.price_type = 'sale' AND sale.price IS NOT NULL AND sale.product_id IN ({$placeholders})
+					AND sale.id > COALESCE(closure.closure_id, 0)
+					GROUP BY sale.product_id, sale.variation_id
+				) AS period ON period.start_id = history.id
+				LEFT JOIN {$this->table} AS closure_event ON closure_event.id = period.closure_id
+				ORDER BY history.id ASC",
+				$params
+			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
-		foreach ( (array) $rows as $row ) {
-			$key         = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
-			$map[ $key ] = $row;
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$rows = $wpdb->get_results( $sql, ARRAY_A );
+
+			foreach ( (array) $rows as $row ) {
+				$key                                    = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
+				$this->active_sale_period_cache[ $key ] = $row;
+			}
+
+			foreach ( $missing_ids as $pid ) {
+				$this->queried_sale_period_ids[ $pid ] = true;
+			}
+		}
+
+		$map = array();
+		foreach ( $this->active_sale_period_cache as $key => $row ) {
+			$pid = (int) $row['product_id'];
+			if ( in_array( $pid, $product_ids, true ) ) {
+				$map[ $key ] = $row;
+			}
 		}
 
 		return $map;
