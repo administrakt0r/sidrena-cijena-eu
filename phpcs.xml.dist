@@ -15,6 +15,7 @@
 
 	<arg name="extensions" value="php"/>
 	<arg name="colors"/>
+	<arg name="cache" value=".phpcs.cache"/>
 	<arg value="sp"/>
 
 	<rule ref="WordPress">
