@@ -137,15 +137,8 @@ class LogRepository {
 		if ( 1 === $page && count( $rows_array ) < $per_page ) {
 			$total = count( $rows_array );
 		} else {
-			$cache_key    = 'sidrena_log_cnt_' . substr( md5( wp_json_encode( $conditions ) . wp_json_encode( $params ) ), 0, 20 );
-			$cached_count = get_transient( $cache_key );
-			if ( false !== $cached_count && is_numeric( $cached_count ) ) {
-				$total = (int) $cached_count;
-			} else {
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-				$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
-				set_transient( $cache_key, $total, 30 );
-			}
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
+			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
 		}
 
 		$items = array();

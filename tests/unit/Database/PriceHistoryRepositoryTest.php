@@ -166,7 +166,6 @@ class PriceHistoryRepositoryTest extends TestCase {
 
 		// reset_cache clears the cache.
 		$repo->reset_cache();
-		delete_transient( 'sidrena_ph_cnt_' . substr( md5( wp_json_encode( array( 'price_type' => 'anchor' ) ) ), 0, 20 ) );
 
 		$count3 = $repo->count( array( 'price_type' => 'anchor' ) );
 		$this->assertSame( 42, $count3 );

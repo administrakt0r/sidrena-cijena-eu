@@ -408,13 +408,6 @@ class PriceHistoryRepository {
 			return self::$count_cache[ $cache_key ];
 		}
 
-		$transient_key = 'sidrena_ph_cnt_' . substr( $cache_key, 0, 20 );
-		$cached        = get_transient( $transient_key );
-		if ( false !== $cached && is_numeric( $cached ) ) {
-			self::$count_cache[ $cache_key ] = (int) $cached;
-			return (int) $cached;
-		}
-
 		global $wpdb;
 
 		list( $where, $params ) = $this->build_where( $args );
@@ -425,7 +418,6 @@ class PriceHistoryRepository {
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
 
 		self::$count_cache[ $cache_key ] = $total;
-		set_transient( $transient_key, $total, 30 );
 
 		return $total;
 	}
