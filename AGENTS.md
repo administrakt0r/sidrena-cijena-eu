@@ -39,10 +39,10 @@ This document is the primary instruction set for AI coding agents (Antigravity, 
 
 ## 2. Using CircleCI for Heavy Verification
 
-Every git push to `master` (or feature branch) triggers CircleCI to run full quality gates in parallel:
+Every git push of a feature branch or PR triggers CircleCI to run full quality gates in parallel:
 
 1. **`verify` job** (Docker `cimg/php:8.4-node`):
-   - PHPUnit full unit test suite (456 tests, 1623 assertions)
+   - PHPUnit full unit test suite (535+ tests, 1916+ assertions)
    - PHPCS WordPress Coding Standards across all 184 files
    - PHPStan static analysis (Level 6, 0 errors)
    - ESLint for JavaScript assets
@@ -58,54 +58,56 @@ You can check CircleCI pipeline status directly from the terminal without leavin
 ```bash
 # Check latest runs
 circleci run list
-
-# Inspect a specific run
-circleci run get <run-id>
-
-# If a job step failed, inspect step logs
-circleci job output get <job-id> --step-num <step-num>
 ```
 
 ---
 
-## 3. Release Packaging Protocol
+## 3. Mandatory Branch & Pull Request (PR) Policy
 
-> [!NOTE]
-> Release zip building and publishing is done **locally on the host machine**, NOT on CircleCI. Release packages are published directly to the public release repository `sidrena-cijena-eu`.
+> [!IMPORTANT]
+> **NEVER push directly to `master`. ALWAYS open a Pull Request.**
+> All agent work must be performed on a dedicated branch and submitted as a GitHub Pull Request for human review before merging.
 
-When a feature, fix, or prompt pack pass is completed:
-
-1. **Bump version in all 4 required locations**:
-   - `sidrena-cijena.php` (`Version:` header and `SIDRENA_CIJENA_VERSION` constant)
-   - `readme.txt` (`Stable tag:` and `= X.Y.Z =` changelog section)
-   - `package.json` (`"version": "X.Y.Z"`)
-2. **Sync documentation**:
-   - `docs/improvement-backlog.md` (mark items closed)
-   - `docs/release-readiness.md`
-   - `AGENTARDS/README.md` and relevant prompt pack file
-3. **Build the release package locally**:
+### Standard Agent Workflow:
+1. **Create and switch to a feature/fix branch** before making changes:
    ```bash
-   tools/build-zip.sh <version>
+   git checkout -b <type>/<short-description>
+   # Examples: feat/add-label-preset, fix/tooltip-clamp, perf/query-index, ux/mobile-table
    ```
-   This generates `versions/<version>/sidrena-cijena-eu.zip`, creates SHA256 checksums, validates the archive with `unzip -t`, and publishes/syncs to `sidrena-cijena-eu`.
-4. **Commit and push to origin**:
+2. **Implement changes and atomic commits**:
+   Use standard conventional commits (`feat:`, `fix:`, `perf:`, `test:`, `docs:`, `chore:`).
+3. **Run fast local sanity checks**:
    ```bash
-   git add versions/<version>/
-   git commit -m "chore: archive installable <version> release"
-   git push origin master
+   composer test:unit                         # Must pass 100%
+   php tools/i18n/make-pot.php --locale=hr_HR # 0 untranslated
    ```
-5. **Verify on CircleCI**:
-   Check `circleci run list` to confirm the CI pipeline passes green.
+4. **Push the branch to origin**:
+   ```bash
+   git push -u origin <branch-name>
+   ```
+5. **Open a GitHub Pull Request via `gh` CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "<type>: <brief title>" \
+     --body "<summary of changes, test coverage, and verification results>"
+   ```
+6. **STOP and request review**:
+   Do **NOT** merge the PR yourself. Output the PR link to the user and request their review.
+7. **Release Packaging**:
+   Once the PR is approved and merged into `master`, the automated `.git/hooks/post-merge` hook or GitHub Action automatically generates the installable zip package.
 
 ---
 
 ## 4. Legal & Architectural Boundaries
 
-- **Croatian statutory rules**: Never violate rules documented in [`docs/legal-rules.md`](file:///home/q/Desktop/wordpressprojects/plugins/sidrena-cijena/docs/legal-rules.md):
+- **Croatian statutory rules**: Never violate rules documented in [`docs/legal-rules.md`](file:///home/q/Desktop/wordpress/plugins/sidrena-cijena/docs/legal-rules.md):
   - Reference dates: general **2026-09-10**, legacy **2025-05-02**.
+  - Statutory enforcement date: **17 November 2026** (NN 110/2026).
   - 30-day lowest-price window (`start-30` to `start-1`, start date excluded).
   - Filename format: `{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`.
   - History tables (`wp_sidrena_price_history`) are append-only legal records.
+- **Label Presets**: Only use wording legally permitted by the Ministry of Economy clarification (22 Sep 2026). Dynamic tokens `{datum}`, `{date}`, `{datum_iso}` resolve automatically to category reference dates.
+- **Tooltip accuracy**: The tooltip must accurately describe the anchor price as the benchmark retail price under statutory direct price control measures, NOT the 30-day lowest-price rule.
 - **Plugin boundaries**: Only modify files within this plugin (`src/`, `assets/`, `tests/`, `languages/`, `docs/`, `tools/`, and root configs). Never alter WordPress core, themes, or WooCommerce core.
 - **Standalone compatibility**: Always ensure the plugin functions properly both when WooCommerce is active and when it is absent (standalone mode).
 - **Never run `wp plugin install --force`**: The repository root is bind-mounted in Docker; forcing installation will delete the local project files.

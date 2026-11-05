@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Git post-merge hook: runs automatically after git merge or git pull on master.
+# Automatically builds the release zip package under versions/<version>/sidrena-cijena-eu.zip.
+#
+set -e
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+BRANCH="$(git branch --show-current 2>/dev/null || git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+
+if [ "$BRANCH" != "master" ]; then
+	exit 0
+fi
+
+VERSION="$(grep '"version"' "$ROOT/package.json" 2>/dev/null | grep -o '[0-9.]*' | head -1)"
+
+if [ -n "$VERSION" ] && [ -f "$ROOT/tools/build-zip.sh" ]; then
+	echo "==> [hook] Post-merge on master detected (v$VERSION). Automatically building release zip..."
+	"$ROOT/tools/build-zip.sh" "$VERSION" --no-upload --force || {
+		echo "warning: automatic build-zip failed; you can run tools/build-zip.sh manually." >&2
+	}
+fi

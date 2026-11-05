@@ -10,6 +10,16 @@ trivial), implement them well, cover every change with tests, and commit atomica
 `docs/legal-rules.md` first. Work only inside this plugin; never touch WordPress core,
 themes or WooCommerce; price-history tables are append-only legal evidence.
 
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+1. Checkout a dedicated branch before making changes:
+   `git checkout -b <type>/<improvement-name>`
+   (e.g., `feat/admin-form-ergonomics`, `fix/variation-anchor-save`, `test/coverage-expansion`)
+2. Commit each item separately with conventional messages.
+3. When finished, push branch and open a Pull Request for user review:
+   `git push -u origin <branch-name>`
+   `gh pr create --base master --title "<type>: <brief description>" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
+
 Specialised passes exist — use them instead of improvising when the work matches:
 - Performance: AGENTARDS/06-performance-db-queries.md (queries, N+1, indexes),
   AGENTARDS/07-performance-caching-runtime.md (caching, per-request work, assets),
@@ -23,50 +33,35 @@ This pass focuses on robustness and compatibility:
    - Add unit tests for uncovered branches in src/ (aim for real behavior coverage).
    - Sweep error paths: validation failures, empty catalogs, missing tables/options after
      migration, malformed CSV rows, corrupt published files, permission-denied admin posts.
-   - Actively inspect and reproduce admin save workflows (do not limit the pass to known
-     backlog items), especially WooCommerce product editing: trace the editor form, plugin
-     controls, submit buttons, nonces, and POST handlers. Fix discovered defects and catch invalid
-     nested forms, duplicate/shared `_wpnonce` fields, plugin `action` values that override the
-     normal Update action, and browser `required` fields that block unrelated saves. Check that
-     ordinary product edits still save and return to the editor, while dedicated plugin actions
-     still reach their own handler; add a regression test for each discovered failure.
+   - Actively inspect and reproduce admin save workflows, especially WooCommerce product editing:
+     trace the editor form, plugin controls, submit buttons, nonces, and POST handlers. Fix
+     discovered defects and catch invalid nested forms, duplicate/shared _wpnonce fields, plugin
+     action values overriding Update, and browser required fields.
    - Check setup, store/location, product, and sale forms for fields whose expected value is
-     unclear. Add concise, translated helper text with a format/example or source-of-truth hint;
-     do not invent legal guidance.
+     unclear. Add concise, translated helper text with a format/example or source-of-truth hint.
    - Verify transient/option cleanup on deactivation and uninstall (Support\Deactivator,
-     Support\Uninstaller) still leaves the anchor/lowest_30_day evidence intact (IMP-09).
+     Support\Uninstaller) leaves the anchor/lowest_30_day evidence intact.
    - Verify label preset resolution (Settings::anchor_label_presets()) and dynamic date token
-     substitution (PriceDisplay::format_anchor_label()) — edge cases: empty label, custom label
-     with no token, label with both {datum} and {date}, variation anchor with legacy category.
+     substitution (PriceDisplay::format_anchor_label()).
 2. Compatibility:
    - Strict PHP 7.4 to 8.4 compatibility: no PHP 8-only syntax in src/ (static scan).
    - Clean operation both with and without WooCommerce (standalone catalog provider).
-   - When WooCommerce is active, verify the anchor-price and special-sale controls fit the
-     native Product data editor (not a cramped Gutenberg block or competing meta box), and
-     that the product editor's normal Update action remains independent of plugin evidence
-     actions. Prefer a focused Playwright regression test when wp-env is available.
-   - Classic and block themes render the anchor/30-day lines (PriceDisplay,
-     BuilderCompat, render_block path). Block theme: PriceDisplay::filter_price_block accepts
-     3 args, reads $block_instance->context['postId'] for Product Collection archive context.
+   - When WooCommerce is active, verify anchor-price and special-sale controls fit the
+     native Product data editor tab without breaking regular product updates.
+   - Classic and block themes render anchor/30-day lines (PriceDisplay, BuilderCompat).
+     Block theme: filter_price_block accepts 3 args and reads $block_instance->context.
 3. Consistency with docs:
-   - Keep `docs/` in sync with behaviour you touch (legal-rules, feature-acceptance,
-     operations, testing, troubleshooting as applicable).
+   - Keep `docs/` in sync with behaviour you touch.
    - Log completed items in `docs/improvement-backlog.md` (FIX-xx/IMP-xx/REL-xx) and add
      verification notes to `docs/release-readiness.md`.
-4. Quality gates & release:
-   - Run fast unit tests locally (`composer test:unit`). Heavy static gates (PHPCS, PHPStan)
-     and integration/E2E tests are offloaded to CircleCI on git push (per AGENTS.md).
-   - If translation strings were updated, regenerate catalogs:
-     `php tools/i18n/make-pot.php --locale=hr_HR` (baseline: 809 translated strings / 0 untranslated
-     in languages/hr_HR.po).
-   - Follow the release procedure in AGENTS.md / AGENTARDS/README.md:
-     1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
-     2. Run `tools/build-zip.sh <version>` locally to produce release zip and publish to sidrena-cijena-eu.
-     3. Verify with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
-     4. Append release notes to docs/release-readiness.md and update docs/improvement-backlog.md.
-     5. Commit all changes including versions/<version>/ and push to origin master.
-     6. Verify CircleCI pipeline passes (`circleci run list`).
+4. Quality gates & PR creation:
+   - Run fast unit tests locally: `composer test:unit`.
+   - Regenerate translation catalogs if strings changed:
+     `php tools/i18n/make-pot.php --locale=hr_HR` (809 translated / 0 untranslated).
+   - Push branch to origin: `git push -u origin <branch-name>`.
+   - Create Pull Request: `gh pr create --base master --title "<type>: <description>" --body "<details>"`.
+   - Output PR link to user and request their review.
 
-Done when: improvements and tests are committed, gates pass cleanly (locally & in CircleCI), translations are
-complete if strings changed, and a new version archive is built locally, verified, and pushed.
+Done when: improvements and tests are committed, fast local checks pass cleanly,
+branch is pushed, and a Pull Request is opened for user review.
 ```

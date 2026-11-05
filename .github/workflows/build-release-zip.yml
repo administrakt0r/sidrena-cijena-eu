@@ -1,0 +1,39 @@
+name: Build Release Package
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'package.json'
+      - 'sidrena-cijena.php'
+      - 'readme.txt'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: get_version
+        run: |
+          VERSION=$(grep '"version"' package.json | grep -o '[0-9.]*' | head -1)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version is $VERSION"
+
+      - name: Build installable zip
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          chmod +x tools/build-zip.sh
+          ./tools/build-zip.sh "$VERSION" --no-upload --force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sidrena-cijena-eu-v${{ steps.get_version.outputs.VERSION }}
+          path: versions/${{ steps.get_version.outputs.VERSION }}/sidrena-cijena-eu.zip

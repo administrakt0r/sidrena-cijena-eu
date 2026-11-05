@@ -9,6 +9,15 @@ and its documentation. Read `docs/legal-rules.md`, `docs/feature-acceptance.md`,
 `docs/operations.md`, and the known-findings record `docs/compliance-audit-2026-09-24.md`
 first. Baseline: 535+ unit tests / 1916+ assertions green before you start.
 
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+1. Checkout a dedicated branch before making changes:
+   `git checkout -b compliance/legal-cross-check`
+2. Commit each fix separately with conventional messages (fix:/test:/docs:).
+3. When finished, push branch and open a Pull Request for user review:
+   `git push -u origin compliance/legal-cross-check`
+   `gh pr create --base master --title "compliance: legal rules and statutory format cross-check" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
+
 Legal context:
 - Primary decrees: NN 101/2026-1212 (anchor/sidrena cijena display obligation) and
   NN 101/2026-1213 (daily machine-readable CSV/XML price list obligation).
@@ -54,17 +63,16 @@ where behaviour changes). Commit each fix separately.
     Settings::anchor_label_presets() use legally permitted wording per Ministry clarification
     (22 Sep 2026). Dynamic date tokens ({datum}, {date}, {datum_iso}) must resolve to the correct
     category-specific reference date (2025-05-02 for legacy, 2026-09-10 for general).
-    Verify PriceDisplay::format_anchor_label() resolves tokens correctly for both category types.
 11. Tooltip text accuracy: default anchor_tooltip_text must accurately explain the anchor as the
     "redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena"
-    (NOT the 30-day lowest price rule). Verify Settings::all() migration migrates any old 30-day
-    tooltip text to the correct statutory wording.
+    (NOT the 30-day lowest price rule). Verify Settings::all() migration.
 
 When deviations or gaps are fixed:
-- Run all static gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`.
-- Follow the release procedure in AGENTARDS/README.md: bump version, build zip with `tools/build-zip.sh <version>`,
-  verify with `unzip -t`, update docs, commit and push to origin master.
+- Run fast local unit suite: `composer test:unit`.
+- Check translation completeness: `php tools/i18n/make-pot.php --locale=hr_HR`.
+- Push branch and create Pull Request via `gh pr create --base master`.
+- Output PR link to user for review and approval.
 
 Done when: every compliance rule is backed by passing test coverage, deviations
-are fixed and committed, and a new version is packaged and pushed.
+are fixed and committed, and a Pull Request is opened for user review.
 ```

@@ -6,8 +6,16 @@
 You are maintaining the WordPress plugin in the current directory
 (sidrena-cijena.php is the bootstrap). Do a full static audit and fix
 everything you find. Rules: work only inside this plugin; do not touch
-WordPress core, themes or WooCommerce; price-history tables are append-only;
-commit each logical fix separately with conventional messages (fix:/test:/docs:/chore:).
+WordPress core, themes or WooCommerce; price-history tables are append-only.
+
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+1. Checkout a dedicated branch before making changes:
+   `git checkout -b fix/audit-and-fix`
+2. Commit each logical fix separately with conventional messages (fix:/test:/docs:/chore:).
+3. When finished, push the branch and open a Pull Request for user review:
+   `git push -u origin fix/audit-and-fix`
+   `gh pr create --base master --title "fix: static audit, lint and security remediation" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
 
 Steps:
 1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing).
@@ -36,19 +44,14 @@ Steps:
    - Post-activation redirect in WelcomeBanner::maybe_redirect() guards against bulk activation
      ($_GET['activate-multi']), network admin, cron, and REST requests.
    Add a regression test for each gap found.
-5. Quality verification & CircleCI:
-   Run fast unit suite (`composer test:unit`). Heavy static gates (PHPCS, PHPStan)
-   are verified via CircleCI in the cloud on git push (per AGENTS.md).
-6. Packaging (mandatory after every completed run per AGENTS.md / AGENTARDS/README.md):
-   - Bump version in all 4 places: sidrena-cijena.php (header Version and SIDRENA_CIJENA_VERSION constant),
-     readme.txt (Stable tag and = X.Y.Z = changelog), and package.json.
-   - Run `tools/build-zip.sh <version>` locally to produce release archive and upload to sidrena-cijena-eu.
-   - Verify archive with `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
+5. Quality verification & Pull Request:
+   - Run fast unit suite (`composer test:unit`).
+   - If version bump was needed, bump version in sidrena-cijena.php, readme.txt, package.json.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
-   - Commit everything including versions/<version>/ and push to origin master.
-   - Verify pipeline passes on CircleCI (`circleci run list`).
+   - Push branch and open PR via `gh pr create --base master`.
+   - Output the PR link to the user and request their review.
 
-Done when: unit suite passes (535 unit tests / 1916 assertions), lint exits 0, PHPStan reports no errors
-(Level 6), JS lint exits 0, translations are complete (809 translated strings / 0 untranslated in
-languages/hr_HR.po), release archive is built locally and CircleCI pipeline passes green.
+Done when: unit suite passes (535 unit tests / 1916 assertions), lint exits 0, PHPStan reports no errors,
+JS lint exits 0, translations are complete (809 translated strings / 0 untranslated in languages/hr_HR.po),
+branch is pushed and Pull Request is opened for user review.
 ```

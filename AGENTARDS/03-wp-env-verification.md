@@ -10,6 +10,15 @@ wrap docker/wp-env commands in `sg docker -c '…'`.
 CRITICAL WARNING: NEVER run `wp plugin install <zip> --force` inside wp-env. The host plugin
 directory is directly bind-mounted into Docker containers; `--force` deletes the directory!
 
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+If any fixes are made during verification:
+1. Create a dedicated branch: `git checkout -b fix/wp-env-integration-fixes`
+2. Commit each fix atomically (fix:/test:).
+3. Push branch and open a Pull Request for user review:
+   `git push -u origin fix/wp-env-integration-fixes`
+   `gh pr create --base master --title "fix: integration and live wp-env verification fixes" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
+
 1. Local demo environment:
    Run `./local.sh` (starts wp-env on http://localhost:8888, activates WooCommerce + Sidrena Cijena,
    configures EUR and Europe/Zagreb timezone, seeds demo products, anchors, a sale, and seeds
@@ -39,9 +48,7 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    - 2. Anchor price display: Open product page; reference date price and label render next to price
         (classic and block themes). Mapped legacy categories show 02.05.2025; general items show 10.09.2026.
         Verify that dynamic date tokens ({datum}) resolve in the label to the category-appropriate date.
-        Verify that the tooltip shows the correct statutory text (NOT the 30-day rule text):
-        "Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum
-        prema mjerama izravne kontrole cijena."
+        Verify that the tooltip shows the correct statutory text (NOT the 30-day rule text).
    - 3. 30-day lowest price: Item with classified promotion shows lowest price line; promotional start date
         is excluded; lowest_30_day rows are never used as self-input.
    - 4. Daily price list: Generate from admin or WP-CLI (`wp sidrena-cijena generate --force`);
@@ -54,23 +61,18 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    - 7. Compliance gate: Missing anchor blocks publication with visible ERROR in Compliance check;
         resolving the finding allows generation.
 6. Block theme (Product Collection block) verification:
-   In a block-theme or Gutenberg-based product listing, verify the anchor price renders correctly
-   in the archive context (Product Collection block). The filter_price_block hook accepts 3 args
-   ($content, $block, $block_instance) and reads $block_instance->context to get the postId for
-   archive blocks. Verify this works for both single product page and Product Collection archive.
+   Verify PriceDisplay::filter_price_block passes 3 args and reads $block_instance->context to show
+   archive prices in WooCommerce Product Collection blocks.
 7. Label preset display verification:
-   In the Display Settings screen (wp-admin/admin.php?page=sidrena-cijena-display), verify:
-   - All 7 preset pills are shown and clickable.
-   - Clicking a preset auto-fills the label field.
-   - {datum} quick-insert button works.
-   - Live preview shows both legacy (2025-05-02) and general (2026-09-10) example dates correctly.
+   In Display Settings, verify preset pills, dynamic date preview, and tooltip styling.
 8. Verify standalone operation without WooCommerce:
-   Test deactivating WooCommerce (`npx wp-env run cli wp plugin deactivate woocommerce`).
+   Deactivate WooCommerce (`npx wp-env run cli wp plugin deactivate woocommerce`).
    Plugin must continue operating without fatals using the standalone catalog. Re-activate WooCommerce after test.
 9. If any fixes were made:
-   - Run all static quality gates (`composer test:unit && composer lint && composer analyse && npm run lint:js`).
-   - Package and release per AGENTARDS/README.md (bump version, build zip, verify with unzip -t, commit and push).
+   - Run fast unit tests: `composer test:unit`.
+   - Push branch and create PR via `gh pr create --base master`.
+   - Hand off PR link to user for review.
 
 Done when: integration suite passes (96 tests / 454 assertions), E2E suite passes (42 Playwright specs on port 8889),
-all 7+ verification steps pass, and any fixes are packaged, committed, and pushed.
+all 7+ verification steps pass, and any fixes are pushed on a branch with an open Pull Request.
 ```

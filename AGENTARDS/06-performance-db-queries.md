@@ -12,7 +12,16 @@ Rules: work only inside this plugin; never touch WordPress core, themes or WooCo
 The price-history table (wp_sidrena_price_history) is append-only legal evidence: schema
 changes are additive only (new indexes/columns, never rewritten rows) and legal semantics
 must not change (docs/legal-rules.md). Keep the plugin working with and without
-WooCommerce. Commit each item separately (perf: / fix:), with tests.
+WooCommerce.
+
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+1. Checkout a dedicated branch before making changes:
+   `git checkout -b perf/db-query-tuning`
+2. Commit each item separately (perf: / fix:), with tests.
+3. Push branch and open a Pull Request for user review:
+   `git push -u origin perf/db-query-tuning`
+   `gh pr create --base master --title "perf: database and query tuning" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
 
 Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 
@@ -68,14 +77,8 @@ Constraints:
   unless the test contradicts docs/legal-rules.md, in which case stop and report it.
 - Never guess, backfill or rewrite historical price rows.
 - PHP 7.4-8.4 compatibility (no PHP 8-only syntax in src/).
-- Gates must pass: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
-  with Docker also `npx wp-env clean tests && composer test:integration`.
-
-Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places (plugin header +
-SIDRENA_CIJENA_VERSION, readme.txt Stable tag + changelog, package.json), `tools/build-zip.sh
-<version>`, `unzip -t versions/<version>/sidrena-cijena-eu.zip`, update docs/improvement-backlog.md
-(PERF-xx) and docs/release-readiness.md, commit everything and push to origin master.
+- Gates must pass: `composer test:unit`.
 
 Done when: measured query counts/timings improved with numbers recorded, every item covered by
-tests, all gates green, legal rules untouched, release archive built and pushed.
+tests, fast unit suite passes green, legal rules untouched, branch pushed, and Pull Request opened for user review.
 ```

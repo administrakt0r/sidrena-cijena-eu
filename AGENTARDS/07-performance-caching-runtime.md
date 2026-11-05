@@ -11,8 +11,16 @@ and after.
 Rules: work only inside this plugin; never touch WordPress core, themes or WooCommerce.
 Legal semantics must not change (docs/legal-rules.md). Compliance findings and the
 publication gate are legal state — a cached compliance result must never hide a new
-ERROR. Keep the plugin working with and without WooCommerce. Commit each item separately
-(perf: / fix:), with tests. PHP 7.4-8.4 only.
+ERROR. Keep the plugin working with and without WooCommerce.
+
+MANDATORY BRANCH & PULL REQUEST WORKFLOW:
+1. Checkout a dedicated branch before making changes:
+   `git checkout -b perf/caching-and-runtime`
+2. Commit each item separately (perf: / fix:), with tests.
+3. Push branch and open a Pull Request for user review:
+   `git push -u origin perf/caching-and-runtime`
+   `gh pr create --base master --title "perf: caching, runtime optimization and asset scoping" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
 
 Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 
@@ -32,8 +40,7 @@ Work items — verify each against the real code first:
    generation inline inside a real visitor's request. Gate the check so ordinary
    front-end requests skip it (admin/cron/CLI only, or one cheap option-flag test that
    fails fast), and hand the heavy work to WP-Cron / Action Scheduler instead of the page
-   request. Preserve the REL-06 behaviour: missed-run detection, catch-up generation,
-   failure notice, `wp sidrena-cijena status` diagnostics.
+   request.
 2. Cache fragmentation: Api/PublicPage::render_list() caches the rendered HTML per
    (page, location, q, type) through Api/RestCache (300 s TTL). Every distinct search
    term = one full catalog build + a full HTML copy living in wp_options on hosts without
@@ -43,8 +50,7 @@ Work items — verify each against the real code first:
    walk + latest_map calls + validator) on every screen load; PublicPage::render_archive()
    queries publications on every request; REST /publications and /status are uncached.
    Add short-TTL caches keyed through the existing generation markers (RestCache /
-   AnchorCache) and flush them on the existing invalidation hooks. Never cache away a
-   compliance ERROR or a publication gate decision.
+   AnchorCache) and flush them on the existing invalidation hooks.
 4. AnchorCache write amplification (src/Pricing/AnchorCache.php): a cold cache writes one
    transient per product/variation (TTL 1 day) and flush() uses a no-expiry transient that
    lands in the autoloaded options table. Prefer batched entries or wp_cache where a
@@ -54,30 +60,14 @@ Work items — verify each against the real code first:
    request regardless of the active locale. Load once, respect the current locale, keep
    Croatian strings working in tests and in the hr catalog.
 6. Asset loading: assets/css/frontend.css and assets/js/frontend.js are enqueued on EVERY
-   front-end page (PriceDisplay::enqueue_assets on wp_enqueue_scripts). Restrict to the
-   contexts the display settings target (product pages, shop/product archives) without
-   breaking builder compatibility (src/WooCommerce/Display/BuilderCompat.php). Also drop
-   the unused wp-i18n dependency of admin.js (src/Admin/AdminMenu::enqueue_assets).
-7. Settings::get() (src/Support/Settings.php) re-parses defaults and runs wp_parse_args on
-   every call, ~10× per rendered product. Memoise per request and invalidate on
-   `sidrena_cijena_settings_changed` (and in tests).
-8. REST per-IP throttle (src/Api/PriceListController.php) costs two options-table round
-   trips per request on hosts without a persistent object cache — use wp_cache when
-   available.
-
-Constraints:
-- Cache invalidation must stay correct: price, anchor, sale, publication and settings
-  changes flush what they touch today (Plugin::flush_caches). Extend, never weaken.
-- If a test encodes a bug, fix the implementation, not the test — unless it contradicts
-  docs/legal-rules.md, in which case stop and report.
-- Gates: `composer test:unit && composer lint && composer analyse && npm run lint:js`;
-  with Docker also `npx wp-env clean tests && composer test:integration`.
-
-Release (mandatory per AGENTARDS/README.md): bump the version in all 4 places, run
-`tools/build-zip.sh <version>`, verify `unzip -t versions/<version>/sidrena-cijena-eu.zip`,
-update docs/improvement-backlog.md (PERF-xx) and docs/release-readiness.md, commit and
-push to origin master.
+   front-end page. Restrict to the contexts the display settings target (product pages,
+   shop/product archives) without breaking builder compatibility.
+7. Settings::get() re-parses defaults and runs wp_parse_args on every call. Memoise per
+   request and invalidate on `sidrena_cijena_settings_changed`.
+8. REST per-IP throttle costs two options-table round trips per request on hosts without
+   a persistent object cache — use wp_cache when available.
 
 Done when: measured per-request cost improved with numbers recorded, invalidation hooks
-verified by tests, all gates green, legal rules untouched, release archive built and pushed.
+verified by tests, fast unit suite passes green, legal rules untouched, branch pushed,
+and Pull Request opened for user review.
 ```

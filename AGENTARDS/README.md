@@ -42,10 +42,43 @@ on Docker hosts); see `docs/testing.md`.
 - Local demo site: http://localhost:8888 (admin / password, started via `./local.sh`).
 - Local test site: http://localhost:8889 (Playwright E2E target only, started via `npx wp-env start`).
 
+## Mandatory Workflow & Pull Request (PR) Policy
+
+> [!IMPORTANT]
+> **NEVER commit directly to `master`. Always open a Pull Request on a new branch.**
+> All agents must adhere to the following workflow for every prompt run so the user can review edits before merging:
+
+1. **Create a new branch**:
+   Before making any edits, checkout a new branch describing the task:
+   ```bash
+   git checkout -b <type>/<short-description>
+   # Examples: feat/add-anchor-preset, fix/tooltip-flip, perf/query-optimization
+   ```
+2. **Make atomic commits**:
+   Commit each logical step with conventional commit prefixes (`feat:`, `fix:`, `perf:`, `test:`, `docs:`, `chore:`).
+3. **Run fast local sanity checks**:
+   ```bash
+   composer test:unit                         # Must pass 535/1916 or more
+   php tools/i18n/make-pot.php --locale=hr_HR # Must report 0 untranslated
+   ```
+4. **Push the branch to origin**:
+   ```bash
+   git push -u origin <branch-name>
+   ```
+5. **Open a GitHub Pull Request via `gh` CLI**:
+   ```bash
+   gh pr create --base master --head <branch-name> \
+     --title "<type>: <concise description>" \
+     --body "<summary of changes, test coverage, and verification results>"
+   ```
+6. **Handoff for review**:
+   Do **NOT** merge the pull request. Output the PR link to the user for human review and approval.
+7. **Automated release zip**:
+   When the user merges the PR into `master`, the automated `.git/hooks/post-merge` hook (or GitHub Action) builds the release zip in `versions/`.
+
 ## Hard rules for every prompt
 
 - **Heavy CPU Offload to CircleCI (Keep Host PC Quiet):** Do NOT run full heavy CPU/RAM commands locally (`composer lint` over 184 files, full `composer analyse`, local `wp-env` integration or Playwright E2E suites). Run only fast local sanity checks (`php -l`, `composer test:unit -- --filter ...`, `composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`). Heavy gates (`verify` and `integration_and_e2e`) run in the cloud via CircleCI pipelines on push. Check status using `circleci run list` and `circleci run get <id>`.
-- **Local Release Packaging:** Release zip creation and publishing to the public repository `sidrena-cijena-eu` is handled locally via `tools/build-zip.sh <version>`. Never offload release packaging to CircleCI.
 - **Plugin boundaries:** Work **only** inside this plugin (`src/`, `assets/`, `tests/`, `languages/`, `docs/`, `tools/`, root config files). Never touch WordPress core, theme or WooCommerce files.
 - **Legal semantics:** Never change legal behavior silently: reference dates (general **2026-09-10**, legacy **2025-05-02**), the 30-day lowest-price window (`start-30` → `start-1`, start excluded), filename pattern (`{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`), 30+ day archive, enforcement deadline (**17 November 2026**, NN 110/2026), and blocking publication gate are governed by `docs/legal-rules.md`.
 - **Permitted label wording:** Anchor label presets must use wording legally permitted by the Ministry of Economy clarification (22 Sep 2026): "Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan [datum]", "Cijena na [datum]", "Najniža redovna cijena ([datum])". Dynamic tokens {datum}/{date}/{datum_iso} must resolve to the category-appropriate reference date (2025-05-02 for legacy, 2026-09-10 for general).
@@ -58,35 +91,3 @@ on Docker hosts); see `docs/testing.md`.
   - **Test shop:** `npx wp-env start` starts the isolated test site at `http://localhost:8889`. Playwright E2E tests (`npm run test:e2e`) run **exclusively** against port 8889.
   - Wrap docker commands in `sg docker -c '…'` if the running shell does not inherit docker group permissions.
   - Before integration tests, clean test DB: `npx wp-env clean tests`.
-
-## Release policy (mandatory at the end of every completed run)
-
-Every completed run ships a new version archive following the repository convention:
-
-1. **Bump the version in all 4 places** (they must agree exactly):
-   - `sidrena-cijena.php` (header `Version:` and constant `SIDRENA_CIJENA_VERSION`)
-   - `readme.txt` (`Stable tag:` and `= X.Y.Z =` changelog entry)
-   - `package.json` (`"version": "X.Y.Z"`)
-2. **Run fast local sanity checks**:
-   ```bash
-   composer test:unit          # PHPUnit fast unit suite (~6s) — must pass 535/1916 or more
-   php tools/i18n/make-pot.php --locale=hr_HR # Verify 0 untranslated strings in languages/hr_HR.po
-   ```
-   *(Heavy static gates: PHPCS, PHPStan, integration tests, and Playwright E2E are verified automatically via CircleCI pipelines).*
-3. **Build release archive and publish locally**:
-   ```bash
-   tools/build-zip.sh <version>
-   # Builds package, computes SHA256 checksums, and syncs/publishes to public repo sidrena-cijena-eu
-   unzip -t versions/<version>/sidrena-cijena-eu.zip
-   ```
-4. **Update documentation**:
-   - Add verification notes to `docs/release-readiness.md`.
-   - Update `docs/improvement-backlog.md` with closed items.
-5. **Commit, push, and verify CircleCI**:
-   Commit the release archive and push to `origin master`:
-   ```bash
-   git add versions/<version>/
-   git commit -m "chore: archive installable <version> release"
-   git push origin master
-   circleci run list  # Ensure CircleCI pipeline runs and passes green
-   ```
