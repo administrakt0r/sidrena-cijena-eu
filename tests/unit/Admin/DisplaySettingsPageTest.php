@@ -50,6 +50,7 @@ class DisplaySettingsPageTest extends TestCase {
 
 		$this->assertNotNull( $anchor_label_field, 'Anchor label field must be registered.' );
 		$this->assertSame( 'anchor_label', $anchor_label_field['args']['label_for'] );
+		$this->assertNotEmpty( $anchor_label_field['args']['description'] );
 	}
 
 	/**

@@ -145,6 +145,18 @@ if ( ! function_exists( 'esc_html' ) ) {
 	}
 }
 
+if ( ! function_exists( 'esc_textarea' ) ) {
+	/**
+	 * Textarea escape stub.
+	 *
+	 * @param string $text Text.
+	 * @return string
+	 */
+	function esc_textarea( $text ) {
+		return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
 if ( ! function_exists( 'esc_attr' ) ) {
 	/**
 	 * Attribute escape stub.
