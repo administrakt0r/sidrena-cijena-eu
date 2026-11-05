@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.20
+Stable tag: 2.0.21
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,16 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.21 =
+* Streaming export pipeline: CsvWriter and XmlWriter stream large product catalogs directly to disk without loading full CSV/XML strings into memory.
+* Incremental catalog hashing: PriceListBuilder::fingerprint() hashes catalog items incrementally row-by-row via hash_init/hash_update, eliminating multi-megabyte array cloning while guaranteeing byte-identical SHA-256 hashes.
+* Write-time checksum hashing: Publisher::publish() calculates SHA-256 file digests and byte sizes during streaming writes, eliminating post-write disk re-reads.
+* Collapsed sequence increment: LocationRepository::next_sequence() collapsed sequence advancement to an atomic UPDATE and integer selection query, eliminating full SELECT * and JSON hydration.
+* Batch publication expiration: CleanupJob and PublicationRepository batch expired publication updates in a single WHERE id IN query.
+* REST download document caching: PriceListController::download() caches serialized CSV and XML documents in RestCache, eliminating full catalog re-serialization on repeat REST downloads.
+* CircleCI caching: enabled tool, analysis, and Playwright browser caching in CircleCI pipelines.
+* Quality gates: 559 unit tests (2,031 assertions) passing; 100% complete Croatian translation catalog.
 
 = 2.0.20 =
 * Accurate legal tooltip explanation: corrected default anchor tooltip from erroneous 30-day wording to the statutory definition per NN 101/2026 and NN 110/2026.
