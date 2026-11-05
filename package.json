@@ -13,7 +13,7 @@
 		"wp-env": "wp-env",
 		"wp-env:test": "wp-env --config .wp-env.test.json",
 		"test:e2e": "playwright test",
-		"lint:js": "wp-scripts lint-js assets/js",
+		"lint:js": "wp-scripts lint-js assets/js --cache --cache-location .eslintcache",
 		"format:js": "wp-scripts format assets/js"
 	}
 }

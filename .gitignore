@@ -32,4 +32,7 @@ Thumbs.db
 .env
 .env.*
 /.phpunit.result.cache
+/.phpcs.cache
+/.phpstan.cache/
+/.eslintcache
 PROMPT.md

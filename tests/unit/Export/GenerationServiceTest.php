@@ -489,4 +489,57 @@ class GenerationServiceTest extends TestCase {
 		$this->assertIsArray( $result );
 		$this->assertFalse( $result['has_errors'] );
 	}
+
+	/**
+	 * Verify generate_location computes validation report only once across all formats.
+	 *
+	 * @return void
+	 */
+	public function test_generate_location_shares_validation_across_formats() {
+		$catalog      = $this->createMock( CatalogProvider::class );
+		$locations    = $this->createMock( LocationRepository::class );
+		$publications = $this->createMock( PublicationRepository::class );
+		$history      = $this->createMock( PriceHistoryRepository::class );
+		$sales        = $this->createMock( SpecialSaleRepository::class );
+
+		$locations->method( 'get' )->with( 7 )->willReturn(
+			array(
+				'id'         => 7,
+				'name'       => 'Dual Format Shop',
+				'identifier' => 'DFS',
+				'type'       => 'webshop',
+				'address'    => 'Ilica 10',
+				'city'       => 'Zagreb',
+			)
+		);
+		$locations->method( 'next_sequence' )->willReturn( 1 );
+		$publications->method( 'latest' )->willReturn( null );
+		$publications->method( 'insert' )->willReturn( 1 );
+
+		// Preloaded empty catalog so iterate is never called.
+		$catalog->expects( $this->never() )->method( 'iterate' );
+
+		// Crucial assertion: Validator::validate must run exactly ONCE for both csv and xml.
+		$validator = $this->createMock( Validator::class );
+		$validator->expects( $this->once() )->method( 'validate' )->willReturn(
+			array(
+				'findings' => array(),
+				'warnings' => 0,
+			)
+		);
+		PluginSwap::swap( 'validator', $validator );
+
+		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
+		$results = $service->generate_location(
+			7,
+			array(
+				'force' => true,
+				'items' => array(),
+			)
+		);
+
+		$this->assertIsArray( $results );
+		$this->assertArrayHasKey( 'csv', $results );
+		$this->assertArrayHasKey( 'xml', $results );
+	}
 }

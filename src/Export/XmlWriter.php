@@ -63,6 +63,86 @@ class XmlWriter {
 	}
 
 	/**
+	 * Stream XML chunks to a file handle and incrementally update a hash context.
+	 *
+	 * @param resource          $handle   Target file stream handle.
+	 * @param array<mixed>[]    $items    Canonical rows.
+	 * @param array<mixed>      $location Location row.
+	 * @param array<mixed>      $meta     Meta.
+	 * @param \HashContext|null $hash_ctx Optional hash context for write-time checksum calculation.
+	 * @return int Bytes written.
+	 */
+	public function write_stream( $handle, array $items, array $location, array $meta = array(), $hash_ctx = null ) {
+		$writer = new \XMLWriter();
+		$writer->openMemory();
+		$writer->setIndent( true );
+		$writer->setIndentString( '  ' );
+		$writer->startDocument( '1.0', 'UTF-8' );
+
+		$writer->startElement( 'cjenik' );
+		$writer->writeAttribute( 'verzija', self::FORMAT_VERSION );
+		$writer->writeAttribute( 'pravilo', isset( $meta['rule_version'] ) ? (string) $meta['rule_version'] : '' );
+		$writer->writeAttribute(
+			'generirano',
+			isset( $meta['generated_at'] ) ? (string) $meta['generated_at'] : Dates::now_site()->format( 'c' )
+		);
+
+		$writer->startElement( 'prodajnoMjesto' );
+		$writer->writeAttribute( 'oznaka', isset( $location['identifier'] ) ? (string) $location['identifier'] : '' );
+
+		foreach ( array(
+			'naziv'  => 'name',
+			'oblik'  => 'type',
+			'adresa' => 'address',
+			'grad'   => 'city',
+		) as $element => $key ) {
+			if ( ! empty( $location[ $key ] ) ) {
+				$writer->writeAttribute( $element, (string) $location[ $key ] );
+			}
+		}
+
+		$bytes = 0;
+		$chunk = $writer->flush();
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
+		$w = fwrite( $handle, $chunk );
+		if ( false !== $w ) {
+			$bytes += $w;
+			if ( null !== $hash_ctx ) {
+				hash_update( $hash_ctx, $chunk );
+			}
+		}
+
+		foreach ( $items as $item ) {
+			$this->write_item( $writer, $item );
+			$chunk = $writer->flush();
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
+			$w = fwrite( $handle, $chunk );
+			if ( false !== $w ) {
+				$bytes += $w;
+				if ( null !== $hash_ctx ) {
+					hash_update( $hash_ctx, $chunk );
+				}
+			}
+		}
+
+		$writer->endElement();
+		$writer->endElement();
+		$writer->endDocument();
+
+		$chunk = $writer->flush();
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
+		$w = fwrite( $handle, $chunk );
+		if ( false !== $w ) {
+			$bytes += $w;
+			if ( null !== $hash_ctx ) {
+				hash_update( $hash_ctx, $chunk );
+			}
+		}
+
+		return $bytes;
+	}
+
+	/**
 	 * Fill an XMLWriter with the document.
 	 *
 	 * @param \XMLWriter     $writer   Writer.

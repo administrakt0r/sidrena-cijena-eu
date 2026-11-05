@@ -319,6 +319,22 @@ class BuildCacheFakeLocations extends LocationRepository {
 
 		return $this->rows;
 	}
+
+	/**
+	 * Get one location by ID.
+	 *
+	 * @param int $id Location ID.
+	 * @return array<string,mixed>|null
+	 */
+	public function get( $id ) {
+		foreach ( $this->rows as $row ) {
+			if ( (int) $row['id'] === (int) $id ) {
+				return $row;
+			}
+		}
+
+		return null;
+	}
 }
 
 /**
@@ -562,6 +578,84 @@ class PriceListControllerCacheTest extends TestCase {
 
 		$res3 = PriceListController::get_status( $request );
 		$this->assertSame( 2, $locs->all_calls, 'Cache flush must trigger a re-query for get_status.' );
+
+		PluginSwap::swap( 'locations', null );
+		PluginSwap::swap( 'publications', null );
+	}
+
+	/**
+	 * Verify download_csv caches the serialized document across requests and invalidates on flush.
+	 *
+	 * @return void
+	 */
+	public function test_download_caches_serialized_document_and_refreshes_on_flush() {
+		$locs       = new BuildCacheFakeLocations();
+		$locs->rows = array(
+			array(
+				'id'         => 1,
+				'name'       => 'Zagreb',
+				'identifier' => 'ZG-01',
+				'active'     => true,
+			),
+		);
+		PluginSwap::swap( 'locations', $locs );
+		PluginSwap::swap( 'publications', new BuildCacheFakePublications() );
+
+		$request = new \WP_REST_Request( 'GET', '/sidrena-cijena/v1/download/csv' );
+		$request->set_param( 'location', 1 );
+		$request->set_param( 'type', 'product' );
+
+		$res1 = PriceListController::download_csv( $request );
+		$this->assertInstanceOf( \WP_REST_Response::class, $res1 );
+		$this->assertSame( 1, $this->catalog->iterate_calls );
+
+		$res2 = PriceListController::download_csv( $request );
+		$this->assertSame( 1, $this->catalog->iterate_calls, 'Repeat download must be served from cache without rebuild.' );
+		$this->assertSame( $res1->get_data(), $res2->get_data() );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$res3 = PriceListController::download_csv( $request );
+		$this->assertSame( 2, $this->catalog->iterate_calls, 'Flush must invalidate cached download document.' );
+
+		PluginSwap::swap( 'locations', null );
+		PluginSwap::swap( 'publications', null );
+	}
+
+	/**
+	 * Verify download_xml caches the serialized document across requests and invalidates on flush.
+	 *
+	 * @return void
+	 */
+	public function test_download_xml_caches_serialized_document_and_refreshes_on_flush() {
+		$locs       = new BuildCacheFakeLocations();
+		$locs->rows = array(
+			array(
+				'id'         => 1,
+				'name'       => 'Zagreb',
+				'identifier' => 'ZG-01',
+				'active'     => true,
+			),
+		);
+		PluginSwap::swap( 'locations', $locs );
+		PluginSwap::swap( 'publications', new BuildCacheFakePublications() );
+
+		$request = new \WP_REST_Request( 'GET', '/sidrena-cijena/v1/download/xml' );
+		$request->set_param( 'location', 1 );
+		$request->set_param( 'type', 'all' );
+
+		$res1 = PriceListController::download_xml( $request );
+		$this->assertInstanceOf( \WP_REST_Response::class, $res1 );
+		$this->assertSame( 1, $this->catalog->iterate_calls );
+
+		$res2 = PriceListController::download_xml( $request );
+		$this->assertSame( 1, $this->catalog->iterate_calls, 'Repeat download must be served from cache without rebuild.' );
+		$this->assertSame( $res1->get_data(), $res2->get_data() );
+
+		Plugin::instance()->rest_cache()->flush();
+
+		$res3 = PriceListController::download_xml( $request );
+		$this->assertSame( 2, $this->catalog->iterate_calls, 'Flush must invalidate cached download document.' );
 
 		PluginSwap::swap( 'locations', null );
 		PluginSwap::swap( 'publications', null );

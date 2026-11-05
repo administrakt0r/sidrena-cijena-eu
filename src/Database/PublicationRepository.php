@@ -82,11 +82,22 @@ class PublicationRepository {
 	 * @param array<mixed> $data Fields.
 	 * @return bool
 	 */
-	public function update( $id, array $data ) {
+	/**
+	 * Update an existing publication row.
+	 *
+	 * @param int               $id       Row ID.
+	 * @param array<mixed>      $data     Fields.
+	 * @param array<mixed>|null $existing Optional existing row to avoid redundant get().
+	 * @return bool
+	 */
+	public function update( $id, array $data, $existing = null ) {
 		global $wpdb;
 
-		$existing = $this->get( $id );
-		$row      = $this->normalize( array_merge( $existing ? $existing : array(), $data ) );
+		if ( null === $existing ) {
+			$existing = $this->get( $id );
+		}
+
+		$row = $this->normalize( array_merge( $existing ? $existing : array(), $data ) );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
@@ -97,17 +108,18 @@ class PublicationRepository {
 	/**
 	 * Set the status of a publication.
 	 *
-	 * @param int    $id     Row ID.
-	 * @param string $status New status.
-	 * @param array  $extra  Additional fields (for example `published_at`, `validation_summary`).
+	 * @param int               $id       Row ID.
+	 * @param string            $status   New status.
+	 * @param array             $extra    Additional fields (for example `published_at`, `validation_summary`).
+	 * @param array<mixed>|null $existing Optional existing row to avoid redundant get().
 	 * @return bool
 	 */
-	public function set_status( $id, $status, array $extra = array() ) {
+	public function set_status( $id, $status, array $extra = array(), $existing = null ) {
 		if ( ! in_array( $status, self::STATUSES, true ) ) {
 			return false;
 		}
 
-		return $this->update( $id, array_merge( array( 'status' => $status ), $extra ) );
+		return $this->update( $id, array_merge( array( 'status' => $status ), $extra ), $existing );
 	}
 
 	/**
@@ -271,13 +283,31 @@ class PublicationRepository {
 	}
 
 	/**
-	 * Mark a publication as expired (archive row retained).
+	 * Mark one or more publications as expired (archive row retained).
 	 *
-	 * @param int $id Row ID.
+	 * @param int|array<int> $ids Row ID or array of row IDs.
 	 * @return bool
 	 */
-	public function mark_expired( $id ) {
+	public function mark_expired( $ids ) {
 		global $wpdb;
+
+		if ( is_array( $ids ) ) {
+			$clean_ids = array_filter( array_map( 'intval', $ids ) );
+			if ( empty( $clean_ids ) ) {
+				return true;
+			}
+
+			$placeholders = implode( ',', array_fill( 0, count( $clean_ids ), '%d' ) );
+			$sql          = $wpdb->prepare(
+				"UPDATE %i SET status = 'expired', expired_at = %s WHERE id IN ($placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				array_merge( array( $this->table, Dates::now_utc() ), $clean_ids )
+			);
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$result = $wpdb->query( $sql );
+
+			return false !== $result;
+		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update(
@@ -286,7 +316,7 @@ class PublicationRepository {
 				'status'     => 'expired',
 				'expired_at' => Dates::now_utc(),
 			),
-			array( 'id' => (int) $id ),
+			array( 'id' => (int) $ids ),
 			array( '%s', '%s' ),
 			array( '%d' )
 		);

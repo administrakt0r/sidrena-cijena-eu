@@ -64,16 +64,16 @@ class Publisher {
 	/**
 	 * Publish a price list.
 	 *
-	 * @param array<mixed> $location Location row.
-	 * @param string       $format   Format (`csv` or `xml`).
-	 * @param string       $content  Generated file content.
-	 * @param array<mixed> $meta     Meta: `fingerprint`, `item_count`, `rule_version`, `force`.
+	 * @param array<mixed>             $location Location row.
+	 * @param string                   $format   Format (`csv` or `xml`).
+	 * @param string|callable|resource $content  Generated file content or stream writer.
+	 * @param array<mixed>             $meta     Meta: `fingerprint`, `item_count`, `rule_version`, `force`.
 	 * @return array<mixed>|\WP_Error
 	 */
 	public function publish( array $location, $format, $content, array $meta = array() ) {
 		$format      = strtolower( (string) $format );
 		$location_id = isset( $location['id'] ) ? (int) $location['id'] : 0;
-		$fingerprint = isset( $meta['fingerprint'] ) ? (string) $meta['fingerprint'] : hash( 'sha256', (string) $content );
+		$fingerprint = isset( $meta['fingerprint'] ) ? (string) $meta['fingerprint'] : ( is_string( $content ) ? hash( 'sha256', $content ) : '' );
 		$force       = ! empty( $meta['force'] );
 
 		$latest = $this->publications->latest( $location_id, $format );
@@ -115,10 +115,59 @@ class Publisher {
 			return new \WP_Error( 'invalid_filename', __( 'A unique price-list filename could not be generated.', 'sidrena-cijena-eu' ) );
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writes the generated price list into the plugin's uploads directory.
-		if ( false === file_put_contents( $path, (string) $content ) ) {
-			return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
+		$hash_ctx  = hash_init( 'sha256' );
+		$file_size = 0;
+
+		if ( is_callable( $content ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming the generated price list into the uploads directory.
+			$handle = fopen( $path, 'wb' );
+			if ( false === $handle ) {
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
+			}
+
+			$written = call_user_func( $content, $handle, $hash_ctx );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closes stream after writing price list.
+			fclose( $handle );
+
+			if ( false === $written ) {
+				wp_delete_file( $path );
+
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
+			}
+
+			$file_size = is_int( $written ) ? $written : (int) filesize( $path );
+		} elseif ( is_resource( $content ) ) {
+			rewind( $content );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming price list from resource.
+			$handle = fopen( $path, 'wb' );
+			if ( false === $handle ) {
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
+			}
+
+			while ( ! feof( $content ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Reads source stream.
+				$chunk = fread( $content, 65536 );
+				if ( false !== $chunk && '' !== $chunk ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Writes to target file.
+					fwrite( $handle, $chunk );
+					hash_update( $hash_ctx, $chunk );
+					$file_size += strlen( $chunk );
+				}
+			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closes target handle.
+			fclose( $handle );
+		} else {
+			$str_content = (string) $content;
+			hash_update( $hash_ctx, $str_content );
+			$file_size = strlen( $str_content );
+
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writes the generated price list into the plugin's uploads directory.
+			if ( false === file_put_contents( $path, $str_content ) ) {
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'sidrena-cijena-eu' ) );
+			}
 		}
+
+		$checksum = hash_final( $hash_ctx );
 
 		$published = Dates::now_utc();
 		$days      = max( 30, (int) Settings::get( 'retention_days', 30 ) );
@@ -132,9 +181,9 @@ class Publisher {
 				'filename'            => $filename,
 				'path'                => $path,
 				'url'                 => $dir['url'] . $filename,
-				'checksum'            => (string) hash_file( 'sha256', $path ),
+				'checksum'            => $checksum,
 				'content_fingerprint' => $fingerprint,
-				'file_size'           => (int) filesize( $path ),
+				'file_size'           => (int) $file_size,
 				'rule_version'        => isset( $meta['rule_version'] ) ? (string) $meta['rule_version'] : '',
 				'status'              => 'published',
 				'sequence_no'         => (int) $sequence,

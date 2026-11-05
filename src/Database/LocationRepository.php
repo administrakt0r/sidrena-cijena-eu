@@ -194,9 +194,10 @@ class LocationRepository {
 			)
 		);
 
-		$location = $this->get( $id );
-
-		return $location ? (int) $location['sequence_no'] : 0;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return (int) $wpdb->get_var(
+			$wpdb->prepare( 'SELECT sequence_no FROM %i WHERE id = %d', $this->table, (int) $id )
+		);
 	}
 
 	/**
