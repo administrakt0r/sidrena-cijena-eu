@@ -10,6 +10,9 @@ namespace SidrenaCijena\Tests\Unit\Database;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Database\PriceHistoryRepository;
 
+/**
+ * Test wpdb stub for PriceHistoryRepository tests.
+ */
 class PriceHistoryRepositoryTestWpdb extends \wpdb {
 
 	/**
@@ -35,6 +38,10 @@ class PriceHistoryRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string|null $query  Query string.
+	 * @param string      $output Output format.
+	 * @return array[]
 	 */
 	public function get_results( $query = null, $output = OBJECT ) {
 		$this->queries[] = $query;
@@ -44,6 +51,11 @@ class PriceHistoryRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string|null $query Query string.
+	 * @param int         $x     Column offset.
+	 * @param int         $y     Row offset.
+	 * @return mixed
 	 */
 	public function get_var( $query = null, $x = 0, $y = 0 ) {
 		$this->queries[] = $query;
@@ -85,7 +97,7 @@ class PriceHistoryRepositoryTest extends TestCase {
 	}
 
 	/**
-	 * active_sale_period_map memoizes queried products within the request.
+	 * Active_sale_period_map memoizes queried products within the request.
 	 *
 	 * @return void
 	 */
@@ -130,7 +142,7 @@ class PriceHistoryRepositoryTest extends TestCase {
 	}
 
 	/**
-	 * count memoizes result for identical query arguments within request.
+	 * Count memoizes result for identical query arguments within request.
 	 *
 	 * @return void
 	 */

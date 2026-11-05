@@ -204,10 +204,6 @@ class Validator {
 					)
 				);
 
-			if ( ! is_array( $iterator ) && ! ( $iterator instanceof \Traversable ) ) {
-				$iterator = array();
-			}
-
 			foreach ( $iterator as $item ) {
 				if ( ! empty( $args['product_id'] ) && (int) $item->id !== (int) $args['product_id'] ) {
 					continue;

@@ -111,7 +111,7 @@ class PriceHistoryPageTest extends TestCase {
 	}
 
 	/**
-	 * render() derives total from fetched rows without calling count() when first page has fewer rows than PER_PAGE.
+	 * Render() derives total from fetched rows without calling count() when first page has fewer rows than PER_PAGE.
 	 *
 	 * @return void
 	 */

@@ -10,6 +10,9 @@ namespace SidrenaCijena\Tests\Unit\Database;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Database\SpecialSaleRepository;
 
+/**
+ * Test wpdb stub for SpecialSaleRepository tests.
+ */
 class SpecialSaleRepositoryTestWpdb extends \wpdb {
 
 	/**
@@ -28,6 +31,10 @@ class SpecialSaleRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string|null $query  Query string.
+	 * @param string      $output Output format.
+	 * @return array[]
 	 */
 	public function get_results( $query = null, $output = OBJECT ) {
 		$this->queries[] = $query;
@@ -69,7 +76,7 @@ class SpecialSaleRepositoryTest extends TestCase {
 	}
 
 	/**
-	 * active_for_item leverages memoized active_map cache to prevent N+1 queries.
+	 * Active_for_item leverages memoized active_map cache to prevent N+1 queries.
 	 *
 	 * @return void
 	 */
@@ -79,17 +86,17 @@ class SpecialSaleRepositoryTest extends TestCase {
 		$test_wpdb                    = new SpecialSaleRepositoryTestWpdb();
 		$test_wpdb->results_to_return = array(
 			array(
-				'id'                   => 1,
-				'product_id'           => 10,
-				'variation_id'         => 0,
-				'sale_type'            => 'akcija',
-				'status'               => 'active',
-				'start_date'           => '2026-09-01 00:00:00',
-				'end_date'             => '2026-10-31 23:59:59',
-				'promo_price'          => 7.50,
-				'lowest_30_day_price'  => 8.50,
-				'currency'             => 'EUR',
-				'created_at'           => '2026-09-01 00:00:00',
+				'id'                  => 1,
+				'product_id'          => 10,
+				'variation_id'        => 0,
+				'sale_type'           => 'akcija',
+				'status'              => 'active',
+				'start_date'          => '2026-09-01 00:00:00',
+				'end_date'            => '2026-10-31 23:59:59',
+				'promo_price'         => 7.50,
+				'lowest_30_day_price' => 8.50,
+				'currency'            => 'EUR',
+				'created_at'          => '2026-09-01 00:00:00',
 			),
 		);
 		$wpdb                         = $test_wpdb;

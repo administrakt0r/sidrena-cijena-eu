@@ -137,8 +137,8 @@ class LogRepository {
 		if ( 1 === $page && count( $rows_array ) < $per_page ) {
 			$total = count( $rows_array );
 		} else {
-			$cache_key     = 'sidrena_log_cnt_' . substr( md5( wp_json_encode( $conditions ) . wp_json_encode( $params ) ), 0, 20 );
-			$cached_count  = get_transient( $cache_key );
+			$cache_key    = 'sidrena_log_cnt_' . substr( md5( wp_json_encode( $conditions ) . wp_json_encode( $params ) ), 0, 20 );
+			$cached_count = get_transient( $cache_key );
 			if ( false !== $cached_count && is_numeric( $cached_count ) ) {
 				$total = (int) $cached_count;
 			} else {

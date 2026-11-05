@@ -7,6 +7,7 @@
 
 namespace SidrenaCijena\Export;
 
+use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Catalog\CatalogProvider;
 use SidrenaCijena\Compliance\RemediationProposer;
 use SidrenaCijena\Database\LocationRepository;
@@ -325,8 +326,8 @@ class GenerationService {
 	/**
 	 * Catalog-level findings for a location, split by severity.
 	 *
-	 * @param int                           $location_id Location ID.
-	 * @param CatalogItem[]|\Traversable|null $items       Optional pre-hydrated catalog items.
+	 * @param int                                                   $location_id Location ID.
+	 * @param array<int,CatalogItem>|\Traversable<CatalogItem>|null $items       Optional pre-hydrated catalog items.
 	 * @return array{errors:array<mixed>,warnings:int}
 	 */
 	protected function catalog_report( $location_id, $items = null ) {
@@ -365,10 +366,12 @@ class GenerationService {
 	 * Hydrate catalog items into an array once for reuse.
 	 *
 	 * @param array<mixed> $args Arguments.
-	 * @return CatalogItem[]
+	 * @return array<int,CatalogItem>
 	 */
 	protected function hydrate_catalog( array $args = array() ) {
 		$type = isset( $args['type'] ) ? (string) $args['type'] : 'all';
+
+		/** @var mixed $iter */
 		$iter = $this->catalog->iterate(
 			array(
 				'type'               => $type,
@@ -376,15 +379,19 @@ class GenerationService {
 			)
 		);
 
-		if ( is_array( $iter ) ) {
-			return $iter;
+		if ( ! is_iterable( $iter ) ) {
+			return array();
 		}
 
-		if ( $iter instanceof \Traversable ) {
-			return iterator_to_array( $iter );
+		$items = array();
+
+		foreach ( $iter as $item ) {
+			if ( $item instanceof CatalogItem ) {
+				$items[] = $item;
+			}
 		}
 
-		return array();
+		return $items;
 	}
 
 	/**

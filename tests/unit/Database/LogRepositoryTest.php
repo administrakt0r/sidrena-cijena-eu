@@ -10,6 +10,9 @@ namespace SidrenaCijena\Tests\Unit\Database;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Database\LogRepository;
 
+/**
+ * Test wpdb stub for LogRepository tests.
+ */
 class LogRepositoryTestWpdb extends \wpdb {
 
 	/**
@@ -35,6 +38,10 @@ class LogRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string|null $query  Query string.
+	 * @param string      $output Output format.
+	 * @return array[]
 	 */
 	public function get_results( $query = null, $output = OBJECT ) {
 		$this->queries[] = $query;
@@ -44,6 +51,11 @@ class LogRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string|null $query Query string.
+	 * @param int         $x     Column offset.
+	 * @param int         $y     Row offset.
+	 * @return mixed
 	 */
 	public function get_var( $query = null, $x = 0, $y = 0 ) {
 		$this->queries[] = $query;
@@ -53,6 +65,11 @@ class LogRepositoryTestWpdb extends \wpdb {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param string            $table  Table name.
+	 * @param array             $data   Data to insert.
+	 * @param array|string|null $format Data format.
+	 * @return int
 	 */
 	public function insert( $table, $data, $format = null ) {
 		$this->queries[] = 'INSERT INTO ' . $table;
@@ -97,7 +114,7 @@ class LogRepositoryTest extends TestCase {
 	}
 
 	/**
-	 * query() on page 1 with count < per_page derives total from rows without issuing COUNT(*).
+	 * Query() on page 1 with count < per_page derives total from rows without issuing COUNT(*).
 	 *
 	 * @return void
 	 */
@@ -128,7 +145,12 @@ class LogRepositoryTest extends TestCase {
 		$wpdb                         = $test_wpdb;
 
 		$repo   = new LogRepository();
-		$result = $repo->query( array( 'page' => 1, 'per_page' => 50 ) );
+		$result = $repo->query(
+			array(
+				'page'     => 1,
+				'per_page' => 50,
+			)
+		);
 
 		$this->assertSame( 2, $result['total'] );
 		$this->assertCount( 2, $result['items'] );
@@ -139,14 +161,14 @@ class LogRepositoryTest extends TestCase {
 	}
 
 	/**
-	 * query() on page 1 with count == per_page issues COUNT(*) to discover full total.
+	 * Query() on page 1 with count == per_page issues COUNT(*) to discover full total.
 	 *
 	 * @return void
 	 */
 	public function test_query_issues_count_when_first_page_is_full() {
 		global $wpdb;
 
-		$test_wpdb = new LogRepositoryTestWpdb();
+		$test_wpdb  = new LogRepositoryTestWpdb();
 		$dummy_rows = array();
 		for ( $i = 1; $i <= 5; $i++ ) {
 			$dummy_rows[] = array(
@@ -164,18 +186,23 @@ class LogRepositoryTest extends TestCase {
 		$wpdb                         = $test_wpdb;
 
 		$repo   = new LogRepository();
-		$result = $repo->query( array( 'page' => 1, 'per_page' => 5 ) );
+		$result = $repo->query(
+			array(
+				'page'     => 1,
+				'per_page' => 5,
+			)
+		);
 
 		$this->assertSame( 100, $result['total'] );
 		$this->assertCount( 5, $result['items'] );
-		// Two queries: SELECT ... LIMIT and SELECT COUNT(*)
+		// Two queries: SELECT ... LIMIT and SELECT COUNT(*).
 		$this->assertCount( 2, $test_wpdb->queries );
 		$this->assertStringContainsString( 'LIMIT 5 OFFSET 0', $test_wpdb->queries[0] );
 		$this->assertStringContainsString( 'COUNT(*)', $test_wpdb->queries[1] );
 	}
 
 	/**
-	 * count_all() caches via transient and invalidates on insert.
+	 * Count_all() caches via transient and invalidates on insert.
 	 *
 	 * @return void
 	 */

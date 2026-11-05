@@ -477,7 +477,14 @@ class GenerationServiceTest extends TestCase {
 		PluginSwap::swap( 'validator', $validator );
 
 		$service = new GenerationService( $catalog, $locations, $publications, $history, $sales );
-		$result  = $service->generate( 6, 'csv', array( 'force' => true, 'items' => array() ) );
+		$result  = $service->generate(
+			6,
+			'csv',
+			array(
+				'force' => true,
+				'items' => array(),
+			)
+		);
 
 		$this->assertIsArray( $result );
 		$this->assertFalse( $result['has_errors'] );

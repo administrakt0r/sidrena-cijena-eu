@@ -36,7 +36,16 @@ class SpecialSaleRepository {
 	 *
 	 * @var array<string,array<mixed>>|null
 	 */
-	protected $active_map_cache;
+	protected static $active_map_cache = null;
+
+	/**
+	 * Clear the active sale snapshot cache.
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$active_map_cache = null;
+	}
 
 	/**
 	 * Constructor.
@@ -67,7 +76,7 @@ class SpecialSaleRepository {
 		global $wpdb;
 
 		$row                    = $this->normalize( $data );
-		$this->active_map_cache = null;
+		self::$active_map_cache = null;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $this->table, $row, $this->formats() );
@@ -92,7 +101,7 @@ class SpecialSaleRepository {
 		}
 
 		$row                    = $this->normalize( array_merge( $existing, $data ) );
-		$this->active_map_cache = null;
+		self::$active_map_cache = null;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->update( $this->table, $row, array( 'id' => (int) $id ), $this->formats(), array( '%d' ) );
@@ -208,8 +217,8 @@ class SpecialSaleRepository {
 		global $wpdb;
 
 		$cache_result = ! $at;
-		if ( $cache_result && null !== $this->active_map_cache ) {
-			return $this->active_map_cache;
+		if ( $cache_result && null !== self::$active_map_cache ) {
+			return self::$active_map_cache;
 		}
 
 		$at = $at ? $at : Dates::now_site()->format( 'Y-m-d H:i:s' );
@@ -239,7 +248,7 @@ class SpecialSaleRepository {
 		}
 
 		if ( $cache_result ) {
-			$this->active_map_cache = $map;
+			self::$active_map_cache = $map;
 		}
 
 		return $map;
@@ -253,7 +262,7 @@ class SpecialSaleRepository {
 	 */
 	public function refresh_statuses( $now = '' ) {
 		global $wpdb;
-		$this->active_map_cache = null;
+		self::$active_map_cache = null;
 
 		$now = $now ? $now : Dates::now_site()->format( 'Y-m-d H:i:s' );
 
@@ -388,8 +397,8 @@ class SpecialSaleRepository {
 		$row['id']                  = (int) $row['id'];
 		$row['product_id']          = (int) $row['product_id'];
 		$row['variation_id']        = (int) $row['variation_id'];
-		$row['promo_price']         = isset( $row['promo_price'] ) && null !== $row['promo_price'] ? (float) $row['promo_price'] : null;
-		$row['lowest_30_day_price'] = isset( $row['lowest_30_day_price'] ) && null !== $row['lowest_30_day_price'] ? (float) $row['lowest_30_day_price'] : null;
+		$row['promo_price']         = isset( $row['promo_price'] ) ? (float) $row['promo_price'] : null;
+		$row['lowest_30_day_price'] = isset( $row['lowest_30_day_price'] ) ? (float) $row['lowest_30_day_price'] : null;
 
 		return $row;
 	}

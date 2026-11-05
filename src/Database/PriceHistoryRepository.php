@@ -46,21 +46,21 @@ class PriceHistoryRepository {
 	 *
 	 * @var array<string,array<string,mixed>>
 	 */
-	protected $active_sale_period_cache = array();
+	protected static $active_sale_period_cache = array();
 
 	/**
 	 * Product IDs whose active sale periods have been queried during this request.
 	 *
 	 * @var array<int,bool>
 	 */
-	protected $queried_sale_period_ids = array();
+	protected static $queried_sale_period_ids = array();
 
 	/**
 	 * In-memory count cache per query args.
 	 *
 	 * @var array<string,int>
 	 */
-	protected $count_cache = array();
+	protected static $count_cache = array();
 
 	/**
 	 * Constructor.
@@ -85,10 +85,10 @@ class PriceHistoryRepository {
 	 *
 	 * @return void
 	 */
-	public function reset_cache() {
-		$this->active_sale_period_cache = array();
-		$this->queried_sale_period_ids  = array();
-		$this->count_cache              = array();
+	public static function reset_cache() {
+		self::$active_sale_period_cache = array();
+		self::$queried_sale_period_ids  = array();
+		self::$count_cache              = array();
 	}
 
 	/**
@@ -269,7 +269,7 @@ class PriceHistoryRepository {
 
 		$missing_ids = array();
 		foreach ( $product_ids as $pid ) {
-			if ( ! isset( $this->queried_sale_period_ids[ $pid ] ) ) {
+			if ( ! isset( self::$queried_sale_period_ids[ $pid ] ) ) {
 				$missing_ids[] = $pid;
 			}
 		}
@@ -308,16 +308,16 @@ class PriceHistoryRepository {
 
 			foreach ( (array) $rows as $row ) {
 				$key                                    = (int) $row['product_id'] . ':' . (int) $row['variation_id'];
-				$this->active_sale_period_cache[ $key ] = $row;
+				self::$active_sale_period_cache[ $key ] = $row;
 			}
 
 			foreach ( $missing_ids as $pid ) {
-				$this->queried_sale_period_ids[ $pid ] = true;
+				self::$queried_sale_period_ids[ $pid ] = true;
 			}
 		}
 
 		$map = array();
-		foreach ( $this->active_sale_period_cache as $key => $row ) {
+		foreach ( self::$active_sale_period_cache as $key => $row ) {
 			$pid = (int) $row['product_id'];
 			if ( in_array( $pid, $product_ids, true ) ) {
 				$map[ $key ] = $row;
@@ -404,14 +404,14 @@ class PriceHistoryRepository {
 	 */
 	public function count( array $args = array() ) {
 		$cache_key = md5( wp_json_encode( $args ) );
-		if ( isset( $this->count_cache[ $cache_key ] ) ) {
-			return $this->count_cache[ $cache_key ];
+		if ( isset( self::$count_cache[ $cache_key ] ) ) {
+			return self::$count_cache[ $cache_key ];
 		}
 
 		$transient_key = 'sidrena_ph_cnt_' . substr( $cache_key, 0, 20 );
 		$cached        = get_transient( $transient_key );
 		if ( false !== $cached && is_numeric( $cached ) ) {
-			$this->count_cache[ $cache_key ] = (int) $cached;
+			self::$count_cache[ $cache_key ] = (int) $cached;
 			return (int) $cached;
 		}
 
@@ -424,7 +424,7 @@ class PriceHistoryRepository {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is validated against strict conditions and values bound by prepare().
 		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
 
-		$this->count_cache[ $cache_key ] = $total;
+		self::$count_cache[ $cache_key ] = $total;
 		set_transient( $transient_key, $total, 30 );
 
 		return $total;
