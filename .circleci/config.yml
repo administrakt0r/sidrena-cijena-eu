@@ -41,7 +41,7 @@ commands:
             - ~/.npm
 
   save_analysis_caches:
-    description: "Save Static Analysis and Test caches (PHPCS, PHPStan, ESLint, PHPUnit)"
+    description: "Save Static Analysis and Test caches (PHPCS, PHPStan, ESLint, PHPUnit, Taskless)"
     steps:
       - save_cache:
           name: Save Static Analysis and Test caches
@@ -51,6 +51,7 @@ commands:
             - .phpstan.cache
             - .eslintcache
             - .phpunit.result.cache
+            - .taskless/.cache
 
   restore_playwright_cache:
     description: "Restore Playwright browser binaries cache"
@@ -99,6 +100,9 @@ jobs:
       - run:
           name: ESLint JavaScript Check
           command: npm run lint:js
+      - run:
+          name: Taskless Rules Check
+          command: node .taskless/bin/cli.mjs check
       - run:
           name: Croatian Catalog Completeness Check
           command: |

@@ -73,7 +73,15 @@
         ],
         "created": true
       }
-    }
+    },
+    "onboarded": true
   },
-  "version": 12
+  "version": 12,
+  "rules": {
+    "reconciledTo": "0.13.5",
+    "engines": {
+      "sg": "0.51.0",
+      "vale": "3.26.0"
+    }
+  }
 }
