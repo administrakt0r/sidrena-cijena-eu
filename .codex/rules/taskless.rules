@@ -1,0 +1,4 @@
+# Written by Taskless: allows exactly the installed Taskless CLI.
+# `taskless init` rewrites this file on every upgrade.
+prefix_rule(pattern = ["npx","@taskless/cli@0.13.5"], decision = "allow")
+prefix_rule(pattern = ["./.taskless/bin/cli.mjs"], decision = "allow")

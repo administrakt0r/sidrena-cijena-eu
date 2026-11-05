@@ -1,0 +1,6 @@
+{
+  "terminalAllowlist": [
+    "npx @taskless/cli@0.13.5",
+    "./.taskless/bin/cli.mjs"
+  ]
+}

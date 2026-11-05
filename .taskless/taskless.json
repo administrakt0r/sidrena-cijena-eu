@@ -1,0 +1,79 @@
+{
+  "install": {
+    "targets": {
+      ".taskless": {
+        "skills": [
+          "taskless"
+        ],
+        "mode": "canonical"
+      },
+      ".claude": {
+        "skills": [
+          "taskless"
+        ],
+        "mode": "reference"
+      },
+      ".cursor": {
+        "skills": [
+          "taskless"
+        ],
+        "mode": "reference"
+      },
+      ".opencode": {
+        "skills": [
+          "taskless"
+        ],
+        "mode": "reference"
+      },
+      ".agents": {
+        "skills": [
+          "taskless"
+        ],
+        "mode": "reference"
+      }
+    },
+    "cliVersion": "0.13.5",
+    "launchers": {
+      "@taskless/cli": "0.13.5"
+    },
+    "permissions": {
+      ".claude/settings.json": {
+        "rules": [
+          "Bash(npx @taskless/cli@0.13.5 *)",
+          "Bash(./.taskless/bin/cli.mjs *)"
+        ],
+        "created": true
+      },
+      ".codex/rules/taskless.rules": {
+        "rules": [
+          "prefix_rule(pattern = [\"npx\",\"@taskless/cli@0.13.5\"], decision = \"allow\")",
+          "prefix_rule(pattern = [\"./.taskless/bin/cli.mjs\"], decision = \"allow\")"
+        ],
+        "created": true
+      },
+      ".cursor/cli.json": {
+        "rules": [
+          "Shell(npx:@taskless/cli@0.13.5)",
+          "Shell(npx:@taskless/cli@0.13.5 *)",
+          "Shell(./.taskless/bin/cli.mjs)"
+        ],
+        "created": true
+      },
+      ".cursor/permissions.json": {
+        "rules": [
+          "npx @taskless/cli@0.13.5",
+          "./.taskless/bin/cli.mjs"
+        ],
+        "created": true
+      },
+      ".opencode/opencode.json": {
+        "rules": [
+          "npx @taskless/cli@0.13.5 *",
+          "./.taskless/bin/cli.mjs *"
+        ],
+        "created": true
+      }
+    }
+  },
+  "version": 12
+}

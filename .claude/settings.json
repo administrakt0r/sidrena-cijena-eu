@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @taskless/cli@0.13.5 *)",
+      "Bash(./.taskless/bin/cli.mjs *)"
+    ]
+  }
+}
