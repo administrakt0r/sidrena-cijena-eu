@@ -391,12 +391,12 @@ class ImportPage {
 	 */
 	protected static function render_upload_form() {
 		echo '<h2>' . esc_html__( 'Upload an import file', 'sidrena-cijena-eu' ) . '</h2>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" enctype="multipart/form-data">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" enctype="multipart/form-data" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_PREVIEW ) . '" />';
 		wp_nonce_field( self::ACTION_PREVIEW, 'sidrena_cijena_import_nonce' );
 		echo '<p><label for="sidrena_import_file">' . esc_html__( 'Upload an import file', 'sidrena-cijena-eu' ) . '</label> <input type="file" id="sidrena_import_file" name="sidrena_import_file" accept=".csv,.txt,text/csv" required /></p>';
 		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'sidrena-cijena-eu' ) . '</label></p>';
-		submit_button( __( 'Upload and preview', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
+		submit_button( __( 'Upload and preview', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 	}
 

@@ -337,6 +337,10 @@ class LowestPriceExplainerTest extends TestCase {
 		$this->assertStringContainsString( '#41', $html );
 		$this->assertStringContainsString( 'sidrena-cijena-source-records', $html );
 		$this->assertStringContainsString( 'Determining lowest price', $html );
+		$this->assertStringNotContainsString( 'style="', $html, 'Explainer HTML must have no inline styles.' );
+		$this->assertStringContainsString( '<caption class="screen-reader-text">', $html, 'Explainer source records table must have an accessible caption.' );
+		$this->assertStringContainsString( 'sidrena-source-records-table', $html );
+		$this->assertStringContainsString( 'sidrena-explainer-badge', $html );
 	}
 
 	/**

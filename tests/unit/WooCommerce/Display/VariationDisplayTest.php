@@ -111,6 +111,45 @@ class VariationDisplayTest extends TestCase {
 			$this->assertStringContainsString( '12,00', $data['price_html'] );
 			$this->assertStringContainsString( 'data-variation-id="11"', $data['price_html'] );
 			$this->assertStringContainsString( '10. 9. 2026.', $data['price_html'] );
+			$this->assertSame( '9,00 €', $data['sidrena_cijena_anchor'] );
+			$this->assertSame( '10. 9. 2026.', $data['sidrena_cijena_reference_date_display'] );
+			$this->assertSame( '2026-09-10', $data['sidrena_cijena_reference_date'] );
+		} finally {
+			PluginSwap::swap( 'catalog', null );
+		}
+	}
+
+	/**
+	 * A variation without an anchor has null anchor data so frontend hides anchor container.
+	 *
+	 * @return void
+	 */
+	public function test_variation_without_anchor_returns_null_anchor() {
+		$item    = new CatalogItem(
+			array(
+				'id'            => 10,
+				'variation_id'  => 12,
+				'currency'      => 'EUR',
+				'current_price' => 15.0,
+			)
+		);
+		$catalog = $this->createMock( CatalogProvider::class );
+		$catalog->method( 'get_variation' )->with( 10, 12 )->willReturn( $item );
+		PluginSwap::swap( 'catalog', $catalog );
+		$anchors = $this->createMock( AnchorPriceService::class );
+		$anchors->method( 'get_anchor' )->with( $item )->willReturn( null );
+		$variation = new DisplayVariationProduct(
+			array(
+				'id'        => 12,
+				'parent_id' => 10,
+				'type'      => 'variation',
+			)
+		);
+
+		try {
+			$data = ( new VariationDisplay( $anchors ) )->filter_available_variation( array( 'price_html' => '' ), null, $variation );
+			$this->assertNull( $data['sidrena_cijena_anchor'] );
+			$this->assertNull( $data['sidrena_cijena_anchor_raw'] );
 		} finally {
 			PluginSwap::swap( 'catalog', null );
 		}

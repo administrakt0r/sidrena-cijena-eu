@@ -169,7 +169,9 @@ final class AnchorMetaBox {
 			$anchor_date_value = substr( (string) $item->first_seen, 0, 10 );
 		}
 
-		echo '<table class="widefat striped"><tbody>';
+		echo '<table class="widefat striped">';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</caption>';
+		echo '<tbody>';
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
