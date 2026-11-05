@@ -2,49 +2,50 @@ version: 2.1
 
 commands:
   restore_tool_caches:
-    description: "Restore Composer, NPM, and static analysis caches"
+    description: "Restore Composer and NPM package download caches"
     steps:
       - restore_cache:
           name: Restore Composer cache
           keys:
-            - v1-composer-{{ checksum "composer.lock" }}
-            - v1-composer-{{ checksum "composer.json" }}
-            - v1-composer-
+            - v2-composer-{{ checksum "composer.lock" }}
+            - v2-composer-{{ checksum "composer.json" }}
+            - v2-composer-
       - restore_cache:
           name: Restore NPM cache
           keys:
-            - v1-npm-{{ checksum "package-lock.json" }}
-            - v1-npm-{{ checksum "package.json" }}
-            - v1-npm-
+            - v2-npm-{{ checksum "package-lock.json" }}
+            - v2-npm-{{ checksum "package.json" }}
+            - v2-npm-
+
+  restore_analysis_caches:
+    description: "Restore Static Analysis and Test caches"
+    steps:
       - restore_cache:
           name: Restore Static Analysis and Test caches
           keys:
-            - v1-analysis-{{ .Branch }}-{{ .Revision }}
-            - v1-analysis-{{ .Branch }}-
-            - v1-analysis-
+            - v2-analysis-{{ .Branch }}-{{ .Revision }}
+            - v2-analysis-{{ .Branch }}-
 
   save_tool_caches:
-    description: "Save Composer and NPM caches"
+    description: "Save Composer and NPM package download caches"
     steps:
       - save_cache:
           name: Save Composer cache
-          key: v1-composer-{{ checksum "composer.lock" }}
+          key: v2-composer-{{ checksum "composer.lock" }}
           paths:
             - ~/.cache/composer
-            - vendor
       - save_cache:
           name: Save NPM cache
-          key: v1-npm-{{ checksum "package-lock.json" }}
+          key: v2-npm-{{ checksum "package-lock.json" }}
           paths:
             - ~/.npm
-            - node_modules
 
   save_analysis_caches:
     description: "Save Static Analysis and Test caches (PHPCS, PHPStan, ESLint, PHPUnit)"
     steps:
       - save_cache:
           name: Save Static Analysis and Test caches
-          key: v1-analysis-{{ .Branch }}-{{ .Revision }}
+          key: v2-analysis-{{ .Branch }}-{{ .Revision }}
           paths:
             - .phpcs.cache
             - .phpstan.cache
@@ -57,15 +58,15 @@ commands:
       - restore_cache:
           name: Restore Playwright browser binaries cache
           keys:
-            - v1-playwright-{{ checksum "package-lock.json" }}
-            - v1-playwright-
+            - v2-playwright-{{ checksum "package-lock.json" }}
+            - v2-playwright-
 
   save_playwright_cache:
     description: "Save Playwright browser binaries cache"
     steps:
       - save_cache:
           name: Save Playwright browser binaries cache
-          key: v1-playwright-{{ checksum "package-lock.json" }}
+          key: v2-playwright-{{ checksum "package-lock.json" }}
           paths:
             - ~/.cache/ms-playwright
 
@@ -78,6 +79,7 @@ jobs:
     steps:
       - checkout
       - restore_tool_caches
+      - restore_analysis_caches
       - run:
           name: Install Composer Dependencies
           command: composer install --prefer-dist --no-progress
