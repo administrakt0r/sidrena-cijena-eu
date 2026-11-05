@@ -1,6 +1,6 @@
 # Prompt 4 — General improvement pass (no Docker needed)
 
-> **Status (v2.0.16):** COMPLETED. CSV formula injection protection, modernized CLI Throwable error resilience, admin redirect safety, and comprehensive unit test expansion (512 unit tests, 1,853 assertions) shipped.
+> **Status (v2.0.22):** COMPLETED. Admin form ergonomics, contextual legal reference date hints, translated settings descriptions (825 strings, 0 untranslated), and expanded unit test coverage across admin settings classes (574 unit tests, 2,134 assertions) shipped.
 
 ```
 You are improving the WordPress plugin in the current directory (sidrena-cijena.php is

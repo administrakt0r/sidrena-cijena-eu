@@ -340,5 +340,13 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | I18N-03 | `done` | Public archive cache invalidation: versioned frontend template cache keys (`'v' => SIDRENA_CIJENA_VERSION`) and added LiteSpeed Cache no-cache controls, ensuring updated Croatian tables display immediately without stale cached English HTML. | `PublicPage::render_archive`, `PublicPage::render_list` |
 | REL-29 | `done` | Package and verify release 2.0.18 archive | `tools/build-zip.sh 2.0.18` |
 
+## Admin Form Ergonomics, Contextual Hints & Settings Test Suite (2026-11-05)
+
+| ID | Status | Item | Verification |
+| --- | --- | --- | --- |
+| IMP-04 | `done` | Admin form ergonomics & contextual helper text: added translated, descriptive helper text and source-of-truth legal reference date hints (`2026-09-10` for general goods, `2025-05-02` for legacy food/household) to `DisplaySettingsPage` and `LegalSettingsPage`; updated field renderers to output descriptions cleanly; translated all new strings into Croatian (`hr_HR.po` 100% complete, 825/825 translated). | `DisplaySettingsPageTest`, `LegalSettingsPageTest`, `tools/i18n/make-pot.php` (825 translated / 0 untranslated) |
+| TEST-05 | `done` | Comprehensive unit test coverage expansion: authored complete unit test suites for `LegalSettingsPage`, `OperationsSettingsPage`, `SaleTypesSettings`, and `StyleSettingsPage`, and added `esc_textarea` in unit test stubs; expanded test suite from 559 tests (2,031 assertions) to 574 tests (2,134 assertions) with 100% pass rate. | `composer test:unit` (574 tests, 2,134 assertions, 0 errors, 100% green) |
+
+
 
 
