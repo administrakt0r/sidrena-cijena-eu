@@ -50,7 +50,7 @@ final class StyleSettingsPage {
 
 		echo '</div>';
 
-		echo '<hr style="margin: 24px 0 20px;" />';
+		echo '<hr class="sidrena-settings-divider" />';
 		echo '<h2>' . esc_html__( 'Display customization options', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<table class="form-table" role="presentation">';
 

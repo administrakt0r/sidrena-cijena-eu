@@ -196,6 +196,7 @@ class ProductEditorSaveTest extends TestCase {
 		$this->assertStringContainsString( 'name="sidrena_cijena_anchor_nonce"', $html );
 		$this->assertStringContainsString( 'action=' . AnchorMetaBox::ACTION, $html );
 		$this->assertStringContainsString( 'formaction=', $html );
+		$this->assertStringContainsString( '<caption class="screen-reader-text">', $html );
 	}
 
 	/**

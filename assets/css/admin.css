@@ -443,4 +443,95 @@ button.is-busy {
 	max-width: 620px;
 }
 
+/* Lowest price explainer styles */
+.sidrena-cijena-explanation {
+	margin-top: 8px;
+}
+
+.sidrena-cijena-identity {
+	margin: 0 0 8px 0;
+	font-size: 13px;
+}
+
+.sidrena-cijena-summary-box {
+	background: #f0f6fc;
+	border-left: 4px solid #72aee6;
+	padding: 8px 12px;
+	margin-bottom: 8px;
+}
+
+.sidrena-cijena-summary-box p:first-child {
+	margin: 0 0 4px 0;
+}
+
+.sidrena-cijena-summary-box p:last-child {
+	margin: 0;
+}
+
+.sidrena-cijena-not-calculated {
+	color: #d63638;
+}
+
+.sidrena-cijena-lowest-val {
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.sidrena-cijena-explanation .notice.inline {
+	margin: 6px 0;
+	padding: 6px 12px;
+}
+
+.sidrena-cijena-explanation .notice.inline p {
+	margin: 0;
+}
+
+.sidrena-cijena-sufficient-history {
+	margin: 4px 0 8px 0;
+	color: #008a20;
+}
+
+.sidrena-cijena-sufficient-history .dashicons {
+	vertical-align: middle;
+	font-size: 16px;
+}
+
+.sidrena-cijena-source-records {
+	margin-top: 8px;
+}
+
+.sidrena-cijena-source-records summary {
+	cursor: pointer;
+	color: #2271b1;
+	font-weight: 500;
+}
+
+.sidrena-cijena-records-wrap {
+	margin-top: 6px;
+}
+
+.sidrena-source-records-table {
+	margin-top: 4px;
+	font-size: 12px;
+}
+
+.sidrena-explainer-badge {
+	background: #008a20;
+	color: #fff;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 11px;
+}
+
+.sidrena-cijena-history-link-wrap {
+	margin-top: 6px;
+}
+
+.sidrena-settings-divider {
+	margin: 24px 0 20px;
+	border: 0;
+	border-top: 1px solid #dcdcde;
+}
+
 

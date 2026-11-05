@@ -285,25 +285,25 @@ class LowestPriceExplainer {
 	public function render_html( array $explanation ) {
 		ob_start();
 		?>
-		<div class="sidrena-cijena-explanation" style="margin-top: 8px;">
-			<p class="sidrena-cijena-identity" style="margin: 0 0 8px 0; font-size: 13px;">
+		<div class="sidrena-cijena-explanation">
+			<p class="sidrena-cijena-identity">
 				<strong><?php echo esc_html__( 'Item identity:', 'sidrena-cijena-eu' ); ?></strong>
 				<code><?php echo esc_html( (string) $explanation['identity_label'] ); ?></code>
 			</p>
 
-			<div class="sidrena-cijena-summary-box" style="background: #f0f6fc; border-left: 4px solid #72aee6; padding: 8px 12px; margin-bottom: 8px;">
-				<p style="margin: 0 0 4px 0;">
+			<div class="sidrena-cijena-summary-box">
+				<p>
 					<strong><?php echo esc_html__( 'Calculation window (30 days):', 'sidrena-cijena-eu' ); ?></strong>
 					<?php echo esc_html( sprintf( '%1$s to %2$s', (string) $explanation['window_start'], (string) $explanation['window_end'] ) ); ?>
 					<?php /* translators: %s: sale start date */ ?>
 					<span class="description">(<?php echo esc_html( sprintf( __( 'for sale starting %s', 'sidrena-cijena-eu' ), (string) $explanation['sale_start'] ) ); ?>)</span>
 				</p>
-				<p style="margin: 0;">
+				<p>
 					<strong><?php echo esc_html__( 'Selected 30-day lowest price:', 'sidrena-cijena-eu' ); ?></strong>
 					<?php if ( null === $explanation['lowest_price'] ) : ?>
-						<em style="color: #d63638;"><?php echo esc_html__( 'Not calculated (no applicable price in window)', 'sidrena-cijena-eu' ); ?></em>
+						<em class="sidrena-cijena-not-calculated"><?php echo esc_html__( 'Not calculated (no applicable price in window)', 'sidrena-cijena-eu' ); ?></em>
 					<?php else : ?>
-						<span style="font-size: 14px; font-weight: 600; color: #1d2327;">
+						<span class="sidrena-cijena-lowest-val">
 							<?php echo esc_html( Currency::format( (float) $explanation['lowest_price'], (string) $explanation['currency'], array( 'display' => 'symbol' ) ) ); ?>
 						</span>
 						<?php if ( ! empty( $explanation['determining_record'] ) ) : ?>
@@ -330,31 +330,32 @@ class LowestPriceExplainer {
 			</div>
 
 			<?php foreach ( (array) $explanation['warnings'] as $warning ) : ?>
-				<div class="notice notice-warning inline" style="margin: 6px 0; padding: 6px 12px;">
-					<p style="margin: 0;"><?php echo esc_html( (string) $warning ); ?></p>
+				<div class="notice notice-warning inline">
+					<p><?php echo esc_html( (string) $warning ); ?></p>
 				</div>
 			<?php endforeach; ?>
 
 			<?php if ( in_array( 'sufficient_history', (array) $explanation['conditions'], true ) ) : ?>
-				<p class="description" style="margin: 4px 0 8px 0; color: #008a20;">
-					<span class="dashicons dashicons-yes-alt" style="vertical-align: middle; font-size: 16px;"></span>
+				<p class="description sidrena-cijena-sufficient-history">
+					<span class="dashicons dashicons-yes-alt"></span>
 					<?php echo esc_html__( 'Full 30-day price history is available.', 'sidrena-cijena-eu' ); ?>
 				</p>
 			<?php endif; ?>
 
-			<details class="sidrena-cijena-source-records" style="margin-top: 8px;">
-				<summary style="cursor: pointer; color: #2271b1; font-weight: 500;">
+			<details class="sidrena-cijena-source-records">
+				<summary>
 					<?php
 					$count = is_array( $explanation['source_records'] ) ? count( $explanation['source_records'] ) : 0;
 					/* translators: %d: count of records */
 					echo esc_html( sprintf( __( 'View source records (%d found in window)', 'sidrena-cijena-eu' ), $count ) );
 					?>
 				</summary>
-				<div style="margin-top: 6px;">
+				<div class="sidrena-cijena-records-wrap">
 					<?php if ( empty( $explanation['source_records'] ) ) : ?>
 						<p class="description"><?php echo esc_html__( 'No price history records overlapped this calculation window.', 'sidrena-cijena-eu' ); ?></p>
 					<?php else : ?>
-						<table class="widefat striped" style="margin-top: 4px; font-size: 12px;">
+						<table class="widefat striped sidrena-source-records-table">
+							<caption class="screen-reader-text"><?php echo esc_html__( 'Price history records', 'sidrena-cijena-eu' ); ?></caption>
 							<thead>
 								<tr>
 									<th scope="col"><?php echo esc_html__( 'ID', 'sidrena-cijena-eu' ); ?></th>
@@ -385,7 +386,7 @@ class LowestPriceExplainer {
 										</td>
 										<td>
 											<?php if ( ! empty( $record['is_determining'] ) ) : ?>
-												<span class="badge" style="background: #008a20; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
+												<span class="badge sidrena-explainer-badge">
 													<?php echo esc_html__( 'Determining lowest price', 'sidrena-cijena-eu' ); ?>
 												</span>
 											<?php else : ?>
@@ -397,7 +398,7 @@ class LowestPriceExplainer {
 							</tbody>
 						</table>
 					<?php endif; ?>
-					<p style="margin-top: 6px;">
+					<p class="sidrena-cijena-history-link-wrap">
 						<?php
 						$history_link = AdminMenu::url(
 							PriceHistoryPage::SLUG,

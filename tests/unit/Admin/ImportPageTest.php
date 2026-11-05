@@ -118,6 +118,18 @@ final class ImportPageTest extends TestCase {
 	}
 
 	/**
+	 * Upload form includes busy form class and button styling.
+	 */
+	public function test_render_upload_form_includes_busy_state() {
+		ob_start();
+		ImportPageProbe::upload_form();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
+		$this->assertStringContainsString( 'sidrena-btn-busy', $html );
+	}
+
+	/**
 	 * Tear down.
 	 */
 	protected function tearDown(): void {
@@ -144,5 +156,12 @@ class ImportPageProbe extends ImportPage {
 	 */
 	public static function preview() {
 		self::render_preview( self::$preview );
+	}
+
+	/**
+	 * Render the upload form.
+	 */
+	public static function upload_form() {
+		self::render_upload_form();
 	}
 }
