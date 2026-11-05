@@ -84,6 +84,42 @@ class CsvWriter {
 	}
 
 	/**
+	 * Stream CSV lines to a file handle and incrementally update a hash context.
+	 *
+	 * @param resource          $handle   Target file stream handle.
+	 * @param array<mixed>[]    $items    Canonical rows.
+	 * @param \HashContext|null $hash_ctx Optional hash context for write-time checksum calculation.
+	 * @return int Bytes written.
+	 */
+	public function write_stream( $handle, array $items, $hash_ctx = null ) {
+		$bytes  = 0;
+		$header = $this->line( self::COLUMNS );
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
+		$written = fwrite( $handle, $header );
+		if ( false !== $written ) {
+			$bytes += $written;
+			if ( null !== $hash_ctx ) {
+				hash_update( $hash_ctx, $header );
+			}
+		}
+
+		foreach ( $items as $item ) {
+			$line    = $this->line( $this->fields( $item ) );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming the generated price list.
+			$written = fwrite( $handle, $line );
+			if ( false !== $written ) {
+				$bytes += $written;
+				if ( null !== $hash_ctx ) {
+					hash_update( $hash_ctx, $line );
+				}
+			}
+		}
+
+		return $bytes;
+	}
+
+	/**
 	 * Encode one CSV line.
 	 *
 	 * @param array<mixed> $fields Fields.

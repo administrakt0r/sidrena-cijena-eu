@@ -175,4 +175,30 @@ class XmlWriterTest extends TestCase {
 			$writer->to_string( $items, $this->location(), $this->meta() )
 		);
 	}
+
+	/**
+	 * Streaming XML output produces byte-identical results to to_string and computes correct hash.
+	 *
+	 * @return void
+	 */
+	public function test_write_stream_byte_identical_to_to_string_and_hashes_incrementally() {
+		$writer = new XmlWriter();
+		$items  = array( $this->item(), $this->item( array( 'vrsta' => 'usluga' ) ) );
+
+		$expected_string = $writer->to_string( $items, $this->location(), $this->meta() );
+		$expected_hash   = hash( 'sha256', $expected_string );
+
+		$stream   = fopen( 'php://memory', 'w+b' );
+		$hash_ctx = hash_init( 'sha256' );
+		$bytes    = $writer->write_stream( $stream, $items, $this->location(), $this->meta(), $hash_ctx );
+		$actual_hash = hash_final( $hash_ctx );
+
+		rewind( $stream );
+		$streamed_content = stream_get_contents( $stream );
+		fclose( $stream );
+
+		$this->assertSame( $expected_string, $streamed_content );
+		$this->assertSame( strlen( $expected_string ), $bytes );
+		$this->assertSame( $expected_hash, $actual_hash );
+	}
 }

@@ -298,15 +298,23 @@ class PriceListBuilder {
 	 * @return string
 	 */
 	public function fingerprint( array $items, array $location, $format, $rule_version ) {
-		$payload = array(
-			'location'     => isset( $location['id'] ) ? (int) $location['id'] : 0,
-			'format'       => (string) $format,
-			'rule_version' => (string) $rule_version,
-			'items'        => array(),
+		$ctx = hash_init( 'sha256' );
+		$header = sprintf(
+			'{"location":%d,"format":%s,"rule_version":%s,"items":[',
+			isset( $location['id'] ) ? (int) $location['id'] : 0,
+			(string) wp_json_encode( (string) $format ),
+			(string) wp_json_encode( (string) $rule_version )
 		);
+		hash_update( $ctx, $header );
 
+		$first = true;
 		foreach ( $items as $item ) {
-			$payload['items'][] = array(
+			if ( ! $first ) {
+				hash_update( $ctx, ',' );
+			}
+			$first = false;
+
+			$row = array(
 				$item['vrsta'],
 				$item['naziv'],
 				$item['sifra'],
@@ -322,8 +330,12 @@ class PriceListBuilder {
 				$item['barkod'],
 				$item['dostupnost'],
 			);
+
+			hash_update( $ctx, (string) wp_json_encode( $row ) );
 		}
 
-		return hash( 'sha256', (string) wp_json_encode( $payload ) );
+		hash_update( $ctx, ']}' );
+
+		return hash_final( $ctx );
 	}
 }

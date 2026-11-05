@@ -232,8 +232,12 @@ class GenerationService {
 		$fingerprint = $this->builder()->fingerprint( $items, $location, $format, (string) $meta['rule_version'] );
 
 		$content = 'xml' === $format
-			? ( new XmlWriter() )->to_string( $items, $location, $meta )
-			: ( new CsvWriter() )->to_string( $items );
+			? function ( $handle, $hash_ctx ) use ( $items, $location, $meta ) {
+				return ( new XmlWriter() )->write_stream( $handle, $items, $location, $meta, $hash_ctx );
+			}
+			: function ( $handle, $hash_ctx ) use ( $items ) {
+				return ( new CsvWriter() )->write_stream( $handle, $items, $hash_ctx );
+			};
 
 		$result = $this->publisher()->publish(
 			$location,
