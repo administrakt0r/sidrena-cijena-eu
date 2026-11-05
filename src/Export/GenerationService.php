@@ -115,6 +115,14 @@ class GenerationService {
 			$args['items'] = $this->hydrate_catalog( $args );
 		}
 
+		if ( ! isset( $args['validation'] ) ) {
+			$args['validation'] = $this->catalog_report( $location_id, $args['items'] );
+		}
+
+		if ( ! isset( $args['build'] ) ) {
+			$args['build'] = $this->builder()->build( $location, $args );
+		}
+
 		$results = array();
 
 		foreach ( $this->formats( $location ) as $format ) {
@@ -188,7 +196,9 @@ class GenerationService {
 			$args['items'] = $this->hydrate_catalog( $args );
 		}
 
-		$validation   = $this->catalog_report( $location_id, $args['items'] );
+		$validation   = isset( $args['validation'] ) && is_array( $args['validation'] )
+			? $args['validation']
+			: $this->catalog_report( $location_id, $args['items'] );
 		$blockers     = self::publication_blockers( $validation['errors'] );
 		$all_blockers = array_merge( $findings, $blockers );
 
@@ -212,7 +222,9 @@ class GenerationService {
 		}
 		unset( $b_finding );
 
-		$build = $this->builder()->build( $location, $args );
+		$build = isset( $args['build'] ) && is_array( $args['build'] )
+			? $args['build']
+			: $this->builder()->build( $location, $args );
 
 		$items = $build['items'];
 		$meta  = $build['meta'];
