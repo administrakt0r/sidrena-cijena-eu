@@ -615,6 +615,87 @@ if ( ! function_exists( 'current_user_can' ) ) {
 	}
 }
 
+if ( ! class_exists( 'WP_Role' ) ) {
+	/**
+	 * Role double for capability tests.
+	 */
+	class WP_Role {
+		/**
+		 * Role name.
+		 *
+		 * @var string
+		 */
+		public $name;
+
+		/**
+		 * Capabilities.
+		 *
+		 * @var array<string,bool>
+		 */
+		public $capabilities = array();
+
+		/**
+		 * Constructor.
+		 *
+		 * @param string             $role         Role name.
+		 * @param array<string,bool> $capabilities Initial capabilities.
+		 */
+		public function __construct( $role, $capabilities = array() ) {
+			$this->name         = $role;
+			$this->capabilities = $capabilities;
+		}
+
+		/**
+		 * Add capability.
+		 *
+		 * @param string $cap   Capability name.
+		 * @param bool   $grant Grant.
+		 * @return void
+		 */
+		public function add_cap( $cap, $grant = true ) {
+			$this->capabilities[ $cap ] = $grant;
+		}
+
+		/**
+		 * Remove capability.
+		 *
+		 * @param string $cap Capability name.
+		 * @return void
+		 */
+		public function remove_cap( $cap ) {
+			unset( $this->capabilities[ $cap ] );
+		}
+
+		/**
+		 * Check capability.
+		 *
+		 * @param string $cap Capability name.
+		 * @return bool
+		 */
+		public function has_cap( $cap ) {
+			return ! empty( $this->capabilities[ $cap ] );
+		}
+	}
+}
+
+if ( ! function_exists( 'get_role' ) ) {
+	/**
+	 * Get role double.
+	 *
+	 * @param string $role Role name.
+	 * @return WP_Role|null
+	 */
+	function get_role( $role ) {
+		if ( ! isset( $GLOBALS['sidrena_test_roles'] ) ) {
+			$GLOBALS['sidrena_test_roles'] = array(
+				'administrator' => new WP_Role( 'administrator', array( 'manage_options' => true ) ),
+			);
+		}
+
+		return isset( $GLOBALS['sidrena_test_roles'][ $role ] ) ? $GLOBALS['sidrena_test_roles'][ $role ] : null;
+	}
+}
+
 if ( ! function_exists( 'get_transient' ) ) {
 	/**
 	 * Transient read stub.
@@ -2726,4 +2807,84 @@ if ( ! class_exists( 'WP_REST_Response' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'add_menu_page' ) ) {
+	/**
+	 * Stub for add_menu_page.
+	 *
+	 * @param string   $page_title Page title.
+	 * @param string   $menu_title Menu title.
+	 * @param string   $capability Capability.
+	 * @param string   $menu_slug  Menu slug.
+	 * @param callable $callback   Callback.
+	 * @param string   $icon_url   Icon URL.
+	 * @param int|null $position   Position.
+	 * @return string Hook suffix.
+	 */
+	function add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $callback = '', $icon_url = '', $position = null ) {
+		if ( ! isset( $GLOBALS['sidrena_test_menu_pages'] ) ) {
+			$GLOBALS['sidrena_test_menu_pages'] = array();
+		}
+
+		$hook = 'toplevel_page_' . $menu_slug;
+		$GLOBALS['sidrena_test_menu_pages'][ $menu_slug ] = array(
+			'page_title' => $page_title,
+			'menu_title' => $menu_title,
+			'capability' => $capability,
+			'menu_slug'  => $menu_slug,
+			'callback'   => $callback,
+			'icon_url'   => $icon_url,
+			'position'   => $position,
+			'hook'       => $hook,
+		);
+
+		return $hook;
+	}
+}
+
+if ( ! function_exists( 'add_submenu_page' ) ) {
+	/**
+	 * Stub for add_submenu_page.
+	 *
+	 * @param string   $parent_slug Parent slug.
+	 * @param string   $page_title  Page title.
+	 * @param string   $menu_title  Menu title.
+	 * @param string   $capability  Capability.
+	 * @param string   $menu_slug   Menu slug.
+	 * @param callable $callback    Callback.
+	 * @param int|null $position    Position.
+	 * @return string Hook suffix.
+	 */
+	function add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $callback = '', $position = null ) {
+		if ( ! isset( $GLOBALS['sidrena_test_submenu_pages'] ) ) {
+			$GLOBALS['sidrena_test_submenu_pages'] = array();
+		}
+
+		$hook = $parent_slug . '_page_' . $menu_slug;
+		$GLOBALS['sidrena_test_submenu_pages'][] = array(
+			'parent_slug' => $parent_slug,
+			'page_title'  => $page_title,
+			'menu_title'  => $menu_title,
+			'capability'  => $capability,
+			'menu_slug'   => $menu_slug,
+			'callback'    => $callback,
+			'position'    => $position,
+			'hook'        => $hook,
+		);
+
+		return $hook;
+	}
+}
+
+if ( ! function_exists( 'get_current_screen' ) ) {
+	/**
+	 * Stub for get_current_screen.
+	 *
+	 * @return object|null
+	 */
+	function get_current_screen() {
+		return isset( $GLOBALS['current_screen'] ) ? $GLOBALS['current_screen'] : null;
+	}
+}
+
 
