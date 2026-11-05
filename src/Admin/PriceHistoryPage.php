@@ -85,17 +85,22 @@ class PriceHistoryPage {
 			$args['source'] = $source;
 		}
 
-		$rows  = $history->query( $args );
-		$total = $history->count(
-			array_diff_key(
-				$args,
-				array(
-					'limit'  => 1,
-					'offset' => 1,
-					'order'  => 1,
+		$rows = $history->query( $args );
+
+		if ( 1 === $page && count( $rows ) < self::PER_PAGE ) {
+			$total = count( $rows );
+		} else {
+			$total = $history->count(
+				array_diff_key(
+					$args,
+					array(
+						'limit'  => 1,
+						'offset' => 1,
+						'order'  => 1,
+					)
 				)
-			)
-		);
+			);
+		}
 
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Price history', 'sidrena-cijena-eu' ) . '</h1>';

@@ -27,12 +27,28 @@ class PriceHistoryRepositoryTestWpdb extends \wpdb {
 	public $results_to_return = array();
 
 	/**
+	 * Stub var to return from get_var.
+	 *
+	 * @var mixed
+	 */
+	public $var_to_return = 0;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function get_results( $query = null, $output = OBJECT ) {
 		$this->queries[] = $query;
 
 		return $this->results_to_return;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_var( $query = null, $x = 0, $y = 0 ) {
+		$this->queries[] = $query;
+
+		return $this->var_to_return;
 	}
 }
 
@@ -111,5 +127,37 @@ class PriceHistoryRepositoryTest extends TestCase {
 		$repo->reset_cache();
 		$repo->active_sale_period_map( array( 10 ) );
 		$this->assertCount( 3, $test_wpdb->queries, 'Must re-query after reset_cache' );
+	}
+
+	/**
+	 * count memoizes result for identical query arguments within request.
+	 *
+	 * @return void
+	 */
+	public function test_count_memoizes_identical_queries() {
+		global $wpdb;
+
+		$test_wpdb                = new PriceHistoryRepositoryTestWpdb();
+		$test_wpdb->var_to_return = 42;
+		$wpdb                     = $test_wpdb;
+
+		$repo = new PriceHistoryRepository();
+
+		$count1 = $repo->count( array( 'price_type' => 'anchor' ) );
+		$this->assertSame( 42, $count1 );
+		$this->assertCount( 1, $test_wpdb->queries );
+
+		// Repeated count call with same arguments serves from in-memory cache.
+		$count2 = $repo->count( array( 'price_type' => 'anchor' ) );
+		$this->assertSame( 42, $count2 );
+		$this->assertCount( 1, $test_wpdb->queries, 'Repeated count call with identical args must not query DB again' );
+
+		// reset_cache clears the cache.
+		$repo->reset_cache();
+		delete_transient( 'sidrena_ph_cnt_' . substr( md5( wp_json_encode( array( 'price_type' => 'anchor' ) ) ), 0, 20 ) );
+
+		$count3 = $repo->count( array( 'price_type' => 'anchor' ) );
+		$this->assertSame( 42, $count3 );
+		$this->assertCount( 2, $test_wpdb->queries, 'Must re-query after cache is reset' );
 	}
 }

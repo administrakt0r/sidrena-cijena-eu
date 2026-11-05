@@ -56,6 +56,13 @@ class PriceHistoryRepository {
 	protected $queried_sale_period_ids = array();
 
 	/**
+	 * In-memory count cache per query args.
+	 *
+	 * @var array<string,int>
+	 */
+	protected $count_cache = array();
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -81,6 +88,7 @@ class PriceHistoryRepository {
 	public function reset_cache() {
 		$this->active_sale_period_cache = array();
 		$this->queried_sale_period_ids  = array();
+		$this->count_cache              = array();
 	}
 
 	/**
@@ -395,6 +403,18 @@ class PriceHistoryRepository {
 	 * @return int
 	 */
 	public function count( array $args = array() ) {
+		$cache_key = md5( wp_json_encode( $args ) );
+		if ( isset( $this->count_cache[ $cache_key ] ) ) {
+			return $this->count_cache[ $cache_key ];
+		}
+
+		$transient_key = 'sidrena_ph_cnt_' . substr( $cache_key, 0, 20 );
+		$cached        = get_transient( $transient_key );
+		if ( false !== $cached && is_numeric( $cached ) ) {
+			$this->count_cache[ $cache_key ] = (int) $cached;
+			return (int) $cached;
+		}
+
 		global $wpdb;
 
 		list( $where, $params ) = $this->build_where( $args );
@@ -402,7 +422,12 @@ class PriceHistoryRepository {
 		$params = array_merge( array( $this->table ), $params );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is validated against strict conditions and values bound by prepare().
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
+		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
+
+		$this->count_cache[ $cache_key ] = $total;
+		set_transient( $transient_key, $total, 30 );
+
+		return $total;
 	}
 
 	/**
