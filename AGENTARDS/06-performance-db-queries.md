@@ -14,7 +14,7 @@ changes are additive only (new indexes/columns, never rewritten rows) and legal 
 must not change (docs/legal-rules.md). Keep the plugin working with and without
 WooCommerce. Commit each item separately (perf: / fix:), with tests.
 
-Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
+Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 
 Measurement (do this first and again at the end; Docker optional for code fixes):
 - Demo shop: `./local.sh` → http://localhost:8888 (admin / password) with 200+ seeded

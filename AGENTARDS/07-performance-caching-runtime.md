@@ -14,7 +14,7 @@ publication gate are legal state — a cached compliance result must never hide 
 ERROR. Keep the plugin working with and without WooCommerce. Commit each item separately
 (perf: / fix:), with tests. PHP 7.4-8.4 only.
 
-Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
+Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in

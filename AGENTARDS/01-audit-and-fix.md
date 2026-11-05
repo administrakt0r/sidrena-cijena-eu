@@ -11,14 +11,14 @@ commit each logical fix separately with conventional messages (fix:/test:/docs:/
 
 Steps:
 1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing).
-   Run fast local unit tests: `composer test:unit`. Heavy gates (full PHPCS across 184 files, PHPStan)
+   Run fast local unit tests: `composer test:unit`. Heavy gates (full PHPCS across all files, PHPStan)
    can be offloaded to CircleCI pipelines to keep host PC quiet (per AGENTS.md).
 2. Record every failure, warning and risky test. Fix them one by one:
    - Lint: WordPress Coding Standards via phpcs.xml.dist
      (PHPCompatibilityWP, testVersion 7.4-).
    - Static analysis: PHPStan level 6 via phpstan.neon.dist.
    - JS Lint: ESLint via .eslintrc.js (browser environment, ES6).
-   - Unit tests must stay green (422+ tests / 1512+ assertions); if a test encodes a bug,
+   - Unit tests must stay green (535+ tests / 1916+ assertions); if a test encodes a bug,
      fix the implementation, not the test - unless the test contradicts docs/legal-rules.md,
      in which case stop and report it.
 3. Check translations:
@@ -26,7 +26,7 @@ Steps:
    update tools/i18n/en_US.php and tools/i18n/hr_HR.php, then run
    `php tools/i18n/make-pot.php --locale=hr_HR` to regenerate
    languages/sidrena-cijena-eu.pot, languages/hr_HR.po, and languages/sidrena-cijena-eu-hr.mo.
-   Confirm 0 untranslated strings (baseline: 768 translated strings / 0 untranslated in languages/hr_HR.po).
+   Confirm 0 untranslated strings (baseline: 809 translated strings / 0 untranslated in languages/hr_HR.po).
 4. Security sweep:
    - Every admin action requires capability check (manage_sidrena_cijena) + valid nonce.
    - Every echo is properly escaped (esc_html, esc_attr, esc_url).
@@ -37,7 +37,7 @@ Steps:
      ($_GET['activate-multi']), network admin, cron, and REST requests.
    Add a regression test for each gap found.
 5. Quality verification & CircleCI:
-   Run fast unit suite (`composer test:unit`). Heavy static gates (PHPCS across 184 files, PHPStan)
+   Run fast unit suite (`composer test:unit`). Heavy static gates (PHPCS, PHPStan)
    are verified via CircleCI in the cloud on git push (per AGENTS.md).
 6. Packaging (mandatory after every completed run per AGENTS.md / AGENTARDS/README.md):
    - Bump version in all 4 places: sidrena-cijena.php (header Version and SIDRENA_CIJENA_VERSION constant),
@@ -48,5 +48,7 @@ Steps:
    - Commit everything including versions/<version>/ and push to origin master.
    - Verify pipeline passes on CircleCI (`circleci run list`).
 
-Done when: unit suite passes (456 unit tests / 1623 assertions), lint exits 0, PHPStan reports no errors (Level 6 across 117 files), JS lint exits 0, translations are complete (768 translated strings / 0 untranslated in languages/hr_HR.po), release archive is built locally and CircleCI pipeline passes green.
+Done when: unit suite passes (535 unit tests / 1916 assertions), lint exits 0, PHPStan reports no errors
+(Level 6), JS lint exits 0, translations are complete (809 translated strings / 0 untranslated in
+languages/hr_HR.po), release archive is built locally and CircleCI pipeline passes green.
 ```

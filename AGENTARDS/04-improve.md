@@ -35,6 +35,9 @@ This pass focuses on robustness and compatibility:
      do not invent legal guidance.
    - Verify transient/option cleanup on deactivation and uninstall (Support\Deactivator,
      Support\Uninstaller) still leaves the anchor/lowest_30_day evidence intact (IMP-09).
+   - Verify label preset resolution (Settings::anchor_label_presets()) and dynamic date token
+     substitution (PriceDisplay::format_anchor_label()) — edge cases: empty label, custom label
+     with no token, label with both {datum} and {date}, variation anchor with legacy category.
 2. Compatibility:
    - Strict PHP 7.4 to 8.4 compatibility: no PHP 8-only syntax in src/ (static scan).
    - Clean operation both with and without WooCommerce (standalone catalog provider).
@@ -43,17 +46,19 @@ This pass focuses on robustness and compatibility:
      that the product editor's normal Update action remains independent of plugin evidence
      actions. Prefer a focused Playwright regression test when wp-env is available.
    - Classic and block themes render the anchor/30-day lines (PriceDisplay,
-     BuilderCompat, render_block path).
+     BuilderCompat, render_block path). Block theme: PriceDisplay::filter_price_block accepts
+     3 args, reads $block_instance->context['postId'] for Product Collection archive context.
 3. Consistency with docs:
    - Keep `docs/` in sync with behaviour you touch (legal-rules, feature-acceptance,
      operations, testing, troubleshooting as applicable).
    - Log completed items in `docs/improvement-backlog.md` (FIX-xx/IMP-xx/REL-xx) and add
      verification notes to `docs/release-readiness.md`.
 4. Quality gates & release:
-   - Run fast unit tests locally (`composer test:unit`). Heavy static gates (PHPCS across 184 files, PHPStan)
+   - Run fast unit tests locally (`composer test:unit`). Heavy static gates (PHPCS, PHPStan)
      and integration/E2E tests are offloaded to CircleCI on git push (per AGENTS.md).
    - If translation strings were updated, regenerate catalogs:
-     `php tools/i18n/make-pot.php --locale=hr_HR` (768 translated strings / 0 untranslated in languages/hr_HR.po).
+     `php tools/i18n/make-pot.php --locale=hr_HR` (baseline: 809 translated strings / 0 untranslated
+     in languages/hr_HR.po).
    - Follow the release procedure in AGENTS.md / AGENTARDS/README.md:
      1. Bump version in sidrena-cijena.php, readme.txt, and package.json.
      2. Run `tools/build-zip.sh <version>` locally to produce release zip and publish to sidrena-cijena-eu.

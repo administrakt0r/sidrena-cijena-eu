@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.19
+Stable tag: 2.0.20
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,12 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.20 =
+* Accurate legal tooltip explanation: corrected default anchor tooltip from erroneous 30-day wording to the statutory definition per NN 101/2026 and NN 110/2026.
+* Block theme archive context: PriceDisplay::filter_price_block now reads WP_Block context to show anchor prices in WooCommerce Product Collection archive blocks.
+* Circular ? icon and tooltip UX: fixed hover gap bridge, screen boundary clamping, and auto-flip behaviour for the info tooltip.
+* 2.0.20 version alignment: bumped version constants and translation catalog (809 translated / 0 untranslated).
 
 = 2.0.19 =
 * Statutory rollout alignment: updated documentation and legal rules guidance reflecting the postponement to 17 November 2026 under NN 110/2026.

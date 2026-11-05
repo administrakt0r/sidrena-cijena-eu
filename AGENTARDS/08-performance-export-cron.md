@@ -15,7 +15,7 @@ checksum/fingerprint reporting, the 30+ day archive retention (max(30, retention
 and the blocking publication gate (FR-007) all stay exactly as they are. Append-only
 price history. PHP 7.4-8.4. Commit each item separately (perf: / fix:), with tests.
 
-Baseline (v2.0.0): 361 unit tests / 1296 assertions green — keep green, grow the suite.
+Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in

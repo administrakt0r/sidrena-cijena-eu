@@ -14,6 +14,8 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
    Run `./local.sh` (starts wp-env on http://localhost:8888, activates WooCommerce + Sidrena Cijena,
    configures EUR and Europe/Zagreb timezone, seeds demo products, anchors, a sale, and seeds
    17 compliance scenarios). Stop with `./stoplocal.sh`.
+   Demo products seeded at localhost:8888: IDs ~10 (Kava mljevena), 11 (Maslinovo ulje),
+   12 (Deterdžent), 13 (Majica pamučna), 14 (Kava u zrnu), 22 (Seed variable).
 2. Isolated testing environment & CircleCI:
    Heavy integration and Playwright E2E suites can be run locally on port 8889 or offloaded
    to CircleCI (`integration_and_e2e` job) to spare the host PC CPU and RAM (see AGENTS.md).
@@ -36,6 +38,10 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
         Welcome banner shows once with author project links and is dismissible. "Mark setup complete" dismisses it.
    - 2. Anchor price display: Open product page; reference date price and label render next to price
         (classic and block themes). Mapped legacy categories show 02.05.2025; general items show 10.09.2026.
+        Verify that dynamic date tokens ({datum}) resolve in the label to the category-appropriate date.
+        Verify that the tooltip shows the correct statutory text (NOT the 30-day rule text):
+        "Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum
+        prema mjerama izravne kontrole cijena."
    - 3. 30-day lowest price: Item with classified promotion shows lowest price line; promotional start date
         is excluded; lowest_30_day rows are never used as self-input.
    - 4. Daily price list: Generate from admin or WP-CLI (`wp sidrena-cijena generate --force`);
@@ -47,13 +53,24 @@ directory is directly bind-mounted into Docker containers; `--force` deletes the
         are NOT backfilled; variations record individually.
    - 7. Compliance gate: Missing anchor blocks publication with visible ERROR in Compliance check;
         resolving the finding allows generation.
-6. Verify standalone operation without WooCommerce:
+6. Block theme (Product Collection block) verification:
+   In a block-theme or Gutenberg-based product listing, verify the anchor price renders correctly
+   in the archive context (Product Collection block). The filter_price_block hook accepts 3 args
+   ($content, $block, $block_instance) and reads $block_instance->context to get the postId for
+   archive blocks. Verify this works for both single product page and Product Collection archive.
+7. Label preset display verification:
+   In the Display Settings screen (wp-admin/admin.php?page=sidrena-cijena-display), verify:
+   - All 7 preset pills are shown and clickable.
+   - Clicking a preset auto-fills the label field.
+   - {datum} quick-insert button works.
+   - Live preview shows both legacy (2025-05-02) and general (2026-09-10) example dates correctly.
+8. Verify standalone operation without WooCommerce:
    Test deactivating WooCommerce (`npx wp-env run cli wp plugin deactivate woocommerce`).
    Plugin must continue operating without fatals using the standalone catalog. Re-activate WooCommerce after test.
-7. If any fixes were made:
+9. If any fixes were made:
    - Run all static quality gates (`composer test:unit && composer lint && composer analyse && npm run lint:js`).
    - Package and release per AGENTARDS/README.md (bump version, build zip, verify with unzip -t, commit and push).
 
-Done when: integration suite passes (96 tests / 454 assertions), E2E suite passes (42 Playwright specs on port 8889), all 7 verification steps pass,
-and any fixes are packaged, committed, and pushed.
+Done when: integration suite passes (96 tests / 454 assertions), E2E suite passes (42 Playwright specs on port 8889),
+all 7+ verification steps pass, and any fixes are packaged, committed, and pushed.
 ```

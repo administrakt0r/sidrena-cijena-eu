@@ -11,7 +11,7 @@ themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the 
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).
 
-Baseline (v2.0.13): 456 unit tests / 1623 assertions green — keep green, grow the suite.
+Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
 Status (v2.0.13): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
@@ -26,8 +26,7 @@ Work items (priority order — read the listed files first, fix what is really t
    LocationsPage (type column has translated labels already in types()), SpecialSaleMetaBox
    (sale_type options + status) and LegalSettingsPage. Build one shared label resolver on
    the existing Support\Labels pattern (which replaced Support\HistoryLabels) and use it
-   everywhere. Add unit tests for the
-   resolver.
+   everywhere. Add unit tests for the resolver.
 2. Tables and pagination. AuditPage renders log rows with PER_PAGE=50 but no paginate_links
    (older entries unreachable) and prints the whole rule-change history unbounded;
    ImportPage's preview renders every parsed row (a 5,000-row CSV = 5,000 <tr>) — cap and
@@ -81,12 +80,28 @@ Work items (priority order — read the listed files first, fix what is really t
    title attribute in templates/anchor-price.php). Remove the duplicated
    screen-reader-text + visible description sentence in LocationsPage. Translate the
    remaining literals (ImportPage's `<th>SKU</th>`, AuditPage's 'true'/'false').
+8. Display Settings label presets UX (v2.0.19+): The DisplaySettingsPage now renders
+   7 preset pills (Sidrena cijena, Bazna cijena, Referentna cijena, Dodatna cijena,
+   Cijena na dan {datum}, Cijena na {datum}, Najniža redovna cijena ({datum})) and a
+   {datum} quick-insert button. Verify the live preview renders both reference dates
+   correctly (2. 5. 2025. for legacy categories, 10. 9. 2026. for general). If you change
+   any preset label text, verify it stays within legally permitted wording
+   (Ministry of Economy clarification, 22 Sep 2026) and update tests in
+   SettingsTest::test_anchor_label_presets.
+9. Tooltip rendering: The circular ? tooltip button (product cards and single product
+   pages) must: (a) render as a circular icon, not raw text; (b) show the tooltip on hover
+   with a hover-gap bridge so the tooltip doesn't disappear when moving to it; (c) clamp
+   to screen boundaries on narrow viewports; (d) auto-flip above the button when there is
+   not enough space below. The tooltip text must accurately say the anchor is the
+   "redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne
+   kontrole cijena" — NOT the 30-day rule. See assets/css/frontend.css and
+   assets/js/frontend.js for current implementation. If you change JS, run ESLint.
 
 After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
-`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 768 translated strings / 0 untranslated in
+`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 809 translated strings / 0 untranslated in
 languages/hr_HR.po.
 
-Gates: fast local unit test suite `composer test:unit`; heavy static gates (PHPCS across 184 files, PHPStan)
+Gates: fast local unit test suite `composer test:unit`; heavy static gates (PHPCS, PHPStan)
 and integration/E2E tests are offloaded to CircleCI on git push (per AGENTS.md).
 
 Release (mandatory per AGENTS.md / AGENTARDS/README.md): bump the version in all 4 places, run

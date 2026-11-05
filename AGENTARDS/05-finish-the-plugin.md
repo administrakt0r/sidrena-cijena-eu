@@ -6,88 +6,63 @@ You are the coding agent for **Sidrena Cijena**, a WordPress plugin that impleme
 Croatian "sidrena cijena" (anchor price) obligation, the daily machine-readable price-list
 obligation and the 30-day lowest-price rule for classified sales.
 
-* Repository: `/home/q/Desktop/wordpressprojects/plugins/sidrena-cijena`
+* Repository: `/home/q/Desktop/wordpress/plugins/sidrena-cijena`
 * Branch `master`, remote `origin https://github.com/administrakt0r/sidrena-cijena`
 * Git author: configured repo-locally as `administrakt0r <markoes3@gmail.com>`
 * Read `AGENTARDS/README.md` first — it defines the mandatory workflow and rules.
 
 ## Non-negotiable rules
 
-1. **One logical item at a time.** Implement it, add unit/integration tests, update documentation,
-   commit with a focused conventional message (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
-2. **Never alter legal behavior silently:**
-   - General reference date: **2026-09-10**; legacy category reference date: **2025-05-02**.
-   - 30-day lowest-price window: `start - 30` to `start - 1` (start date excluded, day -30 included).
-   - Filename pattern: `{FACILITY_FORM}_{ADDRESS}_{FACILITY_ID}_{SEQUENCE}_{DDMMYYYY}_{HHMM}.{EXT}`.
-   - Archive retention: at least 30 days (`max(30, retention_days)`).
-   - Mandatory publication gate blocks generation on missing anchors or unclassified promotions.
-   - Price-history rows (`anchor`, `lowest_30_day`) are append-only legal evidence; never guess or backfill.
-3. **Keep the plugin functional with and without WooCommerce.** Never fatal when WooCommerce is absent.
-4. **All quality gates must be green before packaging and committing.**
-5. **Release at the end of every completed run.** Every completed run ships a new version archive
-   under `versions/<version>/`, committed and pushed to git.
+1. **Plugin boundaries:** Work only inside this plugin (`src/`, `assets/`, `tests/`, `languages/`, `docs/`, `tools/`, root config files). Never touch WordPress core, theme or WooCommerce files.
+2. **Append-only history:** Never invent or guess historical prices; `wp_sidrena_price_history` rows are immutable legal evidence.
+3. **Legal semantics:** Any change to reference dates (`2025-05-02` for legacy categories, `2026-09-10` for general), the 30-day window, the filename pattern, or the enforcement deadline (17 November 2026 per NN 110/2026) must be reviewed against `docs/legal-rules.md` and committed as a legal-change with explicit justification.
+4. **Standalone catalog:** Keep the plugin functional with and without WooCommerce — no fatal when WooCommerce is absent.
+5. **CRITICAL — Never `wp plugin install --force`:** The host directory is bind-mounted into Docker; `--force` deletes the directory contents!
+6. **CPU policy (AGENTS.md):** Run only fast local checks (`php -l`, `composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`). Heavy gates (PHPCS, PHPStan, integration tests, Playwright) offload to CircleCI on push. Release packaging (`tools/build-zip.sh`) runs locally.
+7. **Label presets:** Never invent label text without basis in the Ministry of Economy clarification (22 Sep 2026). Permitted labels include: "Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan [datum]", "Cijena na [datum]", "Najniža redovna cijena ([datum])". Dynamic tokens {datum}/{date}/{datum_iso} must resolve to the category-appropriate reference date.
 
-## Environment & Gotchas
+## Current baseline (v2.0.20)
 
-* Docker, PHP 8.4 + Composer, Node 24 + npm, Playwright Chromium.
-* If user `q` lacks active docker permissions in the current subshell, wrap docker/wp-env commands in `sg docker -c '…'`.
-* **Dev webshop:** `./local.sh` → <http://localhost:8888> (`admin` / `password`). Stop with `./stoplocal.sh`.
-* **Test webshop:** `npx wp-env start` → <http://localhost:8889> (the exclusive E2E target; Playwright must never touch 8888).
-* **CRITICAL:** NEVER run `wp plugin install <zip> --force` inside wp-env (it deletes the bind-mounted repository!).
-* **Clean test DB:** Before running integration tests, run `npx wp-env clean tests`.
-* **CI Workflow location:** CI workflow is maintained in `tools/ci/ci.yml` (ready to copy to `.github/workflows/` when pushing with a token possessing GitHub `workflow` scope).
-* **Current green baseline:** 361+ unit tests / 1296+ assertions, 96+ integration tests / 454+ assertions, 42 E2E specs, PHPStan level 6 clean (0 errors, 117 files), PHPCS clean (175 files), ESLint clean, `./local.sh` exit 0.
+Confirm these are still green before starting any new work:
+- Unit suite: **535 tests / 1916 assertions** (`composer test:unit` — ~6 s).
+- Translations: **809 strings, 0 untranslated** (`php tools/i18n/make-pot.php --locale=hr_HR`).
+- Integration suite (CircleCI): 96 tests / 454 assertions.
+- E2E suite (CircleCI): 42 Playwright specs on port 8889.
+- PHPStan level 6: 0 errors · PHPCS clean · ESLint clean.
+- `./local.sh` exits 0, demo site at http://localhost:8888.
 
-## Quality Gates
+## Work in priority order
 
-```bash
-composer test:unit          # PHPUnit unit suite
-composer lint               # PHPCS WordPress Coding Standards
-composer analyse            # PHPStan level 6
-npm run lint:js             # ESLint
-```
+1. **Remaining open items in `docs/improvement-backlog.md`:**
+   Read every row with status `todo` or `in progress`; pick the highest-priority item and implement it.
+   Do not skip the docs update — log each change as a new row (FIX-xx/IMP-xx/PERF-xx/UX-xx).
+2. **Production deployment alignment:**
+   The production site at https://wordpress.sidrenacijena.eu/ runs an older version.
+   For remote production deploys, see AGENTARDS/11-production-deployment.md.
+3. **readme.txt Stable tag:**
+   Confirm `readme.txt` Stable tag matches `sidrena-cijena.php` Version. If they diverge
+   (e.g., Stable tag: 2.0.19 vs Version: 2.0.20), bump readme.txt Stable tag and add changelog
+   entry, then rebuild the zip and push.
+4. **WooCommerce block theme / Product Collection archive:**
+   PriceDisplay::filter_price_block accepts 3 args and reads $block_instance->context['postId']
+   for Product Collection archive context. If you change PriceDisplay, run:
+   `composer test:unit -- --filter PriceDisplayTest`
+5. **WordPress.org submission:**
+   See `docs/wordpress-org-publishing.md`. The plugin is not yet submitted to WP.org; the
+   public release repo is `administrakt0r/sidrena-cijena-eu` (tagged releases).
 
-When Docker is available:
-```bash
-npx wp-env clean tests
-composer test:integration   # PHPUnit integration suite in wp-env
-npx wp-env start
-npm run test:e2e            # Playwright E2E on port 8889
-./local.sh                  # One-command local setup, must exit 0
-```
+## Quality gates & release (mandatory at the end of every completed run)
 
-## Where the work is tracked
-
-* `docs/improvement-backlog.md` — tracks completed compliance fixes (FIX-01..12), competitor improvements (IMP-01..12), public release items (REL-01..14), performance items (PERF-xx) and UI/UX items (UX-xx).
-* `docs/release-readiness.md` — records verification notes and gate results for every shipped version.
-* `completion-steps.md` — compliance remediation plan and release status.
-
-## Work queue
-
-For focused passes use the dedicated prompts instead of improvising:
-performance — [06](06-performance-db-queries.md) (queries/indexes), [07](07-performance-caching-runtime.md)
-(caching/runtime/assets), [08](08-performance-export-cron.md) (generation/memory/cron);
-UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and their own done-criteria.
-
-1. **REL-03 — WordPress.org submission readiness:**
-   - Review `readme.txt` against WordPress.org plugin directory requirements.
-   - Confirm screenshots, banner, icon assets in `.wordpress-org/`.
-   - Verify license (GPL-2.0-or-later) and external services/privacy declarations.
-   - Ensure clean code standards (nonces, escaping, capability checks on all endpoints).
-2. **Defect & Edge-Case Sweeps:**
-   - Sweep `src/` against `docs/legal-rules.md`, `docs/feature-acceptance.md`, and `docs/price-list-format.md`.
-   - Check edge cases: timezones, DST boundaries, first-offer boundaries, variation identity, service items, CSV formula neutralization, error reporting.
-   - Fix real defects only (no speculative abstractions).
-3. **Translations:**
-   - If strings are added or edited, update `tools/i18n/en_US.php` and `tools/i18n/hr_HR.php`, then run:
-     `php tools/i18n/make-pot.php --locale=hr_HR`
-   - Confirm 0 untranslated strings in `languages/hr_HR.po` (baseline: 768 translated strings / 0 untranslated).
-4. **Mandatory Release Procedure:**
-   - Bump version in all 4 places:
-     - `sidrena-cijena.php` (header `Version:` and `SIDRENA_CIJENA_VERSION`)
-     - `readme.txt` (`Stable tag:` and changelog entry)
-     - `package.json` (`"version": "X.Y.Z"`)
-   - Fast local unit suite check (`composer test:unit`); heavy gates (PHPCS across 184 files, PHPStan, integration, E2E) run on CircleCI.
+1. **Fast local checks:**
+   ```bash
+   composer test:unit                                    # Must pass 535/1916 (or more)
+   php tools/i18n/make-pot.php --locale=hr_HR            # Must report 0 untranslated
+   ```
+2. **Bump the version in all 4 places** (they must agree exactly):
+   - `sidrena-cijena.php` (header `Version:` and constant `SIDRENA_CIJENA_VERSION`)
+   - `readme.txt` (`Stable tag:` and `= X.Y.Z =` changelog entry)
+   - `package.json` (`"version": "X.Y.Z"`)
+3. **Mandatory Release Procedure:**
    - Build archive locally: `tools/build-zip.sh <version>`.
    - Verify archive: `unzip -t versions/<version>/sidrena-cijena-eu.zip`.
    - Update `docs/release-readiness.md` and `docs/improvement-backlog.md`.
@@ -99,4 +74,5 @@ UI/UX — [09](09-ui-ux-improvements.md). They carry the known hotspots and thei
 * Fast local checks pass; CircleCI pipeline passes 100% green.
 * Zero untranslated strings in Croatian catalog.
 * Installable ZIP archive built locally under `versions/<version>/`, verified, committed, pushed, and published to `sidrena-cijena-eu`.
+* `readme.txt` Stable tag matches plugin Version exactly.
 * Complete report summarizing completed work, gate results, release version, and confirmation of legal rule integrity.
