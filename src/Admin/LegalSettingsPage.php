@@ -70,7 +70,7 @@ final class LegalSettingsPage {
 				'key'         => $key,
 				'type'        => $field['type'],
 				'label'       => $field['label'],
-				'description' => isset( $field['description'] ) ? $field['description'] : '',
+				'description' => $field['description'],
 			);
 
 			if ( 'categories' !== $field['type'] ) {

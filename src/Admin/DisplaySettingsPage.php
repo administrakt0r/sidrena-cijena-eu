@@ -102,7 +102,7 @@ final class DisplaySettingsPage {
 				array(
 					'key'         => $key,
 					'type'        => $field['type'],
-					'description' => isset( $field['description'] ) ? $field['description'] : '',
+					'description' => $field['description'],
 					'label_for'   => $key,
 				)
 			);
