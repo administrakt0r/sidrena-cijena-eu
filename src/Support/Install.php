@@ -38,10 +38,10 @@ final class Install {
 		// Settings defaults are translatable strings, and `init` has not run
 		// yet during activation, so the textdomain has to be loaded explicitly
 		// or the seeded labels would be stored in English.
-		$mo_file = file_exists( SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr.mo' )
-			? SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr.mo'
-			: SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo';
-		load_textdomain( 'titanworks-sidrena-bazna-cijena', $mo_file );
+		$mo_file = file_exists( SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo' )
+			? SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo'
+			: SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo';
+		load_textdomain( 'titanworks-bazna-cijena', $mo_file );
 
 		self::seed_options();
 
@@ -62,7 +62,7 @@ final class Install {
 
 		Logger::info(
 			'migration',
-			__( 'Plugin activated.', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Plugin activated.', 'titanworks-bazna-cijena' ),
 			array(
 				'version' => defined( 'SIDRENA_CIJENA_VERSION' ) ? SIDRENA_CIJENA_VERSION : '',
 			)

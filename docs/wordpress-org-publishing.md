@@ -1,4 +1,4 @@
-# Publishing TitanWorks Sidrena Bazna Cijena on WordPress.org
+# Publishing Titanworks Bazna Cijena on WordPress.org
 
 The WordPress.org account at `profiles.wordpress.org/titanworks/` has username
 `@titanworks` and display name `administrakt0r`. These can differ. The
@@ -9,11 +9,10 @@ plugin.
 
 ## Before submission
 
-1. The selected display name is **TitanWorks Sidrena Bazna Cijena**. The exact-name search
-   returned no current plugin listing. The release uses the matching
-   `titanworks-sidrena-bazna-cijena` text domain and package folder. WordPress.org derives
-   the slug from the plugin name; confirm the assigned slug in the submission
-   flow because availability is decided by the directory review team.
+1. The approved display name is **Titanworks Bazna Cijena**. The directory review team
+   confirmed acceptance of this name and requested explicit confirmation of the
+   `titanworks-bazna-cijena` permalink. The release uses the matching
+   `titanworks-bazna-cijena` text domain, slug, and package folder.
 2. Check the current [Detailed Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/),
    [common review issues](https://developer.wordpress.org/plugins/wordpress-org/common-issues/),
    and [readme format](https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/).

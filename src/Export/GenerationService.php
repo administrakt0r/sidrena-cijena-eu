@@ -108,7 +108,7 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ) );
 		}
 
 		if ( ! isset( $args['items'] ) ) {
@@ -144,13 +144,13 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$format = strtolower( (string) $format );
 
 		if ( ! in_array( $format, array( 'csv', 'xml' ), true ) ) {
-			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$source            = isset( $args['source'] ) ? (string) $args['source'] : 'manual';
@@ -165,7 +165,7 @@ class GenerationService {
 			$findings[] = array(
 				'code'           => 'missing_store_identifier',
 				'severity'       => 'ERROR',
-				'message'        => __( 'The sales location has no facility identifier.', 'titanworks-sidrena-bazna-cijena' ),
+				'message'        => __( 'The sales location has no facility identifier.', 'titanworks-bazna-cijena' ),
 				'proposal'       => RemediationProposer::propose( 'missing_store_identifier', array( 'name' => $location['name'] ) ),
 				'entity_type'    => 'location',
 				'entity_id'      => (int) $location_id,
@@ -185,11 +185,11 @@ class GenerationService {
 		// Ensure address and city are populated for filename generation.
 		if ( empty( $location['address'] ) ) {
 			$wc_addr             = (string) get_option( 'woocommerce_store_address', '' );
-			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'titanworks-sidrena-bazna-cijena' );
+			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'titanworks-bazna-cijena' );
 		}
 		if ( empty( $location['city'] ) ) {
 			$wc_city          = (string) get_option( 'woocommerce_store_city', '' );
-			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'titanworks-sidrena-bazna-cijena' );
+			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'titanworks-bazna-cijena' );
 		}
 
 		if ( ! isset( $args['items'] ) ) {
@@ -205,7 +205,7 @@ class GenerationService {
 		if ( ! empty( $all_blockers ) && ! $allow_with_errors ) {
 			$this->record_failure( $location_id, $format, $all_blockers );
 
-			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'titanworks-sidrena-bazna-cijena' ), array( 'findings' => $all_blockers ) );
+			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'titanworks-bazna-cijena' ), array( 'findings' => $all_blockers ) );
 		}
 
 		$proposals = array();

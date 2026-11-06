@@ -1,6 +1,6 @@
-# AGENTS.md — AI Agent Guidelines for `titanworks-sidrena-bazna-cijena`
+# AGENTS.md — AI Agent Guidelines for `titanworks-bazna-cijena`
 
-Welcome to `titanworks-sidrena-bazna-cijena` (TitanWorks Sidrena Bazna Cijena — Croatian Anchor and Base Price Compliance Plugin for WordPress and WooCommerce).
+Welcome to `titanworks-bazna-cijena` (Titanworks Bazna Cijena — Croatian Anchor and Base Price Compliance Plugin for WordPress and WooCommerce).
 This document is the primary instruction set for AI coding agents (Antigravity, OpenCode, Claude, Cursor, Copilot, etc.) working in this repository.
 
 ---

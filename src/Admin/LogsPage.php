@@ -40,7 +40,7 @@ class LogsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only log filters.
@@ -66,14 +66,14 @@ class LogsPage {
 		$result = Plugin::instance()->logs()->query( $args );
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'titanworks-sidrena-bazna-cijena' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'titanworks-bazna-cijena' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'titanworks-bazna-cijena' ) . '</p>';
 
 		echo '<form method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 
-		echo '<label>' . esc_html__( 'Level', 'titanworks-sidrena-bazna-cijena' ) . ' <select name="level">';
-		echo '<option value="">' . esc_html__( 'All levels', 'titanworks-sidrena-bazna-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Level', 'titanworks-bazna-cijena' ) . ' <select name="level">';
+		echo '<option value="">' . esc_html__( 'All levels', 'titanworks-bazna-cijena' ) . '</option>';
 
 		foreach ( LogRepository::LEVELS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $level, $candidate, false ) . '>' . esc_html( Labels::log_level( $candidate ) ) . '</option>';
@@ -81,33 +81,33 @@ class LogsPage {
 
 		echo '</select></label> ';
 
-		echo '<label>' . esc_html__( 'Event', 'titanworks-sidrena-bazna-cijena' ) . ' <select name="event">';
-		echo '<option value="">' . esc_html__( 'All events', 'titanworks-sidrena-bazna-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Event', 'titanworks-bazna-cijena' ) . ' <select name="event">';
+		echo '<option value="">' . esc_html__( 'All events', 'titanworks-bazna-cijena' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $event, $candidate, false ) . '>' . esc_html( Labels::log_event( $candidate ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
-		submit_button( __( 'Filter', 'titanworks-sidrena-bazna-cijena' ), 'secondary', 'submit', false );
+		submit_button( __( 'Filter', 'titanworks-bazna-cijena' ), 'secondary', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'titanworks-sidrena-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'titanworks-bazna-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'Time', 'titanworks-sidrena-bazna-cijena' ),
-			__( 'Level', 'titanworks-sidrena-bazna-cijena' ),
-			__( 'Event', 'titanworks-sidrena-bazna-cijena' ),
-			__( 'Message', 'titanworks-sidrena-bazna-cijena' ),
-			__( 'User', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Time', 'titanworks-bazna-cijena' ),
+			__( 'Level', 'titanworks-bazna-cijena' ),
+			__( 'Event', 'titanworks-bazna-cijena' ),
+			__( 'Message', 'titanworks-bazna-cijena' ),
+			__( 'User', 'titanworks-bazna-cijena' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $result['items'] ) ) {
-			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'titanworks-sidrena-bazna-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'titanworks-bazna-cijena' ) . '</td></tr>';
 		}
 
 		foreach ( $result['items'] as $row ) {
@@ -140,7 +140,7 @@ class LogsPage {
 			: ( isset( $context['user_id'] ) ? (int) $context['user_id'] : 0 );
 
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'titanworks-sidrena-bazna-cijena' );
+			return __( 'system', 'titanworks-bazna-cijena' );
 		}
 
 		$user = get_userdata( $user_id );

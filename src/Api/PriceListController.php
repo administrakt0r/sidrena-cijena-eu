@@ -475,7 +475,7 @@ class PriceListController {
 			$location = Plugin::instance()->locations()->get( (int) $args['location'] );
 
 			if ( ! $location ) {
-				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-sidrena-bazna-cijena' ), array( 'status' => 404 ) );
+				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
 			}
 		}
 
@@ -600,7 +600,7 @@ class PriceListController {
 			$location = $locations->get( $requested );
 
 			if ( ! $location ) {
-				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-sidrena-bazna-cijena' ), array( 'status' => 404 ) );
+				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
 			}
 
 			return $location;
@@ -613,10 +613,10 @@ class PriceListController {
 		}
 
 		if ( count( $active ) > 1 ) {
-			return new \WP_Error( 'sidrena_cijena_location_required', __( 'A location parameter is required when several sales locations are active.', 'titanworks-sidrena-bazna-cijena' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'sidrena_cijena_location_required', __( 'A location parameter is required when several sales locations are active.', 'titanworks-bazna-cijena' ), array( 'status' => 400 ) );
 		}
 
-		return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'No active sales location exists.', 'titanworks-sidrena-bazna-cijena' ), array( 'status' => 404 ) );
+		return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'No active sales location exists.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
 	}
 
 	/**
@@ -702,7 +702,7 @@ class PriceListController {
 			if ( $count >= self::THROTTLE_LIMIT ) {
 				return new \WP_Error(
 					'sidrena_cijena_throttled',
-					__( 'Too many requests. Please retry shortly.', 'titanworks-sidrena-bazna-cijena' ),
+					__( 'Too many requests. Please retry shortly.', 'titanworks-bazna-cijena' ),
 					array(
 						'status'  => 429,
 						'headers' => array( 'Retry-After' => 60 ),
@@ -720,7 +720,7 @@ class PriceListController {
 		if ( $count >= self::THROTTLE_LIMIT ) {
 			return new \WP_Error(
 				'sidrena_cijena_throttled',
-				__( 'Too many requests. Please retry shortly.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'Too many requests. Please retry shortly.', 'titanworks-bazna-cijena' ),
 				array(
 					'status'  => 429,
 					'headers' => array( 'Retry-After' => 60 ),

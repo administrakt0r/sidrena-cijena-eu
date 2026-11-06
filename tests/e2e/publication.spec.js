@@ -5,7 +5,7 @@ test.describe('Price-list publication', () => {
   let productId = 0;
 
   test.beforeAll(async () => {
-    wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+    wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
 
     const id = wpEval(`
       $product = new WC_Product_Simple();

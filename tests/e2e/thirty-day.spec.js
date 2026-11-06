@@ -8,7 +8,7 @@ test.describe('30-day lowest price display', () => {
   let wooCartPageId = 0;
 
   test.beforeAll(async () => {
-    wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+    wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
 
     const id = wpEval(`
       $product = new WC_Product_Simple();
@@ -159,7 +159,7 @@ test.describe('30-day lowest price display', () => {
       const body = await response.json();
       return body.items.find((item) => item.id === expectedProductId);
     }, productId);
-    const extension = cartItem.extensions['titanworks-sidrena-bazna-cijena'] || cartItem.extensions['sidrena-cijena-eu'];
+    const extension = cartItem.extensions['titanworks-bazna-cijena'] || cartItem.extensions['titanworks-sidrena-bazna-cijena'] || cartItem.extensions['sidrena-cijena-eu'];
     const reference = extension.cartPriceSuffix;
 
     expect(reference).toMatch(/Referentne cijene po komadu|Reference prices per item/);

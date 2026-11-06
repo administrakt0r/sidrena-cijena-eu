@@ -114,21 +114,21 @@ class RowValidator {
 		if ( '' === $values['sku'] && $values['product_id'] <= 0 ) {
 			$errors[] = array(
 				'code'    => 'missing_identifier',
-				'message' => __( 'The row has neither an SKU nor a product ID.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'The row has neither an SKU nor a product ID.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
 		if ( '' === $values['reference_date'] ) {
 			$errors[] = array(
 				'code'    => 'invalid_reference_date',
-				'message' => __( 'The reference date is missing or not a valid date.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'The reference date is missing or not a valid date.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
 		if ( null === $values['price'] || $values['price'] < 0 ) {
 			$errors[] = array(
 				'code'    => 'invalid_anchor_price',
-				'message' => __( 'The anchor price is missing or not a valid non-negative number.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'The anchor price is missing or not a valid non-negative number.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
@@ -137,7 +137,7 @@ class RowValidator {
 		if ( ! $item ) {
 			$errors[] = array(
 				'code'    => 'unknown_product',
-				'message' => __( 'No catalog item matches this SKU or product ID.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'No catalog item matches this SKU or product ID.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
@@ -146,7 +146,7 @@ class RowValidator {
 		if ( isset( $seen[ $key ] ) ) {
 			$errors[] = array(
 				'code'    => 'duplicate_row',
-				'message' => __( 'The same item appears more than once in this file.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'The same item appears more than once in this file.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
@@ -159,7 +159,7 @@ class RowValidator {
 		if ( '' !== $values['category'] && $item->categories && ! in_array( $values['category'], $item->categories, true ) ) {
 			$warnings[] = array(
 				'code'    => 'category_mismatch',
-				'message' => __( 'The category in the file does not match the catalog item category.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'The category in the file does not match the catalog item category.', 'titanworks-bazna-cijena' ),
 			);
 		}
 
@@ -175,7 +175,7 @@ class RowValidator {
 		if ( $same_price && $same_date ) {
 			$warnings[] = array(
 				'code'    => 'already_recorded',
-				'message' => __( 'An identical anchor record already exists; the row will be skipped.', 'titanworks-sidrena-bazna-cijena' ),
+				'message' => __( 'An identical anchor record already exists; the row will be skipped.', 'titanworks-bazna-cijena' ),
 			);
 
 			return $this->result( $index, $values, $item, 'unchanged', $errors, $warnings, $existing );
@@ -183,7 +183,7 @@ class RowValidator {
 
 		$warnings[] = array(
 			'code'    => 'would_overwrite',
-			'message' => __( 'This row would replace an existing anchor record and requires explicit confirmation.', 'titanworks-sidrena-bazna-cijena' ),
+			'message' => __( 'This row would replace an existing anchor record and requires explicit confirmation.', 'titanworks-bazna-cijena' ),
 		);
 
 		return $this->result( $index, $values, $item, 'overwrite', $errors, $warnings, $existing );

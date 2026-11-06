@@ -9,8 +9,8 @@
 #     --force        Rebuild and overwrite versions/<version>/ package if it already exists.
 #
 # The zip is built from committed HEAD only, so commit your changes first.
-# Output: versions/<version>/titanworks-sidrena-bazna-cijena.zip + SHA256SUMS.txt
-# Public repo: https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena
+# Output: versions/<version>/titanworks-bazna-cijena.zip + SHA256SUMS.txt
+# Public repo: https://github.com/administrakt0r/titanworks-bazna-cijena
 #
 # Version policy:
 #   Every version, including patch releases, is committed and pushed to GitHub.
@@ -59,13 +59,13 @@ if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PUBLIC_REPO="https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena.git"
-PUBLIC_REPO_NAME="administrakt0r/titanworks-sidrena-bazna-cijena"
+PUBLIC_REPO="https://github.com/administrakt0r/titanworks-bazna-cijena.git"
+PUBLIC_REPO_NAME="administrakt0r/titanworks-bazna-cijena"
 
-HEADER="$(grep -m1 "SIDRENA_CIJENA_VERSION" "$ROOT/titanworks-sidrena-bazna-cijena.php" | grep -o "'[0-9][^']*'" | tr -d "'")"
+HEADER="$(grep -m1 "SIDRENA_CIJENA_VERSION" "$ROOT/titanworks-bazna-cijena.php" | grep -o "'[0-9][^']*'" | tr -d "'")"
 
 if [ "$HEADER" != "$VERSION" ]; then
-	echo "error: titanworks-sidrena-bazna-cijena.php declares $HEADER but you asked for $VERSION." >&2
+	echo "error: titanworks-bazna-cijena.php declares $HEADER but you asked for $VERSION." >&2
 	echo "Bump the header, Stable tag, changelog and package.json first." >&2
 	exit 1
 fi
@@ -73,11 +73,11 @@ fi
 OUT="$ROOT/versions/$VERSION"
 
 if [ "$UPLOAD_ONLY" = true ]; then
-	if [ ! -f "$OUT/titanworks-sidrena-bazna-cijena.zip" ]; then
-		echo "error: $OUT/titanworks-sidrena-bazna-cijena.zip not found to upload." >&2
+	if [ ! -f "$OUT/titanworks-bazna-cijena.zip" ]; then
+		echo "error: $OUT/titanworks-bazna-cijena.zip not found to upload." >&2
 		exit 1
 	fi
-	echo "Using existing package at $OUT/titanworks-sidrena-bazna-cijena.zip"
+	echo "Using existing package at $OUT/titanworks-bazna-cijena.zip"
 else
 	DIRT="$(git -C "$ROOT" status --porcelain | grep -v "^?? versions/" || true)"
 
@@ -87,15 +87,15 @@ else
 		exit 1
 	fi
 
-	if [ -e "$OUT/titanworks-sidrena-bazna-cijena.zip" ] && [ "$FORCE" != true ]; then
+	if [ -e "$OUT/titanworks-bazna-cijena.zip" ] && [ "$FORCE" != true ]; then
 		echo "error: versions/$VERSION already has a package; use --force to overwrite or --upload-only to upload." >&2
 		exit 1
 	fi
 
 	mkdir -p "$OUT"
 
-	git -C "$ROOT" archive --format=zip --prefix=titanworks-sidrena-bazna-cijena/ HEAD \
-		titanworks-sidrena-bazna-cijena.php \
+	git -C "$ROOT" archive --format=zip --prefix=titanworks-bazna-cijena/ HEAD \
+		titanworks-bazna-cijena.php \
 		uninstall.php \
 		readme.txt \
 		LICENSE \
@@ -103,10 +103,10 @@ else
 		assets \
 		templates \
 		languages \
-		-o "$OUT/titanworks-sidrena-bazna-cijena.zip"
+		-o "$OUT/titanworks-bazna-cijena.zip"
 
-	ENTRIES="$(unzip -l "$OUT/titanworks-sidrena-bazna-cijena.zip" | awk 'NR>3' | head -n -2)"
-	LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "titanworks-sidrena-bazna-cijena/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md)" || true)"
+	ENTRIES="$(unzip -l "$OUT/titanworks-bazna-cijena.zip" | awk 'NR>3' | head -n -2)"
+	LEAKS="$(printf '%s\n' "$ENTRIES" | grep -E "titanworks-bazna-cijena/(tests|specs|tools|AGENTARDS|docs|\.opencode|\.specify|node_modules|vendor|versions|PROMPT\.md|completion\.md)" || true)"
 
 	if [ -n "$LEAKS" ]; then
 		echo "error: disallowed or dev-only files leaked into the zip:" >&2
@@ -114,9 +114,9 @@ else
 		exit 1
 	fi
 
-	( cd "$OUT" && sha256sum titanworks-sidrena-bazna-cijena.zip > SHA256SUMS.txt )
+	( cd "$OUT" && sha256sum titanworks-bazna-cijena.zip > SHA256SUMS.txt )
 
-	echo "Built $OUT/titanworks-sidrena-bazna-cijena.zip ($(du -h "$OUT/titanworks-sidrena-bazna-cijena.zip" | cut -f1))"
+	echo "Built $OUT/titanworks-bazna-cijena.zip ($(du -h "$OUT/titanworks-bazna-cijena.zip" | cut -f1))"
 fi
 
 if [ "$DO_UPLOAD" = true ]; then
@@ -133,7 +133,7 @@ if [ "$DO_UPLOAD" = true ]; then
 
 	# 2. Copy release zip and checksum
 	mkdir -p "$TMP_DIR/versions/$VERSION"
-	cp "$OUT/titanworks-sidrena-bazna-cijena.zip" "$TMP_DIR/versions/$VERSION/"
+	cp "$OUT/titanworks-bazna-cijena.zip" "$TMP_DIR/versions/$VERSION/"
 	cp "$OUT/SHA256SUMS.txt" "$TMP_DIR/versions/$VERSION/"
 
 	# 3. Update version strings and badges in public README.md
@@ -155,7 +155,7 @@ if [ "$DO_UPLOAD" = true ]; then
 
 		git add "versions/$VERSION" README.md
 		if ! git diff --cached --quiet; then
-			git commit -m "Release TitanWorks Sidrena Bazna Cijena $VERSION"
+			git commit -m "Release Titanworks Bazna Cijena $VERSION"
 			git push origin master
 			echo "Pushed release package to $PUBLIC_REPO (master)"
 		else
@@ -166,7 +166,7 @@ if [ "$DO_UPLOAD" = true ]; then
 	# 5. Create or update GitHub release via gh CLI
 	if command -v gh >/dev/null 2>&1; then
 		TAG="v$VERSION"
-		TITLE="TitanWorks Sidrena Bazna Cijena $VERSION"
+		TITLE="Titanworks Bazna Cijena $VERSION"
 		SHA="$(awk '{print $1}' "$OUT/SHA256SUMS.txt")"
 
 		CHANGELOG_NOTES="$(sed -n "/^= ${VERSION//./\\.} =/,/^= [0-9]/p" "$ROOT/readme.txt" | grep -v '^=' | sed '/^[[:space:]]*$/d' || true)"
@@ -175,7 +175,7 @@ if [ "$DO_UPLOAD" = true ]; then
 		fi
 
 		NOTES=$(cat <<EOF
-## TitanWorks Sidrena Bazna Cijena $VERSION
+## Titanworks Bazna Cijena $VERSION
 
 Croatian WordPress and WooCommerce plugin for anchor price and base price compliance. Track the lowest price from the previous 30 days, publish current price lists as CSV/XML, and show dated publications in a public HTML archive.
 
@@ -185,7 +185,7 @@ $CHANGELOG_NOTES
 
 ### WordPress upload package
 
-Download \`titanworks-sidrena-bazna-cijena.zip\` below and upload it at the WordPress.org plugin submission page https://wordpress.org/plugins/developers/add/. The SHA-256 file is attached for verification.
+Download \`titanworks-bazna-cijena.zip\` below and upload it at the WordPress.org plugin submission page https://wordpress.org/plugins/developers/add/. The SHA-256 file is attached for verification.
 
 * **SHA-256:** \`$SHA\`
 * **Main site:** https://sidrenacijena.eu/
@@ -195,11 +195,11 @@ EOF
 
 		if gh release view "$TAG" --repo "$PUBLIC_REPO_NAME" >/dev/null 2>&1; then
 			echo "Updating GitHub release $TAG on $PUBLIC_REPO_NAME..."
-			gh release upload "$TAG" "$OUT/titanworks-sidrena-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" --repo "$PUBLIC_REPO_NAME" --clobber
+			gh release upload "$TAG" "$OUT/titanworks-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" --repo "$PUBLIC_REPO_NAME" --clobber
 			gh release edit "$TAG" --repo "$PUBLIC_REPO_NAME" --title "$TITLE" --notes "$NOTES"
 		else
 			echo "Creating GitHub release $TAG on $PUBLIC_REPO_NAME..."
-			gh release create "$TAG" "$OUT/titanworks-sidrena-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" \
+			gh release create "$TAG" "$OUT/titanworks-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" \
 				--repo "$PUBLIC_REPO_NAME" \
 				--title "$TITLE" \
 				--notes "$NOTES" \
@@ -219,4 +219,4 @@ EOF
 	fi
 fi
 
-echo "Done. Package: $OUT/titanworks-sidrena-bazna-cijena.zip"
+echo "Done. Package: $OUT/titanworks-bazna-cijena.zip"

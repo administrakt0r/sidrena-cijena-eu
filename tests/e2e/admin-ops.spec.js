@@ -3,7 +3,7 @@ const { login, wpCli, wpEval } = require('./helpers');
 
 test.describe('Operations and administration', () => {
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
   });
 
   test('operations settings can be changed and persist', async ({ page }) => {

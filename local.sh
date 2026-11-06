@@ -64,8 +64,8 @@ $CLI option update woocommerce_price_num_decimals 2 >/dev/null
 # storefront tests) would never reach the products.
 $CLI option update woocommerce_coming_soon no >/dev/null
 $CLI option update woocommerce_store_pages_only no >/dev/null
-PLUGIN_NAME="$($CLI plugin list --field=name 2>/dev/null | grep -E "titanworks|sidrena" | head -1)"
-$CLI plugin activate "${PLUGIN_NAME:-titanworks-sidrena-bazna-cijena}" woocommerce >/dev/null
+PLUGIN_NAME="$($CLI plugin list --field=name 2>/dev/null | grep -E "titanworks|bazna|sidrena" | head -1)"
+$CLI plugin activate "${PLUGIN_NAME:-titanworks-bazna-cijena}" woocommerce >/dev/null
 
 # The test suites can leave the shop without an active theme (WordPress then
 # renders a blank storefront), so make sure the demo always has one.
@@ -74,7 +74,7 @@ if ! $CLI theme is-active >/dev/null 2>&1; then
 fi
 
 echo "==> Seeding demo products, anchors and a sale..."
-PLUGIN_DIR="$($CLI eval 'echo dirname( array_merge( glob( WP_PLUGIN_DIR . "/*/titanworks-sidrena-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" ) ?: array() )[0] ?? ( WP_PLUGIN_DIR . "/titanworks-sidrena-bazna-cijena" ) );')"
+PLUGIN_DIR="$($CLI eval 'echo dirname( array_merge( glob( WP_PLUGIN_DIR . "/*/titanworks-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/titanworks-sidrena-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" ) ?: array() )[0] ?? ( WP_PLUGIN_DIR . "/titanworks-bazna-cijena" ) );')"
 $CLI eval-file "$PLUGIN_DIR/tools/local-seed.php"
 
 echo "==> Seeding the 17 compliance test scenarios..."

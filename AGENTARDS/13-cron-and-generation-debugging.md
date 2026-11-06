@@ -2,7 +2,7 @@
 
 ```
 You are diagnosing and fixing issues with the daily price list generation pipeline in the
-Sidrena Cijena EU plugin (titanworks-sidrena-bazna-cijena.php is the bootstrap).
+Sidrena Cijena EU plugin (titanworks-bazna-cijena.php is the bootstrap).
 
 BEFORE YOU START — read AGENTARDS/README.md and docs/legal-rules.md. The daily price list
 is a LEGAL OBLIGATION under NN 101/2026-1213. Failure to publish daily (before 08:00) is

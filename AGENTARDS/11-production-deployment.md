@@ -1,7 +1,7 @@
 # Prompt 11 — Production deployment to wordpress.sidrenacijena.eu (needs SSH / WP-CLI remote access)
 
 ```
-You are deploying the TitanWorks Sidrena Bazna Cijena plugin from the local development environment to the
+You are deploying the Titanworks Bazna Cijena plugin from the local development environment to the
 production WordPress site at https://wordpress.sidrenacijena.eu/.
 
 BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
@@ -9,7 +9,7 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
 ## Environment context
 
 - Local plugin repo:    /home/q/Desktop/wordpress/plugins/sidrena-cijena (branch: master)
-- Public release repo:  https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena (tagged releases)
+- Public release repo:  https://github.com/administrakt0r/titanworks-bazna-cijena (tagged releases)
 - Production site:      https://wordpress.sidrenacijena.eu/
 - Production admin:     https://wordpress.sidrenacijena.eu/wp-admin/
 - Local demo site:      http://localhost:8888 (admin / password, started via ./local.sh)
@@ -28,25 +28,25 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
    php tools/i18n/make-pot.php --locale=hr_HR
    # Must report: 809 translated, 0 untranslated
    ```
-3. Confirm readme.txt Stable tag matches titanworks-sidrena-bazna-cijena.php Version:
+3. Confirm readme.txt Stable tag matches titanworks-bazna-cijena.php Version:
    ```bash
    grep "Stable tag" readme.txt
-   grep "Version:" titanworks-sidrena-bazna-cijena.php | head -1
+   grep "Version:" titanworks-bazna-cijena.php | head -1
    # Both must match. If not: bump Stable tag, add changelog entry, rebuild and push.
    ```
 4. Confirm the release zip exists and is valid:
    ```bash
-   ls versions/$(grep '"version"' package.json | grep -o '[0-9.]*')/titanworks-sidrena-bazna-cijena.zip
-   unzip -t versions/*/titanworks-sidrena-bazna-cijena.zip | tail -3
+   ls versions/$(grep '"version"' package.json | grep -o '[0-9.]*')/titanworks-bazna-cijena.zip
+   unzip -t versions/*/titanworks-bazna-cijena.zip | tail -3
    ```
-5. Confirm the latest version is tagged and released in titanworks-sidrena-bazna-cijena public repo.
+5. Confirm the latest version is tagged and released in titanworks-bazna-cijena public repo.
 
 ## Production deployment steps
 
 ### Method A: Upload via WordPress Admin (recommended — no SSH required)
 
-1. Download the release zip from the titanworks-sidrena-bazna-cijena public repo GitHub Releases page,
-   OR use the local zip at `versions/<version>/titanworks-sidrena-bazna-cijena.zip`.
+1. Download the release zip from the titanworks-bazna-cijena public repo GitHub Releases page,
+   OR use the local zip at `versions/<version>/titanworks-bazna-cijena.zip`.
 2. Log into https://wordpress.sidrenacijena.eu/wp-admin/.
 3. Go to Plugins → Add New → Upload Plugin.
 4. Upload the zip and click "Replace current with uploaded".
@@ -57,7 +57,7 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
 
 ```bash
 # Replace <host> and <path> with actual production server details
-ssh <host> "wp plugin install https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena/releases/download/v<version>/titanworks-sidrena-bazna-cijena.zip --activate --allow-root --path=<wp-path>"
+ssh <host> "wp plugin install https://github.com/administrakt0r/titanworks-bazna-cijena/releases/download/v<version>/titanworks-bazna-cijena.zip --activate --allow-root --path=<wp-path>"
 ```
 
 NEVER use `wp plugin install --force` on a directory-mounted environment.

@@ -53,28 +53,28 @@ final class SetupGuidePage {
 		return array(
 			array(
 				'key'         => 'locations',
-				'title'       => __( '1. Add sales locations', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename.', 'titanworks-sidrena-bazna-cijena' ),
+				'title'       => __( '1. Add sales locations', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename.', 'titanworks-bazna-cijena' ),
 			),
 			array(
 				'key'         => 'rules',
-				'title'       => __( '2. Check legal rules', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'titanworks-sidrena-bazna-cijena' ),
+				'title'       => __( '2. Check legal rules', 'titanworks-bazna-cijena' ),
+				'description' => __( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'titanworks-bazna-cijena' ),
 			),
 			array(
 				'key'         => 'anchors',
-				'title'       => __( '3. Record anchor prices', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'titanworks-sidrena-bazna-cijena' ),
+				'title'       => __( '3. Record anchor prices', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'titanworks-bazna-cijena' ),
 			),
 			array(
 				'key'         => 'lists',
-				'title'       => __( '4. Generate the price list', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately.', 'titanworks-sidrena-bazna-cijena' ),
+				'title'       => __( '4. Generate the price list', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately.', 'titanworks-bazna-cijena' ),
 			),
 			array(
 				'key'         => 'check',
-				'title'       => __( '5. Run the compliance check', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'titanworks-sidrena-bazna-cijena' ),
+				'title'       => __( '5. Run the compliance check', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'titanworks-bazna-cijena' ),
 			),
 		);
 	}
@@ -105,18 +105,18 @@ final class SetupGuidePage {
 		$legacy_slugs = isset( $rule['legacy_category_slugs'] ) ? array_filter( array_map( 'strval', (array) $rule['legacy_category_slugs'] ) ) : array();
 
 		if ( $anchor_count <= 0 ) {
-			$anchor_badge = __( '(none recorded)', 'titanworks-sidrena-bazna-cijena' );
+			$anchor_badge = __( '(none recorded)', 'titanworks-bazna-cijena' );
 		} elseif ( $total > $anchor_count ) {
 			$anchor_badge = sprintf(
 				/* translators: 1: recorded anchors, 2: catalog items. */
-				__( '(done: %1$d of %2$d recorded)', 'titanworks-sidrena-bazna-cijena' ),
+				__( '(done: %1$d of %2$d recorded)', 'titanworks-bazna-cijena' ),
 				$anchor_count,
 				$total
 			);
 		} else {
 			$anchor_badge = sprintf(
 				/* translators: %d: count of recorded anchors. */
-				__( '(done: %d recorded)', 'titanworks-sidrena-bazna-cijena' ),
+				__( '(done: %d recorded)', 'titanworks-bazna-cijena' ),
 				$anchor_count
 			);
 		}
@@ -124,20 +124,20 @@ final class SetupGuidePage {
 		$error_count = is_array( $report ) && isset( $report['counts']['ERROR'] ) ? (int) $report['counts']['ERROR'] : null;
 
 		if ( null === $error_count ) {
-			$check_badge = __( '(not run yet)', 'titanworks-sidrena-bazna-cijena' );
+			$check_badge = __( '(not run yet)', 'titanworks-bazna-cijena' );
 		} else {
-			$check_badge = $error_count > 0 ? __( '(errors found)', 'titanworks-sidrena-bazna-cijena' ) : __( '(clean)', 'titanworks-sidrena-bazna-cijena' );
+			$check_badge = $error_count > 0 ? __( '(errors found)', 'titanworks-bazna-cijena' ) : __( '(clean)', 'titanworks-bazna-cijena' );
 		}
 
 		return array(
 			'locations' => array(
 				'complete' => ! empty( $locations ),
-				'badge'    => empty( $locations ) ? __( '(missing)', 'titanworks-sidrena-bazna-cijena' ) : __( '(done)', 'titanworks-sidrena-bazna-cijena' ),
+				'badge'    => empty( $locations ) ? __( '(missing)', 'titanworks-bazna-cijena' ) : __( '(done)', 'titanworks-bazna-cijena' ),
 				'count'    => count( $locations ),
 			),
 			'rules'     => array(
 				'complete'               => ! empty( $legacy_slugs ),
-				'badge'                  => empty( $legacy_slugs ) ? __( '(map your categories)', 'titanworks-sidrena-bazna-cijena' ) : __( '(done)', 'titanworks-sidrena-bazna-cijena' ),
+				'badge'                  => empty( $legacy_slugs ) ? __( '(map your categories)', 'titanworks-bazna-cijena' ) : __( '(done)', 'titanworks-bazna-cijena' ),
 				'slugs'                  => array_values( $legacy_slugs ),
 				'general_reference_date' => isset( $rule['general_reference_date'] ) ? (string) $rule['general_reference_date'] : '',
 				'legacy_reference_date'  => isset( $rule['legacy_reference_date'] ) ? (string) $rule['legacy_reference_date'] : '',
@@ -150,7 +150,7 @@ final class SetupGuidePage {
 			),
 			'lists'     => array(
 				'complete' => (bool) $last,
-				'badge'    => $last ? __( '(published)', 'titanworks-sidrena-bazna-cijena' ) : __( '(not published yet)', 'titanworks-sidrena-bazna-cijena' ),
+				'badge'    => $last ? __( '(published)', 'titanworks-bazna-cijena' ) : __( '(not published yet)', 'titanworks-bazna-cijena' ),
 			),
 			'check'     => array(
 				'complete' => null !== $error_count && 0 === $error_count,
@@ -167,23 +167,23 @@ final class SetupGuidePage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$statuses = self::statuses();
 		$complete = self::is_complete();
 
 		echo '<div class="wrap sidrena-setup">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Setup Guide', 'titanworks-sidrena-bazna-cijena' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Five steps, a few minutes. Made by administrakt0r.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
-		echo '<p><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'titanworks-sidrena-bazna-cijena' ) . '</a></p>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Setup Guide', 'titanworks-bazna-cijena' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Five steps, a few minutes. Made by administrakt0r.', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'titanworks-bazna-cijena' ) . '</a></p>';
 
 		Notice::from_request();
 
 		self::render_projects();
 
 		if ( $complete ) {
-			echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Setup is marked complete. Reopen it any time you add locations or categories.', 'titanworks-sidrena-bazna-cijena' ) . '</p></div>';
+			echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Setup is marked complete. Reopen it any time you add locations or categories.', 'titanworks-bazna-cijena' ) . '</p></div>';
 		}
 
 		echo '<ol class="sidrena-setup__steps">';
@@ -191,13 +191,13 @@ final class SetupGuidePage {
 		// Step 1: locations.
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$d. <a class="button" href="%6$s">%7$s</a></p></li>',
-			esc_html__( '1. Add sales locations', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( '1. Add sales locations', 'titanworks-bazna-cijena' ),
 			esc_html( (string) $statuses['locations']['badge'] ),
-			esc_html__( 'Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename.', 'titanworks-sidrena-bazna-cijena' ),
-			esc_html__( 'Locations', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename.', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Locations', 'titanworks-bazna-cijena' ),
 			(int) $statuses['locations']['count'],
 			esc_url( AdminMenu::url( LocationsPage::SLUG ) ),
-			esc_html__( 'Manage locations', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Manage locations', 'titanworks-bazna-cijena' )
 		);
 
 		// Step 2: rules.
@@ -205,50 +205,50 @@ final class SetupGuidePage {
 
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$s / %6$s. %7$s: %8$s. <a class="button" href="%9$s">%10$s</a></p></li>',
-			esc_html__( '2. Check legal rules', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( '2. Check legal rules', 'titanworks-bazna-cijena' ),
 			esc_html( (string) $statuses['rules']['badge'] ),
-			esc_html__( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'titanworks-sidrena-bazna-cijena' ),
-			esc_html__( 'Reference dates', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them.', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Reference dates', 'titanworks-bazna-cijena' ),
 			esc_html( Dates::format_date_display( (string) $statuses['rules']['general_reference_date'] ) ),
 			esc_html( Dates::format_date_display( (string) $statuses['rules']['legacy_reference_date'] ) ),
-			esc_html__( 'Legacy slugs', 'titanworks-sidrena-bazna-cijena' ),
-			esc_html( $legacy_slugs ? implode( ', ', $legacy_slugs ) : __( 'none mapped yet', 'titanworks-sidrena-bazna-cijena' ) ),
+			esc_html__( 'Legacy slugs', 'titanworks-bazna-cijena' ),
+			esc_html( $legacy_slugs ? implode( ', ', $legacy_slugs ) : __( 'none mapped yet', 'titanworks-bazna-cijena' ) ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-settings', array( 'tab' => 'legal' ) ) ),
-			esc_html__( 'Open legal rules', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Open legal rules', 'titanworks-bazna-cijena' )
 		);
 
 		// Step 3: anchors.
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p>%4$s: %5$d. <a class="button" href="%6$s">%7$s</a> <a class="button" href="%8$s">%9$s</a></p></li>',
-			esc_html__( '3. Record anchor prices', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( '3. Record anchor prices', 'titanworks-bazna-cijena' ),
 			esc_html( (string) $statuses['anchors']['badge'] ),
-			esc_html__( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'titanworks-sidrena-bazna-cijena' ),
-			esc_html__( 'Catalog items', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Enter evidenced prices for existing products or import them by CSV. New products published with this plugin active capture their first offer automatically.', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Catalog items', 'titanworks-bazna-cijena' ),
 			(int) $statuses['anchors']['total'],
 			esc_url( AdminMenu::url( 'sidrena-cijena-anchors' ) ),
-			esc_html__( 'Enter anchors', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Enter anchors', 'titanworks-bazna-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-import' ) ),
-			esc_html__( 'Import CSV', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Import CSV', 'titanworks-bazna-cijena' )
 		);
 
 		// Step 4: lists.
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></li>',
-			esc_html__( '4. Generate the price list', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( '4. Generate the price list', 'titanworks-bazna-cijena' ),
 			esc_html( (string) $statuses['lists']['badge'] ),
-			esc_html__( 'Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately.', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Generate CSV/XML per location, keep at least 30 days of archive. Products regenerate daily before 08:00; service price changes regenerate immediately.', 'titanworks-bazna-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-publications' ) ),
-			esc_html__( 'Open price lists', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Open price lists', 'titanworks-bazna-cijena' )
 		);
 
 		// Step 5: check.
 		printf(
 			'<li><h2>%1$s %2$s</h2><p>%3$s</p><p><a class="button button-primary" href="%4$s">%5$s</a></p></li>',
-			esc_html__( '5. Run the compliance check', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( '5. Run the compliance check', 'titanworks-bazna-cijena' ),
 			esc_html( (string) $statuses['check']['badge'] ),
-			esc_html__( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list.', 'titanworks-bazna-cijena' ),
 			esc_url( AdminMenu::url( 'sidrena-cijena-compliance' ) ),
-			esc_html__( 'Run compliance check', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Run compliance check', 'titanworks-bazna-cijena' )
 		);
 
 		echo '</ol>';
@@ -257,13 +257,13 @@ final class SetupGuidePage {
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 			wp_nonce_field( self::COMPLETE_ACTION );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::COMPLETE_ACTION ) . '" />';
-			submit_button( __( 'Mark setup complete', 'titanworks-sidrena-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
+			submit_button( __( 'Mark setup complete', 'titanworks-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
 			echo '</form>';
 		} else {
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 			wp_nonce_field( self::REOPEN_ACTION );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::REOPEN_ACTION ) . '" />';
-			submit_button( __( 'Reopen setup', 'titanworks-sidrena-bazna-cijena' ), 'secondary sidrena-btn-busy', 'submit', false );
+			submit_button( __( 'Reopen setup', 'titanworks-bazna-cijena' ), 'secondary sidrena-btn-busy', 'submit', false );
 			echo '</form>';
 		}
 
@@ -297,7 +297,7 @@ final class SetupGuidePage {
 	 */
 	public static function handle_complete() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::COMPLETE_ACTION );
@@ -309,7 +309,7 @@ final class SetupGuidePage {
 			add_query_arg(
 				array(
 					'sidrena_cijena_notice'      => 'success',
-					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup marked as complete.', 'titanworks-sidrena-bazna-cijena' ) ),
+					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup marked as complete.', 'titanworks-bazna-cijena' ) ),
 				),
 				AdminMenu::url( self::SLUG )
 			)
@@ -324,7 +324,7 @@ final class SetupGuidePage {
 	 */
 	public static function handle_reopen() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::REOPEN_ACTION );
@@ -335,7 +335,7 @@ final class SetupGuidePage {
 			add_query_arg(
 				array(
 					'sidrena_cijena_notice'      => 'success',
-					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup reopened.', 'titanworks-sidrena-bazna-cijena' ) ),
+					'sidrena_cijena_notice_text' => rawurlencode( __( 'Setup reopened.', 'titanworks-bazna-cijena' ) ),
 				),
 				AdminMenu::url( self::SLUG )
 			)

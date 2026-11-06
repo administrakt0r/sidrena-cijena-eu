@@ -6,7 +6,7 @@ parameters:
 	tmpDir: .phpstan.cache
 	paths:
 		- src
-		- titanworks-sidrena-bazna-cijena.php
+		- titanworks-bazna-cijena.php
 		- uninstall.php
 	excludePaths:
 		- tests

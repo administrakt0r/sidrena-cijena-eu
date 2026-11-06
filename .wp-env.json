@@ -15,6 +15,6 @@
 		"WP_ENVIRONMENT_TYPE": "local"
 	},
 	"lifecycleScripts": {
-		"afterStart": "npx wp-env run cli bash -c 'P=$(wp plugin list --field=name 2>/dev/null | grep -E \"titanworks|sidrena\" | head -1); wp plugin activate ${P:-titanworks-sidrena-bazna-cijena} woocommerce 2>/dev/null || wp plugin activate titanworks-sidrena-bazna-cijena woocommerce 2>/dev/null || true'"
+		"afterStart": "npx wp-env run cli bash -c 'P=$(wp plugin list --field=name 2>/dev/null | grep -E \"titanworks|sidrena\" | head -1); wp plugin activate ${P:-titanworks-bazna-cijena} woocommerce 2>/dev/null || wp plugin activate titanworks-bazna-cijena woocommerce 2>/dev/null || true'"
 	}
 }

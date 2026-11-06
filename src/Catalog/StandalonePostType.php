@@ -48,12 +48,12 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Standalone catalog', 'titanworks-sidrena-bazna-cijena' ),
-					'singular_name' => __( 'Catalog item', 'titanworks-sidrena-bazna-cijena' ),
-					'add_new_item'  => __( 'Add catalog item', 'titanworks-sidrena-bazna-cijena' ),
-					'edit_item'     => __( 'Edit catalog item', 'titanworks-sidrena-bazna-cijena' ),
-					'search_items'  => __( 'Search catalog items', 'titanworks-sidrena-bazna-cijena' ),
-					'not_found'     => __( 'No catalog items found.', 'titanworks-sidrena-bazna-cijena' ),
+					'name'          => __( 'Standalone catalog', 'titanworks-bazna-cijena' ),
+					'singular_name' => __( 'Catalog item', 'titanworks-bazna-cijena' ),
+					'add_new_item'  => __( 'Add catalog item', 'titanworks-bazna-cijena' ),
+					'edit_item'     => __( 'Edit catalog item', 'titanworks-bazna-cijena' ),
+					'search_items'  => __( 'Search catalog items', 'titanworks-bazna-cijena' ),
+					'not_found'     => __( 'No catalog items found.', 'titanworks-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -71,8 +71,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Brands', 'titanworks-sidrena-bazna-cijena' ),
-					'singular_name' => __( 'Brand', 'titanworks-sidrena-bazna-cijena' ),
+					'name'          => __( 'Brands', 'titanworks-bazna-cijena' ),
+					'singular_name' => __( 'Brand', 'titanworks-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -86,8 +86,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Item types', 'titanworks-sidrena-bazna-cijena' ),
-					'singular_name' => __( 'Item type', 'titanworks-sidrena-bazna-cijena' ),
+					'name'          => __( 'Item types', 'titanworks-bazna-cijena' ),
+					'singular_name' => __( 'Item type', 'titanworks-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -130,7 +130,7 @@ final class StandalonePostType {
 	public static function register_meta_box() {
 		add_meta_box(
 			'sidrena-cijena-item-fields',
-			__( 'Sidrena cijena - item data', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Sidrena cijena - item data', 'titanworks-bazna-cijena' ),
 			array( __CLASS__, 'render_meta_box' ),
 			self::POST_TYPE,
 			'normal',
@@ -146,62 +146,62 @@ final class StandalonePostType {
 	public static function fields() {
 		return array(
 			'_sidrena_sku'           => array(
-				'label'       => __( 'SKU / code', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'SKU / code', 'titanworks-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. ART-001', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Catalog SKU or internal product code.', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. ART-001', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Catalog SKU or internal product code.', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_barcode'       => array(
-				'label'       => __( 'Barcode', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Barcode', 'titanworks-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. 3850123456789', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'EAN, UPC, or GTIN barcode.', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 3850123456789', 'titanworks-bazna-cijena' ),
+				'description' => __( 'EAN, UPC, or GTIN barcode.', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_unit'          => array(
-				'label'       => __( 'Unit of measure', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Unit of measure', 'titanworks-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. kom, kg, l', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. kom, kg, l', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_unit_price'    => array(
-				'label'       => __( 'Price per unit of measure', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Price per unit of measure', 'titanworks-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 9.99', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Calculated selling price per unit of measure.', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 9.99', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Calculated selling price per unit of measure.', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_regular_price' => array(
-				'label'       => __( 'Regular price', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Regular price', 'titanworks-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 19.99', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Regular selling price before discounts.', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 19.99', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Regular selling price before discounts.', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_sale_price'    => array(
-				'label'       => __( 'Sale price', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Sale price', 'titanworks-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 14.99', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Promotional selling price if currently discounted.', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 14.99', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Promotional selling price if currently discounted.', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_availability'  => array(
-				'label'   => __( 'Availability', 'titanworks-sidrena-bazna-cijena' ),
+				'label'   => __( 'Availability', 'titanworks-bazna-cijena' ),
 				'type'    => 'select',
 				'options' => array(
-					'available'   => __( 'Available', 'titanworks-sidrena-bazna-cijena' ),
-					'unavailable' => __( 'Unavailable', 'titanworks-sidrena-bazna-cijena' ),
+					'available'   => __( 'Available', 'titanworks-bazna-cijena' ),
+					'unavailable' => __( 'Unavailable', 'titanworks-bazna-cijena' ),
 				),
 			),
 			'_sidrena_currency'      => array(
-				'label'       => __( 'Currency', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'Currency', 'titanworks-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. EUR', 'titanworks-sidrena-bazna-cijena' ),
-				'description' => __( 'Three-letter currency code (defaults to EUR).', 'titanworks-sidrena-bazna-cijena' ),
+				'placeholder' => __( 'e.g. EUR', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Three-letter currency code (defaults to EUR).', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_first_seen'    => array(
-				'label'       => __( 'First appearance date', 'titanworks-sidrena-bazna-cijena' ),
+				'label'       => __( 'First appearance date', 'titanworks-bazna-cijena' ),
 				'type'        => 'date',
-				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_tax_inclusive' => array(
-				'label' => __( 'Prices include tax', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'Prices include tax', 'titanworks-bazna-cijena' ),
 				'type'  => 'checkbox',
 			),
 		);
@@ -254,7 +254,7 @@ final class StandalonePostType {
 
 		echo '</tbody></table>';
 
-		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'titanworks-bazna-cijena' ) . '</p>';
 	}
 
 	/**

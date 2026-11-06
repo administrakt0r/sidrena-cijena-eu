@@ -30,7 +30,7 @@ module.exports = async () => {
 	wpCli( [ 'option', 'update', 'woocommerce_price_num_decimals', '2' ] );
 	wpCli( [ 'option', 'update', 'woocommerce_coming_soon', 'no' ] );
 	wpCli( [ 'option', 'update', 'woocommerce_store_pages_only', 'no' ] );
-	tryWpCli( [ 'plugin', 'activate', 'titanworks-sidrena-bazna-cijena', 'woocommerce' ] );
+	tryWpCli( [ 'plugin', 'activate', 'titanworks-bazna-cijena', 'woocommerce' ] );
 	tryWpCli( [ 'theme', 'activate', 'twentytwentyfive' ] );
 
 	// WooCommerce registers its product permalinks while it boots, so the rules

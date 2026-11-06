@@ -217,11 +217,11 @@ class LocationRepository {
 
 		return $this->insert(
 			array(
-				'name'       => __( 'Webshop', 'titanworks-sidrena-bazna-cijena' ),
+				'name'       => __( 'Webshop', 'titanworks-bazna-cijena' ),
 				'type'       => 'webshop',
 				'identifier' => 'P1',
-				'address'    => '' !== $address ? $address : __( 'Online', 'titanworks-sidrena-bazna-cijena' ),
-				'city'       => '' !== $city ? $city : __( 'Hrvatska', 'titanworks-sidrena-bazna-cijena' ),
+				'address'    => '' !== $address ? $address : __( 'Online', 'titanworks-bazna-cijena' ),
+				'city'       => '' !== $city ? $city : __( 'Hrvatska', 'titanworks-bazna-cijena' ),
 				'active'     => true,
 			)
 		);

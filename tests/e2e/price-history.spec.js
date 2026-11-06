@@ -5,7 +5,7 @@ test.describe('Price history and audit', () => {
   let productId = 0;
 
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
 
     const id = await wpEval(`
       $product = new WC_Product_Simple();

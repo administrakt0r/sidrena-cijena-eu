@@ -45,20 +45,20 @@ class Test_Customer_Wording extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_rendered_croatian_customer_strings() {
-		$lowest_label = __( 'Lowest price in the last 30 days', 'titanworks-sidrena-bazna-cijena' );
+		$lowest_label = __( 'Lowest price in the last 30 days', 'titanworks-bazna-cijena' );
 		$this->assertSame( 'Najniža cijena u zadnjih 30 dana', $lowest_label );
 
-		$anchor_label = __( 'Anchor price', 'titanworks-sidrena-bazna-cijena' );
+		$anchor_label = __( 'Anchor price', 'titanworks-bazna-cijena' );
 		$this->assertSame( 'Sidrena cijena', $anchor_label );
 
 		/* translators: %s: reference date */
-		$date_template = __( 'Cijena na dan %s', 'titanworks-sidrena-bazna-cijena' );
+		$date_template = __( 'Cijena na dan %s', 'titanworks-bazna-cijena' );
 		$this->assertSame( 'Cijena na dan %s', $date_template );
 
-		$cart_label = __( 'Reference prices per item:', 'titanworks-sidrena-bazna-cijena' );
+		$cart_label = __( 'Reference prices per item:', 'titanworks-bazna-cijena' );
 		$this->assertSame( 'Referentne cijene po komadu:', $cart_label );
 
-		$setting_label = __( 'Lowest 30-day price label', 'titanworks-sidrena-bazna-cijena' );
+		$setting_label = __( 'Lowest 30-day price label', 'titanworks-bazna-cijena' );
 		$this->assertSame( 'Oznaka najniže cijene u zadnjih 30 dana', $setting_label );
 	}
 
@@ -68,7 +68,7 @@ class Test_Customer_Wording extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_reference_is_lowest_price_not_normal_or_recommended() {
-		$lowest_label = __( 'Lowest price in the last 30 days', 'titanworks-sidrena-bazna-cijena' );
+		$lowest_label = __( 'Lowest price in the last 30 days', 'titanworks-bazna-cijena' );
 
 		$this->assertStringContainsString( 'Najniža cijena', $lowest_label );
 		$this->assertStringContainsString( '30 dana', $lowest_label );
@@ -161,17 +161,17 @@ class Test_Customer_Wording extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_english_fallback_behavior() {
-		unload_textdomain( 'titanworks-sidrena-bazna-cijena' );
+		unload_textdomain( 'titanworks-bazna-cijena' );
 
 		// With Croatian default filtered to false, on an en_US site it should use English fallback.
 		add_filter( 'sidrena_cijena_load_croatian_catalog', '__return_false' );
 		sidrena_cijena_load_textdomain();
 
 		// In English fallback, strings return the original English source text.
-		$this->assertSame( 'Lowest price in the last 30 days', __( 'Lowest price in the last 30 days', 'titanworks-sidrena-bazna-cijena' ) );
-		$this->assertSame( 'Anchor price', __( 'Anchor price', 'titanworks-sidrena-bazna-cijena' ) );
-		$this->assertSame( 'Reference prices per item:', __( 'Reference prices per item:', 'titanworks-sidrena-bazna-cijena' ) );
-		$this->assertSame( 'Lowest 30-day price label', __( 'Lowest 30-day price label', 'titanworks-sidrena-bazna-cijena' ) );
+		$this->assertSame( 'Lowest price in the last 30 days', __( 'Lowest price in the last 30 days', 'titanworks-bazna-cijena' ) );
+		$this->assertSame( 'Anchor price', __( 'Anchor price', 'titanworks-bazna-cijena' ) );
+		$this->assertSame( 'Reference prices per item:', __( 'Reference prices per item:', 'titanworks-bazna-cijena' ) );
+		$this->assertSame( 'Lowest 30-day price label', __( 'Lowest 30-day price label', 'titanworks-bazna-cijena' ) );
 
 		remove_filter( 'sidrena_cijena_load_croatian_catalog', '__return_false' );
 	}

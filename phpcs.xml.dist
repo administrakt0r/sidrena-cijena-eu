@@ -29,7 +29,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="titanworks-sidrena-bazna-cijena"/>
+				<element value="titanworks-bazna-cijena"/>
 			</property>
 		</properties>
 	</rule>
