@@ -34,6 +34,16 @@ class PriceBlockDisplay extends PriceDisplay {
 
 		return sprintf( '<span data-reference-product="%d" data-display-context="%s"></span>', $product->get_id(), $context );
 	}
+
+	/**
+	 * Expose context resolution for unit testing.
+	 *
+	 * @param \WC_Product|null $product Product.
+	 * @return string
+	 */
+	public function test_context( $product = null ) {
+		return $this->context( $product );
+	}
 }
 
 /**
@@ -80,6 +90,48 @@ class PriceBlockDisplayTest extends TestCase {
 
 		$this->assertStringContainsString( 'data-reference-product="6"', $out );
 		$this->assertStringContainsString( 'data-display-context="archive"', $out );
+	}
+
+	/**
+	 * A variation of the queried parent product uses single product context.
+	 *
+	 * Variations belonging to other products (e.g. upsells/related) use archive context.
+	 *
+	 * @return void
+	 */
+	public function test_variation_of_queried_product_uses_single_context() {
+		$this->reset_state();
+
+		$display = new PriceBlockDisplay();
+
+		$parent_product    = new \WC_Product( array( 'id' => 5 ) );
+		$queried_variation = new \WC_Product_Variation(
+			array(
+				'id'        => 501,
+				'parent_id' => 5,
+			)
+		);
+		$other_variation   = new \WC_Product_Variation(
+			array(
+				'id'        => 601,
+				'parent_id' => 6,
+			)
+		);
+		$other_product     = new \WC_Product( array( 'id' => 6 ) );
+
+		$this->assertSame( 'single', $display->test_context( $parent_product ) );
+		$this->assertSame( 'single', $display->test_context( $queried_variation ) );
+		$this->assertSame( 'archive', $display->test_context( $other_variation ) );
+		$this->assertSame( 'archive', $display->test_context( $other_product ) );
+
+		// Also check via filter_price_html.
+		$html_variation = $display->filter_price_html( '<span class="price">€10</span>', $queried_variation );
+		$this->assertStringContainsString( 'data-display-context="single"', $html_variation );
+		$this->assertStringContainsString( 'data-reference-product="501"', $html_variation );
+
+		$html_other = $display->filter_price_html( '<span class="price">€10</span>', $other_variation );
+		$this->assertStringContainsString( 'data-display-context="archive"', $html_other );
+		$this->assertStringContainsString( 'data-reference-product="601"', $html_other );
 	}
 
 	/**

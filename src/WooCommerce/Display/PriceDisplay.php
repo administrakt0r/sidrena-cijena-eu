@@ -237,10 +237,7 @@ class PriceDisplay {
 			return $content;
 		}
 
-		$context = $this->context();
-		if ( 'single' === $context && function_exists( 'get_queried_object_id' ) && (int) get_queried_object_id() !== (int) $product->get_id() ) {
-			$context = 'archive';
-		}
+		$context = $this->context( $product );
 
 		return $content . $this->render( $product, $context );
 	}
@@ -744,8 +741,13 @@ class PriceDisplay {
 
 		if ( $product instanceof \WC_Product && function_exists( 'get_queried_object_id' ) ) {
 			$queried_id = (int) get_queried_object_id();
-			if ( $queried_id > 0 && (int) $product->get_id() !== $queried_id ) {
-				return 'archive';
+			if ( $queried_id > 0 ) {
+				$product_id = (int) $product->get_id();
+				$parent_id  = method_exists( $product, 'get_parent_id' ) ? (int) $product->get_parent_id() : 0;
+
+				if ( $product_id !== $queried_id && $parent_id !== $queried_id ) {
+					return 'archive';
+				}
 			}
 		}
 
