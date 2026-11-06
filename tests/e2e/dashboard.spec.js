@@ -6,7 +6,7 @@ const ITEM_SKU = 'E2E-DASH-1';
 
 test.describe('Compliance dashboard', () => {
 	test.beforeAll(async () => {
-		wpCli(['plugin', 'activate', 'sidrena-cijena', '--quiet']);
+		wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena', '--quiet']);
 
 		wpEval(`
 			$existing = get_posts( array( 'post_type' => 'product', 'meta_key' => '_sku', 'meta_value' => '${ITEM_SKU}', 'numberposts' => 1 ) );

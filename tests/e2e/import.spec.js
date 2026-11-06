@@ -15,7 +15,7 @@ test.describe('Anchor import', () => {
   let filePath;
 
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'sidrena-cijena']);
+    await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
     await wpEval(`
       if ( ! function_exists( 'wc_get_product' ) || ! wc_get_product_id_by_sku( 'E2E-IMPORT-1' ) ) {
         $product = new WC_Product_Simple();

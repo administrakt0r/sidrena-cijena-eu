@@ -73,11 +73,11 @@ fi
 OUT="$ROOT/versions/$VERSION"
 
 if [ "$UPLOAD_ONLY" = true ]; then
-	if [ ! -f "$OUT/sidrena-cijena-eu.zip" ]; then
-		echo "error: $OUT/sidrena-cijena-eu.zip not found to upload." >&2
+	if [ ! -f "$OUT/titanworks-sidrena-bazna-cijena.zip" ]; then
+		echo "error: $OUT/titanworks-sidrena-bazna-cijena.zip not found to upload." >&2
 		exit 1
 	fi
-	echo "Using existing package at $OUT/sidrena-cijena-eu.zip"
+	echo "Using existing package at $OUT/titanworks-sidrena-bazna-cijena.zip"
 else
 	DIRT="$(git -C "$ROOT" status --porcelain | grep -v "^?? versions/" || true)"
 

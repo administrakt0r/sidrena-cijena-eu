@@ -8,7 +8,7 @@ test.describe('30-day lowest price display', () => {
   let wooCartPageId = 0;
 
   test.beforeAll(async () => {
-    wpCli(['plugin', 'activate', 'sidrena-cijena']);
+    wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
 
     const id = wpEval(`
       $product = new WC_Product_Simple();
