@@ -45,7 +45,7 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 
 	<form method="get" class="sidrena-cijena-cjenik__search">
 		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'titanworks-sidrena-bazna-cijena' ); ?></label>
-		<input type="search" id="sidrena-cijena-q" name="q" value="<?php echo esc_attr( $q ); ?>" />
+		<input type="search" id="sidrena-cijena-q" name="q" value="<?php echo esc_attr( $q ); ?>" placeholder="<?php echo esc_attr__( 'Search catalog items', 'titanworks-sidrena-bazna-cijena' ); ?>" autocomplete="off" />
 		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'titanworks-sidrena-bazna-cijena' ); ?></label>
 		<select name="type" id="sidrena-cijena-type">
 			<option value=""><?php esc_html_e( 'All', 'titanworks-sidrena-bazna-cijena' ); ?></option>

@@ -767,6 +767,7 @@ class PublicPageTest extends TestCase {
 		$out   = $probe->render_list( array() );
 
 		$this->assertStringContainsString( 'sidrena-cijena-cjenik', $out );
+		$this->assertStringContainsString( 'placeholder="Search catalog items"', $out );
 		$this->assertStringContainsString( 'Mlijeko 1L', $out );
 		$this->assertStringContainsString( 'Servis klime', $out );
 	}

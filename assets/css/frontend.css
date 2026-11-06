@@ -392,6 +392,19 @@
 	white-space: nowrap;
 }
 
+.sidrena-cijena-table th {
+	background: #f6f7f7;
+	font-weight: 600;
+}
+
+.sidrena-cijena-table tbody tr:nth-child(even) {
+	background-color: #fcfcfc;
+}
+
+.sidrena-cijena-table tbody tr:hover {
+	background-color: #f0f6fc;
+}
+
 .sidrena-cijena-table td:nth-child(2) {
 	white-space: normal;
 	min-width: 180px;
@@ -423,6 +436,13 @@
 
 .sidrena-cijena-cjenik__search input[type="search"] {
 	max-width: 100%;
+}
+
+.sidrena-cijena-cjenik__search input:focus-visible,
+.sidrena-cijena-cjenik__search select:focus-visible,
+.sidrena-cijena-cjenik__search button:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 1px;
 }
 
 .sidrena-cijena-pagination {
