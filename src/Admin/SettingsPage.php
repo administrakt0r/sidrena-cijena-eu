@@ -140,7 +140,7 @@ final class SettingsPage {
 
 				$class::render_fields();
 
-				submit_button( null, 'primary sidrena-btn-busy' );
+				submit_button();
 				?>
 			</form>
 		</div>

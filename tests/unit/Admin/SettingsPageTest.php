@@ -69,7 +69,7 @@ class SettingsPageTest extends TestCase {
 	}
 
 	/**
-	 * Settings page form markup includes busy state class and busy submit button.
+	 * Settings page form markup includes busy state class on form.
 	 *
 	 * @return void
 	 */
@@ -80,6 +80,6 @@ class SettingsPageTest extends TestCase {
 		$html = ob_get_clean();
 
 		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
-		$this->assertStringContainsString( 'sidrena-btn-busy', $html );
+		$this->assertStringContainsString( 'type="submit"', $html );
 	}
 }
