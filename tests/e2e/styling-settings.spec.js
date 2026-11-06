@@ -12,13 +12,14 @@ test('legal settings save and styling previews work in wp-admin', async ({ page 
 	await expect(page.locator('input[name="sidrena_cijena_rule_config[rule_version]"]')).toHaveValue('2026-10-01-preview');
 
 	await page.goto('wp-admin/admin.php?page=sidrena-cijena-settings&tab=styling');
-	await expect(page.locator('.sidrena-style-choice')).toHaveCount(14);
-	await page.locator('input[value="pill"][type="radio"]').check();
+	await expect(page.locator('.sidrena-style-gallery:not(.sidrena-style-gallery--cards) .sidrena-style-choice')).toHaveCount(14);
+	await expect(page.locator('.sidrena-style-gallery--cards .sidrena-style-choice')).toHaveCount(15);
+	await page.locator('input[name="sidrena_cijena_settings[product_display_style]"][value="pill"]').check();
 	await page.locator('#sidrena-display-size').fill('80');
 	await expect(page.locator('#sidrena-display-size-value')).toHaveText('80%');
 	await page.locator('#submit').click();
 	await expect(page.locator('#setting-error-settings_updated')).toBeVisible();
-	await expect(page.locator('input[value="pill"][type="radio"]')).toBeChecked();
+	await expect(page.locator('input[name="sidrena_cijena_settings[product_display_style]"][value="pill"]')).toBeChecked();
 	await expect(page.locator('#sidrena-display-size')).toHaveValue('80');
 
 	const icon = page.locator('#toplevel_page_sidrena-cijena .wp-menu-image');
