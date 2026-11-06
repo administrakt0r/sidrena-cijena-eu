@@ -207,7 +207,7 @@ class PriceHistoryPage {
 
 			echo '<tr>';
 			echo '<td>' . esc_html( Dates::format_datetime_display( (string) $row['created_at'] ) ) . '</td>';
-			echo '<td>' . esc_html( $item ) . '</td>';
+			echo '<td>' . AdminLinks::render_item_link( (int) $row['product_id'], $item ) . '</td>';
 			echo '<td>' . esc_html( Labels::price_type( (string) $row['price_type'] ) ) . '</td>';
 			echo '<td>' . esc_html( Currency::format( (float) $row['price'], (string) $row['currency'] ) ) . '</td>';
 			echo '<td>' . esc_html( Labels::source( (string) $row['source'] ) ) . '</td>';

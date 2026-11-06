@@ -114,9 +114,11 @@ class BulkAnchorEntryPage {
 			$suggest = $item->effective_price();
 			$field   = 'rows[' . (int) $item->id . '][' . (int) $item->variation_id . ']';
 
+			$item_title = $item->name . ( $item->is_variation() ? ' (' . __( 'variation', 'titanworks-sidrena-bazna-cijena' ) . ' #' . (int) $item->variation_id . ')' : '' );
+
 			echo '<tr>';
 			echo '<td class="check-column"><input type="checkbox" class="sidrena-row-cb" name="' . esc_attr( $field ) . '[record]" value="1" aria-label="' . esc_attr( sprintf( /* translators: %s: catalog item name. */ __( 'Select %s', 'titanworks-sidrena-bazna-cijena' ), $item->name ) ) . '" /></td>';
-			echo '<td>' . esc_html( $item->name ) . ( $item->is_variation() ? ' (' . esc_html__( 'variation', 'titanworks-sidrena-bazna-cijena' ) . ' #' . (int) $item->variation_id . ')' : '' ) . '</td>';
+			echo '<td>' . AdminLinks::render_item_link( (int) $item->id, $item_title ) . '</td>';
 			echo '<td>' . esc_html( (string) $item->sku ) . '</td>';
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
 			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" inputmode="decimal" placeholder="' . esc_attr__( 'e.g. 19.99', 'titanworks-sidrena-bazna-cijena' ) . '" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'titanworks-sidrena-bazna-cijena' ) . '" /></td>';
