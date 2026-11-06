@@ -212,7 +212,7 @@ final class Dates {
 		if ( is_numeric( $value ) ) {
 			$dt = ( new \DateTimeImmutable( '@' . (int) $value ) )->setTimezone( self::zagreb_timezone() );
 
-			return $dt ? $dt->format( 'd.m.Y.' ) : '';
+			return $dt->format( 'd.m.Y.' );
 		}
 
 		$value = self::date_only( $value );
@@ -258,7 +258,7 @@ final class Dates {
 		if ( is_numeric( $value ) ) {
 			$dt = ( new \DateTimeImmutable( '@' . (int) $value ) )->setTimezone( $tz );
 
-			return $dt ? $dt->format( 'd.m.Y. H:i' ) : '';
+			return $dt->format( 'd.m.Y. H:i' );
 		}
 
 		if ( ! is_string( $value ) ) {

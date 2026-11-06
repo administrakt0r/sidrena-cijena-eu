@@ -507,11 +507,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$keys = apply_filters( 'sidrena_cijena_barcode_meta_keys', $this->barcode_keys, $product );
 
 		foreach ( (array) $keys as $key ) {
-			$value = '';
-
-			if ( method_exists( $product, 'get_meta' ) ) {
-				$value = $product->get_meta( $key );
-			}
+			$value = $product->get_meta( $key );
 
 			if ( ( '' === $value || null === $value ) && function_exists( 'get_post_meta' ) ) {
 				$value = get_post_meta( $id, $key, true );
@@ -523,17 +519,15 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			}
 		}
 
-		if ( method_exists( $product, 'get_attribute' ) ) {
-			foreach ( array( 'ean', 'barcode', 'gtin', 'upc', 'barkod' ) as $attr_name ) {
-				$attr_val = $product->get_attribute( $attr_name );
-				if ( '' !== trim( (string) $attr_val ) ) {
-					$this->barcode_cache[ $id ] = trim( (string) $attr_val );
-					return $this->barcode_cache[ $id ];
-				}
+		foreach ( array( 'ean', 'barcode', 'gtin', 'upc', 'barkod' ) as $attr_name ) {
+			$attr_val = $product->get_attribute( $attr_name );
+			if ( '' !== trim( (string) $attr_val ) ) {
+				$this->barcode_cache[ $id ] = trim( (string) $attr_val );
+				return $this->barcode_cache[ $id ];
 			}
 		}
 
-		$sku = method_exists( $product, 'get_sku' ) ? trim( (string) $product->get_sku() ) : '';
+		$sku = trim( (string) $product->get_sku() );
 		if ( '' !== $sku ) {
 			/**
 			 * Filters whether to fall back to the product SKU when no dedicated barcode meta is found.
