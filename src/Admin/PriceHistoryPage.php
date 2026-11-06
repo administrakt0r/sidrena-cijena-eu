@@ -248,7 +248,7 @@ class PriceHistoryPage {
 
 		echo '<h2>' . esc_html__( 'Record a correction', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>' . esc_html__( 'The original record stays in the history. A correction stores who recorded it, when and why.', 'sidrena-cijena-eu' ) . '</p>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		wp_nonce_field( self::ACTION );
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
 
@@ -287,7 +287,7 @@ class PriceHistoryPage {
 		echo '</td></tr>';
 		echo '</tbody></table>';
 
-		submit_button( __( 'Record correction', 'sidrena-cijena-eu' ) );
+		submit_button( __( 'Record correction', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy' );
 		echo '</form>';
 	}
 

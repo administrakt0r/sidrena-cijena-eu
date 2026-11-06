@@ -2561,6 +2561,32 @@ if ( ! function_exists( 'do_settings_sections' ) ) {
 	}
 }
 
+if ( ! function_exists( 'settings_errors' ) ) {
+	/**
+	 * Settings errors rendering stub.
+	 *
+	 * @param string $setting Optional.
+	 * @param bool   $sanitize Optional.
+	 * @param bool   $hide_on_update Optional.
+	 * @return void
+	 */
+	function settings_errors( $setting = '', $sanitize = false, $hide_on_update = false ) {
+		// No-op stub for unit tests.
+	}
+}
+
+if ( ! function_exists( 'settings_fields' ) ) {
+	/**
+	 * Settings fields rendering stub.
+	 *
+	 * @param string $option_group Option group name.
+	 * @return void
+	 */
+	function settings_fields( $option_group ) {
+		echo '<input type="hidden" name="option_page" value="' . esc_attr( $option_group ) . '" />';
+	}
+}
+
 if ( ! function_exists( 'wp_enqueue_style' ) ) {
 	/**
 	 * Enqueue style stub.

@@ -111,7 +111,7 @@ class LocationsPage {
 		$active       = isset( $values['active'] ) ? ! empty( $values['active'] ) : ( $location ? (bool) $location['active'] : true );
 
 		echo '<h2>' . esc_html( $heading ) . '</h2>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		wp_nonce_field( self::ACTION_SAVE );
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_SAVE ) . '" />';
 		echo '<input type="hidden" name="location_id" value="' . esc_attr( (string) $edit_id ) . '" />';
@@ -200,7 +200,7 @@ class LocationsPage {
 
 		echo '</tbody></table>';
 
-		submit_button( $edit_id > 0 ? __( 'Save location', 'sidrena-cijena-eu' ) : __( 'Add location', 'sidrena-cijena-eu' ) );
+		submit_button( $edit_id > 0 ? __( 'Save location', 'sidrena-cijena-eu' ) : __( 'Add location', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy' );
 
 		if ( $edit_id > 0 ) {
 			echo '<p><a href="' . esc_url( self::url() ) . '">' . esc_html__( 'Cancel editing', 'sidrena-cijena-eu' ) . '</a></p>';

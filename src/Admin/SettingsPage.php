@@ -131,7 +131,7 @@ final class SettingsPage {
 				<?php endforeach; ?>
 			</nav>
 
-			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
+			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post" class="sidrena-busy-form">
 				<?php
 				$definition = $tabs[ $tab ];
 				$class      = $definition[0];
@@ -140,7 +140,7 @@ final class SettingsPage {
 
 				$class::render_fields();
 
-				submit_button();
+				submit_button( null, 'primary sidrena-btn-busy' );
 				?>
 			</form>
 		</div>
