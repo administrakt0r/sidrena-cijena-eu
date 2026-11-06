@@ -270,34 +270,37 @@ class CustomerWordingTest extends TestCase {
 	 * @return void
 	 */
 	public function test_textdomain_loading_and_filter() {
-		if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
-			require_once dirname( __DIR__, 3 ) . '/sidrena-cijena.php';
+		if ( ! function_exists( 'titanworks_sidrena_bazna_cijena_load_textdomain' ) && ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
+			$bootstrap = file_exists( dirname( __DIR__, 3 ) . '/titanworks-sidrena-bazna-cijena.php' )
+				? dirname( __DIR__, 3 ) . '/titanworks-sidrena-bazna-cijena.php'
+				: dirname( __DIR__, 3 ) . '/sidrena-cijena.php';
+			require_once $bootstrap;
 		}
 
 		// 1. With Croatian locale, loads Croatian catalog.
-		unload_textdomain( 'sidrena-cijena-eu' );
+		unload_textdomain( 'titanworks-sidrena-bazna-cijena' );
 		$GLOBALS['sidrena_test_locale'] = 'hr_HR';
-		sidrena_cijena_load_textdomain();
-		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
-		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+		titanworks_sidrena_bazna_cijena_load_textdomain();
+		$this->assertTrue( is_textdomain_loaded( 'titanworks-sidrena-bazna-cijena' ) );
+		$this->assertStringEndsWith( 'titanworks-sidrena-bazna-cijena-hr.mo', $GLOBALS['sidrena_test_textdomains']['titanworks-sidrena-bazna-cijena'] );
 
 		// 2. Already loaded - calling again does not reload.
-		$first_loaded = $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'];
-		sidrena_cijena_load_textdomain();
-		$this->assertSame( $first_loaded, $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+		$first_loaded = $GLOBALS['sidrena_test_textdomains']['titanworks-sidrena-bazna-cijena'];
+		titanworks_sidrena_bazna_cijena_load_textdomain();
+		$this->assertSame( $first_loaded, $GLOBALS['sidrena_test_textdomains']['titanworks-sidrena-bazna-cijena'] );
 
 		// 3. In en_US locale, Croatian catalog is not loaded (WP core handles translations JIT).
-		unload_textdomain( 'sidrena-cijena-eu' );
+		unload_textdomain( 'titanworks-sidrena-bazna-cijena' );
 		$GLOBALS['sidrena_test_locale'] = 'en_US';
-		sidrena_cijena_load_textdomain();
-		$this->assertFalse( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
+		titanworks_sidrena_bazna_cijena_load_textdomain();
+		$this->assertFalse( is_textdomain_loaded( 'titanworks-sidrena-bazna-cijena' ) );
 
 		// 4. In en_US locale with filter forcing Croatian -> loads Croatian catalog.
-		unload_textdomain( 'sidrena-cijena-eu' );
+		unload_textdomain( 'titanworks-sidrena-bazna-cijena' );
 		add_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
-		sidrena_cijena_load_textdomain();
-		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
-		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['sidrena_test_textdomains']['sidrena-cijena-eu'] );
+		titanworks_sidrena_bazna_cijena_load_textdomain();
+		$this->assertTrue( is_textdomain_loaded( 'titanworks-sidrena-bazna-cijena' ) );
+		$this->assertStringEndsWith( 'titanworks-sidrena-bazna-cijena-hr.mo', $GLOBALS['sidrena_test_textdomains']['titanworks-sidrena-bazna-cijena'] );
 		remove_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
 	}
 

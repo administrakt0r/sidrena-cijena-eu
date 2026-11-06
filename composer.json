@@ -1,6 +1,6 @@
 {
-	"name": "sidrena-cijena/sidrena-cijena",
-	"description": "Croatian anchor price (sidrena cijena) compliance plugin for WordPress and WooCommerce. Development tooling only; no runtime dependencies.",
+	"name": "titanworks/titanworks-sidrena-bazna-cijena",
+	"description": "Croatian anchor price (sidrena cijena) and base price (bazna cijena) compliance plugin for WordPress and WooCommerce. Development tooling only; no runtime dependencies.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"require": {

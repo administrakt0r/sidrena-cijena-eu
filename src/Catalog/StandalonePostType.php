@@ -48,12 +48,12 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Standalone catalog', 'sidrena-cijena-eu' ),
-					'singular_name' => __( 'Catalog item', 'sidrena-cijena-eu' ),
-					'add_new_item'  => __( 'Add catalog item', 'sidrena-cijena-eu' ),
-					'edit_item'     => __( 'Edit catalog item', 'sidrena-cijena-eu' ),
-					'search_items'  => __( 'Search catalog items', 'sidrena-cijena-eu' ),
-					'not_found'     => __( 'No catalog items found.', 'sidrena-cijena-eu' ),
+					'name'          => __( 'Standalone catalog', 'titanworks-sidrena-bazna-cijena' ),
+					'singular_name' => __( 'Catalog item', 'titanworks-sidrena-bazna-cijena' ),
+					'add_new_item'  => __( 'Add catalog item', 'titanworks-sidrena-bazna-cijena' ),
+					'edit_item'     => __( 'Edit catalog item', 'titanworks-sidrena-bazna-cijena' ),
+					'search_items'  => __( 'Search catalog items', 'titanworks-sidrena-bazna-cijena' ),
+					'not_found'     => __( 'No catalog items found.', 'titanworks-sidrena-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -71,8 +71,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Brands', 'sidrena-cijena-eu' ),
-					'singular_name' => __( 'Brand', 'sidrena-cijena-eu' ),
+					'name'          => __( 'Brands', 'titanworks-sidrena-bazna-cijena' ),
+					'singular_name' => __( 'Brand', 'titanworks-sidrena-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -86,8 +86,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Item types', 'sidrena-cijena-eu' ),
-					'singular_name' => __( 'Item type', 'sidrena-cijena-eu' ),
+					'name'          => __( 'Item types', 'titanworks-sidrena-bazna-cijena' ),
+					'singular_name' => __( 'Item type', 'titanworks-sidrena-bazna-cijena' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -130,7 +130,7 @@ final class StandalonePostType {
 	public static function register_meta_box() {
 		add_meta_box(
 			'sidrena-cijena-item-fields',
-			__( 'Sidrena cijena - item data', 'sidrena-cijena-eu' ),
+			__( 'Sidrena cijena - item data', 'titanworks-sidrena-bazna-cijena' ),
 			array( __CLASS__, 'render_meta_box' ),
 			self::POST_TYPE,
 			'normal',
@@ -146,62 +146,62 @@ final class StandalonePostType {
 	public static function fields() {
 		return array(
 			'_sidrena_sku'           => array(
-				'label'       => __( 'SKU / code', 'sidrena-cijena-eu' ),
+				'label'       => __( 'SKU / code', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. ART-001', 'sidrena-cijena-eu' ),
-				'description' => __( 'Catalog SKU or internal product code.', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. ART-001', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Catalog SKU or internal product code.', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_barcode'       => array(
-				'label'       => __( 'Barcode', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Barcode', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. 3850123456789', 'sidrena-cijena-eu' ),
-				'description' => __( 'EAN, UPC, or GTIN barcode.', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. 3850123456789', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'EAN, UPC, or GTIN barcode.', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_unit'          => array(
-				'label'       => __( 'Unit of measure', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Unit of measure', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. kom, kg, l', 'sidrena-cijena-eu' ),
-				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. kom, kg, l', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_unit_price'    => array(
-				'label'       => __( 'Price per unit of measure', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Price per unit of measure', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 9.99', 'sidrena-cijena-eu' ),
-				'description' => __( 'Calculated selling price per unit of measure.', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. 9.99', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Calculated selling price per unit of measure.', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_regular_price' => array(
-				'label'       => __( 'Regular price', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Regular price', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 19.99', 'sidrena-cijena-eu' ),
-				'description' => __( 'Regular selling price before discounts.', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. 19.99', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Regular selling price before discounts.', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_sale_price'    => array(
-				'label'       => __( 'Sale price', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Sale price', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 14.99', 'sidrena-cijena-eu' ),
-				'description' => __( 'Promotional selling price if currently discounted.', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. 14.99', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Promotional selling price if currently discounted.', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_availability'  => array(
-				'label'   => __( 'Availability', 'sidrena-cijena-eu' ),
+				'label'   => __( 'Availability', 'titanworks-sidrena-bazna-cijena' ),
 				'type'    => 'select',
 				'options' => array(
-					'available'   => __( 'Available', 'sidrena-cijena-eu' ),
-					'unavailable' => __( 'Unavailable', 'sidrena-cijena-eu' ),
+					'available'   => __( 'Available', 'titanworks-sidrena-bazna-cijena' ),
+					'unavailable' => __( 'Unavailable', 'titanworks-sidrena-bazna-cijena' ),
 				),
 			),
 			'_sidrena_currency'      => array(
-				'label'       => __( 'Currency', 'sidrena-cijena-eu' ),
+				'label'       => __( 'Currency', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. EUR', 'sidrena-cijena-eu' ),
-				'description' => __( 'Three-letter currency code (defaults to EUR).', 'sidrena-cijena-eu' ),
+				'placeholder' => __( 'e.g. EUR', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'Three-letter currency code (defaults to EUR).', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_first_seen'    => array(
-				'label'       => __( 'First appearance date', 'sidrena-cijena-eu' ),
+				'label'       => __( 'First appearance date', 'titanworks-sidrena-bazna-cijena' ),
 				'type'        => 'date',
-				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'sidrena-cijena-eu' ),
+				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'titanworks-sidrena-bazna-cijena' ),
 			),
 			'_sidrena_tax_inclusive' => array(
-				'label' => __( 'Prices include tax', 'sidrena-cijena-eu' ),
+				'label' => __( 'Prices include tax', 'titanworks-sidrena-bazna-cijena' ),
 				'type'  => 'checkbox',
 			),
 		);
@@ -254,7 +254,7 @@ final class StandalonePostType {
 
 		echo '</tbody></table>';
 
-		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
 	}
 
 	/**

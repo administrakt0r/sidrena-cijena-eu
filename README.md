@@ -7,19 +7,19 @@
 An open-source WordPress plugin for `sidrena cijena`, Croatian price transparency,
 and WooCommerce price history.
 
-[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download 2.0.0 for WordPress](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip)
+[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download latest for WordPress](https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena/releases/latest/download/titanworks-sidrena-bazna-cijena.zip)
 
-![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-1d6b55?style=flat-square)
+![Version 2.0.20](https://img.shields.io/badge/version-2.0.20-1d6b55?style=flat-square)
 ![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)
 ![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4?style=flat-square&logo=php&logoColor=white)
 ![License GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-1d6b55?style=flat-square)
 
 </div>
 
-## Sidrena Cijena EU for WordPress and WooCommerce
+## TitanWorks Sidrena Bazna Cijena for WordPress and WooCommerce
 
-Sidrena Cijena EU helps Croatian merchants record and display the applicable
-anchor price, calculate the separate lowest price in the previous 30 days for
+TitanWorks Sidrena Bazna Cijena helps Croatian merchants record and display the applicable
+anchor price and base price, calculate the separate lowest price in the previous 30 days for
 special sales, and publish daily machine-readable CSV/XML price lists. It works
 with WooCommerce or its built-in standalone catalog.
 
@@ -28,7 +28,7 @@ price list, validation tools, audit history, and WP-CLI commands. Generated
 price lists and shop-location details are public by design; merchants choose
 what to publish and remain responsible for checking their catalog and locations.
 
-> **Legal notice:** Sidrena Cijena EU is a technical aid, not legal advice or a
+> **Legal notice:** TitanWorks Sidrena Bazna Cijena is a technical aid, not legal advice or a
 > guarantee of compliance. Requirements can depend on the merchant, product,
 > service, sales channel, and applicable law. Verify your setup with qualified
 > legal or accounting advisers.
@@ -52,10 +52,10 @@ what to publish and remain responsible for checking their catalog and locations.
 
 ## Download and install
 
-1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest/download/sidrena-cijena-eu.zip).
+1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena/releases/latest/download/titanworks-sidrena-bazna-cijena.zip).
 2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**, choose the
    ZIP, and install it.
-3. Activate **Sidrena Cijena EU** and follow the setup guide to configure
+3. Activate **TitanWorks Sidrena Bazna Cijena** and follow the setup guide to configure
    locations, legal reference dates, and price evidence.
 4. Generate a price list and verify the public current list and archive before
    relying on scheduled publication.
@@ -82,8 +82,8 @@ documented uncertainties.
 ## Development
 
 ```bash
-git clone https://github.com/administrakt0r/sidrena-cijena-eu.git
-cd sidrena-cijena-eu
+git clone https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena.git
+cd titanworks-sidrena-bazna-cijena
 composer install
 npm install
 npm run wp-env start
@@ -101,7 +101,7 @@ them.
 - [Implementation and legal notes](docs/legal-rules.md)
 - [Price-list format](docs/price-list-format.md)
 - [WooCommerce integration](docs/woocommerce.md)
-- [Releases and WordPress upload ZIPs](https://github.com/administrakt0r/sidrena-cijena-eu/releases)
+- [Releases and WordPress upload ZIPs](https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena/releases)
 
 ## License
 

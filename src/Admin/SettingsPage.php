@@ -68,11 +68,11 @@ final class SettingsPage {
 	 */
 	public static function tabs() {
 		$tabs = array(
-			'display'    => array( DisplaySettingsPage::class, __( 'Display', 'sidrena-cijena-eu' ), self::GROUP_SETTINGS ),
-			'styling'    => array( StyleSettingsPage::class, __( 'Styling', 'sidrena-cijena-eu' ), self::GROUP_SETTINGS ),
-			'legal'      => array( LegalSettingsPage::class, __( 'Legal rules', 'sidrena-cijena-eu' ), self::GROUP_RULES ),
-			'sales'      => array( SaleTypesSettings::class, __( 'Special sales', 'sidrena-cijena-eu' ), self::GROUP_SETTINGS ),
-			'operations' => array( OperationsSettingsPage::class, __( 'Operations', 'sidrena-cijena-eu' ), self::GROUP_SETTINGS ),
+			'display'    => array( DisplaySettingsPage::class, __( 'Display', 'titanworks-sidrena-bazna-cijena' ), self::GROUP_SETTINGS ),
+			'styling'    => array( StyleSettingsPage::class, __( 'Styling', 'titanworks-sidrena-bazna-cijena' ), self::GROUP_SETTINGS ),
+			'legal'      => array( LegalSettingsPage::class, __( 'Legal rules', 'titanworks-sidrena-bazna-cijena' ), self::GROUP_RULES ),
+			'sales'      => array( SaleTypesSettings::class, __( 'Special sales', 'titanworks-sidrena-bazna-cijena' ), self::GROUP_SETTINGS ),
+			'operations' => array( OperationsSettingsPage::class, __( 'Operations', 'titanworks-sidrena-bazna-cijena' ), self::GROUP_SETTINGS ),
 		);
 
 		/**
@@ -103,17 +103,17 @@ final class SettingsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You are not allowed to manage these settings.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You are not allowed to manage these settings.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$tabs = self::tabs();
 		$tab  = self::current_tab();
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html__( 'Sidrena cijena - settings', 'sidrena-cijena-eu' ); ?></h1>
+			<h1><?php echo esc_html__( 'Sidrena cijena - settings', 'titanworks-sidrena-bazna-cijena' ); ?></h1>
 
 			<p class="description">
-				<?php echo esc_html__( 'This plugin is a technical compliance aid, not legal advice. Verify the configured rules with a legal or accounting professional.', 'sidrena-cijena-eu' ); ?>
+				<?php echo esc_html__( 'This plugin is a technical compliance aid, not legal advice. Verify the configured rules with a legal or accounting professional.', 'titanworks-sidrena-bazna-cijena' ); ?>
 			</p>
 
 			<?php

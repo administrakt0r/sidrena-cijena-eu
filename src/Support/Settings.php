@@ -29,12 +29,12 @@ final class Settings {
 	public static function defaults() {
 		return array(
 			'display_enabled'              => true,
-			'anchor_label'                 => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			'anchor_label'                 => __( 'Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ),
 			'currency_display'             => 'symbol',
 			'display_location'             => 'price_html',
 			'product_display_style'        => 'tooltip',
 			'anchor_date_mode'             => 'tooltip',
-			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ),
+			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-sidrena-bazna-cijena' ),
 			'anchor_font_weight'           => 'normal',
 			'display_size'                 => 40,
 			'display_priority'             => 20,
@@ -55,7 +55,7 @@ final class Settings {
 			'sale_types'                   => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
 			'filename_separator'           => '_',
 			'filename_case'                => 'upper',
-			'thirty_day_label'             => __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ),
+			'thirty_day_label'             => __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-sidrena-bazna-cijena' ),
 		);
 	}
 
@@ -70,13 +70,13 @@ final class Settings {
 	 */
 	public static function anchor_label_presets() {
 		return array(
-			'sidrena'         => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
-			'bazna'           => __( 'Bazna cijena', 'sidrena-cijena-eu' ),
-			'referentna'      => __( 'Referentna cijena', 'sidrena-cijena-eu' ),
-			'dodatna'         => __( 'Dodatna cijena', 'sidrena-cijena-eu' ),
-			'cijena_na_dan'   => __( 'Cijena na dan {datum}', 'sidrena-cijena-eu' ),
-			'cijena_na'       => __( 'Cijena na {datum}', 'sidrena-cijena-eu' ),
-			'najniza_redovna' => __( 'Najniža redovna cijena ({datum})', 'sidrena-cijena-eu' ),
+			'sidrena'         => __( 'Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ),
+			'bazna'           => __( 'Bazna cijena', 'titanworks-sidrena-bazna-cijena' ),
+			'referentna'      => __( 'Referentna cijena', 'titanworks-sidrena-bazna-cijena' ),
+			'dodatna'         => __( 'Dodatna cijena', 'titanworks-sidrena-bazna-cijena' ),
+			'cijena_na_dan'   => __( 'Cijena na dan {datum}', 'titanworks-sidrena-bazna-cijena' ),
+			'cijena_na'       => __( 'Cijena na {datum}', 'titanworks-sidrena-bazna-cijena' ),
+			'najniza_redovna' => __( 'Najniža redovna cijena ({datum})', 'titanworks-sidrena-bazna-cijena' ),
 		);
 	}
 
@@ -131,7 +131,7 @@ final class Settings {
 		}
 
 		if ( isset( $stored['thirty_day_label'] ) && 'Lowest price in the last 30 days' === $stored['thirty_day_label'] ) {
-			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' );
+			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-sidrena-bazna-cijena' );
 		}
 
 		$legacy_tooltip_texts = array(
@@ -141,7 +141,7 @@ final class Settings {
 			'Anchor price is the lowest price in the last 30 days before the start of a special form of sale.',
 		);
 		if ( isset( $stored['anchor_tooltip_text'] ) && in_array( trim( (string) $stored['anchor_tooltip_text'] ), $legacy_tooltip_texts, true ) ) {
-			$stored['anchor_tooltip_text'] = __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' );
+			$stored['anchor_tooltip_text'] = __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-sidrena-bazna-cijena' );
 		}
 
 		self::$memo_source = $stored;
@@ -220,7 +220,7 @@ final class Settings {
 
 		Logger::info(
 			'settings_change',
-			__( 'Plugin settings changed.', 'sidrena-cijena-eu' ),
+			__( 'Plugin settings changed.', 'titanworks-sidrena-bazna-cijena' ),
 			array(
 				'changed' => $changed,
 				'user_id' => (int) $user_id,

@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Sidrena Cijena EU
- * Plugin URI:        https://github.com/administrakt0r/sidrena-cijena-eu
- * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), the daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
+ * Plugin Name:       TitanWorks Sidrena Bazna Cijena
+ * Plugin URI:        https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena
+ * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), base price, daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
  * Version:           2.0.20
  * Requires at least: 6.8
  * Requires PHP:      7.4
@@ -10,10 +10,10 @@
  * Author URI:        https://github.com/administrakt0r
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       sidrena-cijena-eu
+ * Text Domain:       titanworks-sidrena-bazna-cijena
  * Domain Path:       /languages
  *
- * @package SidrenaCijena
+ * @package TitanworksSidrenaBaznaCijena
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -41,8 +41,8 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
  *
  * @return void
  */
-function sidrena_cijena_load_textdomain() {
-	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'sidrena-cijena-eu' ) ) {
+function titanworks_sidrena_bazna_cijena_load_textdomain() {
+	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'titanworks-sidrena-bazna-cijena' ) ) {
 		return;
 	}
 
@@ -59,6 +59,8 @@ function sidrena_cijena_load_textdomain() {
 	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', 0 === strpos( (string) $locale, 'hr' ), $locale );
 
 	$candidates = array(
+		SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr.mo',
+		SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr_HR.mo',
 		SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
 		SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
 	);
@@ -66,13 +68,24 @@ function sidrena_cijena_load_textdomain() {
 	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
 		foreach ( $candidates as $bundled_mo ) {
 			if ( file_exists( $bundled_mo ) ) {
-				load_textdomain( 'sidrena-cijena-eu', $bundled_mo );
+				load_textdomain( 'titanworks-sidrena-bazna-cijena', $bundled_mo );
 				break;
 			}
 		}
 	}
 }
-add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );
+add_action( 'init', 'titanworks_sidrena_bazna_cijena_load_textdomain', 1 );
+
+if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
+	/**
+	 * Backward compatibility wrapper for textdomain loading.
+	 *
+	 * @return void
+	 */
+	function sidrena_cijena_load_textdomain() {
+		titanworks_sidrena_bazna_cijena_load_textdomain();
+	}
+}
 
 /**
  * Declare WooCommerce compatibility before WooCommerce loads its features.
@@ -83,7 +96,7 @@ add_action( 'init', 'sidrena_cijena_load_textdomain', 1 );
  *
  * @return void
  */
-function sidrena_cijena_declare_woocommerce_compatibility() {
+function titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility() {
 	if ( ! class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 		return;
 	}
@@ -91,6 +104,17 @@ function sidrena_cijena_declare_woocommerce_compatibility() {
 	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', SIDRENA_CIJENA_FILE, true );
 }
 
-add_action( 'before_woocommerce_init', 'sidrena_cijena_declare_woocommerce_compatibility' );
+add_action( 'before_woocommerce_init', 'titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility' );
+
+if ( ! function_exists( 'sidrena_cijena_declare_woocommerce_compatibility' ) ) {
+	/**
+	 * Backward compatibility wrapper for WooCommerce compatibility declaration.
+	 *
+	 * @return void
+	 */
+	function sidrena_cijena_declare_woocommerce_compatibility() {
+		titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility();
+	}
+}
 
 add_action( 'plugins_loaded', array( 'SidrenaCijena\Plugin', 'boot' ), 20 );

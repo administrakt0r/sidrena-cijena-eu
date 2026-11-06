@@ -82,11 +82,11 @@ function getContainerPluginPath( relPath = '' ) {
 		try {
 			const res = wpCli( [
 				'eval',
-				'echo dirname( glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" )[0] ?? ( WP_PLUGIN_DIR . "/sidrena-cijena" ) );',
+				'echo dirname( glob( WP_PLUGIN_DIR . "/*/{titanworks-sidrena-bazna-cijena,sidrena-cijena}.php", GLOB_BRACE )[0] ?? ( WP_PLUGIN_DIR . "/titanworks-sidrena-bazna-cijena" ) );',
 			] );
 			cachedPluginPath = res.trim();
 		} catch {
-			cachedPluginPath = '/var/www/html/wp-content/plugins/sidrena-cijena';
+			cachedPluginPath = '/var/www/html/wp-content/plugins/titanworks-sidrena-bazna-cijena';
 		}
 	}
 	return relPath ? `${ cachedPluginPath }/${ relPath.replace( /^\/+/, '' ) }` : cachedPluginPath;

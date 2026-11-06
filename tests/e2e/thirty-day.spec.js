@@ -159,7 +159,8 @@ test.describe('30-day lowest price display', () => {
       const body = await response.json();
       return body.items.find((item) => item.id === expectedProductId);
     }, productId);
-    const reference = cartItem.extensions['sidrena-cijena-eu'].cartPriceSuffix;
+    const extension = cartItem.extensions['titanworks-sidrena-bazna-cijena'] || cartItem.extensions['sidrena-cijena-eu'];
+    const reference = extension.cartPriceSuffix;
 
     expect(reference).toMatch(/Referentne cijene po komadu|Reference prices per item/);
     expect(reference).toContain('Cijena na dan');

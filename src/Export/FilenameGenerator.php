@@ -74,26 +74,26 @@ class FilenameGenerator {
 		$format = strtolower( (string) $format );
 
 		if ( ! isset( self::EXTENSIONS[ $format ] ) ) {
-			return new \WP_Error( 'invalid_filename', __( 'The file extension must be CSV or XML.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'invalid_filename', __( 'The file extension must be CSV or XML.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$form = self::facility_form( isset( $location['type'] ) ? (string) $location['type'] : '' );
 
 		if ( '' === $form ) {
-			return new \WP_Error( 'invalid_filename', __( 'The facility form is missing.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'invalid_filename', __( 'The facility form is missing.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$identifier = self::alphanumeric( isset( $location['identifier'] ) ? (string) $location['identifier'] : '' );
 
 		if ( '' === $identifier ) {
-			return new \WP_Error( 'invalid_filename', __( 'The facility identifier is missing.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'invalid_filename', __( 'The facility identifier is missing.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$street = isset( $location['address'] ) ? trim( (string) $location['address'] ) : '';
 		$city   = isset( $location['city'] ) ? trim( (string) $location['city'] ) : '';
 
 		if ( '' === $street || '' === $city ) {
-			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$address = self::address_token(
@@ -103,7 +103,7 @@ class FilenameGenerator {
 		);
 
 		if ( '' === $address ) {
-			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'missing_location_address', __( 'The location street address and city are required in the price-list filename.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$separator = self::separator( $location );
@@ -123,7 +123,7 @@ class FilenameGenerator {
 		$name = 'lower' === self::case( $location ) ? strtolower( $name ) : strtoupper( $name );
 
 		if ( ! self::validate( $name ) ) {
-			return new \WP_Error( 'invalid_filename', __( 'The generated filename is not valid.', 'sidrena-cijena-eu' ) );
+			return new \WP_Error( 'invalid_filename', __( 'The generated filename is not valid.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		return $name;

@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - 'package.json'
-      - 'sidrena-cijena.php'
+      - 'titanworks-sidrena-bazna-cijena.php'
       - 'readme.txt'
   workflow_dispatch:
 
@@ -35,5 +35,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sidrena-cijena-eu-v${{ steps.get_version.outputs.VERSION }}
-          path: versions/${{ steps.get_version.outputs.VERSION }}/sidrena-cijena-eu.zip
+          name: titanworks-sidrena-bazna-cijena-v${{ steps.get_version.outputs.VERSION }}
+          path: versions/${{ steps.get_version.outputs.VERSION }}/titanworks-sidrena-bazna-cijena.zip

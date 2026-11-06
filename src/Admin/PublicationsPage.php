@@ -42,7 +42,7 @@ class PublicationsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$page     = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
@@ -66,21 +66,21 @@ class PublicationsPage {
 		$next = Scheduler::next_run();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Price lists', 'sidrena-cijena-eu' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Price lists', 'titanworks-sidrena-bazna-cijena' ) . '</h1>';
 
 		self::notice();
 
 		echo '<p>';
-		echo esc_html__( 'Filenames follow the legally structured pattern:', 'sidrena-cijena-eu' ) . ' ';
+		echo esc_html__( 'Filenames follow the legally structured pattern:', 'titanworks-sidrena-bazna-cijena' ) . ' ';
 		echo '<code>' . esc_html( FilenameGenerator::pattern() ) . '</code>';
 		echo '</p>';
 
 		echo '<p>';
 		printf(
 			/* translators: 1: last publication time, 2: next scheduled run. */
-			esc_html__( 'Last published: %1$s. Next scheduled generation: %2$s.', 'sidrena-cijena-eu' ),
-			esc_html( $last && $last['published_at'] ? self::site_time( $last['published_at'] ) : __( 'never', 'sidrena-cijena-eu' ) ),
-			esc_html( $next ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $next ) ) : __( 'not scheduled', 'sidrena-cijena-eu' ) )
+			esc_html__( 'Last published: %1$s. Next scheduled generation: %2$s.', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html( $last && $last['published_at'] ? self::site_time( $last['published_at'] ) : __( 'never', 'titanworks-sidrena-bazna-cijena' ) ),
+			esc_html( $next ? self::site_time( gmdate( 'Y-m-d H:i:s', (int) $next ) ) : __( 'not scheduled', 'titanworks-sidrena-bazna-cijena' ) )
 		);
 		echo '</p>';
 
@@ -90,13 +90,13 @@ class PublicationsPage {
 			$gen_time = ! empty( $last_gen['timestamp'] ) ? self::site_time( (int) $last_gen['timestamp'] ) : '';
 			$source   = isset( $last_gen['source'] ) ? (string) $last_gen['source'] : 'scheduled';
 
-			echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Last generation failed:', 'sidrena-cijena-eu' ) . '</strong> ';
+			echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Last generation failed:', 'titanworks-sidrena-bazna-cijena' ) . '</strong> ';
 			printf(
 				/* translators: 1: generation time, 2: run source, 3: error details */
-				esc_html__( '%1$s (%2$s) — %3$s', 'sidrena-cijena-eu' ),
+				esc_html__( '%1$s (%2$s) — %3$s', 'titanworks-sidrena-bazna-cijena' ),
 				esc_html( $gen_time ),
 				esc_html( Labels::run_source( $source ) ),
-				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'sidrena-cijena-eu' ) )
+				esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : __( 'unknown error', 'titanworks-sidrena-bazna-cijena' ) )
 			);
 			echo '</p></div>';
 		}
@@ -104,28 +104,28 @@ class PublicationsPage {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		wp_nonce_field( self::ACTION );
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION ) . '" />';
-		submit_button( __( 'Generate now', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
+		submit_button( __( 'Generate now', 'titanworks-sidrena-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Published price lists', 'sidrena-cijena-eu' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Published price lists', 'titanworks-sidrena-bazna-cijena' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'Filename', 'sidrena-cijena-eu' ),
-			__( 'Format', 'sidrena-cijena-eu' ),
-			__( 'Location', 'sidrena-cijena-eu' ),
-			__( 'Published', 'sidrena-cijena-eu' ),
-			__( 'Expires', 'sidrena-cijena-eu' ),
-			__( 'Items', 'sidrena-cijena-eu' ),
-			__( 'Checksum', 'sidrena-cijena-eu' ),
-			__( 'Status', 'sidrena-cijena-eu' ),
+			__( 'Filename', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Format', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Location', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Published', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Expires', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Items', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Checksum', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Status', 'titanworks-sidrena-bazna-cijena' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $result['items'] ) ) {
-			echo '<tr><td colspan="8">' . esc_html__( 'No price lists have been published yet.', 'sidrena-cijena-eu' ) . '</td></tr>';
+			echo '<tr><td colspan="8">' . esc_html__( 'No price lists have been published yet.', 'titanworks-sidrena-bazna-cijena' ) . '</td></tr>';
 		}
 
 		foreach ( $result['items'] as $row ) {
@@ -153,12 +153,12 @@ class PublicationsPage {
 			if ( $err_count > 0 && 'published' === (string) $row['status'] ) {
 				$warning_title = sprintf(
 					/* translators: %d: number of compliance findings */
-					__( '%d compliance findings', 'sidrena-cijena-eu' ),
+					__( '%d compliance findings', 'titanworks-sidrena-bazna-cijena' ),
 					$err_count
 				);
 				$warning_label = sprintf(
 					/* translators: %d: number of compliance warnings */
-					__( '%d warnings', 'sidrena-cijena-eu' ),
+					__( '%d warnings', 'titanworks-sidrena-bazna-cijena' ),
 					$err_count
 				);
 				echo ' <span class="sidrena-cijena-status sidrena-cijena-status--warning" title="' . esc_attr( $warning_title ) . '">' . esc_html( $warning_label ) . '</span>';
@@ -181,7 +181,7 @@ class PublicationsPage {
 	 */
 	public static function handle_generate() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::ACTION );
@@ -252,7 +252,7 @@ class PublicationsPage {
 				'error',
 				sprintf(
 					/* translators: 1: number of generated price lists, 2: number of failures. */
-					__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'sidrena-cijena-eu' ),
+					__( 'Generation finished: %1$d price lists generated, %2$d failed.', 'titanworks-sidrena-bazna-cijena' ),
 					(int) $generated,
 					(int) $failed
 				)
@@ -263,7 +263,7 @@ class PublicationsPage {
 				'warning',
 				sprintf(
 					/* translators: 1: number of generated price lists, 2: number of price lists with findings, 3: compliance check URL. */
-					__( 'Price lists published successfully: %1$d files created (%2$d with compliance warnings). <a href="%3$s">Review the Compliance report</a> for proposed fixes.', 'sidrena-cijena-eu' ),
+					__( 'Price lists published successfully: %1$d files created (%2$d with compliance warnings). <a href="%3$s">Review the Compliance report</a> for proposed fixes.', 'titanworks-sidrena-bazna-cijena' ),
 					(int) $generated,
 					(int) $with_findings,
 					esc_url( $compliance_url )
@@ -274,7 +274,7 @@ class PublicationsPage {
 				'success',
 				sprintf(
 					/* translators: 1: number of generated price lists. */
-					__( 'Generation finished: %1$d price lists generated.', 'sidrena-cijena-eu' ),
+					__( 'Generation finished: %1$d price lists generated.', 'titanworks-sidrena-bazna-cijena' ),
 					(int) $generated
 				)
 			);

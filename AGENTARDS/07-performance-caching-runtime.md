@@ -4,7 +4,7 @@
 
 ```
 You are reducing per-request cost of the WordPress plugin in the current directory
-(sidrena-cijena.php is the bootstrap). Goal: no wasted work on requests that do not need
+(titanworks-sidrena-bazna-cijena.php is the bootstrap). Goal: no wasted work on requests that do not need
 it, cache only what is safe to cache, and never serve stale legal data. Measure before
 and after.
 
@@ -56,7 +56,7 @@ Work items — verify each against the real code first:
    lands in the autoloaded options table. Prefer batched entries or wp_cache where a
    persistent object cache exists; make sure no cache bookkeeping row is autoloaded.
 5. Textdomain loading: sidrena-cijena.php registers sidrena_cijena_load_textdomain twice
-   (plugins_loaded and init) and explicitly loads languages/sidrena-cijena-eu-hr.mo on every
+   (plugins_loaded and init) and explicitly loads languages/titanworks-sidrena-bazna-cijena-hr.mo on every
    request regardless of the active locale. Load once, respect the current locale, keep
    Croatian strings working in tests and in the hr catalog.
 6. Asset loading: assets/css/frontend.css and assets/js/frontend.js are enqueued on EVERY

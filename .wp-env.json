@@ -15,6 +15,6 @@
 		"WP_ENVIRONMENT_TYPE": "local"
 	},
 	"lifecycleScripts": {
-		"afterStart": "wp-env run cli wp plugin activate sidrena-cijena woocommerce"
+		"afterStart": "wp-env run cli wp plugin activate titanworks-sidrena-bazna-cijena woocommerce"
 	}
 }

@@ -68,25 +68,27 @@ class PriceDisplay {
 			return;
 		}
 
-		woocommerce_store_api_register_endpoint_data(
-			array(
-				'endpoint'        => 'cart-item',
-				'namespace'       => 'sidrena-cijena-eu',
-				'schema_callback' => function () {
-					return array(
-						'cartPriceSuffix' => array(
-							'description' => __( 'Reference price text for this cart item.', 'sidrena-cijena-eu' ),
-							'type'        => 'string',
-							'context'     => array( 'view' ),
-							'readonly'    => true,
-						),
-					);
-				},
-				'data_callback'   => function ( $cart_item ) {
-					return array( 'cartPriceSuffix' => $this->cart_reference_text( $cart_item ) );
-				},
-			)
-		);
+		foreach ( array( 'titanworks-sidrena-bazna-cijena', 'titanworks-sidrena-bazna-cijena' ) as $extension_namespace ) {
+			woocommerce_store_api_register_endpoint_data(
+				array(
+					'endpoint'        => 'cart-item',
+					'namespace'       => $extension_namespace,
+					'schema_callback' => function () {
+						return array(
+							'cartPriceSuffix' => array(
+								'description' => __( 'Reference price text for this cart item.', 'titanworks-sidrena-bazna-cijena' ),
+								'type'        => 'string',
+								'context'     => array( 'view' ),
+								'readonly'    => true,
+							),
+						);
+					},
+					'data_callback'   => function ( $cart_item ) {
+						return array( 'cartPriceSuffix' => $this->cart_reference_text( $cart_item ) );
+					},
+				)
+			);
+		}
 	}
 
 	/**
@@ -166,7 +168,7 @@ class PriceDisplay {
 			return '';
 		}
 
-		return '<div class="sidrena-cijena__cart-reference"><span class="sidrena-cijena__cart-unit-label">' . esc_html__( 'Reference prices per item:', 'sidrena-cijena-eu' ) . '</span> ' . $html . '</div>';
+		return '<div class="sidrena-cijena__cart-reference"><span class="sidrena-cijena__cart-unit-label">' . esc_html__( 'Reference prices per item:', 'titanworks-sidrena-bazna-cijena' ) . '</span> ' . $html . '</div>';
 	}
 
 	/**
@@ -502,7 +504,7 @@ class PriceDisplay {
 
 		if ( null !== $anchor_price
 			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
-			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
+			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ) );
 
 			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
 			$date_parts             = explode( '-', $reference_date );
@@ -539,7 +541,7 @@ class PriceDisplay {
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
 				'style'                  => (string) Settings::get( 'product_display_style', 'tooltip' ),
 				'date_mode'              => (string) Settings::get( 'anchor_date_mode', 'tooltip' ),
-				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ) ),
+				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-sidrena-bazna-cijena' ) ),
 				'font_weight'            => (string) Settings::get( 'anchor_font_weight', 'normal' ),
 				'product_id'             => (int) $item->id,
 				'variation_id'           => (int) $item->variation_id,
@@ -617,7 +619,7 @@ class PriceDisplay {
 
 		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
 			? (string) $args['thirty_day_label']
-			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-sidrena-bazna-cijena' ) );
 
 		/**
 		 * Filters the 30-day lowest price display label.

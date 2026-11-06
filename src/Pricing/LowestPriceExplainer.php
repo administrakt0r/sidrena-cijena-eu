@@ -100,7 +100,7 @@ class LowestPriceExplainer {
 			$window_desc  = $window ? sprintf( '%1$s to %2$s', $window['window_start'], $window['window_end'] ) : '';
 			$warnings[]   = sprintf(
 				/* translators: 1: calculation window description */
-				__( 'No price history exists in or before the 30-day calculation window (%1$s). A reference price cannot be calculated without historical evidence.', 'sidrena-cijena-eu' ),
+				__( 'No price history exists in or before the 30-day calculation window (%1$s). A reference price cannot be calculated without historical evidence.', 'titanworks-sidrena-bazna-cijena' ),
 				$window_desc
 			);
 		} else {
@@ -121,7 +121,7 @@ class LowestPriceExplainer {
 					$conditions[]   = 'short_history';
 					$warnings[]     = sprintf(
 						/* translators: 1: number of coverage days, 2: earliest date in history */
-						__( 'Price history is shorter than 30 days (covers %1$d days starting from %2$s). The reference price is calculated from the available history.', 'sidrena-cijena-eu' ),
+						__( 'Price history is shorter than 30 days (covers %1$d days starting from %2$s). The reference price is calculated from the available history.', 'titanworks-sidrena-bazna-cijena' ),
 						$coverage_days,
 						$earliest_from
 					);
@@ -142,7 +142,7 @@ class LowestPriceExplainer {
 					$last_ended   = end( $ended_sales );
 					$warnings[]   = sprintf(
 						/* translators: 1: end date, 2: sale price */
-						__( 'A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price.', 'sidrena-cijena-eu' ),
+						__( 'A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price.', 'titanworks-sidrena-bazna-cijena' ),
 						$last_ended['effective_to'],
 						Currency::format( (float) $last_ended['price'], $item->currency )
 					);
@@ -166,7 +166,7 @@ class LowestPriceExplainer {
 
 				if ( count( $sale_records ) >= 2 || count( $prices ) >= 2 ) {
 					$conditions[] = 'successive_reductions';
-					$warnings[]   = __( 'Multiple successive reductions detected. All applicable prices in the 30-day window were evaluated.', 'sidrena-cijena-eu' );
+					$warnings[]   = __( 'Multiple successive reductions detected. All applicable prices in the 30-day window were evaluated.', 'titanworks-sidrena-bazna-cijena' );
 				}
 			}
 
@@ -177,7 +177,7 @@ class LowestPriceExplainer {
 					$conditions[] = 'imported_baseline';
 					$warnings[]   = sprintf(
 						/* translators: 1: record ID, 2: source label */
-						__( 'The reference price is determined by an imported or seeded baseline record (#%1$d, source: %2$s).', 'sidrena-cijena-eu' ),
+						__( 'The reference price is determined by an imported or seeded baseline record (#%1$d, source: %2$s).', 'titanworks-sidrena-bazna-cijena' ),
 						(int) $determining_record['id'],
 						Labels::source( $src )
 					);
@@ -185,7 +185,7 @@ class LowestPriceExplainer {
 					$conditions[] = 'manual_baseline';
 					$warnings[]   = sprintf(
 						/* translators: 1: record ID */
-						__( 'The reference price is determined by a manual baseline record (#%1$d).', 'sidrena-cijena-eu' ),
+						__( 'The reference price is determined by a manual baseline record (#%1$d).', 'titanworks-sidrena-bazna-cijena' ),
 						(int) $determining_record['id']
 					);
 				}
@@ -199,12 +199,12 @@ class LowestPriceExplainer {
 		$summary = $has_history && null !== $lowest_price
 			? sprintf(
 				/* translators: 1: lowest price, 2: window start date, 3: window end date */
-				__( 'The lowest applicable price in the 30-day window (%2$s to %3$s) is %1$s.', 'sidrena-cijena-eu' ),
+				__( 'The lowest applicable price in the 30-day window (%2$s to %3$s) is %1$s.', 'titanworks-sidrena-bazna-cijena' ),
 				Currency::format( (float) $lowest_price, $item->currency, array( 'display' => 'symbol' ) ),
 				$window ? $window['window_start'] : '',
 				$window ? $window['window_end'] : ''
 			)
-			: __( 'No applicable lowest price could be calculated for this 30-day window.', 'sidrena-cijena-eu' );
+			: __( 'No applicable lowest price could be calculated for this 30-day window.', 'titanworks-sidrena-bazna-cijena' );
 
 		$stored_lowest_price = is_array( $sale_or_date ) && isset( $sale_or_date['lowest_30_day_price'] ) && '' !== $sale_or_date['lowest_30_day_price']
 			? (float) $sale_or_date['lowest_30_day_price']
@@ -249,7 +249,7 @@ class LowestPriceExplainer {
 		if ( $item->is_variation() ) {
 			return sprintf(
 				/* translators: 1: variation ID, 2: parent product ID, 3: SKU, 4: variation name/attributes */
-				__( 'Variation #%1$d of Product #%2$d (SKU: %3$s) — %4$s', 'sidrena-cijena-eu' ),
+				__( 'Variation #%1$d of Product #%2$d (SKU: %3$s) — %4$s', 'titanworks-sidrena-bazna-cijena' ),
 				(int) $item->variation_id,
 				(int) $item->id,
 				$sku,
@@ -260,7 +260,7 @@ class LowestPriceExplainer {
 		if ( 'woocommerce' === $item->source ) {
 			return sprintf(
 				/* translators: 1: product ID, 2: SKU, 3: product name */
-				__( 'Product #%1$d (SKU: %2$s) — %3$s', 'sidrena-cijena-eu' ),
+				__( 'Product #%1$d (SKU: %2$s) — %3$s', 'titanworks-sidrena-bazna-cijena' ),
 				(int) $item->id,
 				$sku,
 				(string) $item->name
@@ -269,7 +269,7 @@ class LowestPriceExplainer {
 
 		return sprintf(
 			/* translators: 1: item ID, 2: SKU, 3: item name */
-			__( 'Standalone item #%1$d (SKU: %2$s) — %3$s', 'sidrena-cijena-eu' ),
+			__( 'Standalone item #%1$d (SKU: %2$s) — %3$s', 'titanworks-sidrena-bazna-cijena' ),
 			(int) $item->id,
 			$sku,
 			(string) $item->name
@@ -287,21 +287,21 @@ class LowestPriceExplainer {
 		?>
 		<div class="sidrena-cijena-explanation">
 			<p class="sidrena-cijena-identity">
-				<strong><?php echo esc_html__( 'Item identity:', 'sidrena-cijena-eu' ); ?></strong>
+				<strong><?php echo esc_html__( 'Item identity:', 'titanworks-sidrena-bazna-cijena' ); ?></strong>
 				<code><?php echo esc_html( (string) $explanation['identity_label'] ); ?></code>
 			</p>
 
 			<div class="sidrena-cijena-summary-box">
 				<p>
-					<strong><?php echo esc_html__( 'Calculation window (30 days):', 'sidrena-cijena-eu' ); ?></strong>
+					<strong><?php echo esc_html__( 'Calculation window (30 days):', 'titanworks-sidrena-bazna-cijena' ); ?></strong>
 					<?php echo esc_html( sprintf( '%1$s to %2$s', (string) $explanation['window_start'], (string) $explanation['window_end'] ) ); ?>
 					<?php /* translators: %s: sale start date */ ?>
-					<span class="description">(<?php echo esc_html( sprintf( __( 'for sale starting %s', 'sidrena-cijena-eu' ), (string) $explanation['sale_start'] ) ); ?>)</span>
+					<span class="description">(<?php echo esc_html( sprintf( __( 'for sale starting %s', 'titanworks-sidrena-bazna-cijena' ), (string) $explanation['sale_start'] ) ); ?>)</span>
 				</p>
 				<p>
-					<strong><?php echo esc_html__( 'Selected 30-day lowest price:', 'sidrena-cijena-eu' ); ?></strong>
+					<strong><?php echo esc_html__( 'Selected 30-day lowest price:', 'titanworks-sidrena-bazna-cijena' ); ?></strong>
 					<?php if ( null === $explanation['lowest_price'] ) : ?>
-						<em class="sidrena-cijena-not-calculated"><?php echo esc_html__( 'Not calculated (no applicable price in window)', 'sidrena-cijena-eu' ); ?></em>
+						<em class="sidrena-cijena-not-calculated"><?php echo esc_html__( 'Not calculated (no applicable price in window)', 'titanworks-sidrena-bazna-cijena' ); ?></em>
 					<?php else : ?>
 						<span class="sidrena-cijena-lowest-val">
 							<?php echo esc_html( Currency::format( (float) $explanation['lowest_price'], (string) $explanation['currency'], array( 'display' => 'symbol' ) ) ); ?>
@@ -315,7 +315,7 @@ class LowestPriceExplainer {
 									esc_html(
 										sprintf(
 											/* translators: 1: record ID, 2: price type, 3: effective date */
-											__( 'determined by record #%1$d, %2$s from %3$s', 'sidrena-cijena-eu' ),
+											__( 'determined by record #%1$d, %2$s from %3$s', 'titanworks-sidrena-bazna-cijena' ),
 											(int) $det['id'],
 											Labels::price_type( (string) $det['price_type'] ),
 											(string) $det['effective_from']
@@ -338,7 +338,7 @@ class LowestPriceExplainer {
 			<?php if ( in_array( 'sufficient_history', (array) $explanation['conditions'], true ) ) : ?>
 				<p class="description sidrena-cijena-sufficient-history">
 					<span class="dashicons dashicons-yes-alt"></span>
-					<?php echo esc_html__( 'Full 30-day price history is available.', 'sidrena-cijena-eu' ); ?>
+					<?php echo esc_html__( 'Full 30-day price history is available.', 'titanworks-sidrena-bazna-cijena' ); ?>
 				</p>
 			<?php endif; ?>
 
@@ -347,23 +347,23 @@ class LowestPriceExplainer {
 					<?php
 					$count = is_array( $explanation['source_records'] ) ? count( $explanation['source_records'] ) : 0;
 					/* translators: %d: count of records */
-					echo esc_html( sprintf( __( 'View source records (%d found in window)', 'sidrena-cijena-eu' ), $count ) );
+					echo esc_html( sprintf( __( 'View source records (%d found in window)', 'titanworks-sidrena-bazna-cijena' ), $count ) );
 					?>
 				</summary>
 				<div class="sidrena-cijena-records-wrap">
 					<?php if ( empty( $explanation['source_records'] ) ) : ?>
-						<p class="description"><?php echo esc_html__( 'No price history records overlapped this calculation window.', 'sidrena-cijena-eu' ); ?></p>
+						<p class="description"><?php echo esc_html__( 'No price history records overlapped this calculation window.', 'titanworks-sidrena-bazna-cijena' ); ?></p>
 					<?php else : ?>
 						<table class="widefat striped sidrena-source-records-table">
-							<caption class="screen-reader-text"><?php echo esc_html__( 'Price history records', 'sidrena-cijena-eu' ); ?></caption>
+							<caption class="screen-reader-text"><?php echo esc_html__( 'Price history records', 'titanworks-sidrena-bazna-cijena' ); ?></caption>
 							<thead>
 								<tr>
-									<th scope="col"><?php echo esc_html__( 'ID', 'sidrena-cijena-eu' ); ?></th>
-									<th scope="col"><?php echo esc_html__( 'Price', 'sidrena-cijena-eu' ); ?></th>
-									<th scope="col"><?php echo esc_html__( 'Type', 'sidrena-cijena-eu' ); ?></th>
-									<th scope="col"><?php echo esc_html__( 'Source', 'sidrena-cijena-eu' ); ?></th>
-									<th scope="col"><?php echo esc_html__( 'Effective period', 'sidrena-cijena-eu' ); ?></th>
-									<th scope="col"><?php echo esc_html__( 'Role', 'sidrena-cijena-eu' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'ID', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'Price', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'Type', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'Source', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'Effective period', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+									<th scope="col"><?php echo esc_html__( 'Role', 'titanworks-sidrena-bazna-cijena' ); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -379,7 +379,7 @@ class LowestPriceExplainer {
 											if ( ! empty( $record['effective_to'] ) ) {
 												$eff .= ' to ' . (string) $record['effective_to'];
 											} else {
-												$eff .= ' (' . __( 'open', 'sidrena-cijena-eu' ) . ')';
+												$eff .= ' (' . __( 'open', 'titanworks-sidrena-bazna-cijena' ) . ')';
 											}
 											echo esc_html( $eff );
 											?>
@@ -387,10 +387,10 @@ class LowestPriceExplainer {
 										<td>
 											<?php if ( ! empty( $record['is_determining'] ) ) : ?>
 												<span class="badge sidrena-explainer-badge">
-													<?php echo esc_html__( 'Determining lowest price', 'sidrena-cijena-eu' ); ?>
+													<?php echo esc_html__( 'Determining lowest price', 'titanworks-sidrena-bazna-cijena' ); ?>
 												</span>
 											<?php else : ?>
-												<span class="description"><?php echo esc_html__( 'Informed calculation', 'sidrena-cijena-eu' ); ?></span>
+												<span class="description"><?php echo esc_html__( 'Informed calculation', 'titanworks-sidrena-bazna-cijena' ); ?></span>
 											<?php endif; ?>
 										</td>
 									</tr>
@@ -409,7 +409,7 @@ class LowestPriceExplainer {
 						);
 						?>
 						<a href="<?php echo esc_url( $history_link ); ?>">
-							<?php echo esc_html__( 'Open full price history for this item &rarr;', 'sidrena-cijena-eu' ); ?>
+							<?php echo esc_html__( 'Open full price history for this item &rarr;', 'titanworks-sidrena-bazna-cijena' ); ?>
 						</a>
 					</p>
 				</div>

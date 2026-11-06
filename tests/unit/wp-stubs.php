@@ -1744,11 +1744,11 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 }
 
 if ( ! defined( 'SIDRENA_CIJENA_FILE' ) ) {
-	define( 'SIDRENA_CIJENA_FILE', dirname( __DIR__, 2 ) . '/sidrena-cijena.php' );
+	define( 'SIDRENA_CIJENA_FILE', dirname( __DIR__, 2 ) . '/titanworks-sidrena-bazna-cijena.php' );
 }
 
 if ( ! defined( 'SIDRENA_CIJENA_BASENAME' ) ) {
-	define( 'SIDRENA_CIJENA_BASENAME', 'sidrena-cijena/sidrena-cijena.php' );
+	define( 'SIDRENA_CIJENA_BASENAME', 'titanworks-sidrena-bazna-cijena/titanworks-sidrena-bazna-cijena.php' );
 }
 
 if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
@@ -1756,7 +1756,7 @@ if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
 }
 
 if ( ! defined( 'SIDRENA_CIJENA_URL' ) ) {
-	define( 'SIDRENA_CIJENA_URL', 'http://example.org/wp-content/plugins/sidrena-cijena/' );
+	define( 'SIDRENA_CIJENA_URL', 'http://example.org/wp-content/plugins/titanworks-sidrena-bazna-cijena/' );
 }
 
 if ( ! defined( 'ARRAY_A' ) ) {

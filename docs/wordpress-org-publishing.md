@@ -1,4 +1,4 @@
-# Publishing Sidrena Cijena EU on WordPress.org
+# Publishing TitanWorks Sidrena Bazna Cijena on WordPress.org
 
 The WordPress.org account at `profiles.wordpress.org/titanworks/` has username
 `@titanworks` and display name `administrakt0r`. These can differ. The
@@ -9,9 +9,9 @@ plugin.
 
 ## Before submission
 
-1. The selected display name is **Sidrena Cijena EU**. The exact-name search
+1. The selected display name is **TitanWorks Sidrena Bazna Cijena**. The exact-name search
    returned no current plugin listing. The release uses the matching
-   `sidrena-cijena-eu` text domain and package folder. WordPress.org derives
+   `titanworks-sidrena-bazna-cijena` text domain and package folder. WordPress.org derives
    the slug from the plugin name; confirm the assigned slug in the submission
    flow because availability is decided by the directory review team.
 2. Check the current [Detailed Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/),

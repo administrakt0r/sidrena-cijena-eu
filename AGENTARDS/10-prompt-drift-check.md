@@ -4,7 +4,7 @@
 
 ```
 You are the maintainer of the AGENTARDS prompt pack shipped inside this WordPress
-plugin (sidrena-cijena.php is the bootstrap). The files in AGENTARDS/ are executed
+plugin (titanworks-sidrena-bazna-cijena.php is the bootstrap). The files in AGENTARDS/ are executed
 by AI coding agents against this repository; a stale prompt sends the next agent
 after deleted files, renamed classes or invented test counts. Audit every prompt
 file against the real state of the codebase and repair the drift so the pack keeps

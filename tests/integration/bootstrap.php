@@ -35,7 +35,10 @@ tests_add_filter(
 			require_once $woocommerce_plugin;
 		}
 
-		require dirname( __DIR__, 2 ) . '/sidrena-cijena.php';
+		$plugin_bootstrap = file_exists( dirname( __DIR__, 2 ) . '/titanworks-sidrena-bazna-cijena.php' )
+			? dirname( __DIR__, 2 ) . '/titanworks-sidrena-bazna-cijena.php'
+			: dirname( __DIR__, 2 ) . '/sidrena-cijena.php';
+		require $plugin_bootstrap;
 	}
 );
 

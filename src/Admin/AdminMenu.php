@@ -29,8 +29,8 @@ final class AdminMenu {
 	public static function register() {
 		$capability = Capabilities::capability();
 		add_menu_page(
-			__( 'Sidrena cijena', 'sidrena-cijena-eu' ),
-			__( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			__( 'Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ),
 			$capability,
 			self::PARENT,
 			array( DashboardPage::class, 'render' ),
@@ -44,7 +44,7 @@ final class AdminMenu {
 			add_submenu_page(
 				self::PARENT,
 				/* translators: %s: screen title. */
-				sprintf( __( '%s - Sidrena cijena', 'sidrena-cijena-eu' ), $page[1] ),
+				sprintf( __( '%s - Sidrena cijena', 'titanworks-sidrena-bazna-cijena' ), $page[1] ),
 				$page[1],
 				$capability,
 				$slug,
@@ -60,18 +60,18 @@ final class AdminMenu {
 	 */
 	public static function pages() {
 		return array(
-			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'sidrena-cijena-eu' ) ),
-			SetupGuidePage::SLUG          => array( SetupGuidePage::class, __( 'Setup Guide', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-locations'    => array( LocationsPage::class, __( 'Sales locations', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-history'      => array( PriceHistoryPage::class, __( 'Price history', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-compliance'   => array( CompliancePage::class, __( 'Compliance check', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'sidrena-cijena-eu' ) ),
-			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'sidrena-cijena-eu' ) ),
-			DocumentationPage::SLUG       => array( DocumentationPage::class, __( 'Documentation', 'sidrena-cijena-eu' ) ),
+			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'titanworks-sidrena-bazna-cijena' ) ),
+			SetupGuidePage::SLUG          => array( SetupGuidePage::class, __( 'Setup Guide', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-locations'    => array( LocationsPage::class, __( 'Sales locations', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-history'      => array( PriceHistoryPage::class, __( 'Price history', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-compliance'   => array( CompliancePage::class, __( 'Compliance check', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'titanworks-sidrena-bazna-cijena' ) ),
+			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'titanworks-sidrena-bazna-cijena' ) ),
+			DocumentationPage::SLUG       => array( DocumentationPage::class, __( 'Documentation', 'titanworks-sidrena-bazna-cijena' ) ),
 		);
 	}
 
