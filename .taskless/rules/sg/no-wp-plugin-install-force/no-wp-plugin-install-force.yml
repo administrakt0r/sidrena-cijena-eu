@@ -1,0 +1,15 @@
+id: no-wp-plugin-install-force
+language: Bash
+severity: error
+message: "Do not run 'wp plugin install --force'; the repository root is bind-mounted in Docker and WordPress Plugin_Upgrader will wipe the local directory."
+note: |
+  In wp-env and local development containers, the plugin directory is bind-mounted
+  directly from the host machine into wp-content/plugins/sidrena-cijena.
+  Running `wp plugin install <zip> --force` triggers WordPress's Plugin_Upgrader,
+  which removes the plugin folder before unpacking, deleting local repository files.
+rule:
+  any:
+    - pattern: 'wp plugin install $$$PRE --force $$$POST'
+    - pattern: 'wp plugin install $$$PRE --force'
+    - pattern: 'wp plugin install --force $$$POST'
+    - pattern: 'wp plugin install --force'

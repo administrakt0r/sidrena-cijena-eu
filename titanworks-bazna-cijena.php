@@ -3,7 +3,7 @@
  * Plugin Name:       Titanworks Bazna Cijena
  * Plugin URI:        https://github.com/administrakt0r/titanworks-bazna-cijena
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), base price, daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
- * Version:           2.0.20
+ * Version:           2.0.21
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            titanworks
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.20' );
+defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.21' );
 defined( 'SIDRENA_CIJENA_FILE' ) || define( 'SIDRENA_CIJENA_FILE', __FILE__ );
 defined( 'SIDRENA_CIJENA_DIR' ) || define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
 defined( 'SIDRENA_CIJENA_URL' ) || define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );

@@ -36,48 +36,59 @@ final class DisplaySettingsPage {
 
 		$fields = array(
 			'display_enabled'       => array(
-				'label' => __( 'Enable frontend display', 'titanworks-bazna-cijena' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Enable frontend display', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Show anchor price and 30-day lowest price on the public storefront.', 'titanworks-bazna-cijena' ),
 			),
 			'anchor_label'          => array(
-				'label' => __( 'Anchor price label', 'titanworks-bazna-cijena' ),
-				'type'  => 'anchor_label_preset',
+				'label'       => __( 'Anchor price label', 'titanworks-bazna-cijena' ),
+				'type'        => 'anchor_label_preset',
+				'description' => __( 'Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso}).', 'titanworks-bazna-cijena' ),
 			),
 			'thirty_day_label'      => array(
-				'label' => __( 'Lowest 30-day price label', 'titanworks-bazna-cijena' ),
-				'type'  => 'text',
+				'label'       => __( 'Lowest 30-day price label', 'titanworks-bazna-cijena' ),
+				'type'        => 'text',
+				'description' => __( 'Statutory label for the lowest price applied in the 30 days before a promotion.', 'titanworks-bazna-cijena' ),
 			),
 			'currency_display'      => array(
-				'label' => __( 'Currency display', 'titanworks-bazna-cijena' ),
-				'type'  => 'select',
+				'label'       => __( 'Currency display', 'titanworks-bazna-cijena' ),
+				'type'        => 'select',
+				'description' => __( 'Format used to display currency alongside the anchor price.', 'titanworks-bazna-cijena' ),
 			),
 			'display_location'      => array(
-				'label' => __( 'Display position', 'titanworks-bazna-cijena' ),
-				'type'  => 'select',
+				'label'       => __( 'Display position', 'titanworks-bazna-cijena' ),
+				'type'        => 'select',
+				'description' => __( 'Placement of the anchor price relative to the regular product price HTML.', 'titanworks-bazna-cijena' ),
 			),
 			'display_priority'      => array(
-				'label' => __( 'Display priority', 'titanworks-bazna-cijena' ),
-				'type'  => 'number',
+				'label'       => __( 'Display priority', 'titanworks-bazna-cijena' ),
+				'type'        => 'number',
+				'description' => __( 'Action hook priority (default 15; lower values render earlier).', 'titanworks-bazna-cijena' ),
 			),
 			'display_product_pages' => array(
-				'label' => __( 'Product pages', 'titanworks-bazna-cijena' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Product pages', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Render anchor price information on single product pages.', 'titanworks-bazna-cijena' ),
 			),
 			'display_archives'      => array(
-				'label' => __( 'Archives and lists', 'titanworks-bazna-cijena' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Archives and lists', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Render anchor price information on catalog loops, archives, and search results.', 'titanworks-bazna-cijena' ),
 			),
 			'display_variations'    => array(
-				'label' => __( 'Variations', 'titanworks-bazna-cijena' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Variations', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Dynamically update the anchor price when a variation is selected.', 'titanworks-bazna-cijena' ),
 			),
 			'only_when_different'   => array(
-				'label' => __( 'Only when the anchor differs', 'titanworks-bazna-cijena' ),
-				'type'  => 'checkbox',
+				'label'       => __( 'Only when the anchor differs', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Hide the anchor price if it equals the current selling price.', 'titanworks-bazna-cijena' ),
 			),
 			'disclaimer'            => array(
-				'label' => __( 'Administrative disclaimer', 'titanworks-bazna-cijena' ),
-				'type'  => 'textarea',
+				'label'       => __( 'Administrative disclaimer', 'titanworks-bazna-cijena' ),
+				'type'        => 'textarea',
+				'description' => __( 'Optional text displayed alongside anchor prices informing buyers of statutory direct price controls.', 'titanworks-bazna-cijena' ),
 			),
 		);
 
@@ -91,7 +102,7 @@ final class DisplaySettingsPage {
 				array(
 					'key'         => $key,
 					'type'        => $field['type'],
-					'description' => '',
+					'description' => $field['description'],
 					'label_for'   => $key,
 				)
 			);

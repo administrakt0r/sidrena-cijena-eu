@@ -16,6 +16,18 @@
 - Admin forms busy states & submit button ergonomics: added `class="sidrena-busy-form"` and `sidrena-btn-busy` styling across Locations form (`LocationsPage`), Price History correction form (`PriceHistoryPage`), Plugin Settings form (`SettingsPage`), and Setup Guide completion forms (`SetupGuidePage`), preventing accidental double-submissions and network latency confusion.
 - Test coverage & quality: 562 unit tests (2,040 assertions), 0 failures; Croatian translation catalog complete (809 translated strings / 0 untranslated in `languages/hr_HR.po`).
 
+## Release 2.0.21 — Streaming Export Pipeline, Incremental Hashing & CircleCI Optimization (2026-11-05)
+
+- Streaming export pipeline: `CsvWriter::write_stream()` and `XmlWriter::write_stream()` stream large product catalogs directly to disk without loading full CSV/XML strings into memory.
+- Incremental catalog hashing: `PriceListBuilder::fingerprint()` hashes catalog items incrementally row-by-row via `hash_init`/`hash_update`, eliminating multi-megabyte array cloning while guaranteeing byte-identical SHA-256 hashes.
+- Write-time checksum hashing: `Publisher::publish()` calculates SHA-256 file digests and byte sizes during streaming writes, eliminating post-write disk re-reads via `hash_file('sha256')`.
+- Collapsed sequence increment: `LocationRepository::next_sequence()` collapsed sequence counter advancement to an atomic UPDATE and integer selection query, eliminating full SELECT * and JSON hydration.
+- Batch publication expiration: `CleanupJob` and `PublicationRepository::mark_expired()` batch expired publication updates in a single `WHERE id IN (...)` query instead of N individual row updates.
+- REST download document caching: `PriceListController::download()` caches serialized CSV and XML documents in `RestCache`, eliminating full catalog re-serialization on repeat REST downloads.
+- CircleCI caching: enabled Composer, NPM, analysis tools (`.phpcs.cache`, `.phpstan.cache`, `.eslintcache`, `.phpunit.result.cache`), and Playwright browser caching in CircleCI workflows.
+- Quality gates: 559 unit tests (2,031 assertions) passing; 100% complete Croatian translation catalog (809 translated / 0 untranslated strings).
+- Built `versions/2.0.21/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.21` and verified via automated Playwright visual audit.
+
 ## Release 2.0.19 — Competitor-Grade Label Presets, Dynamic Date Tokens & NN 110/2026 Alignment (2026-11-04)
 
 - Competitor-grade anchor label presets & quick selectors: added merchant-selectable preset labels ("Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan {datum}", "Cijena na {datum}", "Najniža redovna cijena ({datum})") and custom input in `Settings::anchor_label_presets()` and `DisplaySettingsPage`.

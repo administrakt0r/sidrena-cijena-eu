@@ -1,0 +1,20 @@
+id: no-direct-exit-in-admin
+language: Php
+severity: error
+message: "Do not use exit or die in WordPress admin pages; use wp_die() to preserve shutdown hooks and proper styling."
+note: |
+  Calling bare exit or die halts script execution abruptly without executing
+  WordPress shutdown hooks (shutdown, wp_footer, rollback). Inside WordPress
+  admin interfaces, always use wp_die() to present translated messages and
+  maintain WordPress operational hooks.
+files:
+  - "src/Admin/**/*.php"
+rule:
+  any:
+    - pattern: 'die($$$ARGS)'
+    - pattern: 'die'
+    - pattern: 'exit($$$ARGS)'
+    - inside:
+        kind: if_statement
+        stopBy: end
+      pattern: exit

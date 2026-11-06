@@ -1,0 +1,15 @@
+id: no-price-history-mutation
+language: Php
+severity: error
+message: "Statutory price history (sidrena_price_history) is an append-only legal record; records cannot be modified or deleted."
+note: |
+  Croatian statutory regulations mandate that anchor price history records are
+  immutable and append-only evidence. PriceHistoryRepository must never perform
+  UPDATE or DELETE operations. Any price corrections must be recorded as new rows
+  via insert_correction().
+files:
+  - "src/Database/PriceHistoryRepository.php"
+rule:
+  any:
+    - pattern: '$wpdb->delete($$$ARGS)'
+    - pattern: '$wpdb->update($$$ARGS)'

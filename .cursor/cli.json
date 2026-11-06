@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(npx:@taskless/cli@0.13.5)",
+      "Shell(npx:@taskless/cli@0.13.5 *)",
+      "Shell(./.taskless/bin/cli.mjs)"
+    ]
+  }
+}
