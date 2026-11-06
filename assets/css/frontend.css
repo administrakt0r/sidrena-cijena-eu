@@ -272,6 +272,11 @@
 	margin-top: 4px;
 }
 
+.sidrena-cijena__tooltip-date:empty,
+.sidrena-cijena__tooltip-date[hidden] {
+	display: none !important;
+}
+
 .sidrena-cijena__reference-date--subtext {
 	display: block;
 	margin-left: 0;

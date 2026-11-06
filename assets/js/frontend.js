@@ -37,9 +37,11 @@
 
 			if ( date ) {
 				dateNodes[ j ].textContent = template ? template.replace( '%s', date ) : date;
+				dateNodes[ j ].removeAttribute( 'hidden' );
 				dateNodes[ j ].style.display = '';
 			} else {
 				dateNodes[ j ].textContent = '';
+				dateNodes[ j ].setAttribute( 'hidden', 'hidden' );
 				dateNodes[ j ].style.display = 'none';
 			}
 		}

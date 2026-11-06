@@ -62,7 +62,7 @@ $sidrena_size = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( '
 						<?php if ( $reference_date_display ) : ?>
 							<span class="sidrena-cijena__tooltip-date" data-sidrena-cijena-tooltip-date data-sidrena-cijena-reference-date><?php echo esc_html( sprintf( $sidrena_date_template, $reference_date_display ) ); ?></span>
 						<?php else : ?>
-							<span class="sidrena-cijena__tooltip-date" data-sidrena-cijena-tooltip-date data-sidrena-cijena-reference-date style="display:none;"></span>
+							<span class="sidrena-cijena__tooltip-date" data-sidrena-cijena-tooltip-date data-sidrena-cijena-reference-date hidden></span>
 						<?php endif; ?>
 					</span>
 				</span>

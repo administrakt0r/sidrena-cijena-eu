@@ -401,4 +401,37 @@ class CustomerWordingTest extends TestCase {
 		$this->assertStringNotContainsString( 'sidrena-cijena__reference-date', $hidden_html );
 		$this->assertStringNotContainsString( 'sidrena-cijena__tooltip-popup', $hidden_html );
 	}
+
+	/**
+	 * Anchor price tooltip template uses hidden attribute instead of inline style when date is empty.
+	 *
+	 * @return void
+	 */
+	public function test_anchor_price_template_renders_hidden_attribute_for_empty_tooltip_date() {
+		$display = new TestablePriceDisplay();
+		$args    = array(
+			'context'                => 'single',
+			'label'                  => 'Sidrena cijena',
+			'anchor_price'           => 19.99,
+			'anchor_display'         => '19,99 €',
+			'current_price'          => 24.99,
+			'current_display'        => '24,99 €',
+			'show_current'           => false,
+			'show_anchor'            => true,
+			'reference_date'         => '',
+			'reference_date_display' => '',
+			'anchor_title'           => 'Sidrena cijena',
+			'disclaimer'             => '',
+			'style'                  => 'tooltip',
+			'date_mode'              => 'tooltip',
+			'font_weight'            => 'normal',
+			'product_id'             => 10,
+			'variation_id'           => 0,
+		);
+
+		$html = $display->call_load_template( $args );
+
+		$this->assertStringContainsString( 'data-sidrena-cijena-tooltip-date data-sidrena-cijena-reference-date hidden', $html );
+		$this->assertStringNotContainsString( 'style="display:none;"', $html );
+	}
 }
