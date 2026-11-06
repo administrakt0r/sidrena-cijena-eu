@@ -18,6 +18,11 @@ defined( 'ABSPATH' ) || exit;
 final class SettingsPage {
 
 	/**
+	 * Settings screen menu slug.
+	 */
+	const SLUG = 'sidrena-cijena-settings';
+
+	/**
 	 * Settings group for the plugin settings option.
 	 */
 	const GROUP_SETTINGS = 'sidrena_cijena_settings';

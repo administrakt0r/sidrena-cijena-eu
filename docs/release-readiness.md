@@ -1,5 +1,12 @@
 # Release verification
 
+## UI/UX pass 16 — Admin Entity Navigation Links, Style Hygiene & Public Price List UX (2026-11-06)
+
+- Direct admin entity navigation links: introduced `AdminLinks` helper (`src/Admin/AdminLinks.php`) providing accessible, context-aware links to edit products, standalone items, variations, sales locations, and legal settings. Wired directly into Compliance findings (`CompliancePage`), Dashboard validation findings (`DashboardPage`), Bulk Anchor Entry table (`BulkAnchorEntryPage`), and Price History corrections (`PriceHistoryPage`).
+- Storefront style hygiene: replaced inline `style="display:none;"` attribute in `templates/anchor-price.php` with CSS `.sidrena-cijena__tooltip-date:empty, .sidrena-cijena__tooltip-date[hidden] { display: none !important; }` in `assets/css/frontend.css` and clean `hidden` attribute toggling in `assets/js/frontend.js`.
+- Public price list search ergonomics & table readability: added localized placeholder `Search catalog items` (`Pretraži stavke kataloga`) and `autocomplete="off"` to the search input in `templates/public-price-list.php`; added subtle zebra striping, row hover tracking, and `:focus-visible` outlines to `assets/css/frontend.css` for enhanced scanning across wide 13-column tables.
+- Test coverage & quality: 567 unit tests (2,071 assertions), 0 failures; Croatian translation catalog complete (809 translated strings / 0 untranslated in `languages/hr_HR.po`).
+
 ## UI/UX pass 15 — Tooltip Hover-Gap Bridge, Hover Clamping, Dynamic Arrow Alignment & Form Busy States (2026-11-06)
 
 - Storefront tooltip hover-gap bridge: added `.sidrena-cijena__tooltip-wrap.has-flipped-down::after` and `:has(.sidrena-cijena__tooltip-popup--flipped-down)::after` pseudo-element bridge, preventing hover flicker when moving the cursor down into flipped tooltips.

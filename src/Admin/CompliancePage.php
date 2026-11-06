@@ -173,7 +173,7 @@ class CompliancePage {
 			echo '<tr>';
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( (string) $finding['severity'] ) ) . '">' . esc_html( Labels::severity( (string) $finding['severity'] ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( (string) $finding['code'] ) . '</code></td>';
-			echo '<td>' . esc_html( Labels::entity_type( (string) $finding['entity_type'] ) . ' #' . (int) $finding['entity_id'] ) . '</td>';
+			echo '<td>' . wp_kses_post( AdminLinks::render_entity_link( (string) $finding['entity_type'], (int) $finding['entity_id'] ) ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['message'] ) . '</td>';
 			echo '<td>' . ( '' !== $proposal ? '<strong>' . esc_html( $proposal ) . '</strong>' : '—' ) . '</td>';
 			echo '<td>' . esc_html( (string) $finding['rule_reference'] ) . '</td>';
