@@ -68,7 +68,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_sale_type',
-				__( 'The current promotional price has no matching classified special form of sale. Classify this offer before publishing.', 'sidrena-cijena-eu' ),
+				__( 'The current promotional price has no matching classified special form of sale. Classify this offer before publishing.', 'titanworks-sidrena-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -119,7 +119,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_30_day_price',
-				__( 'The special form of sale has no usable lowest price for the 30-day period before its start. Recalculate the sale and review any applicable legal exception before publishing.', 'sidrena-cijena-eu' ),
+				__( 'The special form of sale has no usable lowest price for the 30-day period before its start. Recalculate the sale and review any applicable legal exception before publishing.', 'titanworks-sidrena-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -213,7 +213,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'sale_price_not_below_reference',
-				__( 'The current promotional price is not below the applicable lowest price from the preceding 30 days. Review the offer and its reference price before publishing.', 'sidrena-cijena-eu' ),
+				__( 'The current promotional price is not below the applicable lowest price from the preceding 30 days. Review the offer and its reference price before publishing.', 'titanworks-sidrena-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,

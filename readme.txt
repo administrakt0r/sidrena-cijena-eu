@@ -1,4 +1,4 @@
-=== Sidrena Cijena EU ===
+=== TitanWorks Sidrena Bazna Cijena ===
 Contributors: titanworks
 Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
@@ -32,8 +32,8 @@ Main features:
 
 == Installation ==
 
-1. Install **Sidrena Cijena EU** from **Plugins → Add New Plugin**, or upload
-   the ZIP from the [latest GitHub release](https://github.com/administrakt0r/sidrena-cijena-eu/releases/latest).
+1. Install **TitanWorks Sidrena Bazna Cijena** from **Plugins → Add New Plugin**, or upload
+   the ZIP from the [latest GitHub release](https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena/releases/latest).
 2. Activate the plugin through the *Plugins* screen.
 3. Open *Sidrena cijena → Postavke* and review the reference dates and display settings.
 4. Record or import anchor prices for your catalog.
@@ -111,7 +111,7 @@ Review retained records with your data-protection and legal advisers.
 * Complete Croatian translations: rebuilt translation catalogs with 100% coverage (810 translated / 0 untranslated).
 
 = 2.0.18 =
-* Mandatory Croatian language delivery: bundled compiled binary translation files (`sidrena-cijena-eu-hr.mo` and `sidrena-cijena-eu-hr_HR.mo`) directly in the release archive, preventing external sites from rendering fallback English strings.
+* Mandatory Croatian language delivery: bundled compiled binary translation files (`titanworks-sidrena-bazna-cijena-hr.mo` and `titanworks-sidrena-bazna-cijena-hr_HR.mo`) directly in the release archive, preventing external sites from rendering fallback English strings.
 * Public statutory price-list translation guarantee: enforced Croatian translation catalog loading on public `/arhiva-sidrene-cijene/` and `/sidrena-cjenik/` pages and shortcodes regardless of visitor or default site locale.
 * Public archive cache invalidation: versioned frontend template cache keys and added LiteSpeed Cache no-cache controls, ensuring updated Croatian tables display immediately without stale cached English HTML.
 * Packaging hardening: updated `.gitattributes` and `tools/build-zip.sh` so compiled translations are never stripped or treated as leaks in release archives.

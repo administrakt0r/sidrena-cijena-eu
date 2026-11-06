@@ -124,7 +124,7 @@ final class GenerateCommand {
 				Cli::out(
 					sprintf(
 						/* translators: 1: location ID, 2: location name, 3: number of validation errors. */
-						__( 'Location #%1$d %2$s: %3$d compliance error(s); nothing would be published.', 'sidrena-cijena-eu' ),
+						__( 'Location #%1$d %2$s: %3$d compliance error(s); nothing would be published.', 'titanworks-sidrena-bazna-cijena' ),
 						(int) $row['id'],
 						(string) $row['name'],
 						count( $report['findings'] )

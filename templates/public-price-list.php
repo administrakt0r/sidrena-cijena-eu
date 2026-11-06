@@ -34,7 +34,7 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 			$sidrena_generated_at = isset( $meta['generated_at'] ) ? \SidrenaCijena\Support\Dates::format_datetime_display( (string) $meta['generated_at'] ) : '';
 			printf(
 				/* translators: 1: sales location name, 2: legal rule version, 3: generation timestamp. */
-				esc_html__( 'Sales location: %1$s. Rule version: %2$s. Generated: %3$s.', 'sidrena-cijena-eu' ),
+				esc_html__( 'Sales location: %1$s. Rule version: %2$s. Generated: %3$s.', 'titanworks-sidrena-bazna-cijena' ),
 				esc_html( (string) $location['name'] ),
 				esc_html( isset( $meta['rule_version'] ) ? (string) $meta['rule_version'] : '' ),
 				esc_html( $sidrena_generated_at )
@@ -44,17 +44,17 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 	<?php endif; ?>
 
 	<form method="get" class="sidrena-cijena-cjenik__search">
-		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'sidrena-cijena-eu' ); ?></label>
+		<label for="sidrena-cijena-q"><?php esc_html_e( 'Search', 'titanworks-sidrena-bazna-cijena' ); ?></label>
 		<input type="search" id="sidrena-cijena-q" name="q" value="<?php echo esc_attr( $q ); ?>" />
-		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'sidrena-cijena-eu' ); ?></label>
+		<label for="sidrena-cijena-type"><?php esc_html_e( 'Type', 'titanworks-sidrena-bazna-cijena' ); ?></label>
 		<select name="type" id="sidrena-cijena-type">
-			<option value=""><?php esc_html_e( 'All', 'sidrena-cijena-eu' ); ?></option>
-			<option value="proizvod" <?php selected( $type, 'proizvod' ); ?>><?php esc_html_e( 'Products', 'sidrena-cijena-eu' ); ?></option>
-			<option value="usluga" <?php selected( $type, 'usluga' ); ?>><?php esc_html_e( 'Services', 'sidrena-cijena-eu' ); ?></option>
+			<option value=""><?php esc_html_e( 'All', 'titanworks-sidrena-bazna-cijena' ); ?></option>
+			<option value="proizvod" <?php selected( $type, 'proizvod' ); ?>><?php esc_html_e( 'Products', 'titanworks-sidrena-bazna-cijena' ); ?></option>
+			<option value="usluga" <?php selected( $type, 'usluga' ); ?>><?php esc_html_e( 'Services', 'titanworks-sidrena-bazna-cijena' ); ?></option>
 		</select>
-		<button type="submit"><?php esc_html_e( 'Filter', 'sidrena-cijena-eu' ); ?></button>
+		<button type="submit"><?php esc_html_e( 'Filter', 'titanworks-sidrena-bazna-cijena' ); ?></button>
 		<?php if ( '' !== $q || '' !== $type ) : ?>
-			<a href="<?php echo esc_url( remove_query_arg( array( 'q', 'type', 'paged' ) ) ); ?>" class="sidrena-cijena-cjenik__clear"><?php esc_html_e( 'Clear filters', 'sidrena-cijena-eu' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'q', 'type', 'paged' ) ) ); ?>" class="sidrena-cijena-cjenik__clear"><?php esc_html_e( 'Clear filters', 'titanworks-sidrena-bazna-cijena' ); ?></a>
 		<?php endif; ?>
 	</form>
 
@@ -67,7 +67,7 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 			<?php
 			printf(
 				/* translators: 1: start row index, 2: end row index, 3: total number of rows. */
-				esc_html__( 'Showing %1$d–%2$d of %3$d items.', 'sidrena-cijena-eu' ),
+				esc_html__( 'Showing %1$d–%2$d of %3$d items.', 'titanworks-sidrena-bazna-cijena' ),
 				(int) $sidrena_from,
 				(int) $sidrena_to,
 				(int) $sidrena_total_items
@@ -78,31 +78,31 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 
 	<div class="sidrena-cijena-table-container">
 		<table class="sidrena-cijena-table">
-			<caption><?php esc_html_e( 'Price list with the anchor price', 'sidrena-cijena-eu' ); ?></caption>
+			<caption><?php esc_html_e( 'Price list with the anchor price', 'titanworks-sidrena-bazna-cijena' ); ?></caption>
 			<thead>
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Type', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Name', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'SKU', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Brand', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Unit', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Unit price', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Retail price', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Special sale', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Anchor price', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Anchor date', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Barcode', 'sidrena-cijena-eu' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Availability', 'sidrena-cijena-eu' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Type', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Name', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'SKU', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Brand', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Unit', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Unit price', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Retail price', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Lowest price in the last 30 days', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Special sale', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Anchor price', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Anchor date', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Barcode', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Availability', 'titanworks-sidrena-bazna-cijena' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if ( empty( $rows ) ) : ?>
 					<tr>
 						<td colspan="13">
-							<?php esc_html_e( 'No items match this filter.', 'sidrena-cijena-eu' ); ?>
+							<?php esc_html_e( 'No items match this filter.', 'titanworks-sidrena-bazna-cijena' ); ?>
 							<?php if ( '' !== $q || '' !== $type ) : ?>
-								<a href="<?php echo esc_url( remove_query_arg( array( 'q', 'type', 'paged' ) ) ); ?>" class="sidrena-cijena-cjenik__clear"><?php esc_html_e( 'Clear filters', 'sidrena-cijena-eu' ); ?></a>
+								<a href="<?php echo esc_url( remove_query_arg( array( 'q', 'type', 'paged' ) ) ); ?>" class="sidrena-cijena-cjenik__clear"><?php esc_html_e( 'Clear filters', 'titanworks-sidrena-bazna-cijena' ); ?></a>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -129,7 +129,7 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 	</div>
 
 	<?php if ( $sidrena_total_pages > 1 ) : ?>
-		<nav class="sidrena-cijena-pagination" aria-label="<?php esc_attr_e( 'Price list pagination', 'sidrena-cijena-eu' ); ?>">
+		<nav class="sidrena-cijena-pagination" aria-label="<?php esc_attr_e( 'Price list pagination', 'titanworks-sidrena-bazna-cijena' ); ?>">
 			<?php
 			echo wp_kses_post(
 				paginate_links(
@@ -138,9 +138,9 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 						'format'             => '',
 						'current'            => $sidrena_paged,
 						'total'              => $sidrena_total_pages,
-						'prev_text'          => '&laquo; ' . __( 'Previous', 'sidrena-cijena-eu' ),
-						'next_text'          => __( 'Next', 'sidrena-cijena-eu' ) . ' &raquo;',
-						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'sidrena-cijena-eu' ) . ' </span>',
+						'prev_text'          => '&laquo; ' . __( 'Previous', 'titanworks-sidrena-bazna-cijena' ),
+						'next_text'          => __( 'Next', 'titanworks-sidrena-bazna-cijena' ) . ' &raquo;',
+						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'titanworks-sidrena-bazna-cijena' ) . ' </span>',
 					)
 				)
 			);
@@ -149,8 +149,8 @@ $sidrena_total_pages = isset( $total_pages ) ? (int) $total_pages : 1;
 	<?php endif; ?>
 
 	<p class="sidrena-cijena-cjenik__links">
-		<a href="<?php echo esc_url( $feed_xml ); ?>"><?php esc_html_e( 'XML Feed', 'sidrena-cijena-eu' ); ?></a>
-		<a href="<?php echo esc_url( $feed_csv ); ?>"><?php esc_html_e( 'CSV Feed', 'sidrena-cijena-eu' ); ?></a>
-		<a href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'Archive', 'sidrena-cijena-eu' ); ?></a>
+		<a href="<?php echo esc_url( $feed_xml ); ?>"><?php esc_html_e( 'XML Feed', 'titanworks-sidrena-bazna-cijena' ); ?></a>
+		<a href="<?php echo esc_url( $feed_csv ); ?>"><?php esc_html_e( 'CSV Feed', 'titanworks-sidrena-bazna-cijena' ); ?></a>
+		<a href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'Archive', 'titanworks-sidrena-bazna-cijena' ); ?></a>
 	</p>
 </div>

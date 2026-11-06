@@ -2,7 +2,7 @@
 
 ```
 You are configuring and extending the display layer of the Sidrena Cijena EU plugin
-(sidrena-cijena.php is the bootstrap). This prompt covers the full customisation surface
+(titanworks-sidrena-bazna-cijena.php is the bootstrap). This prompt covers the full customisation surface
 for how the anchor price appears on product cards and single-product pages.
 
 BEFORE YOU START — read AGENTARDS/README.md and docs/legal-rules.md.
@@ -90,7 +90,7 @@ Verify with PriceDisplayTest::test_format_anchor_label_resolves_datum_token (or 
 
 1. Checkout branch: `git checkout -b feat/custom-label-preset`
 2. In src/Support/Settings.php → anchor_label_presets(), add new entry:
-   'redovna_na_dan' => __( 'Redovna cijena na dan {datum}', 'sidrena-cijena-eu' ),
+   'redovna_na_dan' => __( 'Redovna cijena na dan {datum}', 'titanworks-sidrena-bazna-cijena' ),
 3. Add Croatian translation to tools/i18n/hr_HR.php.
 4. Run: `php tools/i18n/make-pot.php --locale=hr_HR` (must report 0 untranslated).
 5. Run: `composer test:unit` (must pass).

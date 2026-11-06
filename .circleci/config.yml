@@ -107,7 +107,7 @@ jobs:
 
   integration_and_e2e:
     description: "Run WordPress integration tests and Playwright E2E tests using wp-env"
-    working_directory: ~/sidrena-cijena
+    working_directory: ~/titanworks-sidrena-bazna-cijena
     machine:
       image: ubuntu-2404:current
     resource_class: medium

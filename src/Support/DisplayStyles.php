@@ -20,20 +20,20 @@ final class DisplayStyles {
 	 */
 	public static function presets() {
 		return array(
-			'tooltip'   => __( 'Tooltip / Info icon', 'sidrena-cijena-eu' ),
-			'plain'     => __( 'Plain', 'sidrena-cijena-eu' ),
-			'badge'     => __( 'Badge', 'sidrena-cijena-eu' ),
-			'card'      => __( 'Card', 'sidrena-cijena-eu' ),
-			'underline' => __( 'Underline', 'sidrena-cijena-eu' ),
-			'outline'   => __( 'Outline', 'sidrena-cijena-eu' ),
-			'stripe'    => __( 'Side stripe', 'sidrena-cijena-eu' ),
-			'soft'      => __( 'Soft background', 'sidrena-cijena-eu' ),
-			'mono'      => __( 'Monochrome', 'sidrena-cijena-eu' ),
-			'pill'      => __( 'Pill', 'sidrena-cijena-eu' ),
-			'minimal'   => __( 'Minimal', 'sidrena-cijena-eu' ),
-			'tag'       => __( 'Tag', 'sidrena-cijena-eu' ),
-			'accent'    => __( 'Accent stripe', 'sidrena-cijena-eu' ),
-			'subtle'    => __( 'Subtle', 'sidrena-cijena-eu' ),
+			'tooltip'   => __( 'Tooltip / Info icon', 'titanworks-sidrena-bazna-cijena' ),
+			'plain'     => __( 'Plain', 'titanworks-sidrena-bazna-cijena' ),
+			'badge'     => __( 'Badge', 'titanworks-sidrena-bazna-cijena' ),
+			'card'      => __( 'Card', 'titanworks-sidrena-bazna-cijena' ),
+			'underline' => __( 'Underline', 'titanworks-sidrena-bazna-cijena' ),
+			'outline'   => __( 'Outline', 'titanworks-sidrena-bazna-cijena' ),
+			'stripe'    => __( 'Side stripe', 'titanworks-sidrena-bazna-cijena' ),
+			'soft'      => __( 'Soft background', 'titanworks-sidrena-bazna-cijena' ),
+			'mono'      => __( 'Monochrome', 'titanworks-sidrena-bazna-cijena' ),
+			'pill'      => __( 'Pill', 'titanworks-sidrena-bazna-cijena' ),
+			'minimal'   => __( 'Minimal', 'titanworks-sidrena-bazna-cijena' ),
+			'tag'       => __( 'Tag', 'titanworks-sidrena-bazna-cijena' ),
+			'accent'    => __( 'Accent stripe', 'titanworks-sidrena-bazna-cijena' ),
+			'subtle'    => __( 'Subtle', 'titanworks-sidrena-bazna-cijena' ),
 		);
 	}
 }

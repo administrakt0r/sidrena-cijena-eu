@@ -54,24 +54,24 @@ class CompliancePage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		$report = self::stored_report();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'sidrena-cijena-eu' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'titanworks-sidrena-bazna-cijena' ) . '</h1>';
 
 		self::notice();
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RUN ) . '" />';
 		wp_nonce_field( self::ACTION_RUN );
-		submit_button( __( 'Run compliance check', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
+		submit_button( __( 'Run compliance check', 'titanworks-sidrena-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		if ( ! $report ) {
-			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'sidrena-cijena-eu' ) . '</p>';
+			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
 			echo '</div>';
 
 			return;
@@ -86,7 +86,7 @@ class CompliancePage {
 			esc_html(
 				sprintf(
 					/* translators: 1: generation timestamp, 2: scanned items, 3: total items. */
-					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'sidrena-cijena-eu' ),
+					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'titanworks-sidrena-bazna-cijena' ),
 					$gen_at,
 					isset( $report['scanned'] ) ? (int) $report['scanned'] : 0,
 					isset( $report['total'] ) ? (int) $report['total'] : 0
@@ -110,7 +110,7 @@ class CompliancePage {
 
 		echo '<p>';
 		foreach ( array(
-			''               => __( 'All', 'sidrena-cijena-eu' ),
+			''               => __( 'All', 'titanworks-sidrena-bazna-cijena' ),
 			Finding::ERROR   => Labels::severity( Finding::ERROR ),
 			Finding::WARNING => Labels::severity( Finding::WARNING ),
 			Finding::INFO    => Labels::severity( Finding::INFO ),
@@ -129,17 +129,17 @@ class CompliancePage {
 		printf(
 			'<a class="button" href="%1$s">%2$s</a> ',
 			esc_url( self::export_url( 'csv' ) ),
-			esc_html__( 'Export report (CSV)', 'sidrena-cijena-eu' )
+			esc_html__( 'Export report (CSV)', 'titanworks-sidrena-bazna-cijena' )
 		);
 		printf(
 			'<a class="button" href="%1$s">%2$s</a>',
 			esc_url( self::export_url( 'json' ) ),
-			esc_html__( 'Export report (JSON)', 'sidrena-cijena-eu' )
+			esc_html__( 'Export report (JSON)', 'titanworks-sidrena-bazna-cijena' )
 		);
 		echo '</p>';
 
 		if ( empty( $filtered ) ) {
-			echo '<p>' . esc_html__( 'No findings for this filter.', 'sidrena-cijena-eu' ) . '</p>';
+			echo '<p>' . esc_html__( 'No findings for this filter.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
 			echo '</div>';
 
 			return;
@@ -152,14 +152,14 @@ class CompliancePage {
 		$slice  = array_slice( $filtered, $offset, self::FINDINGS_PER_PAGE );
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena-eu' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'titanworks-sidrena-bazna-cijena' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena-eu' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena-eu' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena-eu' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena-eu' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Proposed change', 'sidrena-cijena-eu' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Entity', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Proposed change', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Rule', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $slice as $finding ) {
@@ -194,7 +194,7 @@ class CompliancePage {
 	 */
 	public static function handle_run() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::ACTION_RUN );
@@ -246,7 +246,7 @@ class CompliancePage {
 	 */
 	public static function handle_export() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'sidrena-cijena-eu' ) );
+			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'titanworks-sidrena-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::ACTION_EXPORT );
@@ -385,7 +385,7 @@ class CompliancePage {
 			$errors > 0 ? 'error' : 'success',
 			sprintf(
 				/* translators: 1: error count, 2: warning count. */
-				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena-eu' ),
+				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'titanworks-sidrena-bazna-cijena' ),
 				$errors,
 				$warnings
 			)

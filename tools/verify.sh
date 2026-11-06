@@ -113,7 +113,7 @@ fi
 #    Note: plain `npx wp-env` only — wp-env 10.39 silently no-ops `--config`.
 if [ "$RUN_INTEGRATION" -eq 1 ]; then
 	echo "==> integration tests (wp-env)"
-	INT_OUT="$(npx wp-env run tests-cli wp-content/plugins/sidrena-cijena/vendor/bin/phpunit -c wp-content/plugins/sidrena-cijena/phpunit.xml.dist --testsuite=integration 2>&1)"
+	INT_OUT="$(npx wp-env run tests-cli -- bash -c 'PHPUNIT=$(find wp-content/plugins -name phpunit -type f | grep "vendor/bin/phpunit" | head -n 1); $PHPUNIT -c $(dirname $(dirname $(dirname "$PHPUNIT")))/phpunit.xml.dist --testsuite=integration' 2>&1)"
 	if echo "$INT_OUT" | grep -q "^OK ("; then
 		record "integration tests" "PASS" "$(echo "$INT_OUT" | grep -o "OK ([0-9]* tests*, [0-9]* assertions*)" | head -1)"
 	else

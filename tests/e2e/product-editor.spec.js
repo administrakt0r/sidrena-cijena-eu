@@ -9,7 +9,7 @@ const variationSku = `SIDRENA-VARIATION-${Date.now()}`;
 
 test.describe('WooCommerce product editor integration', () => {
 	test.beforeAll(async () => {
-		await wpCli(['plugin', 'activate', 'sidrena-cijena', 'woocommerce']);
+		await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena', 'woocommerce']);
 		const output = await wpEval(`
 			$product = new WC_Product_Simple();
 			$product->set_name( 'Sidrena editor regression' );

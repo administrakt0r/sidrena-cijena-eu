@@ -38,14 +38,14 @@ class SaleTypesSettings {
 	public static function register_settings() {
 		add_settings_section(
 			self::SECTION,
-			__( 'Special forms of sale', 'sidrena-cijena-eu' ),
+			__( 'Special forms of sale', 'titanworks-sidrena-bazna-cijena' ),
 			array( __CLASS__, 'section_intro' ),
 			self::PAGE
 		);
 
 		add_settings_field(
 			'sidrena_cijena_sale_types',
-			__( 'Sale types', 'sidrena-cijena-eu' ),
+			__( 'Sale types', 'titanworks-sidrena-bazna-cijena' ),
 			array( __CLASS__, 'render_field' ),
 			self::PAGE,
 			self::SECTION,
@@ -59,7 +59,7 @@ class SaleTypesSettings {
 	 * @return void
 	 */
 	public static function section_intro() {
-		echo '<p>' . esc_html__( 'A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check.', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<p>' . esc_html__( 'A promotion without a classified sale type is never treated as a special form of sale and is reported by the compliance check.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
 	}
 
 	/**
@@ -76,7 +76,7 @@ class SaleTypesSettings {
 			implode( "\n", array_map( 'strval', $types ) ),
 			array(
 				'rows'        => 6,
-				'description' => __( 'One type per line. Each type is used to classify a special sale and is published in the price list. Defaults: akcija, snizenje, sezonsko_snizenje, rasprodaja.', 'sidrena-cijena-eu' ),
+				'description' => __( 'One type per line. Each type is used to classify a special sale and is published in the price list. Defaults: akcija, snizenje, sezonsko_snizenje, rasprodaja.', 'titanworks-sidrena-bazna-cijena' ),
 			)
 		);
 	}

@@ -4,7 +4,7 @@
 
 ```
 You are optimising the generation pipeline of the WordPress plugin in the current
-directory (sidrena-cijena.php is the bootstrap): daily price-list generation, file
+directory (titanworks-sidrena-bazna-cijena.php is the bootstrap): daily price-list generation, file
 publishing, checksums and cleanup. Goal: constant-ish memory on large catalogs, one
 validation per generation, no redundant I/O — with byte-identical output.
 
