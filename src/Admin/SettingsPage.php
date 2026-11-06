@@ -131,7 +131,7 @@ final class SettingsPage {
 				<?php endforeach; ?>
 			</nav>
 
-			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
+			<form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post" class="sidrena-busy-form">
 				<?php
 				$definition = $tabs[ $tab ];
 				$class      = $definition[0];

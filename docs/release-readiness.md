@@ -1,5 +1,14 @@
 # Release verification
 
+## UI/UX pass 15 — Tooltip Hover-Gap Bridge, Hover Clamping, Dynamic Arrow Alignment & Form Busy States (2026-11-06)
+
+- Storefront tooltip hover-gap bridge: added `.sidrena-cijena__tooltip-wrap.has-flipped-down::after` and `:has(.sidrena-cijena__tooltip-popup--flipped-down)::after` pseudo-element bridge, preventing hover flicker when moving the cursor down into flipped tooltips.
+- Proactive desktop hover & keyboard clamping: bound `mouseenter` and `focusin` events in `assets/js/frontend.js`, recalculating boundary clamping and flip positioning before/as the popup appears on desktop hover.
+- Dynamic tooltip arrow alignment: introduced CSS custom property `--sidrena-arrow-left` in `assets/css/frontend.css` and dynamically adjusted arrow position during screen boundary clamping in `repositionTooltip()`, ensuring the tooltip pointer always points directly to the `?` trigger icon even when clamped near viewport edges.
+- Frontend variation label token synchronization: enhanced `assets/js/frontend.js` variation switching to resolve `{datum_iso}` tokens and cleanly strip dangling parentheses when variations lack reference dates.
+- Admin forms busy states & submit button ergonomics: added `class="sidrena-busy-form"` and `sidrena-btn-busy` styling across Locations form (`LocationsPage`), Price History correction form (`PriceHistoryPage`), Plugin Settings form (`SettingsPage`), and Setup Guide completion forms (`SetupGuidePage`), preventing accidental double-submissions and network latency confusion.
+- Test coverage & quality: 562 unit tests (2,040 assertions), 0 failures; Croatian translation catalog complete (809 translated strings / 0 untranslated in `languages/hr_HR.po`).
+
 ## Release 2.0.19 — Competitor-Grade Label Presets, Dynamic Date Tokens & NN 110/2026 Alignment (2026-11-04)
 
 - Competitor-grade anchor label presets & quick selectors: added merchant-selectable preset labels ("Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan {datum}", "Cijena na {datum}", "Najniža redovna cijena ({datum})") and custom input in `Settings::anchor_label_presets()` and `DisplaySettingsPage`.

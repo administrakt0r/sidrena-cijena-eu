@@ -379,5 +379,7 @@ class SetupGuideTest extends TestCase {
 		$this->assertStringContainsString( '(published)', $html );
 		$this->assertStringContainsString( '(clean)', $html );
 		$this->assertStringContainsString( '(map your categories)', $html );
+		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
+		$this->assertStringContainsString( 'sidrena-btn-busy', $html );
 	}
 }

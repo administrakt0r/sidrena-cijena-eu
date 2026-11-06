@@ -67,4 +67,19 @@ class SettingsPageTest extends TestCase {
 		$_GET['tab'] = 'non_existent_tab';
 		$this->assertSame( 'display', SettingsPage::current_tab() );
 	}
+
+	/**
+	 * Settings page form markup includes busy state class on form.
+	 *
+	 * @return void
+	 */
+	public function test_render_includes_busy_state_affordance() {
+		$_GET = array();
+		ob_start();
+		SettingsPage::render();
+		$html = ob_get_clean();
+
+		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
+		$this->assertStringContainsString( 'type="submit"', $html );
+	}
 }

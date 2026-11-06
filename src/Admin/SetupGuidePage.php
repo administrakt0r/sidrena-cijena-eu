@@ -254,16 +254,16 @@ final class SetupGuidePage {
 		echo '</ol>';
 
 		if ( ! $complete ) {
-			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 			wp_nonce_field( self::COMPLETE_ACTION );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::COMPLETE_ACTION ) . '" />';
-			submit_button( __( 'Mark setup complete', 'sidrena-cijena-eu' ), 'primary', 'submit', false );
+			submit_button( __( 'Mark setup complete', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 			echo '</form>';
 		} else {
-			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 			wp_nonce_field( self::REOPEN_ACTION );
 			echo '<input type="hidden" name="action" value="' . esc_attr( self::REOPEN_ACTION ) . '" />';
-			submit_button( __( 'Reopen setup', 'sidrena-cijena-eu' ), 'secondary', 'submit', false );
+			submit_button( __( 'Reopen setup', 'sidrena-cijena-eu' ), 'secondary sidrena-btn-busy', 'submit', false );
 			echo '</form>';
 		}
 

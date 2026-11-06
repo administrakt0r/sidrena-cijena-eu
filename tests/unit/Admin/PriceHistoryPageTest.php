@@ -47,6 +47,18 @@ class PriceHistoryPageTest extends TestCase {
 	}
 
 	/**
+	 * Form includes busy state classes to prevent double submissions.
+	 *
+	 * @return void
+	 */
+	public function test_form_includes_busy_state_affordance() {
+		$html = PriceHistoryPageProbe::form( 0 );
+
+		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
+		$this->assertStringContainsString( 'sidrena-btn-busy', $html );
+	}
+
+	/**
 	 * The filtered product is prefilled and the price starts empty.
 	 *
 	 * @return void

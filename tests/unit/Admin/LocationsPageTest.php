@@ -49,6 +49,18 @@ class LocationsPageTest extends TestCase {
 	}
 
 	/**
+	 * Form includes busy state classes to prevent double submissions.
+	 *
+	 * @return void
+	 */
+	public function test_form_includes_busy_state_affordance() {
+		$html = LocationsPageProbe::form();
+
+		$this->assertStringContainsString( 'class="sidrena-busy-form"', $html );
+		$this->assertStringContainsString( 'sidrena-btn-busy', $html );
+	}
+
+	/**
 	 * Every control is associated with a visible or screen-reader label.
 	 *
 	 * @return void

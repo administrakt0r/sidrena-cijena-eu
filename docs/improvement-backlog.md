@@ -292,6 +292,8 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 
 | ID | Status | Item | Verification |
 | --- | --- | --- | --- |
+| UX-14 | `done` (2026-09-28) | Button busy states & long-running form handling: added `sidrena-busy-form` class and `sidrena-btn-busy` styling to "Run compliance check" (`CompliancePage`), "Generate now" (`PublicationsPage`), and shop-wide bulk anchor setting (`BulkAnchorEntryPage`); formatted timestamps and reference dates with `Dates::format_datetime_display()` and `Dates::format_date_display()` | `CompliancePageTest`, `PublicationsPageTest`, `BulkAnchorEntryTest` |
+| UX-15 | `done` (2026-11-06) | Storefront tooltip hover-gap bridge when flipped down, desktop hover/focus clamping (`mouseenter`/`focusin`), dynamic arrow alignment with `--sidrena-arrow-left`, variation label token synchronization (`{datum_iso}` and empty punctuation cleanup in JS), and admin form busy states (`sidrena-busy-form`, `sidrena-btn-busy`) across locations, price history, settings, and setup guide | `PriceBlockDisplayTest`, `VariationDisplayTest`, `LocationsPageTest`, `PriceHistoryPageTest`, `SettingsPageTest`, `SetupGuideTest`; 562 unit tests green (2,040 assertions) |
 ## CircleCI pipelines & heavy CPU offloading (2026-09-28)
 
 | ID | Status | Item | Verification |
