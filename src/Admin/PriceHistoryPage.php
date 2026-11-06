@@ -311,10 +311,7 @@ class PriceHistoryPage {
 		$variation_id = isset( $_POST['variation_id'] ) ? absint( wp_unslash( $_POST['variation_id'] ) ) : 0;
 		$type         = isset( $_POST['price_type'] ) ? sanitize_key( wp_unslash( $_POST['price_type'] ) ) : '';
 		$price        = isset( $_POST['price'] ) ? sanitize_text_field( wp_unslash( $_POST['price'] ) ) : '';
-		$reference    = isset( $_POST['reference_date'] ) ? sanitize_text_field( wp_unslash( $_POST['reference_date'] ) ) : '';
-		if ( '' !== $reference ) {
-			$reference = Dates::normalize_date( $reference );
-		}
+		$reference    = isset( $_POST['reference_date'] ) ? Dates::normalize_date( sanitize_text_field( wp_unslash( $_POST['reference_date'] ) ) ) : '';
 		$reason       = isset( $_POST['correction_reason'] ) ? sanitize_text_field( wp_unslash( $_POST['correction_reason'] ) ) : '';
 
 		$values = array(

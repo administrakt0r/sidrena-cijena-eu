@@ -22,16 +22,16 @@ final class StyleSettingsPage {
 	 * @return void
 	 */
 	public static function render_fields() {
-		$selected          = (string) Settings::get( 'product_display_style', 'tooltip' );
-		$date_mode         = (string) Settings::get( 'anchor_date_mode', 'tooltip' );
-		$font_weight       = (string) Settings::get( 'anchor_font_weight', 'normal' );
-		$size              = (int) Settings::get( 'display_size', 40 );
-		$card_style        = (string) Settings::get( 'card_display_style', 'same_as_product' );
-		$card_date_mode    = (string) Settings::get( 'card_date_mode', 'tooltip' );
-		$card_font_weight  = (string) Settings::get( 'card_font_weight', 'normal' );
-		$card_size         = (int) Settings::get( 'card_display_size', 40 );
-		$label_text        = (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
-		$tooltip_txt       = (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ) );
+		$selected         = (string) Settings::get( 'product_display_style', 'tooltip' );
+		$date_mode        = (string) Settings::get( 'anchor_date_mode', 'tooltip' );
+		$font_weight      = (string) Settings::get( 'anchor_font_weight', 'normal' );
+		$size             = (int) Settings::get( 'display_size', 40 );
+		$card_style       = (string) Settings::get( 'card_display_style', 'same_as_product' );
+		$card_date_mode   = (string) Settings::get( 'card_date_mode', 'tooltip' );
+		$card_font_weight = (string) Settings::get( 'card_font_weight', 'normal' );
+		$card_size        = (int) Settings::get( 'card_display_size', 40 );
+		$label_text       = (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
+		$tooltip_txt      = (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ) );
 
 		echo '<h2>' . esc_html__( 'Anchor display styles', 'titanworks-bazna-cijena' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Choose a compact preset for single product pages. Each preview shows a current price, its anchor and the reference date.', 'titanworks-bazna-cijena' ) . '</p>';
