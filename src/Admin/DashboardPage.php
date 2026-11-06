@@ -383,7 +383,7 @@ class DashboardPage {
 			echo '<tr>';
 			echo '<td><span class="sidrena-cijena-status sidrena-cijena-status--' . esc_attr( strtolower( $finding->severity ) ) . '">' . esc_html( Labels::severity( $finding->severity ) ) . '</span></td>';
 			echo '<td><code>' . esc_html( $finding->code ) . '</code></td>';
-			echo '<td>' . AdminLinks::render_entity_link( (string) $finding->entity_type, (int) $finding->entity_id ) . '</td>';
+			echo '<td>' . wp_kses_post( AdminLinks::render_entity_link( (string) $finding->entity_type, (int) $finding->entity_id ) ) . '</td>';
 			echo '<td>' . esc_html( $finding->message ) . '</td>';
 			echo '</tr>';
 		}

@@ -10,6 +10,7 @@ namespace SidrenaCijena\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use SidrenaCijena\Admin\AdminLinks;
 use SidrenaCijena\Admin\LocationsPage;
+use SidrenaCijena\Admin\PublicationsPage;
 use SidrenaCijena\Admin\SettingsPage;
 
 /**
@@ -23,6 +24,11 @@ class AdminLinksTest extends TestCase {
 	 * @return void
 	 */
 	public function test_edit_url_resolves_supported_entities() {
+		$catalog_item_url = AdminLinks::edit_url( 'catalog_item', 77 );
+		$this->assertNotNull( $catalog_item_url );
+		$this->assertStringContainsString( 'post=77', $catalog_item_url );
+		$this->assertStringContainsString( 'action=edit', $catalog_item_url );
+
 		$product_url = AdminLinks::edit_url( 'product', 42 );
 		$this->assertNotNull( $product_url );
 		$this->assertStringContainsString( 'post=42', $product_url );
@@ -39,7 +45,11 @@ class AdminLinksTest extends TestCase {
 		$location_url = AdminLinks::edit_url( 'location', 5 );
 		$this->assertNotNull( $location_url );
 		$this->assertStringContainsString( 'page=' . LocationsPage::SLUG, $location_url );
-		$this->assertStringContainsString( 'location_id=5', $location_url );
+		$this->assertStringContainsString( 'location=5', $location_url );
+
+		$publication_url = AdminLinks::edit_url( 'publication', 12 );
+		$this->assertNotNull( $publication_url );
+		$this->assertStringContainsString( 'page=' . PublicationsPage::SLUG, $publication_url );
 
 		$rule_url = AdminLinks::edit_url( 'rule', 0 );
 		$this->assertNotNull( $rule_url );

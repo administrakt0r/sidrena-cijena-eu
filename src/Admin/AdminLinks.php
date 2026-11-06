@@ -32,7 +32,7 @@ class AdminLinks {
 
 		$entity_type = (string) $entity_type;
 
-		if ( in_array( $entity_type, array( 'product', 'item', 'variation' ), true ) ) {
+		if ( in_array( $entity_type, array( 'catalog_item', 'product', 'item', 'variation' ), true ) ) {
 			if ( function_exists( 'get_edit_post_link' ) ) {
 				$url = get_edit_post_link( $id );
 				return $url ? (string) $url : null;
@@ -43,9 +43,17 @@ class AdminLinks {
 		if ( 'location' === $entity_type ) {
 			return add_query_arg(
 				array(
-					'page'        => LocationsPage::SLUG,
-					'action'      => 'edit',
-					'location_id' => $id,
+					'page'     => LocationsPage::SLUG,
+					'location' => $id,
+				),
+				admin_url( 'admin.php' )
+			);
+		}
+
+		if ( 'publication' === $entity_type ) {
+			return add_query_arg(
+				array(
+					'page' => PublicationsPage::SLUG,
 				),
 				admin_url( 'admin.php' )
 			);
