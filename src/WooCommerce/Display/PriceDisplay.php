@@ -743,7 +743,7 @@ class PriceDisplay {
 			$queried_id = (int) get_queried_object_id();
 			if ( $queried_id > 0 ) {
 				$product_id = (int) $product->get_id();
-				$parent_id  = method_exists( $product, 'get_parent_id' ) ? (int) $product->get_parent_id() : 0;
+				$parent_id  = (int) $product->get_parent_id();
 
 				if ( $product_id !== $queried_id && $parent_id !== $queried_id ) {
 					return 'archive';
