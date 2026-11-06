@@ -197,6 +197,10 @@ class PriceBlockDisplayTest extends TestCase {
 			'Cijena na dan',
 			PriceDisplay::format_anchor_label( 'Cijena na dan {datum}', '', '' )
 		);
+		$this->assertSame(
+			'Najniža redovna cijena',
+			PriceDisplay::format_anchor_label( 'Najniža redovna cijena ({datum})', '', '' )
+		);
 	}
 
 	/**

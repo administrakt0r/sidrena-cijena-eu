@@ -210,7 +210,7 @@
 	content: '';
 	position: absolute;
 	top: 100%;
-	left: 50%;
+	left: var(--sidrena-arrow-left, 50%);
 	margin-left: -5px;
 	border-width: 5px;
 	border-style: solid;
@@ -221,7 +221,7 @@
 	content: '';
 	position: absolute;
 	top: 100%;
-	left: 50%;
+	left: var(--sidrena-arrow-left, 50%);
 	margin-left: -6px;
 	border-width: 6px;
 	border-style: solid;
@@ -243,6 +243,12 @@
 	top: auto;
 	bottom: 100%;
 	border-color: transparent transparent #fff transparent;
+}
+
+.sidrena-cijena__tooltip-wrap.has-flipped-down::after,
+.sidrena-cijena__tooltip-wrap:has(.sidrena-cijena__tooltip-popup--flipped-down)::after {
+	bottom: auto;
+	top: 100%;
 }
 
 .sidrena-cijena__tooltip-popup.is-active,
