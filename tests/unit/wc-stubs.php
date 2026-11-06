@@ -94,6 +94,19 @@ if ( ! class_exists( 'WC_Product' ) ) {
 		}
 
 		/**
+		 * Product attribute value.
+		 *
+		 * @param string $attribute Attribute name.
+		 * @return string
+		 */
+		public function get_attribute( $attribute ) {
+			if ( isset( $this->data['attributes'][ $attribute ] ) ) {
+				return (string) $this->data['attributes'][ $attribute ];
+			}
+			return '';
+		}
+
+		/**
 		 * Child variation IDs.
 		 *
 		 * @return int[]

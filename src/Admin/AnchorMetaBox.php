@@ -99,7 +99,25 @@ final class AnchorMetaBox {
 		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'titanworks-bazna-cijena' ) . '</p>';
 		CardVisibility::render_control( $post->ID );
 
-		$product = wc_get_product( $post->ID );
+		$product             = wc_get_product( $post->ID );
+		$barcode             = (string) get_post_meta( $post->ID, '_sidrena_barcode', true );
+		$barcode_placeholder = '';
+		if ( '' === $barcode && $product instanceof \WC_Product ) {
+			$detected_meta = $product->get_meta( '_barcode' );
+			if ( '' === $detected_meta ) {
+				$detected_meta = $product->get_meta( '_ean' );
+			}
+			if ( '' === $detected_meta ) {
+				$detected_meta = $product->get_sku();
+			}
+			if ( '' !== trim( (string) $detected_meta ) ) {
+				$barcode_placeholder = trim( (string) $detected_meta );
+			}
+		}
+
+		echo '<p class="form-field"><label for="_sidrena_barcode">' . esc_html__( 'Barcode / EAN', 'titanworks-bazna-cijena' ) . '</label>';
+		echo '<input type="text" id="_sidrena_barcode" name="_sidrena_barcode" value="' . esc_attr( $barcode ) . '" class="short" placeholder="' . esc_attr( $barcode_placeholder ? $barcode_placeholder : __( 'e.g. 3850123456789 or SKU', 'titanworks-bazna-cijena' ) ) . '" /> ';
+		echo '<span class="description">' . esc_html__( 'EAN, GTIN, or barcode for statutory price lists. If empty, values from EAN plugins or SKU are automatically detected.', 'titanworks-bazna-cijena' ) . '</span></p>';
 
 		if ( $product && $product->is_type( 'variable' ) ) {
 			$items = Plugin::instance()->catalog()->get_items(

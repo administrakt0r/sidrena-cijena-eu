@@ -71,9 +71,14 @@ final class DisplaySettingsPage {
 				'description' => __( 'Render anchor price information on single product pages.', 'titanworks-bazna-cijena' ),
 			),
 			'display_archives'      => array(
-				'label'       => __( 'Archives and lists', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Product cards and archives', 'titanworks-bazna-cijena' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Render anchor price information on catalog loops, archives, and search results.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Render anchor price information on shop loops, category archives, search results, related products, and minicards.', 'titanworks-bazna-cijena' ),
+			),
+			'card_display_default'  => array(
+				'label'       => __( 'Show on cards by default', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Display the anchor price on all product cards by default. Can be unchecked on individual products in the product editor.', 'titanworks-bazna-cijena' ),
 			),
 			'display_variations'    => array(
 				'label'       => __( 'Variations', 'titanworks-bazna-cijena' ),

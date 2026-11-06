@@ -201,6 +201,126 @@ class WooCommerceCatalogProviderTest extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
+	 * Barcode resolves from ean or _ean meta key.
+	 *
+	 * @return void
+	 */
+	public function test_barcode_resolves_from_ean_meta() {
+		$this->register_product(
+			501,
+			array(
+				'name'  => 'Product with EAN meta',
+				'price' => '15.00',
+				'meta'  => array(
+					'ean' => '3850123456789',
+				),
+			)
+		);
+
+		$provider = new WooCommerceCatalogProvider();
+		$item     = $provider->get_item( 501 );
+
+		$this->assertNotNull( $item );
+		$this->assertSame( '3850123456789', $item->barcode );
+	}
+
+	/**
+	 * Barcode resolves from _sidrena_barcode meta.
+	 *
+	 * @return void
+	 */
+	public function test_barcode_resolves_from_sidrena_barcode_meta() {
+		$this->register_product(
+			502,
+			array(
+				'name'  => 'Product with Sidrena barcode',
+				'price' => '25.00',
+				'meta'  => array(
+					'_sidrena_barcode' => '3859876543210',
+				),
+			)
+		);
+
+		$provider = new WooCommerceCatalogProvider();
+		$item     = $provider->get_item( 502 );
+
+		$this->assertNotNull( $item );
+		$this->assertSame( '3859876543210', $item->barcode );
+	}
+
+	/**
+	 * Barcode resolves from product attribute when meta is absent.
+	 *
+	 * @return void
+	 */
+	public function test_barcode_resolves_from_attribute() {
+		$this->register_product(
+			503,
+			array(
+				'name'       => 'Product with EAN attribute',
+				'price'      => '35.00',
+				'attributes' => array(
+					'ean' => '3851112223334',
+				),
+			)
+		);
+
+		$provider = new WooCommerceCatalogProvider();
+		$item     = $provider->get_item( 503 );
+
+		$this->assertNotNull( $item );
+		$this->assertSame( '3851112223334', $item->barcode );
+	}
+
+	/**
+	 * Barcode falls back to SKU when no dedicated barcode is recorded.
+	 *
+	 * @return void
+	 */
+	public function test_barcode_falls_back_to_sku() {
+		$this->register_product(
+			504,
+			array(
+				'name'  => 'Product with SKU only',
+				'price' => '45.00',
+				'sku'   => 'SKU-BARCODE-999',
+			)
+		);
+
+		$provider = new WooCommerceCatalogProvider();
+		$item     = $provider->get_item( 504 );
+
+		$this->assertNotNull( $item );
+		$this->assertSame( 'SKU-BARCODE-999', $item->barcode );
+	}
+
+	/**
+	 * SKU fallback can be filtered off if desired.
+	 *
+	 * @return void
+	 */
+	public function test_barcode_fallback_to_sku_can_be_disabled() {
+		$this->register_product(
+			505,
+			array(
+				'name'  => 'Product with SKU fallback disabled',
+				'price' => '55.00',
+				'sku'   => 'SKU-FALLBACK-OFF',
+			)
+		);
+
+		add_filter( 'sidrena_cijena_barcode_fallback_to_sku', '__return_false' );
+
+		$provider = new WooCommerceCatalogProvider();
+		$item     = $provider->get_item( 505 );
+
+		remove_filter( 'sidrena_cijena_barcode_fallback_to_sku', '__return_false' );
+
+		$this->assertNotNull( $item );
+		$this->assertSame( '', $item->barcode );
+	}
+
+	/**
 	 * Register a product in the test WooCommerce registry.
 	 *
 	 * @param int                 $id   Product ID.

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Titanworks Bazna Cijena 2.0.21\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/titanworks-bazna-cijena/issues\n"
-"POT-Creation-Date: 2026-11-06T21:25:54+00:00\n"
+"POT-Creation-Date: 2026-11-06T21:45:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -299,9 +299,6 @@ msgstr ""
 msgid "Archive pagination"
 msgstr ""
 
-msgid "Archives and lists"
-msgstr ""
-
 msgid "Are you sure you want to set anchor prices for all products in your shop based on their current prices?"
 msgstr ""
 
@@ -336,6 +333,9 @@ msgid "Badge"
 msgstr ""
 
 msgid "Barcode"
+msgstr ""
+
+msgid "Barcode / EAN"
 msgstr ""
 
 msgid "Bazna cijena"
@@ -386,6 +386,15 @@ msgstr ""
 msgid "Card"
 msgstr ""
 
+msgid "Card anchor font weight"
+msgstr ""
+
+msgid "Card display size"
+msgstr ""
+
+msgid "Card reference date display"
+msgstr ""
+
 msgid "Catalog item"
 msgstr ""
 
@@ -413,7 +422,7 @@ msgstr ""
 msgid "Checksum"
 msgstr ""
 
-msgid "Choose a compact preset. Each preview shows a current price, its anchor and the reference date."
+msgid "Choose a compact preset for single product pages. Each preview shows a current price, its anchor and the reference date."
 msgstr ""
 
 msgid "Choose a CSV file to import."
@@ -429,6 +438,9 @@ msgid "Choose the date required for this product under the applicable rule. Do n
 msgstr ""
 
 msgid "Choose the file formats accepted by this location. The generated files remain available in the publication archive."
+msgstr ""
+
+msgid "Choose the style preset used for product cards in shop loops, category archives, search results, related products, and minicards."
 msgstr ""
 
 msgid "Choose where and how the anchor price (\"Sidrena cijena\") is shown next to current prices."
@@ -602,6 +614,12 @@ msgstr ""
 msgid "Display size"
 msgstr ""
 
+msgid "Display size scale specifically for product cards and archives."
+msgstr ""
+
+msgid "Display the anchor price on all product cards by default. Can be unchecked on individual products in the product editor."
+msgstr ""
+
 msgid "Dnevni cron posao:"
 msgstr ""
 
@@ -656,6 +674,9 @@ msgstr ""
 msgid "e.g. 3850123456789"
 msgstr ""
 
+msgid "e.g. 3850123456789 or SKU"
+msgstr ""
+
 msgid "e.g. ART-001"
 msgstr ""
 
@@ -681,6 +702,9 @@ msgid "e.g. Zagreb"
 msgstr ""
 
 msgid "e.g. Zagreb — Vlaška 68"
+msgstr ""
+
+msgid "EAN, GTIN, or barcode for statutory price lists. If empty, values from EAN plugins or SKU are automatically detected."
 msgstr ""
 
 msgid "EAN, UPC, or GTIN barcode."
@@ -843,6 +867,9 @@ msgid "Five steps, a few minutes. Made by administrakt0r."
 msgstr ""
 
 msgid "Fix ERROR findings before publishing: missing anchors, missing addresses and unclassified promotions block the price list."
+msgstr ""
+
+msgid "Font weight for anchor prices rendered on product cards and archives."
 msgstr ""
 
 msgid "For all products in catalog (including overwriting existing)"
@@ -1544,6 +1571,15 @@ msgstr ""
 msgid "Product cards"
 msgstr ""
 
+msgid "Product cards and archives"
+msgstr ""
+
+msgid "Product cards and archives display style"
+msgstr ""
+
+msgid "Product cards display styles"
+msgstr ""
+
 msgid "Product categories governed by the legacy reference date."
 msgstr ""
 
@@ -1649,6 +1685,9 @@ msgstr ""
 msgid "Reference date display"
 msgstr ""
 
+msgid "Reference date mode specifically for product cards and archives."
+msgstr ""
+
 msgid "Reference dates"
 msgstr ""
 
@@ -1682,7 +1721,7 @@ msgstr ""
 msgid "Regular selling price before discounts."
 msgstr ""
 
-msgid "Render anchor price information on catalog loops, archives, and search results."
+msgid "Render anchor price information on shop loops, category archives, search results, related products, and minicards."
 msgstr ""
 
 msgid "Render anchor price information on single product pages."
@@ -1743,6 +1782,9 @@ msgid "Sale type"
 msgstr ""
 
 msgid "Sale types"
+msgstr ""
+
+msgid "Same as product page"
 msgstr ""
 
 msgid "Save location"
@@ -1859,7 +1901,10 @@ msgstr ""
 msgid "Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report."
 msgstr ""
 
-msgid "Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible."
+msgid "Show on cards by default"
+msgstr ""
+
+msgid "Show Sidrena cijena on this product’s shop cards. Enabled by default across all products; uncheck to hide on this item."
 msgstr ""
 
 msgid "Show the generated price-list archive at /arhiva-sidrene-cijene/"

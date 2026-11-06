@@ -33,7 +33,7 @@ if ( 'bold' === $sidrena_font_weight ) {
 	$sidrena_classes .= ' sidrena-cijena--weight-semibold';
 }
 
-$sidrena_size = min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( 'display_size', 40 ) ) );
+$sidrena_size = isset( $size ) ? min( 160, max( 40, (int) $size ) ) : min( 160, max( 40, (int) \SidrenaCijena\Support\Settings::get( 'display_size', 40 ) ) );
 ?>
 <div class="<?php echo esc_attr( $sidrena_classes ); ?>"
 	style="--sidrena-size:<?php echo esc_attr( (string) ( $sidrena_size / 100 ) ); ?>"

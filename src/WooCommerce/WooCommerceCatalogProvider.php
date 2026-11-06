@@ -25,7 +25,25 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 	 *
 	 * @var string[]
 	 */
-	protected $barcode_keys = array( '_barcode', '_wpm_gtin_code', '_alg_ean', '_ywbc_barcode_display_value', '_gtin', '_sidrena_barcode' );
+	protected $barcode_keys = array(
+		'_sidrena_barcode',
+		'_barcode',
+		'barcode',
+		'_ean',
+		'ean',
+		'_gtin',
+		'gtin',
+		'_alg_ean',
+		'_wpm_gtin_code',
+		'_ywbc_barcode_display_value',
+		'_ts_gtin',
+		'hwp_product_gtin',
+		'hwp_var_gtin',
+		'_upc',
+		'upc',
+		'_barkod',
+		'barkod',
+	);
 
 	/**
 	 * Resolved barcode values for items already hydrated in this request.
@@ -489,10 +507,44 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		$keys = apply_filters( 'sidrena_cijena_barcode_meta_keys', $this->barcode_keys, $product );
 
 		foreach ( (array) $keys as $key ) {
-			$value = get_post_meta( $id, $key, true );
+			$value = '';
+
+			if ( method_exists( $product, 'get_meta' ) ) {
+				$value = $product->get_meta( $key );
+			}
+
+			if ( ( '' === $value || null === $value ) && function_exists( 'get_post_meta' ) ) {
+				$value = get_post_meta( $id, $key, true );
+			}
 
 			if ( '' !== $value && null !== $value ) {
-				$this->barcode_cache[ $id ] = (string) $value;
+				$this->barcode_cache[ $id ] = trim( (string) $value );
+				return $this->barcode_cache[ $id ];
+			}
+		}
+
+		if ( method_exists( $product, 'get_attribute' ) ) {
+			foreach ( array( 'ean', 'barcode', 'gtin', 'upc', 'barkod' ) as $attr_name ) {
+				$attr_val = $product->get_attribute( $attr_name );
+				if ( '' !== trim( (string) $attr_val ) ) {
+					$this->barcode_cache[ $id ] = trim( (string) $attr_val );
+					return $this->barcode_cache[ $id ];
+				}
+			}
+		}
+
+		$sku = method_exists( $product, 'get_sku' ) ? trim( (string) $product->get_sku() ) : '';
+		if ( '' !== $sku ) {
+			/**
+			 * Filters whether to fall back to the product SKU when no dedicated barcode meta is found.
+			 *
+			 * @param bool        $fallback Whether to fall back to SKU.
+			 * @param string      $sku      Product SKU.
+			 * @param \WC_Product $product  Product instance.
+			 */
+			$allow_sku_fallback = apply_filters( 'sidrena_cijena_barcode_fallback_to_sku', true, $sku, $product );
+			if ( $allow_sku_fallback ) {
+				$this->barcode_cache[ $id ] = $sku;
 				return $this->barcode_cache[ $id ];
 			}
 		}

@@ -65,16 +65,26 @@
 		var size = document.getElementById( 'sidrena-display-size' );
 		var value = document.getElementById( 'sidrena-display-size-value' );
 
-		if ( ! size || ! value ) {
-			return;
+		if ( size && value ) {
+			size.addEventListener( 'input', function () {
+				value.textContent = size.value + '%';
+				document.querySelectorAll( '.sidrena-style-preview' ).forEach( function ( preview ) {
+					preview.style.setProperty( '--sidrena-size', Number( size.value ) / 100 );
+				} );
+			} );
 		}
 
-		size.addEventListener( 'input', function () {
-			value.textContent = size.value + '%';
-			document.querySelectorAll( '.sidrena-style-preview' ).forEach( function ( preview ) {
-				preview.style.setProperty( '--sidrena-size', Number( size.value ) / 100 );
+		var cardSize = document.getElementById( 'sidrena-card-display-size' );
+		var cardValue = document.getElementById( 'sidrena-card-display-size-value' );
+
+		if ( cardSize && cardValue ) {
+			cardSize.addEventListener( 'input', function () {
+				cardValue.textContent = cardSize.value + '%';
+				document.querySelectorAll( '.sidrena-card-style-preview' ).forEach( function ( preview ) {
+					preview.style.setProperty( '--sidrena-size', Number( cardSize.value ) / 100 );
+				} );
 			} );
-		} );
+		}
 	}
 
 	function bindBulkAnchorSelection() {

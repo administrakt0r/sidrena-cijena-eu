@@ -36,4 +36,18 @@ final class DisplayStyles {
 			'subtle'    => __( 'Subtle', 'titanworks-bazna-cijena' ),
 		);
 	}
+
+	/**
+	 * Card-specific style presets, including dynamic inheritance from single product page.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function card_presets() {
+		return array_merge(
+			array(
+				'same_as_product' => __( 'Same as product page', 'titanworks-bazna-cijena' ),
+			),
+			self::presets()
+		);
+	}
 }

@@ -70,6 +70,28 @@
 	margin-left: 0.35em;
 }
 
+.sidrena-cijena--archive {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	font-size: max(11px, calc(0.92em * var(--sidrena-size, 0.4)));
+}
+
+.products .product .price .sidrena-cijena,
+.woocommerce-loop-product__link .price .sidrena-cijena,
+li.product .price .sidrena-cijena {
+	display: block;
+	margin-left: 0;
+	margin-top: 0.25em;
+	text-align: inherit;
+}
+
+.text-center .sidrena-cijena--archive,
+[style*="text-align: center"] .sidrena-cijena--archive,
+.product.has-text-align-center .sidrena-cijena--archive {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .sidrena-cijena--style-badge,
 .sidrena-cijena--style-card,
 .sidrena-cijena--style-outline,

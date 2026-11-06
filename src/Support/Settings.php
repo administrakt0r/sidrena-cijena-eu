@@ -37,6 +37,11 @@ final class Settings {
 			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ),
 			'anchor_font_weight'           => 'normal',
 			'display_size'                 => 40,
+			'card_display_default'         => true,
+			'card_display_style'           => 'same_as_product',
+			'card_date_mode'               => 'tooltip',
+			'card_font_weight'             => 'normal',
+			'card_display_size'            => 40,
 			'display_priority'             => 20,
 			'display_product_pages'        => true,
 			'display_archives'             => true,
@@ -290,11 +295,27 @@ final class Settings {
 			$output['display_priority'] = (int) $input['display_priority'];
 		}
 
+		if ( isset( $input['card_display_style'] ) && is_string( $input['card_display_style'] ) && ( 'same_as_product' === $input['card_display_style'] || array_key_exists( $input['card_display_style'], DisplayStyles::presets() ) ) ) {
+			$output['card_display_style'] = $input['card_display_style'];
+		}
+
+		if ( isset( $input['card_date_mode'] ) && in_array( $input['card_date_mode'], array( 'tooltip', 'inline', 'subtext', 'hidden' ), true ) ) {
+			$output['card_date_mode'] = $input['card_date_mode'];
+		}
+
+		if ( isset( $input['card_font_weight'] ) && in_array( $input['card_font_weight'], array( 'normal', 'semi-bold', 'bold' ), true ) ) {
+			$output['card_font_weight'] = $input['card_font_weight'];
+		}
+
+		if ( isset( $input['card_display_size'] ) ) {
+			$output['card_display_size'] = min( 160, max( 40, (int) $input['card_display_size'] ) );
+		}
+
 		// Each settings tab submits only its own fields. A flag that is not part
 		// of the submitted tab must keep its stored value; the hidden companion
 		// input rendered by SettingsFields::checkbox() makes present flags
 		// always visible to the sanitizer, including an unchecked one.
-		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'display_variations', 'only_when_different', 'delete_data_on_uninstall', 'allow_generation_with_errors', 'public_archive_enabled', 'archive_footer_link', 'archive_sitemap_link' ) as $flag ) {
+		foreach ( array( 'display_enabled', 'display_product_pages', 'display_archives', 'card_display_default', 'display_variations', 'only_when_different', 'delete_data_on_uninstall', 'allow_generation_with_errors', 'public_archive_enabled', 'archive_footer_link', 'archive_sitemap_link' ) as $flag ) {
 			if ( array_key_exists( $flag, $input ) ) {
 				$output[ $flag ] = ! empty( $input[ $flag ] );
 			}
