@@ -214,7 +214,7 @@ final class DisplaySettingsPage {
 		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Odjeća / tehnika / usluge:', 'titanworks-bazna-cijena' ) . '</strong> <span id="sidrena-preview-general" class="sidrena-label-preview-val"></span>: 17,99 €</div>';
 		echo '</div>';
 
-		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (2. 5. 2025. za hranu, 10. 9. 2026. za ostalu robu i usluge).', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (02.05.2025. za hranu, 10.09.2026. za ostalu robu i usluge).', 'titanworks-bazna-cijena' ) . '</p>';
 		echo '</div>';
 	}
 

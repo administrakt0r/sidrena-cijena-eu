@@ -10,6 +10,7 @@ namespace SidrenaCijena\WooCommerce\Display;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Pricing\AnchorPriceService;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -96,10 +97,7 @@ class VariationDisplay {
 		$data['sidrena_cijena_anchor']                 = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
 		$data['sidrena_cijena_anchor_raw']             = $price;
 		$data['sidrena_cijena_reference_date']         = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-		$date_parts                                    = explode( '-', $data['sidrena_cijena_reference_date'] );
-		$data['sidrena_cijena_reference_date_display'] = 3 === count( $date_parts )
-			? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
-			: '';
+		$data['sidrena_cijena_reference_date_display'] = Dates::format_date_display( $data['sidrena_cijena_reference_date'] );
 
 		return $data;
 	}

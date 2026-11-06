@@ -12,6 +12,7 @@ use SidrenaCijena\Plugin;
 use SidrenaCijena\Pricing\AnchorPriceService;
 use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -510,10 +511,7 @@ class PriceDisplay {
 			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
 
 			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-			$date_parts             = explode( '-', $reference_date );
-			$reference_date_display = 3 === count( $date_parts )
-				? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
-				: '';
+			$reference_date_display = Dates::format_date_display( $reference_date );
 
 			$label = self::format_anchor_label( $raw_label, $reference_date_display, $reference_date );
 

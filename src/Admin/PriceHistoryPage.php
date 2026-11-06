@@ -276,8 +276,12 @@ class PriceHistoryPage {
 		FormState::render_error( $errors, 'price', 'sidrena-history-price' );
 		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-reference">' . esc_html__( 'Reference date', 'titanworks-bazna-cijena' ) . '</label></th>';
+		$ref_disp = ! empty( $reference ) ? Dates::format_date_display( $reference ) : '';
 		echo '<td><input type="date" id="sidrena-history-reference" name="reference_date" value="' . esc_attr( $reference ) . '"' . FormState::error_attributes( $errors, 'reference_date', 'sidrena-history-reference' ) . ' />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attribute markup escaped in FormState::error_attributes().
-		echo '<p class="description">' . esc_html__( 'Required for anchor prices.', 'titanworks-bazna-cijena' ) . '</p>';
+		if ( '' !== $ref_disp ) {
+			echo ' <span class="sidrena-date-badge description" style="display:inline-block;margin-left:6px;font-weight:600;color:#1d2327;">' . esc_html( $ref_disp ) . '</span>';
+		}
+		echo '<p class="description">' . esc_html__( 'Required for anchor prices. Format: d.m.Y. (e.g. 10.09.2026. or 02.05.2025.)', 'titanworks-bazna-cijena' ) . '</p>';
 		FormState::render_error( $errors, 'reference_date', 'sidrena-history-reference' );
 		echo '</td></tr>';
 		echo '<tr><th scope="row"><label for="sidrena-history-reason">' . esc_html__( 'Reason', 'titanworks-bazna-cijena' ) . '</label></th>';
@@ -308,6 +312,9 @@ class PriceHistoryPage {
 		$type         = isset( $_POST['price_type'] ) ? sanitize_key( wp_unslash( $_POST['price_type'] ) ) : '';
 		$price        = isset( $_POST['price'] ) ? sanitize_text_field( wp_unslash( $_POST['price'] ) ) : '';
 		$reference    = isset( $_POST['reference_date'] ) ? sanitize_text_field( wp_unslash( $_POST['reference_date'] ) ) : '';
+		if ( '' !== $reference ) {
+			$reference = Dates::normalize_date( $reference );
+		}
 		$reason       = isset( $_POST['correction_reason'] ) ? sanitize_text_field( wp_unslash( $_POST['correction_reason'] ) ) : '';
 
 		$values = array(

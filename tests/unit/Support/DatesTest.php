@@ -161,4 +161,19 @@ class DatesTest extends TestCase {
 	public function test_now_utc_format() {
 		$this->assertMatchesRegularExpression( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', Dates::now_utc() );
 	}
+
+	/**
+	 * Date normalization accepts ISO and Croatian formats.
+	 *
+	 * @return void
+	 */
+	public function test_normalize_date() {
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '2026-09-10' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10.09.2026.' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10.09.2026' ) );
+		$this->assertSame( '2025-05-02', Dates::normalize_date( '02.05.2025.' ) );
+		$this->assertSame( '2025-05-02', Dates::normalize_date( '2.5.2025' ) );
+		$this->assertSame( '', Dates::normalize_date( 'invalid' ) );
+		$this->assertSame( '', Dates::normalize_date( '' ) );
+	}
 }

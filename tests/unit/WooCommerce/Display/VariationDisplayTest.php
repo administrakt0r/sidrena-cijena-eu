@@ -110,9 +110,9 @@ class VariationDisplayTest extends TestCase {
 			$data = ( new VariationDisplay( $anchors ) )->filter_available_variation( array( 'price_html' => '' ), null, $variation );
 			$this->assertStringContainsString( '12,00', $data['price_html'] );
 			$this->assertStringContainsString( 'data-variation-id="11"', $data['price_html'] );
-			$this->assertStringContainsString( '10. 9. 2026.', $data['price_html'] );
+			$this->assertStringContainsString( '10.09.2026.', $data['price_html'] );
 			$this->assertSame( '9,00 €', $data['sidrena_cijena_anchor'] );
-			$this->assertSame( '10. 9. 2026.', $data['sidrena_cijena_reference_date_display'] );
+			$this->assertSame( '10.09.2026.', $data['sidrena_cijena_reference_date_display'] );
 			$this->assertSame( '2026-09-10', $data['sidrena_cijena_reference_date'] );
 		} finally {
 			PluginSwap::swap( 'catalog', null );

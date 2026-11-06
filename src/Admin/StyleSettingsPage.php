@@ -47,7 +47,7 @@ final class StyleSettingsPage {
 			} elseif ( 'subtle' === $style ) {
 				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span></span>';
 			} else {
-				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span> <span class="sidrena-cijena__reference-date">10. 9. 2026.</span></span>';
+				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span> <span class="sidrena-cijena__reference-date">10.09.2026.</span></span>';
 			}
 			echo '</span></label>';
 		}
@@ -70,7 +70,7 @@ final class StyleSettingsPage {
 			} elseif ( 'subtle' === $preview_style ) {
 				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span></span>';
 			} else {
-				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span> <span class="sidrena-cijena__reference-date">10. 9. 2026.</span></span>';
+				echo '<span class="sidrena-cijena__anchor"><span class="sidrena-cijena__label">' . esc_html( $label_text ) . '</span> <span class="sidrena-cijena__anchor-value">9,99 EUR</span> <span class="sidrena-cijena__reference-date">10.09.2026.</span></span>';
 			}
 			echo '</span></label>';
 		}
@@ -87,7 +87,7 @@ final class StyleSettingsPage {
 		echo '<select id="sidrena-date-mode" name="' . esc_attr( Settings::OPTION . '[anchor_date_mode]' ) . '">';
 		$date_modes = array(
 			'tooltip' => __( 'Interactive tooltip / icon (?) next to price (Recommended – keeps product box clean)', 'titanworks-bazna-cijena' ),
-			'inline'  => __( 'Inline text next to price (e.g. Cijena na dan 10. 9. 2026.)', 'titanworks-bazna-cijena' ),
+			'inline'  => __( 'Inline text next to price (e.g. Cijena na dan 10.09.2026.)', 'titanworks-bazna-cijena' ),
 			'subtext' => __( 'Subtext below anchor price', 'titanworks-bazna-cijena' ),
 			'hidden'  => __( 'Hidden from product box (accessible in title / description)', 'titanworks-bazna-cijena' ),
 		);
