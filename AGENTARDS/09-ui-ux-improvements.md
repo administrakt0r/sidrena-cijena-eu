@@ -1,6 +1,6 @@
 # Prompt 9 — UI/UX pass: admin screens, public price list, accessibility (no Docker needed, optional for E2E)
 
-> **Status (v2.0.13):** COMPLETED. All UI/UX passes (UX-01 through UX-14) implemented, tested, and shipped.
+> **Status (v2.0.21):** COMPLETED. All UI/UX passes (UX-01 through UX-15) implemented, tested, and shipped.
 
 ```
 You are improving the user experience of the WordPress plugin in the current directory
@@ -23,8 +23,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
-Status (v2.0.13): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
-passes expanded through UX-14 (see docs/improvement-backlog.md and docs/release-readiness.md).
+Status (v2.0.21): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
+passes expanded through UX-15 (see docs/improvement-backlog.md and docs/release-readiness.md).
 
 Work items (priority order — read the listed files first, fix what is really there):
 1. Kill raw slugs in the UI. Statuses, log levels, event names, finding severities, sale
