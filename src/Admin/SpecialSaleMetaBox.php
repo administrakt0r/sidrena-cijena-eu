@@ -55,7 +55,7 @@ class SpecialSaleMetaBox {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				self::ID,
-				__( 'Sidrena cijena - special sale', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'Sidrena cijena - special sale', 'titanworks-bazna-cijena' ),
 				array( __CLASS__, 'render' ),
 				$screen,
 				'side',
@@ -74,7 +74,7 @@ class SpecialSaleMetaBox {
 		$item = Plugin::instance()->catalog()->get_item( (int) $post->ID );
 
 		if ( ! $item ) {
-			echo '<p>' . esc_html__( 'This item is not part of the active catalog.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'This item is not part of the active catalog.', 'titanworks-bazna-cijena' ) . '</p>';
 
 			return;
 		}
@@ -95,18 +95,18 @@ class SpecialSaleMetaBox {
 		?>
 		<div class="sidrena-cijena-sale">
 			<p class="sidrena-cijena-item-identity">
-				<strong><?php echo esc_html__( 'Item:', 'titanworks-sidrena-bazna-cijena' ); ?></strong>
+				<strong><?php echo esc_html__( 'Item:', 'titanworks-bazna-cijena' ); ?></strong>
 				<code><?php echo esc_html( $explainer->format_identity( $item ) ); ?></code>
 			</p>
 			<?php if ( ! empty( $sales ) ) : ?>
 				<table class="widefat striped">
-					<caption class="screen-reader-text"><?php echo esc_html__( 'Recorded special sales', 'titanworks-sidrena-bazna-cijena' ); ?></caption>
+					<caption class="screen-reader-text"><?php echo esc_html__( 'Recorded special sales', 'titanworks-bazna-cijena' ); ?></caption>
 					<thead>
 						<tr>
-							<th scope="col"><?php echo esc_html__( 'Type', 'titanworks-sidrena-bazna-cijena' ); ?></th>
-							<th scope="col"><?php echo esc_html__( 'Period', 'titanworks-sidrena-bazna-cijena' ); ?></th>
-							<th scope="col"><?php echo esc_html__( '30 days', 'titanworks-sidrena-bazna-cijena' ); ?></th>
-							<th scope="col"><?php echo esc_html__( 'Status', 'titanworks-sidrena-bazna-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Type', 'titanworks-bazna-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Period', 'titanworks-bazna-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( '30 days', 'titanworks-bazna-cijena' ); ?></th>
+							<th scope="col"><?php echo esc_html__( 'Status', 'titanworks-bazna-cijena' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -134,14 +134,14 @@ class SpecialSaleMetaBox {
 								<td>
 									<?php
 									echo null === $sale['lowest_30_day_price']
-										? esc_html__( 'Not calculated', 'titanworks-sidrena-bazna-cijena' )
+										? esc_html__( 'Not calculated', 'titanworks-bazna-cijena' )
 										: esc_html( Currency::format( (float) $sale['lowest_30_day_price'], $item->currency, array( 'display' => 'symbol' ) ) );
 
 									if ( ! empty( $sale['window_start'] ) && ! empty( $sale['window_end'] ) ) {
 										$w_start = Dates::format_date_display( (string) $sale['window_start'] );
 										$w_end   = Dates::format_date_display( (string) $sale['window_end'] );
 										/* translators: 1: window start date, 2: window end date */
-										echo '<br /><span class="description">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'titanworks-sidrena-bazna-cijena' ), '' !== $w_start ? $w_start : (string) $sale['window_start'], '' !== $w_end ? $w_end : (string) $sale['window_end'] ) ) . '</span>';
+										echo '<br /><span class="description">' . esc_html( sprintf( __( 'Window: %1$s to %2$s', 'titanworks-bazna-cijena' ), '' !== $w_start ? $w_start : (string) $sale['window_start'], '' !== $w_end ? $w_end : (string) $sale['window_end'] ) ) . '</span>';
 									}
 									?>
 								</td>
@@ -162,7 +162,7 @@ class SpecialSaleMetaBox {
 							<summary class="sidrena-cijena-explanation-summary">
 								<?php
 								/* translators: 1: sale name, 2: sale start date */
-								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'titanworks-sidrena-bazna-cijena' ), $sale_name, '' !== $start_disp ? $start_disp : (string) $sale['start_date'] ) );
+								echo esc_html( sprintf( __( 'Calculation explanation: %1$s (starts %2$s)', 'titanworks-bazna-cijena' ), $sale_name, '' !== $start_disp ? $start_disp : (string) $sale['start_date'] ) );
 								?>
 							</summary>
 							<?php echo $explainer->render_html( $explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -170,13 +170,13 @@ class SpecialSaleMetaBox {
 					<?php endforeach; ?>
 				</div>
 			<?php else : ?>
-				<p><?php echo esc_html__( 'No special sale is recorded for this item.', 'titanworks-sidrena-bazna-cijena' ); ?></p>
+				<p><?php echo esc_html__( 'No special sale is recorded for this item.', 'titanworks-bazna-cijena' ); ?></p>
 				<?php
 				$today_explanation = $explainer->explain( $item, $today );
 				?>
 				<details class="sidrena-cijena-explanation-details">
 					<summary class="sidrena-cijena-explanation-summary">
-						<?php echo esc_html__( 'Current 30-day reference baseline (preview for today)', 'titanworks-sidrena-bazna-cijena' ); ?>
+						<?php echo esc_html__( 'Current 30-day reference baseline (preview for today)', 'titanworks-bazna-cijena' ); ?>
 					</summary>
 					<?php echo $explainer->render_html( $today_explanation ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</details>
@@ -190,46 +190,46 @@ class SpecialSaleMetaBox {
 				<?php endif; ?>
 
 				<p>
-					<label for="sidrena-cijena-sale-type<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale type', 'titanworks-sidrena-bazna-cijena' ); ?></label>
+					<label for="sidrena-cijena-sale-type<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale type', 'titanworks-bazna-cijena' ); ?></label>
 					<select id="sidrena-cijena-sale-type<?php echo esc_attr( $id_suffix ); ?>" name="sale_type<?php echo esc_attr( $field_suffix ); ?>" class="widefat">
-						<option value=""><?php echo esc_html__( '- select -', 'titanworks-sidrena-bazna-cijena' ); ?></option>
+						<option value=""><?php echo esc_html__( '- select -', 'titanworks-bazna-cijena' ); ?></option>
 						<?php foreach ( self::sale_types() as $type ) : ?>
 							<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( Labels::sale_type( $type ) ); ?></option>
 						<?php endforeach; ?>
 					</select>
-					<span class="description"><?php echo esc_html__( 'Choose the configured category that describes this promotion; add available categories in Sidrena cijena → Settings → Special sales.', 'titanworks-sidrena-bazna-cijena' ); ?></span>
+					<span class="description"><?php echo esc_html__( 'Choose the configured category that describes this promotion; add available categories in Sidrena cijena → Settings → Special sales.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale name', 'titanworks-sidrena-bazna-cijena' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>" name="sale_name<?php echo esc_attr( $field_suffix ); ?>" class="widefat" placeholder="<?php echo esc_attr__( 'e.g. Spring Sale', 'titanworks-sidrena-bazna-cijena' ); ?>" />
-					<span class="description"><?php echo esc_html__( 'Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign.', 'titanworks-sidrena-bazna-cijena' ); ?></span>
+					<label for="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Sale name', 'titanworks-bazna-cijena' ); ?></label>
+					<input type="text" id="sidrena-cijena-sale-name<?php echo esc_attr( $id_suffix ); ?>" name="sale_name<?php echo esc_attr( $field_suffix ); ?>" class="widefat" placeholder="<?php echo esc_attr__( 'e.g. Spring Sale', 'titanworks-bazna-cijena' ); ?>" />
+					<span class="description"><?php echo esc_html__( 'Optional customer-facing promotion name, for example “Spring sale”. Leave blank if there is no named campaign.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Start date', 'titanworks-sidrena-bazna-cijena' ); ?></label>
+					<label for="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Start date', 'titanworks-bazna-cijena' ); ?></label>
 					<input type="date" id="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>" name="start_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $today ); ?>" />
-					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'titanworks-sidrena-bazna-cijena' ); ?></span>
+					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'End date (optional)', 'titanworks-sidrena-bazna-cijena' ); ?></label>
+					<label for="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'End date (optional)', 'titanworks-bazna-cijena' ); ?></label>
 					<input type="date" id="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>" name="end_date<?php echo esc_attr( $field_suffix ); ?>" />
-					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty.', 'titanworks-sidrena-bazna-cijena' ); ?></span>
+					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
-					<label for="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Promotional price', 'titanworks-sidrena-bazna-cijena' ); ?></label>
-					<input type="text" id="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>" name="promo_price<?php echo esc_attr( $field_suffix ); ?>" class="widefat" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 14.99', 'titanworks-sidrena-bazna-cijena' ); ?>" />
-					<span class="description"><?php echo esc_html__( 'Enter the actual selling price during this promotion, using a decimal comma or point.', 'titanworks-sidrena-bazna-cijena' ); ?></span>
+					<label for="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Promotional price', 'titanworks-bazna-cijena' ); ?></label>
+					<input type="text" id="sidrena-cijena-sale-promo<?php echo esc_attr( $id_suffix ); ?>" name="promo_price<?php echo esc_attr( $field_suffix ); ?>" class="widefat" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 14.99', 'titanworks-bazna-cijena' ); ?>" />
+					<span class="description"><?php echo esc_html__( 'Enter the actual selling price during this promotion, using a decimal comma or point.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p class="description">
-					<?php echo esc_html__( 'The lowest price of the 30 days before the start date is calculated and stored automatically.', 'titanworks-sidrena-bazna-cijena' ); ?>
+					<?php echo esc_html__( 'The lowest price of the 30 days before the start date is calculated and stored automatically.', 'titanworks-bazna-cijena' ); ?>
 				</p>
 
 				<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( $action_url ); ?>" formmethod="post">
-					<?php echo esc_html__( 'Record special sale', 'titanworks-sidrena-bazna-cijena' ); ?>
+					<?php echo esc_html__( 'Record special sale', 'titanworks-bazna-cijena' ); ?>
 				</button>
 			</div>
 		</div>
@@ -243,7 +243,7 @@ class SpecialSaleMetaBox {
 	 */
 	public static function handle_save() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to manage special sales.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to manage special sales.', 'titanworks-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::ACTION, 'sidrena_cijena_sale_nonce' );
@@ -256,7 +256,7 @@ class SpecialSaleMetaBox {
 			: Plugin::instance()->catalog()->get_item( $product_id );
 
 		if ( ! $item ) {
-			self::redirect_back( $product_id, 'error', __( 'The item could not be loaded.', 'titanworks-sidrena-bazna-cijena' ) );
+			self::redirect_back( $product_id, 'error', __( 'The item could not be loaded.', 'titanworks-bazna-cijena' ) );
 
 			return;
 		}
@@ -277,7 +277,7 @@ class SpecialSaleMetaBox {
 			return;
 		}
 
-		self::redirect_back( $product_id, 'success', __( 'The special sale was recorded and the 30-day price was calculated.', 'titanworks-sidrena-bazna-cijena' ) );
+		self::redirect_back( $product_id, 'success', __( 'The special sale was recorded and the 30-day price was calculated.', 'titanworks-bazna-cijena' ) );
 	}
 
 	/**

@@ -23,9 +23,9 @@ const WP_ENV_CLI = process.env.WP_ENV_CLI || 'tests-cli';
 function wpCli( args ) {
 	const bin = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
-	// Normalize plugin slug references for sidrena-cijena / titanworks-sidrena-bazna-cijena
+	// Normalize plugin slug references for sidrena-cijena / titanworks-bazna-cijena / titanworks-bazna-cijena
 	if ( args[0] === 'plugin' && ( args[1] === 'activate' || args[1] === 'deactivate' || args[1] === 'is-active' ) ) {
-		const targetIdx = args.findIndex( ( a ) => a === 'sidrena-cijena' || a === 'titanworks-sidrena-bazna-cijena' );
+		const targetIdx = args.findIndex( ( a ) => a === 'sidrena-cijena' || a === 'titanworks-bazna-cijena' || a === 'titanworks-bazna-cijena' );
 		if ( targetIdx !== -1 ) {
 			try {
 				const listOut = execFileSync( bin, [ 'wp-env', 'run', WP_ENV_CLI, 'wp', 'plugin', 'list', '--field=name' ], {
@@ -108,11 +108,11 @@ function getContainerPluginPath( relPath = '' ) {
 		try {
 			const res = wpCli( [
 				'eval',
-				'$m = array_merge( glob( WP_PLUGIN_DIR . "/*/titanworks-sidrena-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" ) ?: array() ); echo ! empty( $m ) ? dirname( $m[0] ) : ( WP_PLUGIN_DIR . "/titanworks-sidrena-bazna-cijena" );',
+				'$m = array_merge( glob( WP_PLUGIN_DIR . "/*/titanworks-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/titanworks-bazna-cijena.php" ) ?: array(), glob( WP_PLUGIN_DIR . "/*/sidrena-cijena.php" ) ?: array() ); echo ! empty( $m ) ? dirname( $m[0] ) : ( WP_PLUGIN_DIR . "/titanworks-bazna-cijena" );',
 			] );
 			cachedPluginPath = res.trim();
 		} catch {
-			cachedPluginPath = '/var/www/html/wp-content/plugins/titanworks-sidrena-bazna-cijena';
+			cachedPluginPath = '/var/www/html/wp-content/plugins/titanworks-bazna-cijena';
 		}
 	}
 	return relPath ? `${ cachedPluginPath }/${ relPath.replace( /^\/+/, '' ) }` : cachedPluginPath;

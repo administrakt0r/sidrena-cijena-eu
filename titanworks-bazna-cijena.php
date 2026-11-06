@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       TitanWorks Sidrena Bazna Cijena
- * Plugin URI:        https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena
+ * Plugin Name:       Titanworks Bazna Cijena
+ * Plugin URI:        https://github.com/administrakt0r/titanworks-bazna-cijena
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), base price, daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
  * Version:           2.0.20
  * Requires at least: 6.8
@@ -10,10 +10,10 @@
  * Author URI:        https://github.com/administrakt0r
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       titanworks-sidrena-bazna-cijena
+ * Text Domain:       titanworks-bazna-cijena
  * Domain Path:       /languages
  *
- * @package TitanworksSidrenaBaznaCijena
+ * @package TitanworksBaznaCijena
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -41,8 +41,8 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
  *
  * @return void
  */
-function titanworks_sidrena_bazna_cijena_load_textdomain() {
-	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'titanworks-sidrena-bazna-cijena' ) ) {
+function titanworks_bazna_cijena_load_textdomain() {
+	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'titanworks-bazna-cijena' ) ) {
 		return;
 	}
 
@@ -59,22 +59,31 @@ function titanworks_sidrena_bazna_cijena_load_textdomain() {
 	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', 0 === strpos( (string) $locale, 'hr' ), $locale );
 
 	$candidates = array(
-		SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr.mo',
-		SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr_HR.mo',
-		SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
-		SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
+		SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo',
+		SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo',
 	);
 
 	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
 		foreach ( $candidates as $bundled_mo ) {
 			if ( file_exists( $bundled_mo ) ) {
-				load_textdomain( 'titanworks-sidrena-bazna-cijena', $bundled_mo );
+				load_textdomain( 'titanworks-bazna-cijena', $bundled_mo );
 				break;
 			}
 		}
 	}
 }
-add_action( 'init', 'titanworks_sidrena_bazna_cijena_load_textdomain', 1 );
+add_action( 'init', 'titanworks_bazna_cijena_load_textdomain', 1 );
+
+if ( ! function_exists( 'titanworks_sidrena_bazna_cijena_load_textdomain' ) ) {
+	/**
+	 * Backward compatibility alias for textdomain loading.
+	 *
+	 * @return void
+	 */
+	function titanworks_sidrena_bazna_cijena_load_textdomain() {
+		titanworks_bazna_cijena_load_textdomain();
+	}
+}
 
 if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
 	/**
@@ -83,7 +92,7 @@ if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
 	 * @return void
 	 */
 	function sidrena_cijena_load_textdomain() {
-		titanworks_sidrena_bazna_cijena_load_textdomain();
+		titanworks_bazna_cijena_load_textdomain();
 	}
 }
 
@@ -96,7 +105,7 @@ if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
  *
  * @return void
  */
-function titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility() {
+function titanworks_bazna_cijena_declare_woocommerce_compatibility() {
 	if ( ! class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 		return;
 	}
@@ -104,7 +113,18 @@ function titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility() {
 	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', SIDRENA_CIJENA_FILE, true );
 }
 
-add_action( 'before_woocommerce_init', 'titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility' );
+add_action( 'before_woocommerce_init', 'titanworks_bazna_cijena_declare_woocommerce_compatibility' );
+
+if ( ! function_exists( 'titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility' ) ) {
+	/**
+	 * Backward compatibility alias for WooCommerce compatibility declaration.
+	 *
+	 * @return void
+	 */
+	function titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility() {
+		titanworks_bazna_cijena_declare_woocommerce_compatibility();
+	}
+}
 
 if ( ! function_exists( 'sidrena_cijena_declare_woocommerce_compatibility' ) ) {
 	/**
@@ -113,7 +133,7 @@ if ( ! function_exists( 'sidrena_cijena_declare_woocommerce_compatibility' ) ) {
 	 * @return void
 	 */
 	function sidrena_cijena_declare_woocommerce_compatibility() {
-		titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility();
+		titanworks_bazna_cijena_declare_woocommerce_compatibility();
 	}
 }
 

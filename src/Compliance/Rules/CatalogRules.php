@@ -68,7 +68,7 @@ class CatalogRules {
 
 			$findings[] = Finding::error(
 				'missing_sku',
-				__( 'The item has no SKU (product code), which the price list requires.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'The item has no SKU (product code), which the price list requires.', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -97,7 +97,7 @@ class CatalogRules {
 
 			$findings[] = Finding::error(
 				'missing_name',
-				__( 'The item has no name, which the price list requires.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'The item has no name, which the price list requires.', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -129,7 +129,7 @@ class CatalogRules {
 
 			$findings[] = Finding::warning(
 				'missing_barcode',
-				__( 'No barcode is recorded for this item; add one if a barcode is required for it.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'No barcode is recorded for this item; add one if a barcode is required for it.', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -167,7 +167,7 @@ class CatalogRules {
 
 			$findings[] = Finding::error(
 				'invalid_retail_price',
-				__( 'The retail price is missing or not a positive amount.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'The retail price is missing or not a positive amount.', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -204,7 +204,7 @@ class CatalogRules {
 
 			$findings[] = Finding::error(
 				'invalid_unit_price',
-				__( 'The price per unit of measure is not a valid non-negative amount.', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'The price per unit of measure is not a valid non-negative amount.', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -237,7 +237,7 @@ class CatalogRules {
 
 			$findings[] = Finding::error(
 				'invalid_availability',
-				__( 'The availability value is not one of the supported values (available or unavailable).', 'titanworks-sidrena-bazna-cijena' ),
+				__( 'The availability value is not one of the supported values (available or unavailable).', 'titanworks-bazna-cijena' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -279,7 +279,7 @@ class CatalogRules {
 				'invalid_currency',
 				sprintf(
 					/* translators: 1: item currency, 2: expected currency. */
-					__( 'The item currency %1$s is not the expected currency %2$s.', 'titanworks-sidrena-bazna-cijena' ),
+					__( 'The item currency %1$s is not the expected currency %2$s.', 'titanworks-bazna-cijena' ),
 					'' === $currency ? '—' : $currency,
 					$expected
 				),
@@ -341,7 +341,7 @@ class CatalogRules {
 					'duplicate_product_records',
 					sprintf(
 						/* translators: %s: SKU. */
-						__( 'More than one catalog record uses the SKU %s. Price history may be ambiguous.', 'titanworks-sidrena-bazna-cijena' ),
+						__( 'More than one catalog record uses the SKU %s. Price history may be ambiguous.', 'titanworks-bazna-cijena' ),
 						$item->sku
 					),
 					array(

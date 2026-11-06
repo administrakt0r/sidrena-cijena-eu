@@ -246,7 +246,7 @@ class PublicPage {
 			return;
 		}
 
-		$text = (string) apply_filters( 'sidrena_cijena_footer_link_text', __( 'Cjenici', 'titanworks-sidrena-bazna-cijena' ) );
+		$text = (string) apply_filters( 'sidrena_cijena_footer_link_text', __( 'Cjenici', 'titanworks-bazna-cijena' ) );
 
 		printf(
 			'<p class="sidrena-cijena-archive-link"><a href="%1$s">%2$s</a></p>',
@@ -611,9 +611,9 @@ class PublicPage {
 		$row['lowest_30_day_display'] = null === $lowest_30_day_price ? '' : Currency::format( (float) $lowest_30_day_price );
 		$row['anchor_display']        = null === $row['sidrena_cijena'] ? '' : Currency::format( (float) $row['sidrena_cijena'] );
 		$row['reference_display']     = Dates::format_date_display( isset( $row['anchor_reference_date'] ) ? $row['anchor_reference_date'] : '' );
-		$row['type_display']          = 'usluga' === $row['vrsta'] ? __( 'Service', 'titanworks-sidrena-bazna-cijena' ) : __( 'Product', 'titanworks-sidrena-bazna-cijena' );
+		$row['type_display']          = 'usluga' === $row['vrsta'] ? __( 'Service', 'titanworks-bazna-cijena' ) : __( 'Product', 'titanworks-bazna-cijena' );
 		$row['sale_display']          = empty( $row['poseban_oblik_prodaje'] ) ? '' : (string) $row['naziv_posebnog_oblika_prodaje'];
-		$row['availability_display']  = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'titanworks-sidrena-bazna-cijena' ) : __( 'Unavailable', 'titanworks-sidrena-bazna-cijena' );
+		$row['availability_display']  = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'titanworks-bazna-cijena' ) : __( 'Unavailable', 'titanworks-bazna-cijena' );
 
 		return $row;
 	}
@@ -695,16 +695,13 @@ class PublicPage {
 	 */
 	public static function ensure_croatian_catalog() {
 		$candidates = array(
-			SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr.mo',
-			SIDRENA_CIJENA_DIR . 'languages/titanworks-sidrena-bazna-cijena-hr_HR.mo',
-			SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
-			SIDRENA_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
+			SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo',
+			SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo',
 		);
 
 		foreach ( $candidates as $mo_file ) {
 			if ( file_exists( $mo_file ) ) {
-				load_textdomain( 'titanworks-sidrena-bazna-cijena', $mo_file );
-				load_textdomain( 'titanworks-sidrena-bazna-cijena', $mo_file );
+				load_textdomain( 'titanworks-bazna-cijena', $mo_file );
 				break;
 			}
 		}

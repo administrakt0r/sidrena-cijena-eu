@@ -4,9 +4,9 @@
 
 ```
 You are improving the user experience of the WordPress plugin in the current directory
-(titanworks-sidrena-bazna-cijena.php is the bootstrap): the Sidrena Cijena admin screens and the public
+(titanworks-bazna-cijena.php is the bootstrap): the Sidrena Cijena admin screens and the public
 price-list output. Croatian-first: every visible string goes through the
-`titanworks-sidrena-bazna-cijena` textdomain. Work only inside this plugin; never touch WordPress core,
+`titanworks-bazna-cijena` textdomain. Work only inside this plugin; never touch WordPress core,
 themes or WooCommerce. Do not change legal semantics (docs/legal-rules.md), the CSV/XML
 contracts, or the filename pattern. Implement 2-3 focused items per session, each with
 tests where behaviour changes, committed atomically (feat:/fix:/test:/docs:).

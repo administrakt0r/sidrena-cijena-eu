@@ -34,13 +34,13 @@ class Pagination {
 		echo '<span class="displaying-num">' . esc_html(
 			sprintf(
 				/* translators: %s: number of rows. */
-				__( '%s item(s)', 'titanworks-sidrena-bazna-cijena' ),
+				__( '%s item(s)', 'titanworks-bazna-cijena' ),
 				number_format_i18n( $total )
 			)
 		) . '</span>';
 
 		if ( $pages > 1 ) {
-			echo '<nav class="tablenav-pages-nav" aria-label="' . esc_attr__( 'Table pagination', 'titanworks-sidrena-bazna-cijena' ) . '">';
+			echo '<nav class="tablenav-pages-nav" aria-label="' . esc_attr__( 'Table pagination', 'titanworks-bazna-cijena' ) . '">';
 			echo wp_kses_post(
 				paginate_links(
 					array(
@@ -48,7 +48,7 @@ class Pagination {
 						'format'             => '',
 						'current'            => $page,
 						'total'              => $pages,
-						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'titanworks-sidrena-bazna-cijena' ) . ' </span>',
+						'before_page_number' => '<span class="screen-reader-text">' . __( 'Page', 'titanworks-bazna-cijena' ) . ' </span>',
 					)
 				)
 			);

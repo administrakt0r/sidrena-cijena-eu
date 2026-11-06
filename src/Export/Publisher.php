@@ -89,7 +89,7 @@ class Publisher {
 		$dir = $this->directory( $location );
 
 		if ( ! $dir ) {
-			return new \WP_Error( 'publication_directory_failed', __( 'The price-list storage directory could not be created.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'publication_directory_failed', __( 'The price-list storage directory could not be created.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$sequence = 0;
@@ -112,7 +112,7 @@ class Publisher {
 		}
 
 		if ( $this->file_exists( $path ) ) {
-			return new \WP_Error( 'invalid_filename', __( 'A unique price-list filename could not be generated.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'invalid_filename', __( 'A unique price-list filename could not be generated.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$hash_ctx  = hash_init( 'sha256' );
@@ -122,7 +122,7 @@ class Publisher {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming the generated price list into the uploads directory.
 			$handle = fopen( $path, 'wb' );
 			if ( false === $handle ) {
-				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-sidrena-bazna-cijena' ) );
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-bazna-cijena' ) );
 			}
 
 			$written = call_user_func( $content, $handle, $hash_ctx );
@@ -132,7 +132,7 @@ class Publisher {
 			if ( false === $written ) {
 				wp_delete_file( $path );
 
-				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-sidrena-bazna-cijena' ) );
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-bazna-cijena' ) );
 			}
 
 			$file_size = is_int( $written ) ? $written : (int) filesize( $path );
@@ -141,7 +141,7 @@ class Publisher {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming price list from resource.
 			$handle = fopen( $path, 'wb' );
 			if ( false === $handle ) {
-				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-sidrena-bazna-cijena' ) );
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-bazna-cijena' ) );
 			}
 
 			while ( ! feof( $content ) ) {
@@ -163,7 +163,7 @@ class Publisher {
 
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Writes the generated price list into the plugin's uploads directory.
 			if ( false === file_put_contents( $path, $str_content ) ) {
-				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-sidrena-bazna-cijena' ) );
+				return new \WP_Error( 'publication_write_failed', __( 'The price list could not be written.', 'titanworks-bazna-cijena' ) );
 			}
 		}
 
@@ -198,7 +198,7 @@ class Publisher {
 		if ( ! $id ) {
 			wp_delete_file( $path );
 
-			return new \WP_Error( 'publication_archive_failed', __( 'The publication archive row could not be stored.', 'titanworks-sidrena-bazna-cijena' ) );
+			return new \WP_Error( 'publication_archive_failed', __( 'The publication archive row could not be stored.', 'titanworks-bazna-cijena' ) );
 		}
 
 		$this->publications->supersede( $location_id, $format, $id );

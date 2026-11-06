@@ -104,7 +104,7 @@ class AnchorPriceService {
 		if ( null === $price || $price < 0 ) {
 			return new WP_Error(
 				'invalid_anchor_price',
-				__( 'The anchor price must be a non-negative number.', 'titanworks-sidrena-bazna-cijena' )
+				__( 'The anchor price must be a non-negative number.', 'titanworks-bazna-cijena' )
 			);
 		}
 
@@ -117,7 +117,7 @@ class AnchorPriceService {
 		if ( ! Dates::is_valid_date( $reference_date ) ) {
 			return new WP_Error(
 				'invalid_reference_date',
-				__( 'The reference date is not a valid date (YYYY-MM-DD).', 'titanworks-sidrena-bazna-cijena' )
+				__( 'The reference date is not a valid date (YYYY-MM-DD).', 'titanworks-bazna-cijena' )
 			);
 		}
 
@@ -134,7 +134,7 @@ class AnchorPriceService {
 		if ( $correction_of && '' === $reason ) {
 			return new WP_Error(
 				'correction_reason_required',
-				__( 'Changing an existing anchor price requires a correction reason.', 'titanworks-sidrena-bazna-cijena' )
+				__( 'Changing an existing anchor price requires a correction reason.', 'titanworks-bazna-cijena' )
 			);
 		}
 
@@ -166,7 +166,7 @@ class AnchorPriceService {
 		if ( ! $id ) {
 			return new WP_Error(
 				'anchor_record_failed',
-				__( 'The anchor price could not be recorded.', 'titanworks-sidrena-bazna-cijena' )
+				__( 'The anchor price could not be recorded.', 'titanworks-bazna-cijena' )
 			);
 		}
 

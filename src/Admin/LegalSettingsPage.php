@@ -32,30 +32,30 @@ final class LegalSettingsPage {
 	public static function register_settings() {
 		add_settings_section(
 			'sidrena_cijena_legal',
-			__( 'Reference dates and legal rules', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Reference dates and legal rules', 'titanworks-bazna-cijena' ),
 			array( __CLASS__, 'section_intro' ),
 			self::PAGE
 		);
 
 		$fields = array(
 			'general_reference_date' => array(
-				'label' => __( 'General reference date', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'General reference date', 'titanworks-bazna-cijena' ),
 				'type'  => 'date',
 			),
 			'legacy_reference_date'  => array(
-				'label' => __( 'Legacy reference date', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'Legacy reference date', 'titanworks-bazna-cijena' ),
 				'type'  => 'date',
 			),
 			'legacy_enabled'         => array(
-				'label' => __( 'Enable legacy treatment', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'Enable legacy treatment', 'titanworks-bazna-cijena' ),
 				'type'  => 'checkbox',
 			),
 			'legacy_category_slugs'  => array(
-				'label' => __( 'Legacy categories', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'Legacy categories', 'titanworks-bazna-cijena' ),
 				'type'  => 'categories',
 			),
 			'rule_version'           => array(
-				'label' => __( 'Legal-rule version', 'titanworks-sidrena-bazna-cijena' ),
+				'label' => __( 'Legal-rule version', 'titanworks-bazna-cijena' ),
 				'type'  => 'text',
 			),
 		);
@@ -88,7 +88,7 @@ final class LegalSettingsPage {
 	 * @return void
 	 */
 	public static function section_intro() {
-		echo '<p>' . esc_html__( 'Changing these values never rewrites existing historical records; every change is recorded in the audit trail.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
+		echo '<p>' . esc_html__( 'Changing these values never rewrites existing historical records; every change is recorded in the audit trail.', 'titanworks-bazna-cijena' ) . '</p>';
 	}
 
 	/**
@@ -124,7 +124,7 @@ final class LegalSettingsPage {
 				}
 
 				if ( empty( $choices ) ) {
-					echo '<em>' . esc_html__( 'No catalog categories are available.', 'titanworks-sidrena-bazna-cijena' ) . '</em>';
+					echo '<em>' . esc_html__( 'No catalog categories are available.', 'titanworks-bazna-cijena' ) . '</em>';
 
 					return;
 				}
@@ -152,15 +152,15 @@ final class LegalSettingsPage {
 			return;
 		}
 
-		echo '<h2>' . esc_html__( 'Recent rule changes', 'titanworks-sidrena-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Recent rule changes', 'titanworks-bazna-cijena' ) . '</h2>';
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Recent legal rule changes', 'titanworks-sidrena-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Recent legal rule changes', 'titanworks-bazna-cijena' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'When', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Setting', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Old value', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'New value', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'User', 'titanworks-sidrena-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'When', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Setting', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Old value', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'New value', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'User', 'titanworks-bazna-cijena' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( array_slice( array_reverse( $history ), 0, 20 ) as $entry ) {
@@ -185,7 +185,7 @@ final class LegalSettingsPage {
 	 */
 	private static function user_label( $user_id ) {
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'titanworks-sidrena-bazna-cijena' );
+			return __( 'system', 'titanworks-bazna-cijena' );
 		}
 
 		$user = get_userdata( $user_id );
@@ -206,7 +206,7 @@ final class LegalSettingsPage {
 
 		if ( is_bool( $value ) || 'true' === $value || 'false' === $value ) {
 			$bool = is_bool( $value ) ? $value : ( 'true' === $value );
-			return $bool ? __( 'Yes', 'titanworks-sidrena-bazna-cijena' ) : __( 'No', 'titanworks-sidrena-bazna-cijena' );
+			return $bool ? __( 'Yes', 'titanworks-bazna-cijena' ) : __( 'No', 'titanworks-bazna-cijena' );
 		}
 
 		return (string) $value;

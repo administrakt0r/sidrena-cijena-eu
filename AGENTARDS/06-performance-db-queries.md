@@ -4,7 +4,7 @@
 
 ```
 You are optimising the data layer of the WordPress plugin in the current directory
-(titanworks-sidrena-bazna-cijena.php is the bootstrap). Goal: fewer, smaller, indexed queries with
+(titanworks-bazna-cijena.php is the bootstrap). Goal: fewer, smaller, indexed queries with
 identical observable behaviour. Measure before and after; never optimise blind, and
 never "simplify" a query in a way that changes which rows win.
 

@@ -44,10 +44,10 @@ final class CardVisibility {
 	 */
 	public static function render_control( $product_id ) {
 		wp_nonce_field( self::FIELD, self::NONCE, false );
-		echo '<p class="form-field"><label for="sidrena-cijena-show-in-cards">' . esc_html__( 'Product cards', 'titanworks-sidrena-bazna-cijena' ) . '</label>';
+		echo '<p class="form-field"><label for="sidrena-cijena-show-in-cards">' . esc_html__( 'Product cards', 'titanworks-bazna-cijena' ) . '</label>';
 		echo '<input type="hidden" name="' . esc_attr( self::FIELD ) . '" value="0" />';
 		echo '<input type="checkbox" id="sidrena-cijena-show-in-cards" name="' . esc_attr( self::FIELD ) . '" value="1" ' . checked( self::is_visible( $product_id ), true, false ) . ' /> ';
-		echo '<span class="description">' . esc_html__( 'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.', 'titanworks-sidrena-bazna-cijena' ) . '</span></p>';
+		echo '<span class="description">' . esc_html__( 'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.', 'titanworks-bazna-cijena' ) . '</span></p>';
 	}
 
 	/**

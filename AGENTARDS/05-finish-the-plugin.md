@@ -53,13 +53,13 @@ Confirm these are still green before starting any new work:
    The production site at https://wordpress.sidrenacijena.eu/ runs an older version.
    For remote production deploys, see AGENTARDS/11-production-deployment.md.
 3. **readme.txt Stable tag:**
-   Confirm `readme.txt` Stable tag matches `titanworks-sidrena-bazna-cijena.php` Version.
+   Confirm `readme.txt` Stable tag matches `titanworks-bazna-cijena.php` Version.
 4. **WooCommerce block theme / Product Collection archive:**
    PriceDisplay::filter_price_block accepts 3 args and reads $block_instance->context['postId']
    for Product Collection archive context.
 5. **WordPress.org submission:**
    See `docs/wordpress-org-publishing.md`. The plugin is not yet submitted to WP.org; the
-   public release repo is `administrakt0r/titanworks-sidrena-bazna-cijena` (tagged releases).
+   public release repo is `administrakt0r/titanworks-bazna-cijena` (tagged releases).
 
 ## Definition of done
 

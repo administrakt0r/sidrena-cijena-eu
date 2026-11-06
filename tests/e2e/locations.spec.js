@@ -5,7 +5,7 @@ const IDENTIFIER = `E2E-${Date.now().toString().slice(-5)}`;
 
 test.describe('Sales locations', () => {
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
   });
 
   test.afterAll(async () => {

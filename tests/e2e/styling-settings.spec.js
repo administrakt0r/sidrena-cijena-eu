@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { login, wpCli, wpEval } = require('./helpers');
 
 test('legal settings save and styling previews work in wp-admin', async ({ page }) => {
-	await wpCli(['plugin', 'activate', 'titanworks-sidrena-bazna-cijena']);
+	await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
 	await login(page);
 
 	await page.goto('wp-admin/admin.php?page=sidrena-cijena-settings&tab=legal');

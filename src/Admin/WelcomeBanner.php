@@ -39,12 +39,12 @@ final class WelcomeBanner {
 			array(
 				'url'         => 'https://wpineu.com',
 				'title'       => 'WPinEU.com',
-				'description' => __( 'WordPress in Europe — premium WordPress hosting, start free.', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'WordPress in Europe — premium WordPress hosting, start free.', 'titanworks-bazna-cijena' ),
 			),
 			array(
 				'url'         => 'https://llm.kiwi',
 				'title'       => 'LLM.kiwi',
-				'description' => __( 'FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!', 'titanworks-sidrena-bazna-cijena' ),
+				'description' => __( 'FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!', 'titanworks-bazna-cijena' ),
 			),
 		);
 	}
@@ -162,18 +162,18 @@ final class WelcomeBanner {
 		);
 
 		echo '<div class="notice notice-info sidrena-welcome-banner is-dismissible">';
-		echo '<h2>' . esc_html__( 'Welcome to Sidrena cijena!', 'titanworks-sidrena-bazna-cijena' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes.', 'titanworks-sidrena-bazna-cijena' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Welcome to Sidrena cijena!', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes.', 'titanworks-bazna-cijena' ) . '</p>';
 		$docs_url = AdminMenu::url( DocumentationPage::SLUG );
 
 		printf(
 			'<p><a class="button button-primary" href="%1$s">%2$s</a> <a class="button" href="%3$s">%4$s</a> <a class="button button-secondary" href="%5$s">%6$s</a></p>',
 			esc_url( $setup_url ),
-			esc_html__( 'Open Setup Guide', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Open Setup Guide', 'titanworks-bazna-cijena' ),
 			esc_url( $dismiss_url ),
-			esc_html__( 'Dismiss', 'titanworks-sidrena-bazna-cijena' ),
+			esc_html__( 'Dismiss', 'titanworks-bazna-cijena' ),
 			esc_url( $docs_url ),
-			esc_html__( 'Documentation', 'titanworks-sidrena-bazna-cijena' )
+			esc_html__( 'Documentation', 'titanworks-bazna-cijena' )
 		);
 		echo '</div>';
 	}
@@ -185,7 +185,7 @@ final class WelcomeBanner {
 	 */
 	public static function handle_dismiss() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-sidrena-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-bazna-cijena' ) );
 		}
 
 		check_admin_referer( self::DISMISS_ACTION );

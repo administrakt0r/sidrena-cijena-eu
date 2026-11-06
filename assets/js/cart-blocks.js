@@ -7,9 +7,13 @@
 		return;
 	}
 
-	window.wc.blocksCheckout.registerCheckoutFilters( 'titanworks-sidrena-bazna-cijena', {
+	window.wc.blocksCheckout.registerCheckoutFilters( 'titanworks-bazna-cijena', {
 		cartItemPrice: function ( defaultValue, extensions ) {
-			var extension = extensions && ( extensions[ 'titanworks-sidrena-bazna-cijena' ] || extensions[ 'sidrena-cijena-eu' ] );
+			var extension = extensions && (
+				extensions[ 'titanworks-bazna-cijena' ] ||
+				extensions[ 'titanworks-sidrena-bazna-cijena' ] ||
+				extensions[ 'sidrena-cijena-eu' ]
+			);
 			var reference = extension && extension.cartPriceSuffix;
 
 			if ( typeof reference !== 'string' || reference === '' ) {

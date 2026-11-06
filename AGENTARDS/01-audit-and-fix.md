@@ -4,7 +4,7 @@
 
 ```
 You are maintaining the WordPress plugin in the current directory
-(titanworks-sidrena-bazna-cijena.php is the bootstrap). Do a full static audit and fix
+(titanworks-bazna-cijena.php is the bootstrap). Do a full static audit and fix
 everything you find. Rules: work only inside this plugin; do not touch
 WordPress core, themes or WooCommerce; price-history tables are append-only.
 
@@ -33,7 +33,7 @@ Steps:
    Run `php tools/i18n/make-pot.php`. If translatable strings were added or changed:
    update tools/i18n/en_US.php and tools/i18n/hr_HR.php, then run
    `php tools/i18n/make-pot.php --locale=hr_HR` to regenerate
-   languages/titanworks-sidrena-bazna-cijena.pot, languages/hr_HR.po, and languages/titanworks-sidrena-bazna-cijena-hr.mo.
+   languages/titanworks-bazna-cijena.pot, languages/hr_HR.po, and languages/titanworks-bazna-cijena-hr.mo.
    Confirm 0 untranslated strings (baseline: 809 translated strings / 0 untranslated in languages/hr_HR.po).
 4. Security sweep:
    - Every admin action requires capability check (manage_sidrena_cijena) + valid nonce.
@@ -46,7 +46,7 @@ Steps:
    Add a regression test for each gap found.
 5. Quality verification & Pull Request:
    - Run fast unit suite (`composer test:unit`).
-   - If version bump was needed, bump version in titanworks-sidrena-bazna-cijena.php, readme.txt, package.json.
+   - If version bump was needed, bump version in titanworks-bazna-cijena.php, readme.txt, package.json.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
    - Push branch and open PR via `gh pr create --base master`.
    - Output the PR link to the user and request their review.

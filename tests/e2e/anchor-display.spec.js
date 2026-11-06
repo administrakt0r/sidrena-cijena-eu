@@ -12,7 +12,7 @@ test.describe( 'Anchor price display', () => {
 	let upsellId;
 
 	test.beforeAll( () => {
-		wpCli( [ 'plugin', 'activate', 'titanworks-sidrena-bazna-cijena' ] );
+		wpCli( [ 'plugin', 'activate', 'titanworks-bazna-cijena' ] );
 
 		const created = wpEval(
 			'$p = new WC_Product_Simple();' +

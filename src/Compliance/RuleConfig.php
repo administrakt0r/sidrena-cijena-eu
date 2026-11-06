@@ -200,7 +200,7 @@ final class RuleConfig {
 
 		Logger::info(
 			'settings_change',
-			__( 'Legal rule configuration changed.', 'titanworks-sidrena-bazna-cijena' ),
+			__( 'Legal rule configuration changed.', 'titanworks-bazna-cijena' ),
 			array(
 				'user_id' => (int) $user_id,
 				'reason'  => $reason,
