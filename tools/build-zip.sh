@@ -59,8 +59,8 @@ if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PUBLIC_REPO="https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena.git"
-PUBLIC_REPO_NAME="administrakt0r/titanworks-sidrena-bazna-cijena"
+PUBLIC_REPO="https://github.com/administrakt0r/sidrena-cijena-eu.git"
+PUBLIC_REPO_NAME="administrakt0r/sidrena-cijena-eu"
 
 HEADER="$(grep -m1 "TWBCE_CIJENA_VERSION" "$ROOT/titanworks-bazna-cijena.php" | grep -o "'[0-9][^']*'" | tr -d "'")"
 

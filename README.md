@@ -83,8 +83,8 @@ documented uncertainties.
 ## Development
 
 ```bash
-git clone https://github.com/administrakt0r/titanworks-bazna-cijena.git
-cd titanworks-bazna-cijena
+git clone https://github.com/administrakt0r/sidrena-cijena-eu.git
+cd sidrena-cijena-eu
 composer install
 npm install
 npm run wp-env start
@@ -102,7 +102,7 @@ them.
 - [Implementation and legal notes](docs/legal-rules.md)
 - [Price-list format](docs/price-list-format.md)
 - [WooCommerce integration](docs/woocommerce.md)
-- [Releases and WordPress upload ZIPs](https://github.com/administrakt0r/titanworks-bazna-cijena/releases)
+- [Releases and WordPress upload ZIPs](https://github.com/administrakt0r/sidrena-cijena-eu/releases)
 
 ## License
 
