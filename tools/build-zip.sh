@@ -207,7 +207,7 @@ EOF
 		fi
 		echo "GitHub release published: https://github.com/$PUBLIC_REPO_NAME/releases/tag/$TAG"
 
-		ORIGIN_REPO="$(git -C "$ROOT" remote get-url origin 2>/dev/null | sed -E 's/.*github\.com[:\/]([^\/]+\/[^\/\.]+)(\.git)?$/\1/' || true)"
+		ORIGIN_REPO="$(git -C "$ROOT" remote get-url origin 2>/dev/null | sed -E 's#.*github\.com[:/]([^/]+/[^/.]+)(\.git)?/?$#\1#' || true)"
 		if [ -n "$ORIGIN_REPO" ] && [ "$ORIGIN_REPO" != "$PUBLIC_REPO_NAME" ]; then
 			if gh release view "$TAG" --repo "$ORIGIN_REPO" >/dev/null 2>&1; then
 				echo "Updating GitHub release $TAG on $ORIGIN_REPO..."
