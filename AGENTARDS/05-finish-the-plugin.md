@@ -7,21 +7,21 @@ Croatian "sidrena cijena" (anchor price) obligation, the daily machine-readable 
 obligation and the 30-day lowest-price rule for classified sales.
 
 * Repository: `/home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev`
-* Branch `main`, remote `origin https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena-dev`
+* Branch `master`, remote `origin https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena-dev`
 * Git author: configured repo-locally as `administrakt0r <markoes3@gmail.com>`
 * Read `AGENTARDS/README.md` first — it defines the mandatory workflow and rules.
 
 ## Mandatory Branch & Pull Request (PR) Policy
 
 > [!IMPORTANT]
-> **NEVER push directly to `main`. ALWAYS open a Pull Request.**
+> **NEVER push directly to `master`. ALWAYS open a Pull Request.**
 > All changes must be made on a dedicated branch and submitted via `gh pr create` for human review before merging.
 
 1. Checkout branch: `git checkout -b <type>/<description>`
 2. Make atomic conventional commits (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
 3. Run fast local sanity checks (`composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`).
 4. Push branch: `git push -u origin <branch-name>`.
-5. Open PR: `gh pr create --base main --title "..." --body "..."`.
+5. Open PR: `gh pr create --base master --title "..." --body "..."`.
 6. STOP. Output PR link and wait for user review and merge.
 
 ## Non-negotiable rules

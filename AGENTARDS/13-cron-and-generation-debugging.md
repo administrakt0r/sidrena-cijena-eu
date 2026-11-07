@@ -16,8 +16,8 @@ If fixing generation bugs in the codebase:
 2. Commit each fix atomically (`fix:`, `test:`).
 3. Push branch and open a Pull Request for user review:
    `git push -u origin fix/generation-pipeline-repair`
-   `gh pr create --base main --title "fix: price list generation and cron pipeline" --body "..."`
-   Do NOT push directly to main or merge the PR yourself.
+   `gh pr create --base master --title "fix: price list generation and cron pipeline" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
 
 ## Architecture overview
 
@@ -99,7 +99,7 @@ php tools/i18n/make-pot.php --locale=hr_HR   # 0 untranslated
 Push branch and open Pull Request:
 ```bash
 git push -u origin fix/generation-pipeline-repair
-gh pr create --base main --title "fix: price list generation and cron pipeline" --body "..."
+gh pr create --base master --title "fix: price list generation and cron pipeline" --body "..."
 ```
 
 Done when: generation runs cleanly, produces valid CSV/XML matching docs/price-list-format.md,

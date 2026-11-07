@@ -8,7 +8,7 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
 
 ## Environment context
 
-- Local plugin repo:    /home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev (branch: main)
+- Local plugin repo:    /home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev (branch: master)
 - Public release repo:  https://github.com/administrakt0r/titanworks-bazna-cijena (tagged releases)
 - Production site:      https://wordpress.sidrenacijena.eu/
 - Production admin:     https://wordpress.sidrenacijena.eu/wp-admin/

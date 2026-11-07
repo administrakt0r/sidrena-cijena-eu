@@ -17,8 +17,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item atomically with conventional prefixes.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin ux/<feature-or-screen>`
-   `gh pr create --base main --title "ux: <brief summary of UX improvements>" --body "..."`
-   Do NOT push directly to main or merge the PR yourself.
+   `gh pr create --base master --title "ux: <brief summary of UX improvements>" --body "..."`
+   Do NOT push directly to master or merge the PR yourself.
 
 Baseline (v2.0.22): 614 unit tests / 2335 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
