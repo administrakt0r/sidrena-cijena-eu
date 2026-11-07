@@ -8,16 +8,15 @@
 
 ## Primary sources
 
-* **NN 101/2026-1212** — [*Odluka o isticanju dodatne cijene kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1212.html). Defines the anchor ("sidrena") price and duty to display it with the retail price at the point of sale/service and in advertising, including online advertising.
-* **NN 101/2026-1213** — [*Odluka o objavi cjenika proizvoda i usluga kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1213.html). Defines machine-readable `.csv`/`.xml` lists, content, filename, 30-day availability, and real-time automated retrieval.
-* **NN 110/2026-1309** & **NN 110/2026** — *Odluke o izmjenama Odluka* (29 September 2026). Postpones the enforcement rollout date from 1 October 2026 to **17 November 2026**, while keeping reference dates unchanged.
-* [Ministry of Economy clarification (22 September 2026)](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440), including the linked explanatory letter, clarifies new listings, website scope, permitted wording (e.g. "Bazna cijena", "Cijena na [datum]"), and location-specific lists.
-* Consumer-protection rules on the **lowest price in the last 30 days**
-  for special forms of sale (akcija, sniženje, sezonsko sniženje,
-  rasprodaja and equivalents).
+* **NN 40/25** — [*Zakon o iznimnim mjerama kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2025_04_40_743.html). Foundational law empowering the Croatian Government to enact price freezing, mandatory reference/historical price display, and digital price list measures.
+* **NN 19/22** & **NN 59/26** — [*Zakon o zaštiti potrošača*](https://narodne-novine.nn.hr/clanci/sluzbeni/2022_02_19_234.html), specifically Article 19 regarding special forms of sale (akcija, sniženje, rasprodaja, sezonsko sniženje), establishing the mandatory lowest price in the preceding 30 days.
+* **NN 101/2026-1212** — [*Odluka o isticanju dodatne cijene kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1212.html). Defines the anchor ("sidrena" / "bazna") price and the duty to display it alongside the retail price at points of sale/service and in all advertising, including online advertising and e-commerce stores.
+* **NN 101/2026-1213** — [*Odluka o objavi cjenika proizvoda i usluga kao mjera izravne kontrole cijena*](https://narodne-novine.nn.hr/clanci/sluzbeni/2026_09_101_1213.html). Defines daily machine-readable `.csv`/`.xml` price lists, required schema and columns, filename nomenclature, 30-day availability, and real-time automated retrieval for all entities with a web presence.
+* **NN 110/2026-1309** & **NN 110/2026** — *Odluke o izmjenama Odluka* (29 September 2026). Postpones the enforcement rollout date from 1 October 2026 to **17 November 2026**, while keeping statutory reference dates unchanged.
+* [Ministry of Economy clarification (22 September 2026)](https://mingo.gov.hr/vijesti/pojasnjenja-za-primjenu-dodatne-cijene-i-objavu-cjenika-od-1-listopada/10440), including the linked explanatory letter, clarifies new listings, website scope (excluding social media profiles), permitted wording (e.g. "Bazna cijena", "Sidrena cijena", "Cijena na [datum]", "Referentna cijena", "Dodatna cijena"), and location-specific lists.
 * **NN 117/22** — *Pravilnik* on clear and unambiguous price display.
 
-## The anchor price (sidrena cijena)
+## The anchor price (sidrena / bazna cijena)
 
 The anchor is the retail price that was valid on the legal **reference
 date**, **excluding** any special-sale discount. It is stored as immutable
@@ -49,6 +48,25 @@ label. It is **never substituted** for the anchor price and vice versa.
 An unclassified promotion (sale price without a chosen sale type) is
 reported as a compliance finding and never silently treated as a special
 sale.
+
+## Cross-compliance: The "Tri cijene" (Triple Price) rule for promotions
+
+When an item is subject to a special form of sale (akcija, sniženje, rasprodaja, sezonsko sniženje), two separate legal regimes apply simultaneously:
+
+1. **Consumer Protection Act (NN 19/22, 59/26, Art. 19):** requires showing the promotional price alongside the lowest price applied during the 30 calendar days before the promotion began.
+2. **Direct Price Control Decree (NN 101/2026-1212 & NN 110/2026):** requires showing the benchmark anchor/base price valid on the prescribed statutory reference date (or verified first offer date for post-reference items).
+
+Consequently, under Croatian cross-compliance rules, **three distinct prices** must be presented to consumers on the storefront and in promotional advertising:
+* **1. Trenutna / Akcijska cijena** — The effective discounted price the customer pays today.
+* **2. Najniža cijena u prethodnih 30 dana** — The lowest price applied in the 30 calendar days before the sale.
+* **3. Sidrena / Bazna cijena** — The regular retail price on the legal reference date (2026-09-10 general or 2025-05-02 legacy).
+
+### Strict separation rules:
+* The anchor price **must never** be used as the 30-day lowest price.
+* The 30-day lowest price **must never** be substituted for the anchor price.
+* The promotional price must be strictly lower than the lowest price from the preceding 30 days (`sale_price_not_below_reference`).
+* Anchor price records are excluded from 30-day calculator input sets.
+* Products on promotion lacking an anchor price are flagged as cross-compliance errors.
 
 ## Online price list (cjenik)
 

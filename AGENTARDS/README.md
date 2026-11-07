@@ -7,7 +7,7 @@ is self-contained, completely up to date, and states its own done-criteria.
 | # | File | Purpose | Needs Docker? | Status |
 |---|------|---------|---------------|--------|
 | 1 | [01-audit-and-fix.md](01-audit-and-fix.md) | Static audit: PHPCS, PHPStan, ESLint, unit tests, security sweep | No | ✅ v2.0.11 |
-| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.0 |
+| 2 | [02-compliance-cross-check.md](02-compliance-cross-check.md) | Legal and specification cross-check against `docs/`, fix deviations | No | ✅ v2.0.22 |
 | 3 | [03-wp-env-verification.md](03-wp-env-verification.md) | Full wp-env run: integration + E2E (port 8889) + 7-point checklist + block theme + label preset checks | **Yes** | ✅ v2.0.0 |
 | 4 | [04-improve.md](04-improve.md) | General improvement pass: robustness, compatibility, docs sync | No | ✅ v2.0.17 |
 | 5 | [05-finish-the-plugin.md](05-finish-the-plugin.md) | Finish remaining work: open backlog items, readme.txt Stable tag, WP.org readiness | Optional | ✅ v2.0.0 |
