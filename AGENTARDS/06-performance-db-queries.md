@@ -20,10 +20,10 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item separately (perf: / fix:), with tests.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin perf/db-query-tuning`
-   `gh pr create --base master --title "perf: database and query tuning" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "perf: database and query tuning" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
-Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
+Baseline (v2.0.22): 614 unit tests / 2335 assertions green — keep green, grow the suite.
 
 Measurement (do this first and again at the end; Docker optional for code fixes):
 - Demo shop: `./local.sh` → http://localhost:8888 (admin / password) with 200+ seeded

@@ -19,10 +19,10 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item separately (perf: / fix:), with tests.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin perf/export-pipeline-optimization`
-   `gh pr create --base master --title "perf: streaming export pipeline and cron optimization" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "perf: streaming export pipeline and cron optimization" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
-Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
+Baseline (v2.0.22): 614 unit tests / 2335 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in

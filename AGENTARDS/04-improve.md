@@ -1,9 +1,9 @@
 # Prompt 4 — General improvement pass (no Docker needed)
 
-> **Status (v2.0.22):** COMPLETED. Admin form ergonomics, contextual legal reference date hints, translated settings descriptions (825 strings, 0 untranslated), and expanded unit test coverage across admin settings classes (574 unit tests, 2,134 assertions) shipped.
+> **Status (v2.0.22):** COMPLETED. Admin form ergonomics, contextual legal reference date hints, translated settings descriptions (875 strings, 0 untranslated), and expanded unit test coverage across admin settings classes (614 unit tests, 2335 assertions) shipped.
 
 ```
-You are improving the WordPress plugin in the current directory (sidrena-cijena.php is
+You are improving the WordPress plugin in the current directory (titanworks-bazna-cijena.php is
 the bootstrap). Pick a small number of high-value items (2-3 per session, not more unless
 trivial), implement them well, cover every change with tests, and commit atomically
 (feat:/fix:/test:/docs:). Do not change legal semantics without reviewing
@@ -17,8 +17,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item separately with conventional messages.
 3. When finished, push branch and open a Pull Request for user review:
    `git push -u origin <branch-name>`
-   `gh pr create --base master --title "<type>: <brief description>" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "<type>: <brief description>" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Specialised passes exist — use them instead of improvising when the work matches:
 - Performance: AGENTARDS/06-performance-db-queries.md (queries, N+1, indexes),
@@ -57,9 +57,9 @@ This pass focuses on robustness and compatibility:
 4. Quality gates & PR creation:
    - Run fast unit tests locally: `composer test:unit`.
    - Regenerate translation catalogs if strings changed:
-     `php tools/i18n/make-pot.php --locale=hr_HR` (809 translated / 0 untranslated).
+     `php tools/i18n/make-pot.php --locale=hr_HR` (875 translated / 0 untranslated).
    - Push branch to origin: `git push -u origin <branch-name>`.
-   - Create Pull Request: `gh pr create --base master --title "<type>: <description>" --body "<details>"`.
+   - Create Pull Request: `gh pr create --base main --title "<type>: <description>" --body "<details>"`.
    - Output PR link to user and request their review.
 
 Done when: improvements and tests are committed, fast local checks pass cleanly,
