@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.21
+Stable tag: 2.0.22
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.22 =
+* Statutory framework update: incorporated NN 110/2026 postponement (enforcement active 17 November 2026) while preserving statutory reference dates (2026-09-10 general, 2025-05-02 legacy).
+* Admin statutory guide: added contextual guidance banner and checklist on the Compliance page explaining legal reference dates and merchant obligations.
+* Triple-price promotion cross-compliance: implemented validation and remediation proposals for promotional pricing, ensuring retail price, anchor price, and 30-day lowest price remain distinct per Ministry of Economy clarification.
+* Display name & branding compliance: finalized plugin display name as "Titanworks Bazna Cijena" and aligned entry file, headers, textdomain, and readme metadata for WordPress.org directory review.
+* Quality gates: 614 unit tests (2,335 assertions) passing 100%; complete Croatian and English translation catalogs with 0 untranslated strings.
 
 = 2.0.21 =
 * Streaming export pipeline: CsvWriter and XmlWriter stream large product catalogs directly to disk without loading full CSV/XML strings into memory.
