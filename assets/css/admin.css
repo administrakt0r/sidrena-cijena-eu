@@ -534,4 +534,94 @@ button.is-busy {
 	border-top: 1px solid #dcdcde;
 }
 
+.sidrena-statutory-guide {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #2271b1;
+	border-radius: 4px;
+	padding: 16px 20px;
+	margin: 16px 0 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.sidrena-statutory-guide__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.sidrena-statutory-guide__header h2 {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.sidrena-statutory-badge {
+	background: #135e96;
+	color: #fff;
+	padding: 3px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.sidrena-statutory-intro {
+	margin: 0 0 16px;
+	color: #50575e;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.sidrena-statutory-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+	margin-top: 12px;
+}
+
+.sidrena-statutory-col {
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 12px 14px;
+}
+
+.sidrena-statutory-col h3 {
+	margin: 0 0 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #1d2327;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.sidrena-statutory-col ul {
+	margin: 0;
+	padding-left: 18px;
+	list-style: disc;
+	font-size: 12px;
+	line-height: 1.45;
+	color: #3c434a;
+}
+
+.sidrena-statutory-col li {
+	margin-bottom: 6px;
+}
+
+.sidrena-statutory-col li:last-child {
+	margin-bottom: 0;
+}
+
+.sidrena-statutory-col code {
+	background: #eaecf0;
+	padding: 1px 4px;
+	border-radius: 3px;
+	font-size: 11px;
+}
+
 

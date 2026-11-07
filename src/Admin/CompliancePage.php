@@ -10,6 +10,7 @@ namespace SidrenaCijena\Admin;
 use SidrenaCijena\Compliance\ComplianceReport;
 use SidrenaCijena\Compliance\Finding;
 use SidrenaCijena\Compliance\RemediationProposer;
+use SidrenaCijena\Compliance\RuleConfig;
 use SidrenaCijena\Logging\Logger;
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Dates;
@@ -63,6 +64,7 @@ class CompliancePage {
 		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'titanworks-bazna-cijena' ) . '</h1>';
 
 		self::notice();
+		self::render_statutory_guide();
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RUN ) . '" />';
@@ -390,5 +392,69 @@ class CompliancePage {
 				$warnings
 			)
 		);
+	}
+
+	/**
+	 * Render the Croatian statutory compliance and conditions guide.
+	 *
+	 * @return void
+	 */
+	public static function render_statutory_guide() {
+		$gen_date = (string) RuleConfig::get( 'general_reference_date', RuleConfig::DEFAULT_GENERAL_DATE );
+		$leg_date = (string) RuleConfig::get( 'legacy_reference_date', RuleConfig::DEFAULT_LEGACY_DATE );
+
+		echo '<div class="sidrena-statutory-guide">';
+		echo '<div class="sidrena-statutory-guide__header">';
+		echo '<h2>' . esc_html__( 'Croatian Statutory Compliance Framework & Conditions', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<span class="sidrena-statutory-badge">' . esc_html__( 'Enforcement: 17 November 2026 (NN 110/2026)', 'titanworks-bazna-cijena' ) . '</span>';
+		echo '</div>';
+		echo '<p class="sidrena-statutory-intro">' . esc_html__( 'This cross-compliance engine continuously audits your catalog and publications against Croatian statutory decrees (NN 101/2026-1212, NN 101/2026-1213, NN 110/2026, NN 40/25) and the Consumer Protection Act (NN 19/22, 59/26, Art. 19).', 'titanworks-bazna-cijena' ) . '</p>';
+
+		echo '<div class="sidrena-statutory-grid">';
+
+		// Pillar 1: Anchor / Base Price.
+		echo '<div class="sidrena-statutory-col">';
+		echo '<h3><span class="dashicons dashicons-calendar-alt"></span> ' . esc_html__( '1. Bazna / Sidrena cijena', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<ul>';
+		echo '<li><strong>' . esc_html__( 'General reference date:', 'titanworks-bazna-cijena' ) . '</strong> <code>' . esc_html( $gen_date ) . '</code> (' . esc_html__( 'all B2C products & services', 'titanworks-bazna-cijena' ) . ')</li>';
+		echo '<li><strong>' . esc_html__( 'Legacy reference date:', 'titanworks-bazna-cijena' ) . '</strong> <code>' . esc_html( $leg_date ) . '</code> (' . esc_html__( 'food, drinks, cosmetics, household', 'titanworks-bazna-cijena' ) . ')</li>';
+		echo '<li><strong>' . esc_html__( 'Permitted labels:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Bazna cijena, Sidrena cijena, Cijena na [datum], Referentna cijena, Dodatna cijena', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Post-reference listings:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Verified first-offer price & date mandatory; blank anchor is prohibited.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '</ul>';
+		echo '</div>';
+
+		// Pillar 2: Triple Price Rule for Promotions.
+		echo '<div class="sidrena-statutory-col">';
+		echo '<h3><span class="dashicons dashicons-tag"></span> ' . esc_html__( '2. Special Sales: "Triple Price" Rule', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<ul>';
+		echo '<li><strong>' . esc_html__( 'Three distinct prices:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'When an item is discounted (akcija, sniženje), you must display: (1) Promotional price, (2) Lowest price in preceding 30 days, and (3) Anchor/base price.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Strict legal separation:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'The anchor price must never be used as the 30-day price, and the 30-day price must never be used as the anchor price.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Price condition:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Promotional price must be strictly lower than the lowest price from the preceding 30 days.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '</ul>';
+		echo '</div>';
+
+		// Pillar 3: Daily Price List.
+		echo '<div class="sidrena-statutory-col">';
+		echo '<h3><span class="dashicons dashicons-media-spreadsheet"></span> ' . esc_html__( '3. Daily Machine-Readable Price List', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<ul>';
+		echo '<li><strong>' . esc_html__( 'Daily publication:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Every working morning before 08:00 (products) and upon every price change (services).', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Formats:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'CSV (; delimiter, comma decimals, 12 columns) and XML formats.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( '30-day public archive:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Dated publication archive must remain accessible for at least 30 calendar days.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Filename contract:', 'titanworks-bazna-cijena' ) . '</strong> <code>{FORM}_{ADDRESS}_{ID}_{SEQ}_{DATE}_{TIME}.EXT</code></li>';
+		echo '</ul>';
+		echo '</div>';
+
+		// Pillar 4: Audit & Remediation Proposals.
+		echo '<div class="sidrena-statutory-col">';
+		echo '<h3><span class="dashicons dashicons-yes-alt"></span> ' . esc_html__( '4. Audit & Remediation Proposals', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<ul>';
+		echo '<li><strong>' . esc_html__( 'Supervisory body:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'State Inspectorate (Državni inspektorat) enforces compliance and penal sanctions.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Mandatory attributes:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Barcodes (EAN/GTIN) and unit prices (per kg/l) are checked where applicable.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Actionable fixes:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Every detected warning or error includes a concrete proposal ("Prijedlog izmjene") to resolve findings before publication.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '</ul>';
+		echo '</div>';
+
+		echo '</div>'; // .sidrena-statutory-grid
+		echo '</div>'; // .sidrena-statutory-guide
 	}
 }

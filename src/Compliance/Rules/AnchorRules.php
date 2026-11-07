@@ -10,6 +10,7 @@ namespace SidrenaCijena\Compliance\Rules;
 use SidrenaCijena\Catalog\CatalogItem;
 use SidrenaCijena\Compliance\Finding;
 use SidrenaCijena\Compliance\Validator;
+use SidrenaCijena\Support\Currency;
 use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
@@ -91,6 +92,7 @@ class AnchorRules {
 						'variation_id'     => $item->variation_id,
 						'reference_date'   => $reference_date,
 						'introduced_after' => $introduced_after,
+						'is_promotional'   => $this->is_promotional( $item ),
 					),
 				)
 			);
@@ -211,5 +213,31 @@ class AnchorRules {
 		}
 
 		return substr( (string) $item->first_seen, 0, 10 ) > $reference_date;
+	}
+
+	/**
+	 * Whether the item carries an active promotional sale price.
+	 *
+	 * @param CatalogItem $item Item.
+	 * @return bool
+	 */
+	protected function is_promotional( CatalogItem $item ) {
+		$current = Currency::to_storage( $item->effective_price() );
+		$sale    = Currency::to_storage( $item->sale_price );
+		$regular = Currency::to_storage( $item->regular_price );
+
+		if ( null === $current || $current <= 0 ) {
+			return false;
+		}
+
+		if ( null !== $regular && $regular > 0 ) {
+			return $current < $regular;
+		}
+
+		return 'woocommerce' === $item->source
+			&& null !== $item->current_price
+			&& null !== $sale
+			&& $sale > 0
+			&& $current === $sale;
 	}
 }

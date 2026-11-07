@@ -88,6 +88,9 @@ class CompliancePageTest extends TestCase {
 
 		$this->assertStringContainsString( '28.09.2026. 10:30', $html );
 		$this->assertStringContainsString( 'sidrena-busy-form', $html );
+		$this->assertStringContainsString( 'sidrena-statutory-guide', $html );
+		$this->assertStringContainsString( '17 November 2026', $html );
+		$this->assertStringContainsString( 'Triple Price', $html );
 		$this->assertStringContainsString( 'missing_anchor_price', $html );
 		$this->assertStringContainsString( 'missing_location_address', $html );
 		$this->assertStringContainsString( 'Error', $html );

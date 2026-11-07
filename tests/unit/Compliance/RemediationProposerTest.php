@@ -28,6 +28,23 @@ class RemediationProposerTest extends TestCase {
 	}
 
 	/**
+	 * Promotional item missing an anchor price proposes fulfilling triple-price cross-compliance.
+	 *
+	 * @return void
+	 */
+	public function test_propose_missing_anchor_price_promotional() {
+		$proposal = RemediationProposer::propose(
+			'missing_anchor_price',
+			array(
+				'reference_date' => '2026-09-10',
+				'is_promotional' => true,
+			)
+		);
+		$this->assertStringContainsString( '2026-09-10', $proposal );
+		$this->assertStringContainsString( 'three distinct prices', $proposal );
+	}
+
+	/**
 	 * Invalid anchor date proposes updating to statutory reference date.
 	 *
 	 * @return void
