@@ -14,7 +14,7 @@ The reported history queries now have literal SQL predicates with bound filter v
 
 Local checks: PHP syntax for modified PHP files, the unit suite, and Croatian catalog extraction. Heavy PHPCS, PHPStan, integration tests, Playwright and submission-package Plugin Check run in CircleCI. The WordPress test environment has `WP_DEBUG` enabled. Do not claim clean-install checks passed until the corresponding CI results are available.
 
-After human review and merge, build the submission ZIP using `tools/build-zip.sh 2.0.24 --no-upload`. It contains the `sidrena-cijena-eu/` directory and the existing bootstrap filename. Upload it through the WordPress.org submission page only after the final CI checks pass.
+After human review and merge, build the submission ZIP using `tools/build-zip.sh 2.0.24 --no-upload`. The archive and its top-level directory must always be named `sidrena-cijena-eu`, which is the required WordPress directory slug; repository names must not change this. It contains the existing bootstrap filename. Upload it through the WordPress.org submission page only after the final CI checks pass.
 
 Suggested reply after uploading and verifying the corrected package:
 

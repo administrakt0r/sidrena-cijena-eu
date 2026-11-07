@@ -189,7 +189,7 @@ anchor. `VariationDisplayTest` covers the parent and selected variation paths.
 | UX-11 | `done` | Merchants needed a clear public page of generated cjenici and simple ways to expose it | Styled archive lists current publications and dates with CSV/XML links; archive, footer link and sitemap entry are enabled by default and configurable; integration and live HTTP checks passed |
 | FIX-17 | `done` | WordPress sitemap initialization happened before the archive provider registered, omitting its URL from the sitemap index | Public page hooks register at `init` priority 0; integration test verifies the provider entry |
 | REL-11 | `done` | The release needed a distinctive public-facing name, accurate directory metadata and owner-only submission steps | Version 2.0.0 uses “Sidrena Cijena EU”; metadata and SEO README updated; private submission instructions are locally excluded and omitted from the release ZIP |
-| REL-12 | `done` | Final committed 2.0.0 archive and package-only Plugin Check scan | Final ZIP checksum verified; exact-package Plugin Check reported 0 errors and 63 reviewed warnings; source and ZIP/checksum assets published at https://github.com/administrakt0r/sidrena-cijena-eu/releases/tag/v2.0.0 |
+| REL-12 | `done` | Final committed 2.0.0 archive and package-only Plugin Check scan | Final ZIP checksum verified; exact-package Plugin Check reported 0 errors and 63 reviewed warnings; source and ZIP/checksum assets published at https://github.com/administrakt0r/sidrena-bazna-cijena-titanworks/releases/tag/v2.0.0 |
 | REL-09 | `done` | `Contributors:` used display name instead of WordPress.org username | Profile checked; changed to `titanworks`; publishing steps documented |
 
 ## Static audit and security regression pass (2026-09-27)

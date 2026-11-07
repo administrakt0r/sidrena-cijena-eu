@@ -247,8 +247,8 @@
 - See the locally excluded owner note at `docs/wordpress-org-upload-2.0.0.md`
   for submission steps. It and the Plugin Check CSV are excluded from Git and
   from the ZIP.
-- Published the source at <https://github.com/administrakt0r/sidrena-cijena-eu>.
-  The [v2.0.0 GitHub release](https://github.com/administrakt0r/sidrena-cijena-eu/releases/tag/v2.0.0)
+- Published the source at <https://github.com/administrakt0r/sidrena-bazna-cijena-titanworks>.
+  The [v2.0.0 GitHub release](https://github.com/administrakt0r/sidrena-bazna-cijena-titanworks/releases/tag/v2.0.0)
   includes the upload ZIP and SHA-256 file. WordPress.org directory submission
   remains for the owner to complete using the private instructions.
 

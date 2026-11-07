@@ -10,6 +10,10 @@
 #
 # The zip is built from committed HEAD only, so commit your changes first.
 # Output: versions/<version>/sidrena-cijena-eu.zip + SHA256SUMS.txt
+#
+# Package naming invariant: the archive name and its top-level directory must
+# always use the WordPress directory slug `sidrena-cijena-eu`, regardless of
+# this repository's name or remote URL.
 # Public repo: https://github.com/administrakt0r/titanworks-bazna-cijena
 #
 # Version policy:
@@ -59,8 +63,8 @@ if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PUBLIC_REPO="https://github.com/administrakt0r/sidrena-cijena-eu.git"
-PUBLIC_REPO_NAME="administrakt0r/sidrena-cijena-eu"
+PUBLIC_REPO="https://github.com/administrakt0r/sidrena-bazna-cijena-titanworks.git"
+PUBLIC_REPO_NAME="administrakt0r/sidrena-bazna-cijena-titanworks"
 
 HEADER="$(grep -m1 "TWBCE_CIJENA_VERSION" "$ROOT/titanworks-bazna-cijena.php" | grep -o "'[0-9][^']*'" | tr -d "'")"
 
