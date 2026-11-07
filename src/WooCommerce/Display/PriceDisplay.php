@@ -12,6 +12,7 @@ use SidrenaCijena\Plugin;
 use SidrenaCijena\Pricing\AnchorPriceService;
 use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 use SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -236,10 +237,7 @@ class PriceDisplay {
 			return $content;
 		}
 
-		$context = $this->context();
-		if ( 'single' === $context && function_exists( 'get_queried_object_id' ) && (int) get_queried_object_id() !== (int) $product->get_id() ) {
-			$context = 'archive';
-		}
+		$context = $this->context( $product );
 
 		return $content . $this->render( $product, $context );
 	}
@@ -313,7 +311,7 @@ class PriceDisplay {
 			return $html;
 		}
 
-		$block = $this->render( $product, $this->context() );
+		$block = $this->render( $product, $this->context( $product ) );
 
 		return $html . $block;
 	}
@@ -370,13 +368,16 @@ class PriceDisplay {
 		$is_archive          = ( function_exists( 'is_shop' ) && is_shop() )
 			|| ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() )
 			|| ( function_exists( 'is_post_type_archive' ) && is_post_type_archive( 'product' ) );
+		$is_home_or_search   = ( function_exists( 'is_front_page' ) && is_front_page() )
+			|| ( function_exists( 'is_home' ) && is_home() )
+			|| ( function_exists( 'is_search' ) && is_search() );
 		$is_cart_or_checkout = ( function_exists( 'is_cart' ) && is_cart() ) || ( function_exists( 'is_checkout' ) && is_checkout() );
 
 		$should_enqueue = false;
 
 		if ( $is_product_page && Settings::get( 'display_product_pages' ) ) {
 			$should_enqueue = true;
-		} elseif ( $is_archive && Settings::get( 'display_archives' ) ) {
+		} elseif ( ( $is_archive || $is_home_or_search ) && Settings::get( 'display_archives' ) ) {
 			$should_enqueue = true;
 		} elseif ( $is_cart_or_checkout ) {
 			$should_enqueue = true;
@@ -507,10 +508,7 @@ class PriceDisplay {
 			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
 
 			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-			$date_parts             = explode( '-', $reference_date );
-			$reference_date_display = 3 === count( $date_parts )
-				? sprintf( '%d. %d. %d.', (int) $date_parts[2], (int) $date_parts[1], (int) $date_parts[0] )
-				: '';
+			$reference_date_display = Dates::format_date_display( $reference_date );
 
 			$label = self::format_anchor_label( $raw_label, $reference_date_display, $reference_date );
 
@@ -523,6 +521,27 @@ class PriceDisplay {
 			$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
 
 			$anchor_title = self::format_anchor_title( $label, $reference_date_display );
+
+			$is_card_context = 'archive' === $context;
+
+			$card_style = (string) Settings::get( 'card_display_style', 'same_as_product' );
+			if ( $is_card_context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \SidrenaCijena\Support\DisplayStyles::presets() ) ) {
+				$style = $card_style;
+			} else {
+				$style = (string) Settings::get( 'product_display_style', 'tooltip' );
+			}
+
+			$date_mode = $is_card_context
+				? (string) Settings::get( 'card_date_mode', Settings::get( 'anchor_date_mode', 'tooltip' ) )
+				: (string) Settings::get( 'anchor_date_mode', 'tooltip' );
+
+			$font_weight = $is_card_context
+				? (string) Settings::get( 'card_font_weight', Settings::get( 'anchor_font_weight', 'normal' ) )
+				: (string) Settings::get( 'anchor_font_weight', 'normal' );
+
+			$size = $is_card_context
+				? (int) Settings::get( 'card_display_size', Settings::get( 'display_size', 40 ) )
+				: (int) Settings::get( 'display_size', 40 );
 
 			$template_args = array(
 				'item'                   => $item,
@@ -539,10 +558,11 @@ class PriceDisplay {
 				'reference_date_display' => $reference_date_display,
 				'anchor_title'           => $anchor_title,
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
-				'style'                  => (string) Settings::get( 'product_display_style', 'tooltip' ),
-				'date_mode'              => (string) Settings::get( 'anchor_date_mode', 'tooltip' ),
+				'style'                  => $style,
+				'date_mode'              => $date_mode,
 				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ) ),
-				'font_weight'            => (string) Settings::get( 'anchor_font_weight', 'normal' ),
+				'font_weight'            => $font_weight,
+				'size'                   => $size,
 				'product_id'             => (int) $item->id,
 				'variation_id'           => (int) $item->variation_id,
 			);
@@ -711,11 +731,24 @@ class PriceDisplay {
 	/**
 	 * Display context for the current request.
 	 *
+	 * @param \WC_Product|null $product Optional product being evaluated.
 	 * @return string
 	 */
-	protected function context() {
+	protected function context( $product = null ) {
 		if ( function_exists( 'wc_get_loop_prop' ) && wc_get_loop_prop( 'name' ) ) {
 			return 'archive';
+		}
+
+		if ( $product instanceof \WC_Product && function_exists( 'get_queried_object_id' ) ) {
+			$queried_id = (int) get_queried_object_id();
+			if ( $queried_id > 0 ) {
+				$product_id = (int) $product->get_id();
+				$parent_id  = (int) $product->get_parent_id();
+
+				if ( $product_id !== $queried_id && $parent_id !== $queried_id ) {
+					return 'archive';
+				}
+			}
 		}
 
 		if ( function_exists( 'is_product' ) && is_product() ) {

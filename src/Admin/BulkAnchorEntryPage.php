@@ -9,6 +9,7 @@ namespace SidrenaCijena\Admin;
 
 use SidrenaCijena\Plugin;
 use SidrenaCijena\Support\Currency;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -122,7 +123,12 @@ class BulkAnchorEntryPage {
 			echo '<td>' . esc_html( (string) $item->sku ) . '</td>';
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
 			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" inputmode="decimal" placeholder="' . esc_attr__( 'e.g. 19.99', 'titanworks-bazna-cijena' ) . '" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'titanworks-bazna-cijena' ) . '" /></td>';
-			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'titanworks-bazna-cijena' ) . '" /></td>';
+			$ref_formatted = Dates::format_date_display( $row['reference_date'] );
+			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'titanworks-bazna-cijena' ) . '" />';
+			if ( '' !== $ref_formatted ) {
+				echo ' <span class="sidrena-date-badge description" style="display:inline-block;margin-left:4px;font-size:12px;font-weight:600;color:#1d2327;">' . esc_html( $ref_formatted ) . '</span>';
+			}
+			echo '</td>';
 			echo '</tr>';
 		}
 
@@ -302,7 +308,7 @@ class BulkAnchorEntryPage {
 				}
 
 				$price = isset( $fields['price'] ) ? sanitize_text_field( (string) $fields['price'] ) : '';
-				$date  = isset( $fields['reference_date'] ) ? sanitize_text_field( (string) $fields['reference_date'] ) : '';
+				$date  = isset( $fields['reference_date'] ) ? Dates::normalize_date( sanitize_text_field( (string) $fields['reference_date'] ) ) : '';
 
 				if ( '' === $price ) {
 					++$failed;

@@ -11,6 +11,7 @@
 namespace SidrenaCijena\Compliance;
 
 use SidrenaCijena\Logging\Logger;
+use SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -253,12 +254,12 @@ final class RuleConfig {
 	private static function sanitize_date( $value, $fallback ) {
 		$value = trim( (string) $value );
 
-		$date = \DateTimeImmutable::createFromFormat( '!Y-m-d', $value );
+		$normalized = Dates::normalize_date( $value );
 
-		if ( ! $date || $date->format( 'Y-m-d' ) !== $value ) {
-			return $fallback;
+		if ( '' !== $normalized && Dates::is_valid_date( $normalized ) ) {
+			return $normalized;
 		}
 
-		return $value;
+		return $fallback;
 	}
 }

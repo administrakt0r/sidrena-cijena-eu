@@ -8,6 +8,7 @@
 namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
 
 use PHPUnit\Framework\TestCase;
+use SidrenaCijena\Support\Settings;
 use SidrenaCijena\WooCommerce\Display\CardVisibility;
 
 /**
@@ -28,6 +29,7 @@ class CardVisibilityTest extends TestCase {
 		$GLOBALS['sidrena_test_can']         = true;
 		$GLOBALS['sidrena_test_wc_products'] = array();
 		$GLOBALS['sidrena_test_post_meta']   = array();
+		$GLOBALS['sidrena_test_options']     = array();
 		$_POST                               = array();
 	}
 
@@ -39,28 +41,34 @@ class CardVisibilityTest extends TestCase {
 	protected function tearDown(): void {
 		$GLOBALS['sidrena_test_wc_products'] = array();
 		$GLOBALS['sidrena_test_post_meta']   = array();
+		$GLOBALS['sidrena_test_options']     = array();
 		$_POST                               = array();
 		parent::tearDown();
 	}
 
 	/**
-	 * Test is_visible returns true only when meta is '1'.
+	 * Test is_visible returns true by default and respects explicit overrides.
 	 *
 	 * @return void
 	 */
 	public function test_is_visible_respects_post_meta() {
 		$product_id = 42;
 
-		// Initial state when no post meta exists.
-		$this->assertFalse( CardVisibility::is_visible( $product_id ) );
+		// Initial state when no post meta exists: visible by default.
+		$this->assertTrue( CardVisibility::is_visible( $product_id ) );
 
-		// Set to '0'.
+		// Set to '0': hidden.
 		$GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '0';
 		$this->assertFalse( CardVisibility::is_visible( $product_id ) );
 
-		// Set to '1'.
+		// Set to '1': visible.
 		$GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '1';
 		$this->assertTrue( CardVisibility::is_visible( $product_id ) );
+
+		// Unset meta with card_display_default = false in settings.
+		unset( $GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] );
+		update_option( Settings::OPTION, array( 'card_display_default' => false ) );
+		$this->assertFalse( CardVisibility::is_visible( $product_id ) );
 	}
 
 	/**
@@ -92,10 +100,12 @@ class CardVisibilityTest extends TestCase {
 
 		$_POST[ CardVisibility::NONCE ] = wp_create_nonce( CardVisibility::FIELD );
 		$_POST[ CardVisibility::FIELD ] = '1';
+		$_POST['_sidrena_barcode']      = '3851234567890';
 
 		CardVisibility::save( $product );
 
 		$this->assertSame( '1', $product->get_meta( CardVisibility::META_KEY ) );
+		$this->assertSame( '3851234567890', $product->get_meta( '_sidrena_barcode' ) );
 
 		// Now uncheck.
 		$_POST[ CardVisibility::FIELD ] = '0';

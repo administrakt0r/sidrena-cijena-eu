@@ -71,9 +71,14 @@ final class DisplaySettingsPage {
 				'description' => __( 'Render anchor price information on single product pages.', 'titanworks-bazna-cijena' ),
 			),
 			'display_archives'      => array(
-				'label'       => __( 'Archives and lists', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Product cards and archives', 'titanworks-bazna-cijena' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Render anchor price information on catalog loops, archives, and search results.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Render anchor price information on shop loops, category archives, search results, related products, and minicards.', 'titanworks-bazna-cijena' ),
+			),
+			'card_display_default'  => array(
+				'label'       => __( 'Show on cards by default', 'titanworks-bazna-cijena' ),
+				'type'        => 'checkbox',
+				'description' => __( 'Display the anchor price on all product cards by default. Can be unchecked on individual products in the product editor.', 'titanworks-bazna-cijena' ),
 			),
 			'display_variations'    => array(
 				'label'       => __( 'Variations', 'titanworks-bazna-cijena' ),
@@ -209,7 +214,7 @@ final class DisplaySettingsPage {
 		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Odjeća / tehnika / usluge:', 'titanworks-bazna-cijena' ) . '</strong> <span id="sidrena-preview-general" class="sidrena-label-preview-val"></span>: 17,99 €</div>';
 		echo '</div>';
 
-		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (2. 5. 2025. za hranu, 10. 9. 2026. za ostalu robu i usluge).', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (02.05.2025. za hranu, 10.09.2026. za ostalu robu i usluge).', 'titanworks-bazna-cijena' ) . '</p>';
 		echo '</div>';
 	}
 

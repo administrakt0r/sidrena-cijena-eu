@@ -41,12 +41,12 @@ final class LegalSettingsPage {
 			'general_reference_date' => array(
 				'label'       => __( 'General reference date', 'titanworks-bazna-cijena' ),
 				'type'        => 'date',
-				'description' => __( 'Statutory anchor reference date (default: 2026-09-10).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Statutory anchor reference date (default: 10.09.2026. / 2026-09-10).', 'titanworks-bazna-cijena' ),
 			),
 			'legacy_reference_date'  => array(
 				'label'       => __( 'Legacy reference date', 'titanworks-bazna-cijena' ),
 				'type'        => 'date',
-				'description' => __( 'Statutory anchor reference date for legacy categories (default: 2025-05-02).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Statutory anchor reference date for legacy categories (default: 02.05.2025. / 2025-05-02).', 'titanworks-bazna-cijena' ),
 			),
 			'legacy_enabled'         => array(
 				'label'       => __( 'Enable legacy treatment', 'titanworks-bazna-cijena' ),
@@ -61,7 +61,7 @@ final class LegalSettingsPage {
 			'rule_version'           => array(
 				'label'       => __( 'Legal-rule version', 'titanworks-bazna-cijena' ),
 				'type'        => 'text',
-				'description' => __( 'Identifier for the legal rule-set configuration (e.g. 2026-09-10).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Identifier for the legal rule-set configuration (e.g. 10.09.2026.).', 'titanworks-bazna-cijena' ),
 			),
 		);
 
@@ -121,6 +121,9 @@ final class LegalSettingsPage {
 						'class' => '',
 					)
 				);
+				if ( ! empty( $value ) ) {
+					echo ' <span class="sidrena-date-badge description" style="display:inline-block;margin-left:8px;font-weight:600;color:#1d2327;">' . esc_html( Dates::format_date_display( $value ) ) . '</span>';
+				}
 				break;
 			case 'categories':
 				$choices = array();
@@ -212,6 +215,10 @@ final class LegalSettingsPage {
 	private static function format_value( $value ) {
 		if ( is_array( $value ) ) {
 			return implode( ', ', array_map( 'strval', $value ) );
+		}
+
+		if ( is_string( $value ) && Dates::is_valid_date( $value ) ) {
+			return Dates::format_date_display( $value );
 		}
 
 		if ( is_bool( $value ) || 'true' === $value || 'false' === $value ) {

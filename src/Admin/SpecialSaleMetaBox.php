@@ -209,13 +209,16 @@ class SpecialSaleMetaBox {
 				<p>
 					<label for="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Start date', 'titanworks-bazna-cijena' ); ?></label>
 					<input type="date" id="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>" name="start_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $today ); ?>" />
+					<?php if ( ! empty( $today ) ) : ?>
+						<span class="sidrena-date-badge description" style="display:inline-block;margin-left:6px;font-weight:600;color:#1d2327;"><?php echo esc_html( Dates::format_date_display( $today ) ); ?></span>
+					<?php endif; ?>
 					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'End date (optional)', 'titanworks-bazna-cijena' ); ?></label>
 					<input type="date" id="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>" name="end_date<?php echo esc_attr( $field_suffix ); ?>" />
-					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty.', 'titanworks-bazna-cijena' ); ?></span>
+					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty. Format: d.m.Y.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
@@ -264,8 +267,8 @@ class SpecialSaleMetaBox {
 		$args = array(
 			'sale_type'   => sanitize_key( self::posted_value( 'sale_type', $variation_id ) ),
 			'sale_name'   => self::posted_value( 'sale_name', $variation_id ),
-			'start_date'  => self::posted_value( 'start_date', $variation_id ),
-			'end_date'    => self::posted_value( 'end_date', $variation_id ),
+			'start_date'  => Dates::normalize_date( self::posted_value( 'start_date', $variation_id ) ),
+			'end_date'    => Dates::normalize_date( self::posted_value( 'end_date', $variation_id ) ),
 			'promo_price' => self::posted_value( 'promo_price', $variation_id ),
 		);
 

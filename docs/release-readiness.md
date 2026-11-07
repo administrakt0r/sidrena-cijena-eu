@@ -1,5 +1,12 @@
 # Release verification
 
+## UI/UX pass 17 — Card Anchor Display Presets, Default-On Visibility & Barcode/EAN Auto-Detection (2026-11-06)
+
+- Default-on card visibility: enabled anchor price display on product cards, category archives, search results, related products, and minicards by default across all products (`CardVisibility::is_visible()` defaults to true). Merchants can toggle globally in Settings → Display (`display_archives` and `card_display_default`) or override per-product via the "Product cards" checkbox in the product data panel.
+- Dedicated card styling presets: added full preset gallery and customizable controls for product cards and archives in Settings → Display styles (`card_display_style`, `card_date_mode`, `card_font_weight`, `card_display_size`), supporting "Same as product page" or independent presets (`tooltip`, `subtle`, `minimal`, `badge`, `card`, `pill`, `tag`, etc.) tailored for compact grid cards.
+- Barcode / EAN auto-detection & WooCommerce field: expanded barcode meta detection in `WooCommerceCatalogProvider` to inspect `_sidrena_barcode`, `_barcode`, `barcode`, `_ean`, `ean`, `_gtin`, `gtin`, attributes (`pa_ean`, `pa_barcode`, `pa_barkod`), and automatic fallback to `sku` via filter `sidrena_cijena_barcode_fallback_to_sku`. Added a native Barcode/EAN field in WooCommerce Product Data (`AnchorMetaBox`) so merchants can view and edit barcodes directly without needing extra plugins.
+- Test coverage & quality: 611 unit tests (2,315 assertions), 0 failures; Croatian translation catalog complete (840 translated strings / 0 untranslated in `languages/hr_HR.po`).
+
 ## UI/UX pass 16 — Admin Entity Navigation Links, Style Hygiene & Public Price List UX (2026-11-06)
 
 - Direct admin entity navigation links: introduced `AdminLinks` helper (`src/Admin/AdminLinks.php`) providing accessible, context-aware links to edit products, standalone items, variations, sales locations, and legal settings. Wired directly into Compliance findings (`CompliancePage`), Dashboard validation findings (`DashboardPage`), Bulk Anchor Entry table (`BulkAnchorEntryPage`), and Price History corrections (`PriceHistoryPage`).

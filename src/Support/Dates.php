@@ -18,16 +18,28 @@ defined( 'ABSPATH' ) || exit;
 final class Dates {
 
 	/**
-	 * Site time zone.
+	 * Canonical legal timezone for Croatian compliance: Europe/Zagreb.
+	 *
+	 * @return \DateTimeZone
+	 */
+	public static function zagreb_timezone() {
+		return new \DateTimeZone( 'Europe/Zagreb' );
+	}
+
+	/**
+	 * Site time zone. Falls back to Europe/Zagreb when unconfigured or UTC.
 	 *
 	 * @return \DateTimeZone
 	 */
 	public static function timezone() {
 		if ( function_exists( 'wp_timezone' ) ) {
-			return wp_timezone();
+			$tz = wp_timezone();
+			if ( 'UTC' !== $tz->getName() && '+00:00' !== $tz->getName() ) {
+				return $tz;
+			}
 		}
 
-		return new \DateTimeZone( 'UTC' );
+		return self::zagreb_timezone();
 	}
 
 	/**
@@ -90,7 +102,10 @@ final class Dates {
 	/**
 	 * Parse a site-local date or datetime into a DateTimeImmutable.
 	 *
-	 * @param string $value Date (`Y-m-d`) or datetime (`Y-m-d H:i:s`).
+	 * Supports both ISO (`Y-m-d H:i:s`, `Y-m-d H:i`, `Y-m-d`) and Croatian
+	 * formats (`d.m.Y. H:i`, `d.m.Y.`, `d.m.Y`).
+	 *
+	 * @param string $value Date or datetime.
 	 * @return \DateTimeImmutable|null
 	 */
 	public static function parse_site( $value ) {
@@ -98,6 +113,19 @@ final class Dates {
 
 		if ( '' === $value ) {
 			return null;
+		}
+
+		if ( preg_match( '/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\.?(\s+(\d{1,2}):(\d{2})(:(\d{2}))?)?$/', $value, $matches ) ) {
+			$day   = sprintf( '%02d', (int) $matches[1] );
+			$month = sprintf( '%02d', (int) $matches[2] );
+			$year  = $matches[3];
+			$time  = ! empty( $matches[4] ) ? sprintf( '%02d:%02d:%02d', (int) $matches[5], (int) $matches[6], isset( $matches[8] ) ? (int) $matches[8] : 0 ) : '00:00:00';
+			$iso   = "$year-$month-$day $time";
+
+			$date = \DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $iso, self::timezone() );
+			if ( $date ) {
+				return $date;
+			}
 		}
 
 		$formats = array( 'Y-m-d H:i:s', 'Y-m-d H:i', 'Y-m-d' );
@@ -114,7 +142,44 @@ final class Dates {
 	}
 
 	/**
-	 * Whether a string is a valid `Y-m-d` date.
+	 * Normalize a date string (ISO `Y-m-d` or Croatian `d.m.Y.`) to ISO `Y-m-d`.
+	 *
+	 * @param mixed $value Input date.
+	 * @return string Normalized `YYYY-MM-DD` or empty string if invalid.
+	 */
+	public static function normalize_date( $value ) {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		$value = trim( $value );
+		$clean = rtrim( $value, '.' );
+
+		if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $clean, $matches ) ) {
+			$y = (int) $matches[1];
+			$m = (int) $matches[2];
+			$d = (int) $matches[3];
+			if ( checkdate( $m, $d, $y ) ) {
+				return sprintf( '%04d-%02d-%02d', $y, $m, $d );
+			}
+			return '';
+		}
+
+		if ( preg_match( '/^(\d{1,2})[\.\/\-](\d{1,2})[\.\/\-](\d{4})$/', $clean, $matches ) ) {
+			$y = (int) $matches[3];
+			$m = (int) $matches[2];
+			$d = (int) $matches[1];
+			if ( checkdate( $m, $d, $y ) ) {
+				return sprintf( '%04d-%02d-%02d', $y, $m, $d );
+			}
+			return '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * Whether a string is a valid ISO date (YYYY-MM-DD).
 	 *
 	 * @param mixed $value Candidate.
 	 * @return bool
@@ -130,44 +195,70 @@ final class Dates {
 	}
 
 	/**
-	 * Format a date-only value for display without converting time zones.
+	 * Format a date-only value for display as Croatian `d.m.Y.`.
 	 *
 	 * Reference dates are legal date-only values (`Y-m-d`). Passing them through
 	 * a timestamp would shift the calendar day on sites west of UTC, so the
-	 * components are formatted directly (`02.05.2025.`).
+	 * components are formatted directly (`10.09.2026.`).
 	 *
-	 * @param mixed $value Date (`Y-m-d`) or datetime string.
-	 * @return string Display date, or an empty string when the value is not a date.
+	 * @param mixed $value Date (`Y-m-d`), datetime string, or integer timestamp.
+	 * @return string Display date (e.g. `10.09.2026.`), or an empty string when the value is not a date.
 	 */
 	public static function format_date_display( $value ) {
-		$value = self::date_only( $value );
-
-		if ( ! self::is_valid_date( $value ) ) {
+		if ( empty( $value ) ) {
 			return '';
 		}
 
-		$parts = explode( '-', (string) $value );
+		if ( is_numeric( $value ) ) {
+			$dt = ( new \DateTimeImmutable( '@' . (int) $value ) )->setTimezone( self::zagreb_timezone() );
 
-		return sprintf( '%s.%s.%s.', $parts[2], $parts[1], $parts[0] );
+			return $dt->format( 'd.m.Y.' );
+		}
+
+		$value = self::date_only( $value );
+
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		$value = trim( $value );
+
+		if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value, $matches ) ) {
+			if ( ! checkdate( (int) $matches[2], (int) $matches[3], (int) $matches[1] ) ) {
+				return '';
+			}
+			return sprintf( '%02d.%02d.%04d.', (int) $matches[3], (int) $matches[2], (int) $matches[1] );
+		}
+
+		if ( preg_match( '/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\.?$/', $value, $matches ) ) {
+			if ( ! checkdate( (int) $matches[2], (int) $matches[1], (int) $matches[3] ) ) {
+				return '';
+			}
+			return sprintf( '%02d.%02d.%04d.', (int) $matches[1], (int) $matches[2], (int) $matches[3] );
+		}
+
+		return '';
 	}
 
 	/**
-	 * Format a UTC datetime for display in the site time zone.
+	 * Format a UTC datetime for display in Europe/Zagreb 24-hour time (`d.m.Y. H:i`).
 	 *
-	 * Consistent with format_date_display: outputs Croatian `d.m.Y. H:i`.
+	 * Consistent with format_date_display: outputs Croatian `d.m.Y. H:i` in 24-hour time.
 	 *
 	 * @param mixed $value UTC datetime string or integer timestamp.
-	 * @return string Formatted site-local datetime or empty string if invalid.
+	 * @return string Formatted Zagreb datetime (e.g. `10.09.2026. 08:00`) or empty string if invalid.
 	 */
 	public static function format_datetime_display( $value ) {
 		if ( empty( $value ) ) {
 			return '';
 		}
 
-		if ( is_numeric( $value ) ) {
-			$dt = self::from_utc( gmdate( 'Y-m-d H:i:s', (int) $value ) );
+		$tz = self::zagreb_timezone();
 
-			return $dt ? $dt->format( 'd.m.Y. H:i' ) : '';
+		if ( is_numeric( $value ) ) {
+			$dt = ( new \DateTimeImmutable( '@' . (int) $value ) )->setTimezone( $tz );
+
+			return $dt->format( 'd.m.Y. H:i' );
 		}
 
 		if ( ! is_string( $value ) ) {
@@ -183,13 +274,13 @@ final class Dates {
 		$dt = self::from_utc( 16 === strlen( $value ) ? $value . ':00' : $value );
 
 		if ( $dt ) {
-			return $dt->format( 'd.m.Y. H:i' );
+			return $dt->setTimezone( $tz )->format( 'd.m.Y. H:i' );
 		}
 
 		try {
-			$parsed = new \DateTimeImmutable( $value );
+			$parsed = new \DateTimeImmutable( $value, new \DateTimeZone( 'UTC' ) );
 
-			return $parsed->setTimezone( self::timezone() )->format( 'd.m.Y. H:i' );
+			return $parsed->setTimezone( $tz )->format( 'd.m.Y. H:i' );
 		} catch ( \Throwable $e ) {
 			return '';
 		}

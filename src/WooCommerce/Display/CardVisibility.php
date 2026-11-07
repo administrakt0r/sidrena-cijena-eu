@@ -8,6 +8,7 @@
 namespace SidrenaCijena\WooCommerce\Display;
 
 use SidrenaCijena\Admin\Capabilities;
+use SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,11 +30,20 @@ final class CardVisibility {
 	/**
 	 * Whether the anchor appears in an archive product card.
 	 *
+	 * Enabled by default across all products unless explicitly set to '0'
+	 * on this product or disabled in global settings.
+	 *
 	 * @param int $product_id Product ID.
 	 * @return bool
 	 */
 	public static function is_visible( $product_id ) {
-		return '1' === (string) get_post_meta( (int) $product_id, self::META_KEY, true );
+		$value = (string) get_post_meta( (int) $product_id, self::META_KEY, true );
+
+		if ( '' === $value ) {
+			return (bool) Settings::get( 'card_display_default', true );
+		}
+
+		return '1' === $value;
 	}
 
 	/**
@@ -47,11 +57,11 @@ final class CardVisibility {
 		echo '<p class="form-field"><label for="sidrena-cijena-show-in-cards">' . esc_html__( 'Product cards', 'titanworks-bazna-cijena' ) . '</label>';
 		echo '<input type="hidden" name="' . esc_attr( self::FIELD ) . '" value="0" />';
 		echo '<input type="checkbox" id="sidrena-cijena-show-in-cards" name="' . esc_attr( self::FIELD ) . '" value="1" ' . checked( self::is_visible( $product_id ), true, false ) . ' /> ';
-		echo '<span class="description">' . esc_html__( 'Show Sidrena cijena on this product’s shop cards. The product page and price-list evidence stay visible.', 'titanworks-bazna-cijena' ) . '</span></p>';
+		echo '<span class="description">' . esc_html__( 'Show Sidrena cijena on this product’s shop cards. Enabled by default across all products; uncheck to hide on this item.', 'titanworks-bazna-cijena' ) . '</span></p>';
 	}
 
 	/**
-	 * Persist the preference during WooCommerce's validated product save.
+	 * Persist the preference and barcode during WooCommerce's validated product save.
 	 *
 	 * @param \WC_Product $product Product being saved.
 	 * @return void
@@ -68,11 +78,14 @@ final class CardVisibility {
 		}
 
 		// The hidden companion field makes an unchecked box explicit.
-		if ( ! isset( $_POST[ self::FIELD ] ) ) {
-			return;
+		if ( isset( $_POST[ self::FIELD ] ) ) {
+			$value = sanitize_text_field( wp_unslash( $_POST[ self::FIELD ] ) );
+			$product->update_meta_data( self::META_KEY, '1' === $value ? '1' : '0' );
 		}
 
-		$value = sanitize_text_field( wp_unslash( $_POST[ self::FIELD ] ) );
-		$product->update_meta_data( self::META_KEY, '1' === $value ? '1' : '0' );
+		if ( isset( $_POST['_sidrena_barcode'] ) ) {
+			$barcode = sanitize_text_field( wp_unslash( $_POST['_sidrena_barcode'] ) );
+			$product->update_meta_data( '_sidrena_barcode', $barcode );
+		}
 	}
 }

@@ -127,7 +127,7 @@ final class OperationsSettingsPage {
 						'pattern'     => '^([01]?[0-9]|2[0-3]):[0-5][0-9]$',
 						'maxlength'   => 5,
 						'inputmode'   => 'numeric',
-						'description' => __( '24-hour format (HH:MM, e.g. 08:00 or 14:30) in site local time.', 'titanworks-bazna-cijena' ),
+						'description' => __( '24-hour format (HH:MM, e.g. 08:00 or 14:30) in Zagreb time (Europe/Zagreb).', 'titanworks-bazna-cijena' ),
 					)
 				);
 				break;

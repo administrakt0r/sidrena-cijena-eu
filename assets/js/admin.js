@@ -65,16 +65,26 @@
 		var size = document.getElementById( 'sidrena-display-size' );
 		var value = document.getElementById( 'sidrena-display-size-value' );
 
-		if ( ! size || ! value ) {
-			return;
+		if ( size && value ) {
+			size.addEventListener( 'input', function () {
+				value.textContent = size.value + '%';
+				document.querySelectorAll( '.sidrena-style-preview' ).forEach( function ( preview ) {
+					preview.style.setProperty( '--sidrena-size', Number( size.value ) / 100 );
+				} );
+			} );
 		}
 
-		size.addEventListener( 'input', function () {
-			value.textContent = size.value + '%';
-			document.querySelectorAll( '.sidrena-style-preview' ).forEach( function ( preview ) {
-				preview.style.setProperty( '--sidrena-size', Number( size.value ) / 100 );
+		var cardSize = document.getElementById( 'sidrena-card-display-size' );
+		var cardValue = document.getElementById( 'sidrena-card-display-size-value' );
+
+		if ( cardSize && cardValue ) {
+			cardSize.addEventListener( 'input', function () {
+				cardValue.textContent = cardSize.value + '%';
+				document.querySelectorAll( '.sidrena-card-style-preview' ).forEach( function ( preview ) {
+					preview.style.setProperty( '--sidrena-size', Number( cardSize.value ) / 100 );
+				} );
 			} );
-		} );
+		}
 	}
 
 	function bindBulkAnchorSelection() {
@@ -183,10 +193,10 @@
 		function updatePreview() {
 			var val = input.value || input.getAttribute( 'placeholder' ) || 'Sidrena cijena';
 			if ( previewFood ) {
-				previewFood.textContent = val.replace( /\{datum\}|\{date\}/g, '2. 5. 2025.' ).replace( /\{datum_iso\}/g, '2025-05-02' );
+				previewFood.textContent = val.replace( /\{datum\}|\{date\}/g, '02.05.2025.' ).replace( /\{datum_iso\}/g, '2025-05-02' );
 			}
 			if ( previewGeneral ) {
-				previewGeneral.textContent = val.replace( /\{datum\}|\{date\}/g, '10. 9. 2026.' ).replace( /\{datum_iso\}/g, '2026-09-10' );
+				previewGeneral.textContent = val.replace( /\{datum\}|\{date\}/g, '10.09.2026.' ).replace( /\{datum_iso\}/g, '2026-09-10' );
 			}
 
 			for ( var i = 0; i < presetBtns.length; i++ ) {
