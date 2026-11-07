@@ -35,5 +35,6 @@ Thumbs.db
 /.phpcs.cache
 /.phpstan.cache/
 /.eslintcache
-/.taskless/
+/.taskless/.cache/
+/.taskless/.run/
 PROMPT.md

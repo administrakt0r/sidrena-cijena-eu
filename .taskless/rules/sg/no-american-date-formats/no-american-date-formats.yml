@@ -1,0 +1,33 @@
+id: no-american-date-formats
+language: Php
+severity: error
+message: "Do not use American date or 12-hour time formats (m/d/Y, h:i a); use Croatian statutory format d.m.Y. and 24-hour Zagreb time H:i via Dates helper."
+note: |
+  Croatian statutory compliance mandates standard Croatian date format (d.m.Y.)
+  and 24-hour Zagreb time (H:i). Never use American month-first date formats
+  (m/d/Y, n/j/Y, m-d-Y) or 12-hour AM/PM formats (h:i a, g:i A). Always use
+  the Dates helper methods (Dates::format_date(), Dates::format_datetime()) or
+  standard Croatian format strings.
+files:
+  - "src/**/*.php"
+  - "templates/**/*.php"
+rule:
+  any:
+    - pattern: "'m/d/Y'"
+    - pattern: '"m/d/Y"'
+    - pattern: "'m/d/y'"
+    - pattern: '"m/d/y"'
+    - pattern: "'n/j/Y'"
+    - pattern: '"n/j/Y"'
+    - pattern: "'n/j/y'"
+    - pattern: '"n/j/y"'
+    - pattern: "'m-d-Y'"
+    - pattern: '"m-d-Y"'
+    - pattern: "'h:i A'"
+    - pattern: '"h:i A"'
+    - pattern: "'h:i a'"
+    - pattern: '"h:i a"'
+    - pattern: "'g:i A'"
+    - pattern: '"g:i A"'
+    - pattern: "'g:i a'"
+    - pattern: '"g:i a"'

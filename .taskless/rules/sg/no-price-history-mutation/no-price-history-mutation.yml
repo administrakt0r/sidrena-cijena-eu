@@ -13,3 +13,4 @@ rule:
   any:
     - pattern: '$wpdb->delete($$$ARGS)'
     - pattern: '$wpdb->update($$$ARGS)'
+    - pattern: '$wpdb->query($$$ARGS)'
