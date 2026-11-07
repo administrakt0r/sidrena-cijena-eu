@@ -119,6 +119,9 @@ class StandalonePostTypeTest extends TestCase {
 		$this->assertStringContainsString( 'name="_sidrena_sku"', $html );
 		$this->assertStringContainsString( 'name="_sidrena_regular_price"', $html );
 		$this->assertStringContainsString( 'name="_sidrena_sale_price"', $html );
+		$this->assertStringContainsString( 'name="_sidrena_first_seen"', $html );
+		$this->assertStringContainsString( 'class="regular-text sidrena-datepicker"', $html );
+		$this->assertStringContainsString( 'placeholder="d.m.Y."', $html );
 	}
 
 	/**
@@ -158,11 +161,13 @@ class StandalonePostTypeTest extends TestCase {
 		$_POST['_sidrena_currency']         = 'EUR';
 		$_POST['_sidrena_tax_inclusive']    = '1';
 		$_POST['_sidrena_item_type']        = 'product';
+		$_POST['_sidrena_first_seen']       = '10.09.2026.';
 
 		StandalonePostType::save( $post_id );
 
 		$this->assertSame( 'COK-01', get_post_meta( $post_id, '_sidrena_sku', true ) );
 		$this->assertSame( 2.49, get_post_meta( $post_id, '_sidrena_regular_price', true ) );
 		$this->assertSame( 1.99, get_post_meta( $post_id, '_sidrena_sale_price', true ) );
+		$this->assertSame( '2026-09-10', get_post_meta( $post_id, '_sidrena_first_seen', true ) );
 	}
 }

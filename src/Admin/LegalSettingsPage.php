@@ -115,15 +115,15 @@ final class LegalSettingsPage {
 			case 'date':
 				$fields->text(
 					$key,
-					$value,
+					Dates::format_date_display( $value ),
 					array(
-						'type'  => 'date',
-						'class' => '',
+						'type'         => 'text',
+						'class'        => 'regular-text sidrena-datepicker',
+						'placeholder'  => 'd.m.Y.',
+						'autocomplete' => 'off',
+						'inputmode'    => 'numeric',
 					)
 				);
-				if ( ! empty( $value ) ) {
-					echo ' <span class="sidrena-date-badge description" style="display:inline-block;margin-left:8px;font-weight:600;color:#1d2327;">' . esc_html( Dates::format_date_display( $value ) ) . '</span>';
-				}
 				break;
 			case 'categories':
 				$choices = array();

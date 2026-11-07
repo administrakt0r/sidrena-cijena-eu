@@ -2730,6 +2730,26 @@ if ( ! function_exists( 'wp_enqueue_script' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_localize_script' ) ) {
+	/**
+	 * Localize script stub.
+	 *
+	 * @param string $handle      Script handle.
+	 * @param string $object_name JavaScript object name.
+	 * @param array  $l10n        Localization data.
+	 * @return bool
+	 */
+	function wp_localize_script( $handle, $object_name, $l10n ) {
+		if ( ! isset( $GLOBALS['sidrena_test_localized_scripts'] ) ) {
+			$GLOBALS['sidrena_test_localized_scripts'] = array();
+		}
+
+		$GLOBALS['sidrena_test_localized_scripts'][ $handle ][ $object_name ] = $l10n;
+
+		return true;
+	}
+}
+
 if ( ! function_exists( 'wp_script_is' ) ) {
 	/**
 	 * Script is stub.

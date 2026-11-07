@@ -208,16 +208,13 @@ class SpecialSaleMetaBox {
 
 				<p>
 					<label for="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Start date', 'titanworks-bazna-cijena' ); ?></label>
-					<input type="date" id="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>" name="start_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $today ); ?>" />
-					<?php if ( ! empty( $today ) ) : ?>
-						<span class="sidrena-date-badge description" style="display:inline-block;margin-left:6px;font-weight:600;color:#1d2327;"><?php echo esc_html( Dates::format_date_display( $today ) ); ?></span>
-					<?php endif; ?>
+					<input type="text" class="widefat sidrena-datepicker" id="sidrena-cijena-sale-start<?php echo esc_attr( $id_suffix ); ?>" name="start_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( Dates::format_date_display( $today ) ); ?>" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" />
 					<span class="description"><?php echo esc_html__( 'Use the first day the promotional price applies.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 
 				<p>
 					<label for="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'End date (optional)', 'titanworks-bazna-cijena' ); ?></label>
-					<input type="date" id="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>" name="end_date<?php echo esc_attr( $field_suffix ); ?>" />
+					<input type="text" class="widefat sidrena-datepicker" id="sidrena-cijena-sale-end<?php echo esc_attr( $id_suffix ); ?>" name="end_date<?php echo esc_attr( $field_suffix ); ?>" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" />
 					<span class="description"><?php echo esc_html__( 'If the promotion has a scheduled last day, enter it; otherwise leave this empty. Format: d.m.Y.', 'titanworks-bazna-cijena' ); ?></span>
 				</p>
 

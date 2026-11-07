@@ -38,6 +38,10 @@ class DatesTest extends TestCase {
 		$this->assertSame( '10.09.2026.', Dates::format_date_display( '2026-09-10' ) );
 		$this->assertSame( '02.05.2025.', Dates::format_date_display( '2025-05-02' ) );
 		$this->assertSame( '01.01.2026.', Dates::format_date_display( '2026-01-01 00:30:00' ) );
+		$this->assertSame( '10.09.2026.', Dates::format_date_display( '10.09.2026.' ) );
+		$this->assertSame( '10.09.2026.', Dates::format_date_display( '10. 9. 2026.' ) );
+		$this->assertSame( '10.09.2026.', Dates::format_date_display( '10/09/2026' ) );
+		$this->assertSame( '10.09.2026.', Dates::format_date_display( '10-09-2026' ) );
 		$this->assertSame( '', Dates::format_date_display( '' ) );
 		$this->assertSame( '', Dates::format_date_display( null ) );
 		$this->assertSame( '', Dates::format_date_display( '2026-02-30' ) );
@@ -171,8 +175,13 @@ class DatesTest extends TestCase {
 		$this->assertSame( '2026-09-10', Dates::normalize_date( '2026-09-10' ) );
 		$this->assertSame( '2026-09-10', Dates::normalize_date( '10.09.2026.' ) );
 		$this->assertSame( '2026-09-10', Dates::normalize_date( '10.09.2026' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10. 09. 2026.' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10. 9. 2026.' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10/09/2026' ) );
+		$this->assertSame( '2026-09-10', Dates::normalize_date( '10-09-2026' ) );
 		$this->assertSame( '2025-05-02', Dates::normalize_date( '02.05.2025.' ) );
 		$this->assertSame( '2025-05-02', Dates::normalize_date( '2.5.2025' ) );
+		$this->assertSame( '2025-05-02', Dates::normalize_date( '02. 05. 2025.' ) );
 		$this->assertSame( '', Dates::normalize_date( 'invalid' ) );
 		$this->assertSame( '', Dates::normalize_date( '' ) );
 	}

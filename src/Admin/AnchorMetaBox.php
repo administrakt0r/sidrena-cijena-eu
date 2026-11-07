@@ -245,10 +245,7 @@ final class AnchorMetaBox {
 
 			<p>
 				<label for="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Reference date', 'titanworks-bazna-cijena' ); ?></label>
-				<input type="date" id="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>" name="reference_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( $anchor_date_value ); ?>" />
-				<?php if ( ! empty( $anchor_date_value ) ) : ?>
-					<span class="sidrena-date-badge description" style="display:inline-block;margin-left:6px;font-weight:600;color:#1d2327;"><?php echo esc_html( Dates::format_date_display( $anchor_date_value ) ); ?></span>
-				<?php endif; ?>
+				<input type="text" class="regular-text sidrena-datepicker" id="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>" name="reference_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( Dates::format_date_display( $anchor_date_value ) ); ?>" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" />
 				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'titanworks-bazna-cijena' ); ?></span>
 			</p>
 

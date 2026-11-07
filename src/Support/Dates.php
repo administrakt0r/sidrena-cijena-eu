@@ -165,7 +165,7 @@ final class Dates {
 			return '';
 		}
 
-		if ( preg_match( '/^(\d{1,2})[\.\/\-](\d{1,2})[\.\/\-](\d{4})$/', $clean, $matches ) ) {
+		if ( preg_match( '/^(\d{1,2})[\.\/\-]\s*(\d{1,2})[\.\/\-]\s*(\d{4})$/', $clean, $matches ) ) {
 			$y = (int) $matches[3];
 			$m = (int) $matches[2];
 			$d = (int) $matches[1];
@@ -230,7 +230,7 @@ final class Dates {
 			return sprintf( '%02d.%02d.%04d.', (int) $matches[3], (int) $matches[2], (int) $matches[1] );
 		}
 
-		if ( preg_match( '/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\.?$/', $value, $matches ) ) {
+		if ( preg_match( '/^(\d{1,2})[\.\/\-]\s*(\d{1,2})[\.\/\-]\s*(\d{4})\.?$/', $value, $matches ) ) {
 			if ( ! checkdate( (int) $matches[2], (int) $matches[1], (int) $matches[3] ) ) {
 				return '';
 			}
@@ -298,6 +298,16 @@ final class Dates {
 	public static function date_only( $value ) {
 		if ( ! is_string( $value ) || '' === $value ) {
 			return $value;
+		}
+
+		$value = trim( $value );
+
+		if ( preg_match( '/^(\d{4}-\d{2}-\d{2})/', $value, $matches ) ) {
+			return $matches[1];
+		}
+
+		if ( preg_match( '/^(\d{1,2}[\.\/\-]\s*\d{1,2}[\.\/\-]\s*\d{4}\.?)/', $value, $matches ) ) {
+			return $matches[1];
 		}
 
 		return strlen( $value ) > 10 ? substr( $value, 0, 10 ) : $value;

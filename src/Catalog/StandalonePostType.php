@@ -198,7 +198,7 @@ final class StandalonePostType {
 			'_sidrena_first_seen'    => array(
 				'label'       => __( 'First appearance date', 'titanworks-bazna-cijena' ),
 				'type'        => 'date',
-				'description' => __( 'Date the item was first offered in the store (YYYY-MM-DD).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Date the item was first offered in the store (d.m.Y.).', 'titanworks-bazna-cijena' ),
 			),
 			'_sidrena_tax_inclusive' => array(
 				'label' => __( 'Prices include tax', 'titanworks-bazna-cijena' ),
@@ -238,7 +238,8 @@ final class StandalonePostType {
 					echo '<input type="checkbox" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="1"' . checked( (bool) $value, true, false ) . ' />';
 					break;
 				case 'date':
-					echo '<input type="date" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) $value ) . '" />';
+					$date_display = Dates::format_date_display( (string) $value );
+					echo '<input type="text" class="regular-text sidrena-datepicker" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( $date_display ) . '" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" />';
 					break;
 				default:
 					echo '<input type="text" class="regular-text" id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( (string) $value ) . '"' . ( '' !== $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' />';
@@ -299,8 +300,7 @@ final class StandalonePostType {
 				if ( in_array( $field['type'], array( 'price', 'unit_price' ), true ) ) {
 					$value = Currency::to_storage( $value );
 				} elseif ( 'date' === $field['type'] ) {
-					$value = sanitize_text_field( (string) $value );
-					$value = Dates::is_valid_date( $value ) ? $value : '';
+					$value = Dates::normalize_date( sanitize_text_field( (string) $value ) );
 				} else {
 					$value = sanitize_text_field( (string) $value );
 				}

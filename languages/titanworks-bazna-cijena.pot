@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Titanworks Bazna Cijena 2.0.22\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/titanworks-bazna-cijena/issues\n"
-"POT-Creation-Date: 2026-11-07T02:49:10+00:00\n"
+"POT-Creation-Date: 2026-11-07T10:31:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -305,6 +305,12 @@ msgstr ""
 msgid "Apply the legacy reference date to items in designated legacy categories."
 msgstr ""
 
+msgid "Apr"
+msgstr ""
+
+msgid "April"
+msgstr ""
+
 msgid "A prior promotional sale ended recently within the 30-day window (ended %1$s, price %2$s) and was included in determining the 30-day lowest price."
 msgstr ""
 
@@ -333,6 +339,12 @@ msgid "A staff-facing name to recognize this shop, for example “Zagreb — Vla
 msgstr ""
 
 msgid "Audit"
+msgstr ""
+
+msgid "Aug"
+msgstr ""
+
+msgid "August"
 msgstr ""
 
 msgid "A unique price-list filename could not be generated."
@@ -605,13 +617,19 @@ msgstr ""
 msgid "Dated publication archive must remain accessible for at least 30 calendar days."
 msgstr ""
 
-msgid "Date the item was first offered in the store (YYYY-MM-DD)."
+msgid "Date the item was first offered in the store (d.m.Y.)."
 msgstr ""
 
 msgid "Datum objave"
 msgstr ""
 
 msgid "Deactivate"
+msgstr ""
+
+msgid "Dec"
+msgstr ""
+
+msgid "December"
 msgstr ""
 
 msgid "Delete"
@@ -669,6 +687,9 @@ msgid "Dodatak automatski prikazuje propisane zakonske cijene uz redovnu cijenu 
 msgstr ""
 
 msgid "Dodatna cijena"
+msgstr ""
+
+msgid "Done"
 msgstr ""
 
 msgid "Do not delete the original data source until the imported anchors have been verified."
@@ -887,6 +908,12 @@ msgstr ""
 msgid "Failed publications"
 msgstr ""
 
+msgid "Feb"
+msgstr ""
+
+msgid "February"
+msgstr ""
+
 msgid "File"
 msgstr ""
 
@@ -950,7 +977,16 @@ msgstr ""
 msgid "for sale starting %s"
 msgstr ""
 
+msgid "Fr"
+msgstr ""
+
 msgid "FREE AI API endpoint, OpenAI compatible — put AI inference in your apps and projects for free!"
+msgstr ""
+
+msgid "Fri"
+msgstr ""
+
+msgid "Friday"
 msgstr ""
 
 msgid "Full 30-day price history is available."
@@ -1094,6 +1130,12 @@ msgstr ""
 msgid "Item types"
 msgstr ""
 
+msgid "Jan"
+msgstr ""
+
+msgid "January"
+msgstr ""
+
 msgid "Javna arhiva svih generiranih cjenika (čuva se minimalno 30 dana)."
 msgstr ""
 
@@ -1104,6 +1146,18 @@ msgid "Javni URL-ovi dostupni kupcima i inspekciji:"
 msgstr ""
 
 msgid "Javni XML feed važećeg cjenika."
+msgstr ""
+
+msgid "Jul"
+msgstr ""
+
+msgid "July"
+msgstr ""
+
+msgid "Jun"
+msgstr ""
+
+msgid "June"
 msgstr ""
 
 msgid "Kada se promijeni cijena usluge (_sidrena_item_type=service), cjenik se prema zakonu mora ažurirati bez odgode, stoga dodatak automatski pokreće asinkrono regeneriranje."
@@ -1241,7 +1295,16 @@ msgstr ""
 msgid "Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id."
 msgstr ""
 
+msgid "Mar"
+msgstr ""
+
+msgid "March"
+msgstr ""
+
 msgid "Mark setup complete"
+msgstr ""
+
+msgid "May"
 msgstr ""
 
 msgid "Message"
@@ -1257,6 +1320,15 @@ msgid "Minimal"
 msgstr ""
 
 msgid "Missing"
+msgstr ""
+
+msgid "Mo"
+msgstr ""
+
+msgid "Mon"
+msgstr ""
+
+msgid "Monday"
 msgstr ""
 
 msgid "Monochrome"
@@ -1412,6 +1484,12 @@ msgstr ""
 msgid "Not scheduled."
 msgstr ""
 
+msgid "Nov"
+msgstr ""
+
+msgid "November"
+msgstr ""
+
 msgid "Novi proizvodi (prva ponuda)"
 msgstr ""
 
@@ -1419,6 +1497,12 @@ msgid "Objašnjenje sidrene cijene"
 msgstr ""
 
 msgid "Observed first offer"
+msgstr ""
+
+msgid "Oct"
+msgstr ""
+
+msgid "October"
 msgstr ""
 
 msgid "Odaberite predloženi naziv ili upišite vlastiti:"
@@ -1557,6 +1641,9 @@ msgid "Pregledna HTML stranica s cjenikom artikala."
 msgstr ""
 
 msgid "Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput \"Bazna cijena\", \"Referentna cijena\" ili \"Cijena na [datum]\". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (02.05.2025. za hranu, 10.09.2026. za ostalu robu i usluge)."
+msgstr ""
+
+msgid "Prev"
 msgstr ""
 
 msgid "Preview"
@@ -1841,6 +1928,9 @@ msgstr ""
 msgid "Run compliance check"
 msgstr ""
 
+msgid "Sa"
+msgstr ""
+
 msgid "Sale name"
 msgstr ""
 
@@ -1863,6 +1953,12 @@ msgid "Sale types"
 msgstr ""
 
 msgid "Same as product page"
+msgstr ""
+
+msgid "Sat"
+msgstr ""
+
+msgid "Saturday"
 msgstr ""
 
 msgid "Save location"
@@ -1904,10 +2000,16 @@ msgstr ""
 msgid "Semi-bold (600)"
 msgstr ""
 
+msgid "Sep"
+msgstr ""
+
 msgid "Separate block below the price"
 msgstr ""
 
 msgid "Separator between parts in the generated filename (default is underscore)."
+msgstr ""
+
+msgid "September"
 msgstr ""
 
 msgid "Sequence"
@@ -2129,6 +2231,9 @@ msgstr ""
 msgid "Styling"
 msgstr ""
 
+msgid "Su"
+msgstr ""
+
 msgid "Subtext below anchor price"
 msgstr ""
 
@@ -2147,6 +2252,12 @@ msgstr ""
 msgid "Suggested prices are taken from the current price and are NOT verified historical anchor prices. Review every row before saving; unchecked rows are never stored."
 msgstr ""
 
+msgid "Sun"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
 msgid "Superseded"
 msgstr ""
 
@@ -2163,6 +2274,9 @@ msgid "Table pagination"
 msgstr ""
 
 msgid "Tag"
+msgstr ""
+
+msgid "Th"
 msgstr ""
 
 msgid "Thank you for installing. Open the setup guide to configure locations, legal rules, anchor prices and the daily price list in a few minutes."
@@ -2417,10 +2531,19 @@ msgstr ""
 msgid "Three distinct prices:"
 msgstr ""
 
+msgid "Thu"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
 msgid "Time"
 msgstr ""
 
 msgid "Tip"
+msgstr ""
+
+msgid "Today"
 msgstr ""
 
 msgid "Today's price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date."
@@ -2436,6 +2559,15 @@ msgid "Too many requests. Please retry shortly."
 msgstr ""
 
 msgid "Trenutna regeneracija za usluge:"
+msgstr ""
+
+msgid "Tu"
+msgstr ""
+
+msgid "Tue"
+msgstr ""
+
+msgid "Tuesday"
 msgstr ""
 
 msgid "Type"
@@ -2552,10 +2684,19 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
+msgid "We"
+msgstr ""
+
 msgid "Webshop"
 msgstr ""
 
 msgid "Web shop (webshop)"
+msgstr ""
+
+msgid "Wed"
+msgstr ""
+
+msgid "Wednesday"
 msgstr ""
 
 msgid "Welcome to Sidrena cijena!"

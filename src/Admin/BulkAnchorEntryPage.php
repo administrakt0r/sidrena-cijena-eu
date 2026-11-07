@@ -124,11 +124,7 @@ class BulkAnchorEntryPage {
 			echo '<td>' . esc_html( null === $suggest ? '—' : Currency::format( $suggest, $item->currency ) ) . '</td>';
 			echo '<td><input type="text" name="' . esc_attr( $field ) . '[price]" value="' . esc_attr( null === $suggest ? '' : Currency::format_decimal( $suggest ) ) . '" class="small-text" inputmode="decimal" placeholder="' . esc_attr__( 'e.g. 19.99', 'titanworks-bazna-cijena' ) . '" aria-label="' . esc_attr__( 'Suggested anchor (unverified)', 'titanworks-bazna-cijena' ) . '" /></td>';
 			$ref_formatted = Dates::format_date_display( $row['reference_date'] );
-			echo '<td><input type="date" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $row['reference_date'] ) . '" aria-label="' . esc_attr__( 'Reference date', 'titanworks-bazna-cijena' ) . '" />';
-			if ( '' !== $ref_formatted ) {
-				echo ' <span class="sidrena-date-badge description" style="display:inline-block;margin-left:4px;font-size:12px;font-weight:600;color:#1d2327;">' . esc_html( $ref_formatted ) . '</span>';
-			}
-			echo '</td>';
+			echo '<td><input type="text" class="small-text sidrena-datepicker" name="' . esc_attr( $field ) . '[reference_date]" value="' . esc_attr( $ref_formatted ) . '" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" aria-label="' . esc_attr__( 'Reference date', 'titanworks-bazna-cijena' ) . '" /></td>';
 			echo '</tr>';
 		}
 

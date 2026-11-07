@@ -257,6 +257,8 @@ class BulkAnchorEntryTest extends TestCase {
 		$this->assertStringContainsString( 'sidrena-btn-select-all', $html );
 		$this->assertStringContainsString( 'sidrena-btn-deselect-all', $html );
 		$this->assertStringContainsString( 'sidrena-select-all', $html );
+		$this->assertStringContainsString( 'sidrena-datepicker', $html );
+		$this->assertStringContainsString( 'placeholder="d.m.Y."', $html );
 		$this->assertStringContainsString( 'Proizvod Bez Sidrene', $html );
 		$this->assertStringContainsString( 'PBS-101', $html );
 	}

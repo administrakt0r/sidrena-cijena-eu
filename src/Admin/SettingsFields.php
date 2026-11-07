@@ -59,6 +59,9 @@ final class SettingsFields {
 		if ( isset( $args['inputmode'] ) ) {
 			$attrs .= ' inputmode="' . esc_attr( $args['inputmode'] ) . '"';
 		}
+		if ( isset( $args['autocomplete'] ) ) {
+			$attrs .= ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"';
+		}
 
 		printf(
 			'<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" value="%5$s" placeholder="%6$s"%7$s />',

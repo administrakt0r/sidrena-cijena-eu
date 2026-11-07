@@ -231,6 +231,85 @@
 		}
 	}
 
+	function bindDatepickers() {
+		var inputs = document.querySelectorAll( '.sidrena-datepicker' );
+		if ( ! inputs.length ) {
+			return;
+		}
+
+		for ( var i = 0; i < inputs.length; i++ ) {
+			var input = inputs[ i ];
+			var val = input.value ? input.value.trim() : '';
+
+			// If input contains raw ISO YYYY-MM-DD, convert to European DD.MM.YYYY.
+			var iso = val.match( /^(\d{4})-(\d{1,2})-(\d{1,2})$/ );
+			if ( iso ) {
+				var y = iso[ 1 ];
+				var m = iso[ 2 ].length === 1 ? '0' + iso[ 2 ] : iso[ 2 ];
+				var d = iso[ 3 ].length === 1 ? '0' + iso[ 3 ] : iso[ 3 ];
+				input.value = d + '.' + m + '.' + y + '.';
+			}
+
+			// Format on blur if manually entered
+			if ( ! input.hasAttribute( 'data-sidrena-datepicker-bound' ) ) {
+				input.setAttribute( 'data-sidrena-datepicker-bound', '1' );
+				input.addEventListener( 'blur', function ( event ) {
+					var v = event.target.value ? event.target.value.trim() : '';
+					if ( ! v ) {
+						return;
+					}
+					var clean = v.replace( /\.$/, '' );
+					var eu = clean.match( /^(\d{1,2})[./-]\s*(\d{1,2})[./-]\s*(\d{4})$/ );
+					if ( eu ) {
+						var ed = eu[ 1 ].length === 1 ? '0' + eu[ 1 ] : eu[ 1 ];
+						var em = eu[ 2 ].length === 1 ? '0' + eu[ 2 ] : eu[ 2 ];
+						var ey = eu[ 3 ];
+						event.target.value = ed + '.' + em + '.' + ey + '.';
+						return;
+					}
+					var isov = clean.match( /^(\d{4})-(\d{1,2})-(\d{1,2})$/ );
+					if ( isov ) {
+						var iy = isov[ 1 ];
+						var im = isov[ 2 ].length === 1 ? '0' + isov[ 2 ] : isov[ 2 ];
+						var id = isov[ 3 ].length === 1 ? '0' + isov[ 3 ] : isov[ 3 ];
+						event.target.value = id + '.' + im + '.' + iy + '.';
+					}
+				} );
+			}
+		}
+
+		if ( window.jQuery && window.jQuery.fn && window.jQuery.fn.datepicker ) {
+			var $ = window.jQuery;
+			var i18n = window.sidrenaDatepickerI18n || {
+				closeText: 'Zatvori',
+				prevText: '&#x3C;Prethodno',
+				nextText: 'Sljedeće&#x3E;',
+				currentText: 'Danas',
+				monthNames: [ 'Siječanj', 'Veljača', 'Ožujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac' ],
+				monthNamesShort: [ 'Sij', 'Velj', 'Ožu', 'Tra', 'Svi', 'Lip', 'Srp', 'Kol', 'Ruj', 'Lis', 'Stu', 'Pro' ],
+				dayNames: [ 'Nedjelja', 'Ponedjeljak', 'Utorak', 'Srijeda', 'Četvrtak', 'Petak', 'Subota' ],
+				dayNamesShort: [ 'Ned', 'Pon', 'Uto', 'Sri', 'Čet', 'Pet', 'Sub' ],
+				dayNamesMin: [ 'Ne', 'Po', 'Ut', 'Sr', 'Če', 'Pe', 'Su' ],
+				dateFormat: 'dd.mm.yy.',
+				firstDay: 1
+			};
+
+			var opts = Object.assign ? Object.assign( {}, i18n, {
+				dateFormat: 'dd.mm.yy.',
+				firstDay: 1,
+				changeMonth: true,
+				changeYear: true
+			} ) : i18n;
+
+			$( '.sidrena-datepicker' ).each( function () {
+				var $el = $( this );
+				if ( ! $el.hasClass( 'hasDatepicker' ) ) {
+					$el.datepicker( opts );
+				}
+			} );
+		}
+	}
+
 	function init() {
 		focusFeedback();
 		bindStylePreviews();
@@ -238,6 +317,11 @@
 		bindTimeInputs();
 		bindEvidenceForms();
 		bindLabelPresets();
+		bindDatepickers();
+
+		if ( window.jQuery ) {
+			window.jQuery( document ).on( 'woocommerce_variations_loaded', bindDatepickers );
+		}
 	}
 
 	if ( 'loading' === document.readyState ) {

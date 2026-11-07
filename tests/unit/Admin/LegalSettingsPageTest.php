@@ -100,7 +100,8 @@ class LegalSettingsPageTest extends TestCase {
 			)
 		);
 		$date_html = (string) ob_get_clean();
-		$this->assertStringContainsString( 'type="date"', $date_html );
+		$this->assertStringContainsString( 'sidrena-datepicker', $date_html );
+		$this->assertStringContainsString( 'placeholder="d.m.Y."', $date_html );
 		$this->assertStringContainsString( 'Statutory anchor reference date', $date_html );
 
 		// Checkbox field.

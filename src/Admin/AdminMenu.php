@@ -161,9 +161,77 @@ final class AdminMenu {
 		wp_enqueue_script(
 			'sidrena-cijena-admin',
 			SIDRENA_CIJENA_URL . 'assets/js/admin.js',
-			array(),
+			array( 'jquery', 'jquery-ui-datepicker' ),
 			SIDRENA_CIJENA_VERSION,
 			true
+		);
+
+		wp_localize_script(
+			'sidrena-cijena-admin',
+			'sidrenaDatepickerI18n',
+			array(
+				'closeText'       => __( 'Done', 'titanworks-bazna-cijena' ),
+				'prevText'        => __( 'Prev', 'titanworks-bazna-cijena' ),
+				'nextText'        => __( 'Next', 'titanworks-bazna-cijena' ),
+				'currentText'     => __( 'Today', 'titanworks-bazna-cijena' ),
+				'monthNames'      => array(
+					__( 'January', 'titanworks-bazna-cijena' ),
+					__( 'February', 'titanworks-bazna-cijena' ),
+					__( 'March', 'titanworks-bazna-cijena' ),
+					__( 'April', 'titanworks-bazna-cijena' ),
+					__( 'May', 'titanworks-bazna-cijena' ),
+					__( 'June', 'titanworks-bazna-cijena' ),
+					__( 'July', 'titanworks-bazna-cijena' ),
+					__( 'August', 'titanworks-bazna-cijena' ),
+					__( 'September', 'titanworks-bazna-cijena' ),
+					__( 'October', 'titanworks-bazna-cijena' ),
+					__( 'November', 'titanworks-bazna-cijena' ),
+					__( 'December', 'titanworks-bazna-cijena' ),
+				),
+				'monthNamesShort' => array(
+					__( 'Jan', 'titanworks-bazna-cijena' ),
+					__( 'Feb', 'titanworks-bazna-cijena' ),
+					__( 'Mar', 'titanworks-bazna-cijena' ),
+					__( 'Apr', 'titanworks-bazna-cijena' ),
+					__( 'May', 'titanworks-bazna-cijena' ),
+					__( 'Jun', 'titanworks-bazna-cijena' ),
+					__( 'Jul', 'titanworks-bazna-cijena' ),
+					__( 'Aug', 'titanworks-bazna-cijena' ),
+					__( 'Sep', 'titanworks-bazna-cijena' ),
+					__( 'Oct', 'titanworks-bazna-cijena' ),
+					__( 'Nov', 'titanworks-bazna-cijena' ),
+					__( 'Dec', 'titanworks-bazna-cijena' ),
+				),
+				'dayNames'        => array(
+					__( 'Sunday', 'titanworks-bazna-cijena' ),
+					__( 'Monday', 'titanworks-bazna-cijena' ),
+					__( 'Tuesday', 'titanworks-bazna-cijena' ),
+					__( 'Wednesday', 'titanworks-bazna-cijena' ),
+					__( 'Thursday', 'titanworks-bazna-cijena' ),
+					__( 'Friday', 'titanworks-bazna-cijena' ),
+					__( 'Saturday', 'titanworks-bazna-cijena' ),
+				),
+				'dayNamesShort'   => array(
+					__( 'Sun', 'titanworks-bazna-cijena' ),
+					__( 'Mon', 'titanworks-bazna-cijena' ),
+					__( 'Tue', 'titanworks-bazna-cijena' ),
+					__( 'Wed', 'titanworks-bazna-cijena' ),
+					__( 'Thu', 'titanworks-bazna-cijena' ),
+					__( 'Fri', 'titanworks-bazna-cijena' ),
+					__( 'Sat', 'titanworks-bazna-cijena' ),
+				),
+				'dayNamesMin'     => array(
+					__( 'Su', 'titanworks-bazna-cijena' ),
+					__( 'Mo', 'titanworks-bazna-cijena' ),
+					__( 'Tu', 'titanworks-bazna-cijena' ),
+					__( 'We', 'titanworks-bazna-cijena' ),
+					__( 'Th', 'titanworks-bazna-cijena' ),
+					__( 'Fr', 'titanworks-bazna-cijena' ),
+					__( 'Sa', 'titanworks-bazna-cijena' ),
+				),
+				'dateFormat'      => 'dd.mm.yy.',
+				'firstDay'        => 1,
+			)
 		);
 	}
 

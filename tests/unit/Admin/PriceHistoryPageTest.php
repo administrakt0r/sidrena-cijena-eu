@@ -96,7 +96,7 @@ class PriceHistoryPageTest extends TestCase {
 		$this->assertStringContainsString( 'value="7"', $html );
 		$this->assertStringContainsString( 'value="3"', $html );
 		$this->assertStringContainsString( 'value="11.00"', $html );
-		$this->assertStringContainsString( 'value="2026-09-10"', $html );
+		$this->assertStringContainsString( 'value="10.09.2026."', $html );
 		$this->assertStringContainsString( 'value="Popravak unosa"', $html );
 		$this->assertStringContainsString( 'value="sale" selected=', $html );
 	}
@@ -158,6 +158,8 @@ class PriceHistoryPageTest extends TestCase {
 		$html = (string) ob_get_clean();
 
 		$this->assertStringContainsString( 'Sidrena cijena: Price history', $html );
+		$this->assertStringContainsString( 'sidrena-datepicker', $html );
+		$this->assertStringContainsString( 'placeholder="d.m.Y."', $html );
 		PluginSwap::swap( 'history', null );
 	}
 }
