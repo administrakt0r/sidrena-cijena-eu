@@ -59,8 +59,8 @@ if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PUBLIC_REPO="https://github.com/administrakt0r/titanworks-bazna-cijena.git"
-PUBLIC_REPO_NAME="administrakt0r/titanworks-bazna-cijena"
+PUBLIC_REPO="https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena.git"
+PUBLIC_REPO_NAME="administrakt0r/titanworks-sidrena-bazna-cijena"
 
 HEADER="$(grep -m1 "SIDRENA_CIJENA_VERSION" "$ROOT/titanworks-bazna-cijena.php" | grep -o "'[0-9][^']*'" | tr -d "'")"
 
@@ -206,6 +206,22 @@ EOF
 				--target master
 		fi
 		echo "GitHub release published: https://github.com/$PUBLIC_REPO_NAME/releases/tag/$TAG"
+
+		ORIGIN_REPO="$(git -C "$ROOT" remote get-url origin 2>/dev/null | sed -E 's/.*github\.com[:\/]([^\/]+\/[^\/\.]+)(\.git)?$/\1/' || true)"
+		if [ -n "$ORIGIN_REPO" ] && [ "$ORIGIN_REPO" != "$PUBLIC_REPO_NAME" ]; then
+			if gh release view "$TAG" --repo "$ORIGIN_REPO" >/dev/null 2>&1; then
+				echo "Updating GitHub release $TAG on $ORIGIN_REPO..."
+				gh release upload "$TAG" "$OUT/titanworks-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" --repo "$ORIGIN_REPO" --clobber
+				gh release edit "$TAG" --repo "$ORIGIN_REPO" --title "$TITLE" --notes "$NOTES"
+			else
+				echo "Creating GitHub release $TAG on $ORIGIN_REPO..."
+				gh release create "$TAG" "$OUT/titanworks-bazna-cijena.zip" "$OUT/SHA256SUMS.txt" \
+					--repo "$ORIGIN_REPO" \
+					--title "$TITLE" \
+					--notes "$NOTES"
+			fi
+			echo "GitHub release published on origin: https://github.com/$ORIGIN_REPO/releases/tag/$TAG"
+		fi
 	else
 		echo "Notice: gh CLI not found or not in PATH; skipped GitHub release creation."
 	fi

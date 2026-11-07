@@ -1,5 +1,13 @@
 # Release verification
 
+## Release 2.0.23 — European Date Formatting, 24-Hour Time & Storefront Display Polish (2026-11-07)
+
+- European datepicker & 24-hour time: replaced native browser date inputs with localized WordPress jQuery UI Datepicker (`dd.mm.yy.`, Monday as first day of week) across Single Product, Variations, Bulk Anchor Entry, Price History Corrections, Standalone Products, and Legal Settings.
+- Backend date normalization: `Dates::normalize_date()` accepts European delimiter variants (`10.09.2026.`, `10. 09. 2026.`, `10/09/2026`) and canonicalizes to statutory ISO `YYYY-MM-DD`.
+- Product card anchor display & special sales: refined anchor visibility on WooCommerce archive/shop cards and resolved special sale pricing calculations in `SpecialSaleOfferMatcher`.
+- Quality gates: 635 unit tests (2,396 assertions) passing 100%; Croatian translation catalog fully synchronized (922 translated / 0 untranslated strings).
+- Package: built `versions/2.0.23/titanworks-bazna-cijena.zip` using `tools/build-zip.sh 2.0.23`.
+
 ## Release 2.0.22 — Statutory Guidance, Promotion Cross-Compliance & WordPress.org Alignment (2026-11-07)
 
 - Statutory enforcement framework alignment: integrated NN 110/2026 postponement (enforcement effective 17 November 2026) while strictly keeping statutory reference dates unchanged (2026-09-10 general, 2025-05-02 legacy). Added administrative statutory guidance card and checklist to `CompliancePage`.

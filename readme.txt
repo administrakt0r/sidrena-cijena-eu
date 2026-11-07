@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.22
+Stable tag: 2.0.23
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,13 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.23 =
+* European date format & 24-hour time: replaced native browser date inputs with WordPress jQuery UI Datepicker in Croatian locale (d.m.Y.) and 24-hour time format (H:i) across all admin screens.
+* Smart date normalization: backend parsing accepts European date formats (d.m.Y. with dots, spaces, or slashes) and normalizes to statutory ISO YYYY-MM-DD.
+* Product card anchor display: resolved anchor price visibility and layout within shop and archive product cards.
+* Special sale display & offer matching: improved offer matching and pricing calculations for active promotional sales.
+* Quality gates: 635 unit tests (2,396 assertions) passing 100%; complete Croatian translation catalog with 0 untranslated strings.
 
 = 2.0.22 =
 * Statutory framework update: incorporated NN 110/2026 postponement (enforcement active 17 November 2026) while preserving statutory reference dates (2026-09-10 general, 2025-05-02 legacy).
