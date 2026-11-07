@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Titanworks Bazna Cijena 2.0.21\n"
 "Report-Msgid-Bugs-To: https://github.com/administrakt0r/titanworks-bazna-cijena/issues\n"
-"POT-Creation-Date: 2026-11-06T22:07:15+00:00\n"
+"POT-Creation-Date: 2026-11-07T00:45:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -83,6 +83,9 @@ msgstr ""
 msgid "1. Add sales locations"
 msgstr ""
 
+msgid "1. Bazna / Sidrena cijena"
+msgstr ""
+
 msgid "1. Zakonski okvir i pravila"
 msgstr ""
 
@@ -98,6 +101,12 @@ msgstr ""
 msgid "2. Skupno postavljanje sidrenih cijena (Bulk unos i alati)"
 msgstr ""
 
+msgid "2. Special Sales: \"Triple Price\" Rule"
+msgstr ""
+
+msgid "3. Daily Machine-Readable Price List"
+msgstr ""
+
 msgid "3. Prikaz na trgovini"
 msgstr ""
 
@@ -105,6 +114,9 @@ msgid "3. Prikaz sidrene i najniže 30-dnevne cijene na trgovini"
 msgstr ""
 
 msgid "3. Record anchor prices"
+msgstr ""
+
+msgid "4. Audit & Remediation Proposals"
 msgstr ""
 
 msgid "4. Dnevni cjenik, format naziva i javni feedovi"
@@ -146,6 +158,9 @@ msgstr ""
 msgid "30-day price warnings"
 msgstr ""
 
+msgid "30-day public archive:"
+msgstr ""
+
 msgid "30-day reference price explanation"
 msgstr ""
 
@@ -156,6 +171,9 @@ msgid "Accepted columns: sku or product_id, variation_id, reference_date, anchor
 msgstr ""
 
 msgid "Action"
+msgstr ""
+
+msgid "Actionable fixes:"
 msgstr ""
 
 msgid "Action hook priority (default 15; lower values render earlier)."
@@ -201,6 +219,9 @@ msgid "Aktivira se prilikom izmjene ili ponovnog izračuna posebnog oblika proda
 msgstr ""
 
 msgid "All"
+msgstr ""
+
+msgid "all B2C products & services"
 msgstr ""
 
 msgid "All events"
@@ -338,7 +359,13 @@ msgstr ""
 msgid "Barcode / EAN"
 msgstr ""
 
+msgid "Barcodes (EAN/GTIN) and unit prices (per kg/l) are checked where applicable."
+msgstr ""
+
 msgid "Bazna cijena"
+msgstr ""
+
+msgid "Bazna cijena, Sidrena cijena, Cijena na [datum], Referentna cijena, Dodatna cijena"
 msgstr ""
 
 msgid "Before you import"
@@ -515,7 +542,13 @@ msgstr ""
 msgid "Correction recorded. The original value is preserved."
 msgstr ""
 
+msgid "Croatian Statutory Compliance Framework & Conditions"
+msgstr ""
+
 msgid "CSV"
+msgstr ""
+
+msgid "CSV (; delimiter, comma decimals, 12 columns) and XML formats."
 msgstr ""
 
 msgid "CSV Feed"
@@ -554,6 +587,9 @@ msgstr ""
 msgid "Current price list"
 msgstr ""
 
+msgid "Daily publication:"
+msgstr ""
+
 msgid "Daily publication deadline"
 msgstr ""
 
@@ -564,6 +600,9 @@ msgid "Dashboard"
 msgstr ""
 
 msgid "Date"
+msgstr ""
+
+msgid "Dated publication archive must remain accessible for at least 30 calendar days."
 msgstr ""
 
 msgid "Date the item was first offered in the store (YYYY-MM-DD)."
@@ -734,6 +773,9 @@ msgstr ""
 msgid "Ended"
 msgstr ""
 
+msgid "Enforcement: 17 November 2026 (NN 110/2026)"
+msgstr ""
+
 msgid "Enter a correction reason."
 msgstr ""
 
@@ -788,10 +830,16 @@ msgstr ""
 msgid "Every catalog item has an anchor price recorded."
 msgstr ""
 
+msgid "Every detected warning or error includes a concrete proposal (\"Prijedlog izmjene\") to resolve findings before publication."
+msgstr ""
+
 msgid "Every legal-rule change and every recorded correction is kept here with the user and the timestamp."
 msgstr ""
 
 msgid "Every location needs a name, facility form, street address, city and a unique facility identifier. The address and identifier build the price-list filename."
+msgstr ""
+
+msgid "Every working morning before 08:00 (products) and upon every price change (services)."
 msgstr ""
 
 msgid "Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason."
@@ -845,6 +893,9 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
+msgid "Filename contract:"
+msgstr ""
+
 msgid "Filename letter case"
 msgstr ""
 
@@ -872,6 +923,9 @@ msgstr ""
 msgid "Font weight for anchor prices rendered on product cards and archives."
 msgstr ""
 
+msgid "food, drinks, cosmetics, household"
+msgstr ""
+
 msgid "For all products in catalog (including overwriting existing)"
 msgstr ""
 
@@ -887,6 +941,9 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
+msgid "Formats:"
+msgstr ""
+
 msgid "Format used to display currency alongside the anchor price."
 msgstr ""
 
@@ -900,6 +957,9 @@ msgid "Full 30-day price history is available."
 msgstr ""
 
 msgid "General reference date"
+msgstr ""
+
+msgid "General reference date:"
 msgstr ""
 
 msgid "General reference date is 10 September 2026. Legacy categories (food, beverages, cosmetics, cleaning, toiletries, household) use 2 May 2025 — map your real category slugs, the plugin never guesses them."
@@ -1094,6 +1154,9 @@ msgstr ""
 msgid "Legacy reference date"
 msgstr ""
 
+msgid "Legacy reference date:"
+msgstr ""
+
 msgid "Legacy slugs"
 msgstr ""
 
@@ -1155,6 +1218,9 @@ msgid "Lowest price in the last 30 days"
 msgstr ""
 
 msgid "Manage locations"
+msgstr ""
+
+msgid "Mandatory attributes:"
 msgstr ""
 
 msgid "Mandatory price-list generation"
@@ -1451,6 +1517,9 @@ msgstr ""
 msgid "Period"
 msgstr ""
 
+msgid "Permitted labels:"
+msgstr ""
+
 msgid "Pill"
 msgstr ""
 
@@ -1473,6 +1542,9 @@ msgid "Pokreće provjeru usklađenosti i ispisuje pronađene GREŠKE i UPOZORENJ
 msgstr ""
 
 msgid "Posebne (naslijeđene) kategorije"
+msgstr ""
+
+msgid "Post-reference listings:"
 msgstr ""
 
 msgid "Postavi za sve proizvode odjednom:"
@@ -1503,6 +1575,9 @@ msgid "Price-list retention (days)"
 msgstr ""
 
 msgid "Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens."
+msgstr ""
+
+msgid "Price condition:"
 msgstr ""
 
 msgid "Price history"
@@ -1605,6 +1680,9 @@ msgid "Promotion (akcija)"
 msgstr ""
 
 msgid "Promotional price"
+msgstr ""
+
+msgid "Promotional price must be strictly lower than the lowest price from the preceding 30 days."
 msgstr ""
 
 msgid "Promotional selling price if currently discounted."
@@ -2018,6 +2096,9 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
+msgid "State Inspectorate (Državni inspektorat) enforces compliance and penal sanctions."
+msgstr ""
+
 msgid "Status"
 msgstr ""
 
@@ -2034,6 +2115,9 @@ msgid "Statutory label for the lowest price applied in the 30 days before a prom
 msgstr ""
 
 msgid "Stilovi i interaktivni tooltip:"
+msgstr ""
+
+msgid "Strict legal separation:"
 msgstr ""
 
 msgid "Struktura naziva datoteke:"
@@ -2066,6 +2150,9 @@ msgstr ""
 msgid "Superseded"
 msgstr ""
 
+msgid "Supervisory body:"
+msgstr ""
+
 msgid "system"
 msgstr ""
 
@@ -2094,6 +2181,9 @@ msgid "The anchor price is missing or not a valid non-negative number."
 msgstr ""
 
 msgid "The anchor price must be a non-negative number."
+msgstr ""
+
+msgid "The anchor price must never be used as the 30-day price, and the 30-day price must never be used as the anchor price."
 msgstr ""
 
 msgid "The anchor price was recorded for reference date %1$s but the applicable reference date is %2$s. Review whether the record is correct."
@@ -2300,7 +2390,13 @@ msgstr ""
 msgid "The WooCommerce product ID or standalone item ID from your catalog."
 msgstr ""
 
+msgid "This cross-compliance engine continuously audits your catalog and publications against Croatian statutory decrees (NN 101/2026-1212, NN 101/2026-1213, NN 110/2026, NN 40/25) and the Consumer Protection Act (NN 19/22, 59/26, Art. 19)."
+msgstr ""
+
 msgid "This item is not part of the active catalog."
+msgstr ""
+
+msgid "This item is on a promotional sale. Under statutory cross-compliance rules, items on promotion must display three distinct prices: the sale price, the 30-day lowest price, and the anchor/base price. Record the anchor price for reference date %s."
 msgstr ""
 
 msgid "This location has published price lists. It will be deactivated instead of deleted. Continue?"
@@ -2316,6 +2412,9 @@ msgid "This row would replace an existing anchor record and requires explicit co
 msgstr ""
 
 msgid "Three-letter currency code (defaults to EUR)."
+msgstr ""
+
+msgid "Three distinct prices:"
 msgstr ""
 
 msgid "Time"
@@ -2432,6 +2531,9 @@ msgstr ""
 msgid "Važna pravna napomena o nepromjenjivosti dokaza:"
 msgstr ""
 
+msgid "Verified first-offer price & date mandatory; blank anchor is prohibited."
+msgstr ""
+
 msgid "Verify that the recorded anchor price matches your historical price records for the designated reference date."
 msgstr ""
 
@@ -2460,6 +2562,9 @@ msgid "Welcome to Sidrena cijena!"
 msgstr ""
 
 msgid "When"
+msgstr ""
+
+msgid "When an item is discounted (akcija, sniženje), you must display: (1) Promotional price, (2) Lowest price in preceding 30 days, and (3) Anchor/base price."
 msgstr ""
 
 msgid "When set to tooltip, users can click the (?) icon to see a popup with full explanation and reference date."
