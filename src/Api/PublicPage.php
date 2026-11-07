@@ -246,6 +246,13 @@ class PublicPage {
 			return;
 		}
 
+		wp_enqueue_style(
+			'sidrena-cijena-frontend',
+			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+			array(),
+			SIDRENA_CIJENA_VERSION
+		);
+
 		$text = (string) apply_filters( 'sidrena_cijena_footer_link_text', __( 'Cjenici', 'titanworks-bazna-cijena' ) );
 
 		printf(

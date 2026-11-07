@@ -77,11 +77,23 @@ class VariationDisplay {
 			$price_html = $variation->get_price_html();
 		}
 
+		$price_display = new PriceDisplay( $this->anchors );
+
 		if ( false === strpos( $price_html, 'sidrena-cijena' ) ) {
-			$price_html .= ( new PriceDisplay( $this->anchors ) )->render_item( $item );
+			$price_html .= $price_display->render_item( $item );
 		}
 
 		$data['price_html'] = $price_html;
+
+		$sale = $price_display->active_sale_for_item( $item );
+		if ( $sale && null !== $sale['lowest_30_day_price'] ) {
+			$lowest_30                         = PriceDisplay::display_price( (float) $sale['lowest_30_day_price'], $item );
+			$data['sidrena_cijena_30_day']     = Currency::format( $lowest_30, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
+			$data['sidrena_cijena_30_day_raw'] = $lowest_30;
+		} else {
+			$data['sidrena_cijena_30_day']     = null;
+			$data['sidrena_cijena_30_day_raw'] = null;
+		}
 
 		$anchor = $this->anchors->get_anchor( $item );
 

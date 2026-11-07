@@ -30,6 +30,22 @@ class PriceDisplay {
 	protected $anchors;
 
 	/**
+	 * Reset the active card tracker (kept for backward compatibility).
+	 *
+	 * @return void
+	 */
+	public static function reset_active_card() {
+	}
+
+	/**
+	 * Reset the rendered product ID cache (kept for backward compatibility).
+	 *
+	 * @return void
+	 */
+	public static function reset_rendered_cache() {
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param AnchorPriceService $anchors Anchor service.
@@ -302,8 +318,8 @@ class PriceDisplay {
 	/**
 	 * Append the anchor block to WooCommerce price HTML.
 	 *
-	 * @param string      $html    Price HTML.
-	 * @param \WC_Product $product Product.
+	 * @param string            $html    Price HTML.
+	 * @param \WC_Product|mixed $product Product.
 	 * @return string
 	 */
 	public function filter_price_html( $html, $product ) {
@@ -311,9 +327,22 @@ class PriceDisplay {
 			return $html;
 		}
 
-		$block = $this->render( $product, $this->context( $product ) );
+		if ( ! $product instanceof \WC_Product ) {
+			return $html;
+		}
 
-		return $html . $block;
+		if ( false !== strpos( (string) $html, 'sidrena-cijena' ) ) {
+			return $html;
+		}
+
+		$context = $this->context( $product );
+		$block   = $this->render( $product, $context );
+
+		if ( '' !== $block ) {
+			return $html . $block;
+		}
+
+		return $html;
 	}
 
 	/**
@@ -338,6 +367,8 @@ class PriceDisplay {
 	/**
 	 * Render in archive loops.
 	 *
+	 * When display_location is 'summary', this outputs the anchor block below the price.
+	 *
 	 * @return void
 	 */
 	public function render_archive_item() {
@@ -347,7 +378,7 @@ class PriceDisplay {
 
 		$product = $this->current_product();
 
-		if ( ! $product ) {
+		if ( ! $product instanceof \WC_Product ) {
 			return;
 		}
 
@@ -438,6 +469,10 @@ class PriceDisplay {
 			return '';
 		}
 
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return '';
+		}
+
 		if ( ( 'archive' === $context && ! Settings::get( 'display_archives' ) ) || ( 'single' === $context && ! Settings::get( 'display_product_pages' ) ) ) {
 			return '';
 		}
@@ -446,13 +481,13 @@ class PriceDisplay {
 			return '';
 		}
 
-		// A variable parent has no single retail price. Its selected variation
-		// supplies the matching anchor through WooCommerce variation data.
+		// A variable parent has no single retail price on single product pages.
+		// Its selected variation supplies the matching anchor through WooCommerce variation data.
+		// In archive product cards, render the anchor range or baseline so the card is not empty.
 		if ( $product->is_type( 'variable' ) ) {
-			return '';
-		}
-
-		if ( is_admin() && ! wp_doing_ajax() ) {
+			if ( 'archive' === $context ) {
+				return $this->render_variable_archive( $product, $context, $args );
+			}
 			return '';
 		}
 
@@ -466,6 +501,212 @@ class PriceDisplay {
 	}
 
 	/**
+	 * Render anchor price for a variable product in archive context.
+	 *
+	 * Variable products in shop loops/cards do not have a single selected variation,
+	 * but customers need to see the baseline anchor price or range.
+	 *
+	 * @param \WC_Product         $product Variable product.
+	 * @param string              $context Rendering context (e.g. 'archive').
+	 * @param array<string,mixed> $args    Rendering overrides.
+	 * @return string
+	 */
+	protected function render_variable_archive( $product, $context, array $args ) {
+		$visible_ids = method_exists( $product, 'get_visible_children' ) ? (array) $product->get_visible_children() : array();
+		$children    = ! empty( $visible_ids ) ? $visible_ids : (array) $product->get_children();
+
+		$currency      = function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : 'EUR';
+		$currency_mode = (string) Settings::get( 'currency_display', 'symbol' );
+
+		$date_groups         = array();
+		$representative_item = null;
+		$sale_prices         = array();
+
+		foreach ( $children as $child_id ) {
+			if ( function_exists( 'wc_get_product' ) ) {
+				$var_prod = wc_get_product( (int) $child_id );
+				if ( $var_prod instanceof \WC_Product ) {
+					if ( 'publish' !== $var_prod->get_status() ) {
+						continue;
+					}
+					if ( '' === $var_prod->get_price() || ! $var_prod->is_purchasable() ) {
+						continue;
+					}
+				}
+			}
+
+			$child_item = Plugin::instance()->catalog()->get_variation( (int) $product->get_id(), (int) $child_id );
+			if ( ! $child_item || null === $child_item->current_price ) {
+				continue;
+			}
+
+			if ( null === $representative_item ) {
+				$representative_item = $child_item;
+				$currency            = $child_item->currency;
+			}
+
+			// Collect qualifying 30-day sale prices across offered variations, tax-adjusting each variation's reference.
+			$sale = $this->active_sale_for_item( $child_item );
+			if ( $sale && null !== $sale['lowest_30_day_price'] ) {
+				$adjusted_sale = self::display_price( (float) $sale['lowest_30_day_price'], $child_item );
+				if ( null !== $adjusted_sale ) {
+					$sale_prices[] = (float) $adjusted_sale;
+				}
+			}
+
+			$anchor = $this->anchors->get_anchor( $child_item );
+			if ( $anchor && null !== $anchor['price'] ) {
+				$display_p = self::display_price( (float) $anchor['price'], $child_item );
+				$current_p = self::display_price( (float) $child_item->current_price, $child_item );
+				$ref_date  = ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+
+				if ( ! isset( $date_groups[ $ref_date ] ) ) {
+					$date_groups[ $ref_date ] = array(
+						'anchors'             => array(),
+						'has_difference'      => false,
+						'representative_item' => $child_item,
+					);
+				}
+
+				$date_groups[ $ref_date ]['anchors'][] = $display_p;
+				if ( null === $current_p || $display_p !== $current_p ) {
+					$date_groups[ $ref_date ]['has_difference'] = true;
+				}
+			}
+		}
+
+		$only_when_different = array_key_exists( 'only_when_different', $args )
+			? (bool) $args['only_when_different']
+			: (bool) Settings::get( 'only_when_different' );
+
+		$rendered_anchors                   = '';
+		$anchor_args                        = $args;
+		$anchor_args['only_when_different'] = false;
+		$anchor_args['show_30_day']         = false; // Multi-variation sale resolution is appended below.
+
+		if ( empty( $date_groups ) ) {
+			$item = $this->catalog_item( $product );
+			if ( $item ) {
+				$rendered_anchors .= $this->render_item( $item, $context, $anchor_args );
+			}
+		} else {
+			foreach ( $date_groups as $group_date => $group ) {
+				if ( $only_when_different && ! $group['has_difference'] ) {
+					continue;
+				}
+
+				$group_anchors = $group['anchors'];
+				$min_anchor    = min( $group_anchors );
+				$max_anchor    = max( $group_anchors );
+
+				if ( $min_anchor === $max_anchor ) {
+					$anchor_display = Currency::format( $min_anchor, $currency, array( 'display' => $currency_mode ) );
+				} else {
+					$min_formatted  = Currency::format( $min_anchor, $currency, array( 'display' => $currency_mode ) );
+					$max_formatted  = Currency::format( $max_anchor, $currency, array( 'display' => $currency_mode ) );
+					$anchor_display = sprintf( '%1$s – %2$s', $min_formatted, $max_formatted );
+				}
+
+				$group_args                   = $anchor_args;
+				$group_args['anchor_price']   = $min_anchor;
+				$group_args['anchor_display'] = $anchor_display;
+				if ( '' !== $group_date ) {
+					$group_args['reference_date'] = $group_date;
+				}
+
+				$rendered_anchors .= $this->render_item( $group['representative_item'], $context, $group_args );
+			}
+		}
+
+		if ( '' === $rendered_anchors && empty( $sale_prices ) ) {
+			return '';
+		}
+
+		$html = $rendered_anchors;
+
+		// Resolve qualifying 30-day sale references across all offered variations.
+		if ( ! empty( $sale_prices ) && $representative_item ) {
+			$min_sale = min( $sale_prices );
+			$max_sale = max( $sale_prices );
+
+			if ( $min_sale === $max_sale ) {
+				$sale_display = Currency::format( $min_sale, $currency, array( 'display' => $currency_mode ) );
+			} else {
+				$min_sale_fmt = Currency::format( $min_sale, $currency, array( 'display' => $currency_mode ) );
+				$max_sale_fmt = Currency::format( $max_sale, $currency, array( 'display' => $currency_mode ) );
+				$sale_display = sprintf( '%1$s – %2$s', $min_sale_fmt, $max_sale_fmt );
+			}
+
+			$html .= $this->render_variable_thirty_day( $representative_item, $context, $sale_display, $min_sale, $args );
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Render the 30-day lowest price block for a variable product in archive context.
+	 *
+	 * @param CatalogItem  $item         Representative item.
+	 * @param string       $context      Rendering context.
+	 * @param string       $sale_display Formatted price or range.
+	 * @param float        $min_sale     Minimum sale price.
+	 * @param array<mixed> $args         Rendering overrides.
+	 * @return string
+	 */
+	protected function render_variable_thirty_day( CatalogItem $item, $context, $sale_display, $min_sale, array $args ) {
+		$show = array_key_exists( 'show_30_day', $args ) ? (bool) $args['show_30_day'] : true;
+
+		if ( ! $show ) {
+			return '';
+		}
+
+		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
+			? (string) $args['thirty_day_label']
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' ) );
+
+		$label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $label, $item, $context );
+
+		$card_style = (string) Settings::get( 'card_display_style', 'same_as_product' );
+		$style      = ( 'archive' === $context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \SidrenaCijena\Support\DisplayStyles::presets() ) )
+			? $card_style
+			: (string) Settings::get( 'product_display_style', 'tooltip' );
+
+		$card_item = new CatalogItem(
+			array(
+				'id'            => (int) $item->id,
+				'variation_id'  => 0,
+				'currency'      => $item->currency,
+				'current_price' => $item->current_price,
+			)
+		);
+
+		$template_args = array(
+			'item'    => $card_item,
+			'price'   => $min_sale,
+			'label'   => $label,
+			'display' => $sale_display,
+			'style'   => $style,
+		);
+
+		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
+
+		if ( ! $template ) {
+			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+		}
+
+		if ( ! is_readable( $template ) ) {
+			return '';
+		}
+
+		ob_start();
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		extract( $template_args, EXTR_SKIP );
+		include $template;
+
+		return (string) ob_get_clean();
+	}
+
+	/**
 	 * Render the anchor block for a catalog item.
 	 *
 	 * @param CatalogItem $item    Catalog item.
@@ -476,7 +717,9 @@ class PriceDisplay {
 	public function render_item( CatalogItem $item, $context = 'single', array $args = array() ) {
 		$anchor = $this->anchors->get_anchor( $item );
 
-		$anchor_price = ( $anchor && null !== $anchor['price'] ) ? (float) $anchor['price'] : null;
+		$anchor_price = isset( $args['anchor_price'] )
+			? (float) $args['anchor_price']
+			: ( ( $anchor && null !== $anchor['price'] ) ? (float) $anchor['price'] : null );
 
 		/**
 		 * Filters the resolved anchor price before rendering.
@@ -491,7 +734,9 @@ class PriceDisplay {
 		// WooCommerce stores prices excluding tax and adjusts them for display,
 		// so the anchor has to be shown on the same basis as the price next to
 		// it (FR-014).
-		$anchor_price  = self::display_price( $anchor_price, $item );
+		if ( ! isset( $args['anchor_price'] ) ) {
+			$anchor_price = self::display_price( $anchor_price, $item );
+		}
 		$current_price = self::display_price( $current_price, $item );
 
 		$only_when_different = array_key_exists( 'only_when_different', $args )
@@ -507,7 +752,7 @@ class PriceDisplay {
 			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
 			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
 
-			$reference_date         = $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+			$reference_date         = isset( $args['reference_date'] ) ? (string) $args['reference_date'] : ( $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '' );
 			$reference_date_display = Dates::format_date_display( $reference_date );
 
 			$label = self::format_anchor_label( $raw_label, $reference_date_display, $reference_date );
@@ -549,7 +794,7 @@ class PriceDisplay {
 				'label'                  => $label,
 				'label_template'         => $raw_label,
 				'anchor_price'           => $anchor_price,
-				'anchor_display'         => Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+				'anchor_display'         => isset( $args['anchor_display'] ) ? (string) $args['anchor_display'] : Currency::format( $anchor_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 				'current_price'          => $current_price,
 				'current_display'        => null === $current_price ? '' : Currency::format( $current_price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 				'show_current'           => $show_current,
@@ -583,6 +828,51 @@ class PriceDisplay {
 	}
 
 	/**
+	 * Find the qualifying active special sale for a catalog item.
+	 *
+	 * @param CatalogItem $item Catalog item.
+	 * @return array<string,mixed>|null
+	 */
+	public function active_sale_for_item( CatalogItem $item ) {
+		$sales  = Plugin::instance()->special_sales();
+		$active = $sales->active_map();
+		$key    = (int) $item->id . ':' . (int) $item->variation_id;
+		$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
+
+		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {
+			return null;
+		}
+
+		if ( 'woocommerce' === $item->source ) {
+			$current    = Currency::to_storage( $item->effective_price() );
+			$regular    = Currency::to_storage( $item->regular_price );
+			$sale_price = Currency::to_storage( $item->sale_price );
+
+			if ( null !== $regular && null !== $current ) {
+				$promotional = $regular > 0 && $current < $regular;
+
+				if ( ! $promotional && null !== $item->current_price && null !== $sale_price ) {
+					$promotional = $current === $sale_price;
+				}
+
+				if ( ! $promotional ) {
+					return null;
+				}
+			}
+
+			$periods    = Plugin::instance()->history()->active_sale_period_map( array( (int) $item->id ) );
+			$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $key;
+			$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
+
+			if ( ! SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
+				return null;
+			}
+		}
+
+		return $sale;
+	}
+
+	/**
 	 * Render the 30-day lowest price block for an item in a special sale.
 	 *
 	 * The 30-day price is rendered separately from the anchor price and never
@@ -600,42 +890,14 @@ class PriceDisplay {
 			return '';
 		}
 
-		$sales  = Plugin::instance()->special_sales();
-		$active = $sales->active_map();
-		$key    = (int) $item->id . ':' . (int) $item->variation_id;
-		$sale   = isset( $active[ $key ] ) ? $active[ $key ] : null;
+		$sale = $this->active_sale_for_item( $item );
 
 		if ( ! $sale || null === $sale['lowest_30_day_price'] ) {
 			return '';
 		}
 
-		if ( 'woocommerce' === $item->source ) {
-			$current    = Currency::to_storage( $item->effective_price() );
-			$regular    = Currency::to_storage( $item->regular_price );
-			$sale_price = Currency::to_storage( $item->sale_price );
-
-			if ( null !== $regular && null !== $current ) {
-				$promotional = $regular > 0 && $current < $regular;
-
-				if ( ! $promotional && null !== $item->current_price && null !== $sale_price ) {
-					$promotional = $current === $sale_price;
-				}
-
-				if ( ! $promotional ) {
-					return '';
-				}
-			}
-
-			$periods    = Plugin::instance()->history()->active_sale_period_map( array( (int) $item->id ) );
-			$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $key;
-			$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
-
-			if ( ! SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
-				return '';
-			}
-		}
-
 		$price = (float) $sale['lowest_30_day_price'];
+		$price = (float) self::display_price( $price, $item );
 
 		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
 			? (string) $args['thirty_day_label']

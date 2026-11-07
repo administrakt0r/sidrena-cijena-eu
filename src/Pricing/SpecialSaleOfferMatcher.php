@@ -31,7 +31,13 @@ final class SpecialSaleOfferMatcher {
 			return true;
 		}
 
-		if ( ! is_array( $period ) || empty( $sale['start_date'] ) || empty( $period['valid_from'] ) ) {
+		// When no price-history interval is captured yet (e.g. newly created sale,
+		// unrecorded history, or manual meta-box classification), the active sale applies.
+		if ( ! is_array( $period ) || empty( $period['valid_from'] ) ) {
+			return true;
+		}
+
+		if ( empty( $sale['start_date'] ) ) {
 			return false;
 		}
 
@@ -39,17 +45,28 @@ final class SpecialSaleOfferMatcher {
 		$period_start = substr( (string) $period['valid_from'], 0, 10 );
 
 		// Date-only sale records cannot identify which of two same-day offers
-		// they describe, so require an administrator to resolve that ambiguity.
+		// they describe if there was an intervening closure.
 		if ( ! empty( $period['prior_closure_at'] ) && substr( (string) $period['prior_closure_at'], 0, 10 ) === $period_start ) {
 			return false;
 		}
 
-		$sale_price  = Currency::to_storage( isset( $sale['promo_price'] ) ? $sale['promo_price'] : null );
-		$first_price = Currency::to_storage( isset( $period['price'] ) ? $period['price'] : null );
+		$sale_price  = isset( $sale['promo_price'] ) && '' !== $sale['promo_price']
+			? Currency::to_storage( $sale['promo_price'] )
+			: null;
+		$first_price = isset( $period['price'] ) && '' !== $period['price']
+			? Currency::to_storage( $period['price'] )
+			: null;
 
-		return $sale_start === $period_start
-			&& null !== $sale_price
-			&& null !== $first_price
-			&& $sale_price === $first_price;
+		// When price history captures the offer interval, verify that the start date
+		// matches so the 30-day window calculated from the classification is legally aligned.
+		if ( $sale_start !== $period_start ) {
+			return false;
+		}
+
+		if ( null !== $sale_price && null !== $first_price && $sale_price !== $first_price ) {
+			return false;
+		}
+
+		return true;
 	}
 }

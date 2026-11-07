@@ -1233,7 +1233,7 @@ class PublicPageTest extends TestCase {
 		$disabled_out = ob_get_clean();
 		$this->assertSame( '', $disabled_out );
 
-		// When enabled, outputs small link with default text "Cjenici".
+		// When enabled, outputs small link with default text "Cjenici" and enqueues stylesheet.
 		\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => true ) );
 		ob_start();
 		$page->footer_link();
@@ -1241,6 +1241,7 @@ class PublicPageTest extends TestCase {
 		$this->assertStringContainsString( 'sidrena-cijena-archive-link', $out );
 		$this->assertStringContainsString( 'Cjenici', $out );
 		$this->assertStringContainsString( PublicPage::STEM_ARCHIVE, $out );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
 
 		// Filter hook sidrena_cijena_footer_link_text.
 		add_filter(

@@ -116,6 +116,18 @@ if ( ! class_exists( 'WC_Product' ) ) {
 		}
 
 		/**
+		 * Visible child variation IDs.
+		 *
+		 * @return int[]
+		 */
+		public function get_visible_children() {
+			if ( isset( $this->data['visible_children'] ) ) {
+				return array_map( 'intval', (array) $this->data['visible_children'] );
+			}
+			return $this->get_children();
+		}
+
+		/**
 		 * Whether the product can currently be purchased.
 		 *
 		 * @return bool
@@ -467,5 +479,20 @@ if ( ! function_exists( 'get_woocommerce_currency' ) ) {
 if ( ! function_exists( 'wc_prices_include_tax' ) ) {
 	function wc_prices_include_tax() {
 		return true;
+	}
+}
+
+if ( ! function_exists( 'wc_get_price_to_display' ) ) {
+	/**
+	 * Tax-adjusted price stub for testing.
+	 *
+	 * @param WC_Product   $product Product.
+	 * @param array<mixed> $args    Price arguments.
+	 * @return float
+	 */
+	function wc_get_price_to_display( $product, $args = array() ) {
+		$price      = isset( $args['price'] ) ? (float) $args['price'] : (float) $product->get_price();
+		$multiplier = isset( $GLOBALS['sidrena_test_tax_multiplier'] ) ? (float) $GLOBALS['sidrena_test_tax_multiplier'] : 1.0;
+		return (float) ( $price * $multiplier );
 	}
 }

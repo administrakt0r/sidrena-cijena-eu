@@ -7,17 +7,49 @@
 ( function () {
 	'use strict';
 
-	function update( data, root ) {
+	function isElementForProduct( element, root, productId ) {
+		if ( ! element ) {
+			return false;
+		}
+
+		// When data-product-id is present on the block wrapper, require it to match this product.
+		var wrapper = element.closest ? element.closest( '.sidrena-cijena' ) : null;
+		if ( wrapper && productId ) {
+			var wrapperPid = wrapper.getAttribute( 'data-product-id' );
+			if ( wrapperPid && String( wrapperPid ) !== String( productId ) ) {
+				return false;
+			}
+		}
+
+		// Exclude elements inside nested related or upsell product cards.
+		if ( element.closest && root ) {
+			var nestedSection = element.closest( '.related, .upsells, .up-sells, .cross-sells' );
+			if ( nestedSection && root.contains( nestedSection ) ) {
+				return false;
+			}
+			var closestProduct = element.closest( '.product' );
+			if ( closestProduct && closestProduct !== root && root.contains( closestProduct ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	function update( data, root, productId ) {
+		if ( ! root || ! root.querySelectorAll ) {
+			return;
+		}
+
 		var nodes = root.querySelectorAll( '[data-sidrena-cijena-anchor]' );
 		var display = data && data.sidrena_cijena_anchor ? data.sidrena_cijena_anchor : '';
 		var date = data && data.sidrena_cijena_reference_date_display ? data.sidrena_cijena_reference_date_display : '';
 		var isoDate = data && data.sidrena_cijena_reference_date ? data.sidrena_cijena_reference_date : '';
 
-		if ( ! nodes.length ) {
-			return;
-		}
-
 		for ( var i = 0; i < nodes.length; i++ ) {
+			if ( ! isElementForProduct( nodes[ i ], root, productId ) ) {
+				continue;
+			}
 			nodes[ i ].textContent = display;
 			if ( ! nodes[ i ].hasAttribute( 'aria-live' ) ) {
 				nodes[ i ].setAttribute( 'aria-live', 'polite' );
@@ -26,6 +58,9 @@
 
 		var dateNodes = root.querySelectorAll( '[data-sidrena-cijena-reference-date]' );
 		for ( var j = 0; j < dateNodes.length; j++ ) {
+			if ( ! isElementForProduct( dateNodes[ j ], root, productId ) ) {
+				continue;
+			}
 			var template = '';
 			var wrapper = dateNodes[ j ].closest
 				? dateNodes[ j ].closest( '[data-sidrena-cijena-date-template]' )
@@ -48,6 +83,9 @@
 
 		var labelNodes = root.querySelectorAll( '[data-sidrena-cijena-label]' );
 		for ( var k = 0; k < labelNodes.length; k++ ) {
+			if ( ! isElementForProduct( labelNodes[ k ], root, productId ) ) {
+				continue;
+			}
 			var labelWrapper = labelNodes[ k ].closest
 				? labelNodes[ k ].closest( '[data-sidrena-cijena-label-template]' )
 				: null;
@@ -68,7 +106,23 @@
 
 		var anchorBlocks = root.querySelectorAll( '.sidrena-cijena__anchor' );
 		for ( var a = 0; a < anchorBlocks.length; a++ ) {
+			if ( ! isElementForProduct( anchorBlocks[ a ], root, productId ) ) {
+				continue;
+			}
 			anchorBlocks[ a ].style.display = display ? '' : 'none';
+		}
+
+		var thirtyDayNodes = root.querySelectorAll( '[data-sidrena-cijena-30-day]' );
+		var display30 = data && data.sidrena_cijena_30_day ? data.sidrena_cijena_30_day : '';
+		for ( var t = 0; t < thirtyDayNodes.length; t++ ) {
+			if ( ! isElementForProduct( thirtyDayNodes[ t ], root, productId ) ) {
+				continue;
+			}
+			thirtyDayNodes[ t ].textContent = display30;
+			var wrap30 = thirtyDayNodes[ t ].closest ? thirtyDayNodes[ t ].closest( '.sidrena-cijena--30-day' ) : null;
+			if ( wrap30 ) {
+				wrap30.style.display = display30 ? '' : 'none';
+			}
 		}
 	}
 
@@ -207,11 +261,17 @@
 
 		if ( window.jQuery ) {
 			window.jQuery( document ).on( 'found_variation', function ( event, variation ) {
-				update( variation, event.target.closest( '.product' ) || event.target );
+				var form = event.target && event.target.closest ? event.target.closest( 'form.variations_form' ) : event.target;
+				var productId = form && form.getAttribute ? ( form.getAttribute( 'data-product_id' ) || form.getAttribute( 'data-product-id' ) ) : '';
+				var root = ( event.target.closest && event.target.closest( '.product' ) ) || event.target;
+				update( variation, root, productId );
 			} );
 
 			window.jQuery( document ).on( 'reset_data', function ( event ) {
-				update( null, event.target.closest( '.product' ) || event.target );
+				var form = event.target && event.target.closest ? event.target.closest( 'form.variations_form' ) : event.target;
+				var productId = form && form.getAttribute ? ( form.getAttribute( 'data-product_id' ) || form.getAttribute( 'data-product-id' ) ) : '';
+				var root = ( event.target.closest && event.target.closest( '.product' ) ) || event.target;
+				update( null, root, productId );
 			} );
 		}
 	}
