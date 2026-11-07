@@ -1,0 +1,30 @@
+id: no-legacy-text-domain
+language: Php
+severity: error
+message: "Do not use obsolete textdomain 'sidrena-cijena'; use 'titanworks-bazna-cijena' for all internationalization calls."
+note: |
+  The plugin was renamed to Titanworks Bazna Cijena. All translation functions
+  (__, _e, esc_html__, esc_attr__, _x, etc.) must use the current textdomain
+  'titanworks-bazna-cijena'. Using 'sidrena-cijena' will cause untranslated strings
+  and break Croatian translation catalog loading.
+files:
+  - "src/**/*.php"
+  - "templates/**/*.php"
+rule:
+  any:
+    - pattern: '__($TEXT, "sidrena-cijena")'
+    - pattern: "__($TEXT, 'sidrena-cijena')"
+    - pattern: '_e($TEXT, "sidrena-cijena")'
+    - pattern: "_e($TEXT, 'sidrena-cijena')"
+    - pattern: 'esc_html__($TEXT, "sidrena-cijena")'
+    - pattern: "esc_html__($TEXT, 'sidrena-cijena')"
+    - pattern: 'esc_attr__($TEXT, "sidrena-cijena")'
+    - pattern: "esc_attr__($TEXT, 'sidrena-cijena')"
+    - pattern: '_x($TEXT, $CONTEXT, "sidrena-cijena")'
+    - pattern: "_x($TEXT, $CONTEXT, 'sidrena-cijena')"
+    - pattern: 'esc_html_x($TEXT, $CONTEXT, "sidrena-cijena")'
+    - pattern: "esc_html_x($TEXT, $CONTEXT, 'sidrena-cijena')"
+    - pattern: 'esc_attr_x($TEXT, $CONTEXT, "sidrena-cijena")'
+    - pattern: "esc_attr_x($TEXT, $CONTEXT, 'sidrena-cijena')"
+    - pattern: '_n($SINGLE, $PLURAL, $NUMBER, "sidrena-cijena")'
+    - pattern: "_n($SINGLE, $PLURAL, $NUMBER, 'sidrena-cijena')"
