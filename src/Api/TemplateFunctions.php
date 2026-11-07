@@ -2,20 +2,20 @@
 /**
  * Template API and shortcode.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Public template functions and the `[sidrena_cijena]` shortcode.
+ * Public template functions and the `[twbce_cijena]` shortcode.
  */
 final class TemplateFunctions {
 
@@ -25,7 +25,7 @@ final class TemplateFunctions {
 	 * @return void
 	 */
 	public static function register() {
-		add_shortcode( 'sidrena_cijena', array( __CLASS__, 'shortcode' ) );
+		add_shortcode( 'twbce_cijena', array( __CLASS__, 'shortcode' ) );
 	}
 
 	/**
@@ -103,7 +103,7 @@ final class TemplateFunctions {
 				'thirty_day_label' => '',
 			),
 			$atts,
-			'sidrena_cijena'
+			'twbce_cijena'
 		);
 
 		$product_id = (int) $atts['product_id'];
@@ -157,9 +157,9 @@ final class TemplateFunctions {
 		}
 
 		if ( 'woocommerce' === $item->source ) {
-			$regular    = \SidrenaCijena\Support\Currency::to_storage( $item->regular_price );
-			$current    = \SidrenaCijena\Support\Currency::to_storage( $item->effective_price() );
-			$sale_price = \SidrenaCijena\Support\Currency::to_storage( $item->sale_price );
+			$regular    = \Titanworks\SidrenaCijena\Support\Currency::to_storage( $item->regular_price );
+			$current    = \Titanworks\SidrenaCijena\Support\Currency::to_storage( $item->effective_price() );
+			$sale_price = \Titanworks\SidrenaCijena\Support\Currency::to_storage( $item->sale_price );
 
 			if ( null !== $regular && null !== $current ) {
 				$promotional = $regular > 0 && $current < $regular;
@@ -185,14 +185,14 @@ final class TemplateFunctions {
 			$period_key = isset( $sale['product_id'] ) ? (int) $sale['product_id'] . ':' . (int) ( isset( $sale['variation_id'] ) ? $sale['variation_id'] : 0 ) : $key;
 			$period     = isset( $periods[ $period_key ] ) ? $periods[ $period_key ] : null;
 
-			if ( ! \SidrenaCijena\Pricing\SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
+			if ( ! \Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher::matches( $item, $sale, $period ) ) {
 				return '';
 			}
 		}
 
 		$display_label = null !== $label && '' !== $label
 			? (string) $label
-			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
 
 		/**
 		 * Filters the 30-day lowest price display label.
@@ -201,19 +201,19 @@ final class TemplateFunctions {
 		 * @param CatalogItem $item    Catalog item.
 		 * @param string      $context Rendering context.
 		 */
-		$display_label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $display_label, $item, 'template' );
+		$display_label = (string) apply_filters( 'twbce_cijena_thirty_day_label', $display_label, $item, 'template' );
 
 		$args = array(
 			'item'    => $item,
 			'price'   => $price,
 			'label'   => $display_label,
-			'display' => \SidrenaCijena\Support\Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
+			'display' => \Titanworks\SidrenaCijena\Support\Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) ),
 		);
 
 		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
 
 		if ( ! $template ) {
-			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+			$template = TWBCE_CIJENA_DIR . 'templates/thirty-day-price.php';
 		}
 
 		if ( ! is_readable( $template ) ) {
@@ -233,7 +233,7 @@ final class TemplateFunctions {
 	 *
 	 * @param int $product_id   Product ID.
 	 * @param int $variation_id Variation ID.
-	 * @return \SidrenaCijena\Catalog\CatalogItem|null
+	 * @return \Titanworks\SidrenaCijena\Catalog\CatalogItem|null
 	 */
 	protected static function item( $product_id, $variation_id = 0 ) {
 		$catalog = Plugin::instance()->catalog();

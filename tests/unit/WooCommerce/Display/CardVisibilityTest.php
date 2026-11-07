@@ -2,17 +2,17 @@
 /**
  * Card visibility unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\WooCommerce\Display\CardVisibility;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility;
 
 /**
- * @covers \SidrenaCijena\WooCommerce\Display\CardVisibility
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility
  */
 class CardVisibilityTest extends TestCase {
 
@@ -26,11 +26,11 @@ class CardVisibilityTest extends TestCase {
 
 		require_once dirname( __DIR__, 2 ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_can']         = true;
-		$GLOBALS['sidrena_test_wc_products'] = array();
-		$GLOBALS['sidrena_test_post_meta']   = array();
-		$GLOBALS['sidrena_test_options']     = array();
-		$_POST                               = array();
+		$GLOBALS['twbce_test_can']         = true;
+		$GLOBALS['twbce_test_wc_products'] = array();
+		$GLOBALS['twbce_test_post_meta']   = array();
+		$GLOBALS['twbce_test_options']     = array();
+		$_POST                             = array();
 	}
 
 	/**
@@ -39,10 +39,10 @@ class CardVisibilityTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		$GLOBALS['sidrena_test_wc_products'] = array();
-		$GLOBALS['sidrena_test_post_meta']   = array();
-		$GLOBALS['sidrena_test_options']     = array();
-		$_POST                               = array();
+		$GLOBALS['twbce_test_wc_products'] = array();
+		$GLOBALS['twbce_test_post_meta']   = array();
+		$GLOBALS['twbce_test_options']     = array();
+		$_POST                             = array();
 		parent::tearDown();
 	}
 
@@ -58,15 +58,15 @@ class CardVisibilityTest extends TestCase {
 		$this->assertTrue( CardVisibility::is_visible( $product_id ) );
 
 		// Set to '0': hidden.
-		$GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '0';
+		$GLOBALS['twbce_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '0';
 		$this->assertFalse( CardVisibility::is_visible( $product_id ) );
 
 		// Set to '1': visible.
-		$GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '1';
+		$GLOBALS['twbce_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '1';
 		$this->assertTrue( CardVisibility::is_visible( $product_id ) );
 
 		// Unset meta with card_display_default = false in settings.
-		unset( $GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] );
+		unset( $GLOBALS['twbce_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] );
 		update_option( Settings::OPTION, array( 'card_display_default' => false ) );
 		$this->assertFalse( CardVisibility::is_visible( $product_id ) );
 	}
@@ -78,7 +78,7 @@ class CardVisibilityTest extends TestCase {
 	 */
 	public function test_render_control_renders_expected_markup() {
 		$product_id = 99;
-		$GLOBALS['sidrena_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '1';
+		$GLOBALS['twbce_test_post_meta'][ $product_id ][ CardVisibility::META_KEY ] = '1';
 
 		ob_start();
 		CardVisibility::render_control( $product_id );
@@ -100,12 +100,12 @@ class CardVisibilityTest extends TestCase {
 
 		$_POST[ CardVisibility::NONCE ] = wp_create_nonce( CardVisibility::FIELD );
 		$_POST[ CardVisibility::FIELD ] = '1';
-		$_POST['_sidrena_barcode']      = '3851234567890';
+		$_POST['_twbce_barcode']        = '3851234567890';
 
 		CardVisibility::save( $product );
 
 		$this->assertSame( '1', $product->get_meta( CardVisibility::META_KEY ) );
-		$this->assertSame( '3851234567890', $product->get_meta( '_sidrena_barcode' ) );
+		$this->assertSame( '3851234567890', $product->get_meta( '_twbce_barcode' ) );
 
 		// Now uncheck.
 		$_POST[ CardVisibility::FIELD ] = '0';
@@ -121,7 +121,7 @@ class CardVisibilityTest extends TestCase {
 	 */
 	public function test_save_bails_if_user_cannot_manage() {
 		$product                        = new \WC_Product( array( 'id' => 123 ) );
-		$GLOBALS['sidrena_test_can']    = false;
+		$GLOBALS['twbce_test_can']      = false;
 		$_POST[ CardVisibility::NONCE ] = wp_create_nonce( CardVisibility::FIELD );
 		$_POST[ CardVisibility::FIELD ] = '1';
 

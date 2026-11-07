@@ -5,10 +5,10 @@
  * Themes and plugins should prefer these namespaced functions; the thin
  * global wrappers live in `global-functions.php`.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int $variation_id Variation ID.
  * @return float|null
  */
-function sidrena_cijena_get_anchor_price( $product_id, $variation_id = 0 ) {
+function twbce_cijena_get_anchor_price( $product_id, $variation_id = 0 ) {
 	return TemplateFunctions::get_anchor_price( $product_id, $variation_id );
 }
 
@@ -30,7 +30,7 @@ function sidrena_cijena_get_anchor_price( $product_id, $variation_id = 0 ) {
  * @param int $variation_id Variation ID.
  * @return float|null
  */
-function sidrena_cijena_get_lowest_30_day_price( $product_id, $variation_id = 0 ) {
+function twbce_cijena_get_lowest_30_day_price( $product_id, $variation_id = 0 ) {
 	return TemplateFunctions::get_lowest_30_day_price( $product_id, $variation_id );
 }
 
@@ -41,6 +41,6 @@ function sidrena_cijena_get_lowest_30_day_price( $product_id, $variation_id = 0 
  * @param array<mixed> $args       Rendering arguments.
  * @return string
  */
-function sidrena_cijena_render_anchor_price( $product_id, array $args = array() ) {
+function twbce_cijena_render_anchor_price( $product_id, array $args = array() ) {
 	return TemplateFunctions::render_anchor_price( $product_id, $args );
 }

@@ -5,12 +5,12 @@
  * Archive rows are never deleted by cleanup; only files are removed after the
  * retention period (FR-046 to FR-049).
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -163,7 +163,7 @@ class PublicationRepository {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$row = $wpdb->get_row(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- wpdb accepts the complete, ordered argument array.
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Status placeholders are generated safely and bound dynamically.
 				"SELECT * FROM %i WHERE location_id = %d AND format = %s AND status IN ({$placeholders}) ORDER BY id DESC LIMIT 1",
@@ -222,36 +222,33 @@ class PublicationRepository {
 		$per_page = isset( $args['per_page'] ) ? max( 1, min( 500, (int) $args['per_page'] ) ) : 50;
 		$offset   = ( $page - 1 ) * $per_page;
 
-		$conditions = array();
-		$params     = array();
+		$include_expired = ! empty( $args['include_expired'] ) ? 1 : 0;
+		$location        = ! empty( $args['location'] ) ? (int) $args['location'] : 0;
+		$format          = ! empty( $args['format'] ) ? (string) $args['format'] : '';
+		$params          = array( $this->table, $include_expired, $location, $location, $format, $format );
+		$list_params     = array_merge( $params, array( $per_page, $offset ) );
 
-		if ( empty( $args['include_expired'] ) ) {
-			$conditions[] = 'status IN (%s, %s)';
-			$params[]     = 'published';
-			$params[]     = 'superseded';
-			$conditions[] = 'expired_at IS NULL';
-		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+		$total = (int) $wpdb->get_var(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM %i WHERE (%d = 1 OR (status IN ('published', 'superseded') AND expired_at IS NULL))
+				AND (%d = 0 OR location_id = %d) AND (%s = '' OR format = %s)",
+				$params
+			)
+		);
 
-		if ( ! empty( $args['location'] ) ) {
-			$conditions[] = 'location_id = %d';
-			$params[]     = (int) $args['location'];
-		}
-
-		if ( ! empty( $args['format'] ) ) {
-			$conditions[] = 'format = %s';
-			$params[]     = (string) $args['format'];
-		}
-
-		$where = empty( $conditions ) ? '' : 'WHERE ' . implode( ' AND ', $conditions );
-
-		$query_params = array_merge( array( $this->table ), $params );
-		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY published_at DESC, id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+		$rows = $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE (%d = 1 OR (status IN ('published', 'superseded') AND expired_at IS NULL))
+				AND (%d = 0 OR location_id = %d) AND (%s = '' OR format = %s)
+				ORDER BY published_at DESC, id DESC LIMIT %d OFFSET %d",
+				$list_params
+			),
+			ARRAY_A
+		);
 
 		$items = array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 
@@ -298,7 +295,8 @@ class PublicationRepository {
 			}
 
 			$placeholders = implode( ',', array_fill( 0, count( $clean_ids ), '%d' ) );
-			$sql          = $wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Fixed table/date parameters followed by generated integer placeholders.
+			$sql = $wpdb->prepare(
 				"UPDATE %i SET status = 'expired', expired_at = %s WHERE id IN ($placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				array_merge( array( $this->table, Dates::now_utc() ), $clean_ids )
 			);

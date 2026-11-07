@@ -2,18 +2,18 @@
 /**
  * Integration tests for the anchor import pipeline.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Import\CsvParser;
-use SidrenaCijena\Import\ImportService;
-use SidrenaCijena\Import\RowValidator;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Import\CsvParser;
+use Titanworks\SidrenaCijena\Import\ImportService;
+use Titanworks\SidrenaCijena\Import\RowValidator;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
 
 /**
  * Anchor service that fails for one SKU to exercise rollback.
@@ -23,9 +23,9 @@ class FailingAnchorService extends AnchorPriceService {
 	/**
 	 * Record an anchor unless the SKU is marked as failing.
 	 *
-	 * @param \SidrenaCijena\Catalog\CatalogItem $item Item.
-	 * @param mixed                              $price Price.
-	 * @param array<mixed>                       $args Arguments.
+	 * @param \Titanworks\SidrenaCijena\Catalog\CatalogItem $item Item.
+	 * @param mixed                                         $price Price.
+	 * @param array<mixed>                                  $args Arguments.
 	 * @return int|\WP_Error
 	 */
 	public function record( $item, $price, array $args = array() ) {
@@ -133,8 +133,8 @@ class Test_Import extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 

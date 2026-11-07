@@ -2,10 +2,10 @@
 /**
  * Display labels for stored vocabulary.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,11 +25,11 @@ final class Labels {
 	 */
 	public static function price_type( $type ) {
 		$labels = array(
-			'regular'       => __( 'Regular price', 'titanworks-bazna-cijena' ),
-			'sale'          => __( 'Sale price', 'titanworks-bazna-cijena' ),
-			'anchor'        => __( 'Anchor price', 'titanworks-bazna-cijena' ),
-			'lowest_30_day' => __( 'Lowest price in the last 30 days', 'titanworks-bazna-cijena' ),
-			'historical'    => __( 'Historical price', 'titanworks-bazna-cijena' ),
+			'regular'       => __( 'Regular price', 'sidrena-cijena-eu' ),
+			'sale'          => __( 'Sale price', 'sidrena-cijena-eu' ),
+			'anchor'        => __( 'Anchor price', 'sidrena-cijena-eu' ),
+			'lowest_30_day' => __( 'Lowest price in the last 30 days', 'sidrena-cijena-eu' ),
+			'historical'    => __( 'Historical price', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -46,14 +46,14 @@ final class Labels {
 	public static function source( $source ) {
 		$labels = array(
 			'woocommerce'          => 'WooCommerce',
-			'standalone'           => __( 'Standalone catalog', 'titanworks-bazna-cijena' ),
-			'manual'               => __( 'Manual entry', 'titanworks-bazna-cijena' ),
-			'bulk'                 => __( 'Bulk entry', 'titanworks-bazna-cijena' ),
-			'import'               => __( 'CSV import', 'titanworks-bazna-cijena' ),
+			'standalone'           => __( 'Standalone catalog', 'sidrena-cijena-eu' ),
+			'manual'               => __( 'Manual entry', 'sidrena-cijena-eu' ),
+			'bulk'                 => __( 'Bulk entry', 'sidrena-cijena-eu' ),
+			'import'               => __( 'CSV import', 'sidrena-cijena-eu' ),
 			'cli'                  => 'WP-CLI',
-			'migration'            => __( 'Migration', 'titanworks-bazna-cijena' ),
-			'system'               => __( 'System', 'titanworks-bazna-cijena' ),
-			'observed_first_offer' => __( 'Observed first offer', 'titanworks-bazna-cijena' ),
+			'migration'            => __( 'Migration', 'sidrena-cijena-eu' ),
+			'system'               => __( 'System', 'sidrena-cijena-eu' ),
+			'observed_first_offer' => __( 'Observed first offer', 'sidrena-cijena-eu' ),
 		);
 
 		$source = (string) $source;
@@ -69,13 +69,13 @@ final class Labels {
 	 */
 	public static function publication_status( $status ) {
 		$labels = array(
-			'pending'    => __( 'Pending', 'titanworks-bazna-cijena' ),
-			'generated'  => __( 'Generated', 'titanworks-bazna-cijena' ),
-			'validated'  => __( 'Validated', 'titanworks-bazna-cijena' ),
-			'published'  => __( 'Published', 'titanworks-bazna-cijena' ),
-			'failed'     => __( 'Failed', 'titanworks-bazna-cijena' ),
-			'superseded' => __( 'Superseded', 'titanworks-bazna-cijena' ),
-			'expired'    => __( 'Expired', 'titanworks-bazna-cijena' ),
+			'pending'    => __( 'Pending', 'sidrena-cijena-eu' ),
+			'generated'  => __( 'Generated', 'sidrena-cijena-eu' ),
+			'validated'  => __( 'Validated', 'sidrena-cijena-eu' ),
+			'published'  => __( 'Published', 'sidrena-cijena-eu' ),
+			'failed'     => __( 'Failed', 'sidrena-cijena-eu' ),
+			'superseded' => __( 'Superseded', 'sidrena-cijena-eu' ),
+			'expired'    => __( 'Expired', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;
@@ -91,10 +91,10 @@ final class Labels {
 	 */
 	public static function sale_status( $status ) {
 		$labels = array(
-			'scheduled' => __( 'Scheduled', 'titanworks-bazna-cijena' ),
-			'active'    => __( 'Active', 'titanworks-bazna-cijena' ),
-			'ended'     => __( 'Ended', 'titanworks-bazna-cijena' ),
-			'cancelled' => __( 'Cancelled', 'titanworks-bazna-cijena' ),
+			'scheduled' => __( 'Scheduled', 'sidrena-cijena-eu' ),
+			'active'    => __( 'Active', 'sidrena-cijena-eu' ),
+			'ended'     => __( 'Ended', 'sidrena-cijena-eu' ),
+			'cancelled' => __( 'Cancelled', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;
@@ -110,9 +110,9 @@ final class Labels {
 	 */
 	public static function log_level( $level ) {
 		$labels = array(
-			'info'    => __( 'Info', 'titanworks-bazna-cijena' ),
-			'warning' => __( 'Warning', 'titanworks-bazna-cijena' ),
-			'error'   => __( 'Error', 'titanworks-bazna-cijena' ),
+			'info'    => __( 'Info', 'sidrena-cijena-eu' ),
+			'warning' => __( 'Warning', 'sidrena-cijena-eu' ),
+			'error'   => __( 'Error', 'sidrena-cijena-eu' ),
 		);
 
 		$level = (string) $level;
@@ -128,15 +128,15 @@ final class Labels {
 	 */
 	public static function log_event( $event ) {
 		$labels = array(
-			'export_scheduled'   => __( 'Scheduled generation', 'titanworks-bazna-cijena' ),
-			'export_manual'      => __( 'Manual generation', 'titanworks-bazna-cijena' ),
-			'export_failed'      => __( 'Failed generation', 'titanworks-bazna-cijena' ),
-			'import'             => __( 'Import', 'titanworks-bazna-cijena' ),
-			'validation_failure' => __( 'Validation failure', 'titanworks-bazna-cijena' ),
-			'history_correction' => __( 'History correction', 'titanworks-bazna-cijena' ),
-			'migration'          => __( 'Migration', 'titanworks-bazna-cijena' ),
-			'settings_change'    => __( 'Settings change', 'titanworks-bazna-cijena' ),
-			'cleanup'            => __( 'Cleanup', 'titanworks-bazna-cijena' ),
+			'export_scheduled'   => __( 'Scheduled generation', 'sidrena-cijena-eu' ),
+			'export_manual'      => __( 'Manual generation', 'sidrena-cijena-eu' ),
+			'export_failed'      => __( 'Failed generation', 'sidrena-cijena-eu' ),
+			'import'             => __( 'Import', 'sidrena-cijena-eu' ),
+			'validation_failure' => __( 'Validation failure', 'sidrena-cijena-eu' ),
+			'history_correction' => __( 'History correction', 'sidrena-cijena-eu' ),
+			'migration'          => __( 'Migration', 'sidrena-cijena-eu' ),
+			'settings_change'    => __( 'Settings change', 'sidrena-cijena-eu' ),
+			'cleanup'            => __( 'Cleanup', 'sidrena-cijena-eu' ),
 		);
 
 		$event = (string) $event;
@@ -152,9 +152,9 @@ final class Labels {
 	 */
 	public static function severity( $severity ) {
 		$labels = array(
-			'ERROR'   => __( 'Error', 'titanworks-bazna-cijena' ),
-			'WARNING' => __( 'Warning', 'titanworks-bazna-cijena' ),
-			'INFO'    => __( 'Info', 'titanworks-bazna-cijena' ),
+			'ERROR'   => __( 'Error', 'sidrena-cijena-eu' ),
+			'WARNING' => __( 'Warning', 'sidrena-cijena-eu' ),
+			'INFO'    => __( 'Info', 'sidrena-cijena-eu' ),
 		);
 
 		$severity = (string) $severity;
@@ -170,9 +170,9 @@ final class Labels {
 	 */
 	public static function entity_type( $type ) {
 		$labels = array(
-			'catalog_item' => __( 'Catalog item', 'titanworks-bazna-cijena' ),
-			'location'     => __( 'Sales location', 'titanworks-bazna-cijena' ),
-			'publication'  => __( 'Publication', 'titanworks-bazna-cijena' ),
+			'catalog_item' => __( 'Catalog item', 'sidrena-cijena-eu' ),
+			'location'     => __( 'Sales location', 'sidrena-cijena-eu' ),
+			'publication'  => __( 'Publication', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -190,10 +190,10 @@ final class Labels {
 	 */
 	public static function sale_type( $type ) {
 		$labels = array(
-			'akcija'            => __( 'Promotion (akcija)', 'titanworks-bazna-cijena' ),
-			'snizenje'          => __( 'Price reduction (snizenje)', 'titanworks-bazna-cijena' ),
-			'sezonsko_snizenje' => __( 'Seasonal reduction (sezonsko_snizenje)', 'titanworks-bazna-cijena' ),
-			'rasprodaja'        => __( 'Clearance (rasprodaja)', 'titanworks-bazna-cijena' ),
+			'akcija'            => __( 'Promotion (akcija)', 'sidrena-cijena-eu' ),
+			'snizenje'          => __( 'Price reduction (snizenje)', 'sidrena-cijena-eu' ),
+			'sezonsko_snizenje' => __( 'Seasonal reduction (sezonsko_snizenje)', 'sidrena-cijena-eu' ),
+			'rasprodaja'        => __( 'Clearance (rasprodaja)', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -209,10 +209,10 @@ final class Labels {
 	 */
 	public static function location_type( $type ) {
 		$labels = array(
-			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'titanworks-bazna-cijena' ),
-			'webshop'        => __( 'Web shop (webshop)', 'titanworks-bazna-cijena' ),
-			'poslovnica'     => __( 'Branch office (poslovnica)', 'titanworks-bazna-cijena' ),
-			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'titanworks-bazna-cijena' ),
+			'prodavaonica'   => __( 'Retail store (prodavaonica)', 'sidrena-cijena-eu' ),
+			'webshop'        => __( 'Web shop (webshop)', 'sidrena-cijena-eu' ),
+			'poslovnica'     => __( 'Branch office (poslovnica)', 'sidrena-cijena-eu' ),
+			'usluzno_mjesto' => __( 'Service location (uslužno mjesto)', 'sidrena-cijena-eu' ),
 		);
 
 		$type = (string) $type;
@@ -228,8 +228,8 @@ final class Labels {
 	 */
 	public static function run_source( $source ) {
 		$labels = array(
-			'scheduled' => __( 'Scheduled run', 'titanworks-bazna-cijena' ),
-			'manual'    => __( 'Manual run', 'titanworks-bazna-cijena' ),
+			'scheduled' => __( 'Scheduled run', 'sidrena-cijena-eu' ),
+			'manual'    => __( 'Manual run', 'sidrena-cijena-eu' ),
 			'cli'       => 'WP-CLI',
 		);
 
@@ -246,12 +246,12 @@ final class Labels {
 	 */
 	public static function rule_setting( $key ) {
 		$labels = array(
-			'general_reference_date' => __( 'General reference date', 'titanworks-bazna-cijena' ),
-			'legacy_reference_date'  => __( 'Legacy reference date', 'titanworks-bazna-cijena' ),
-			'legacy_enabled'         => __( 'Enable legacy treatment', 'titanworks-bazna-cijena' ),
-			'legacy_category_ids'    => __( 'Legacy categories', 'titanworks-bazna-cijena' ),
-			'legacy_category_slugs'  => __( 'Legacy categories', 'titanworks-bazna-cijena' ),
-			'rule_version'           => __( 'Legal-rule version', 'titanworks-bazna-cijena' ),
+			'general_reference_date' => __( 'General reference date', 'sidrena-cijena-eu' ),
+			'legacy_reference_date'  => __( 'Legacy reference date', 'sidrena-cijena-eu' ),
+			'legacy_enabled'         => __( 'Enable legacy treatment', 'sidrena-cijena-eu' ),
+			'legacy_category_ids'    => __( 'Legacy categories', 'sidrena-cijena-eu' ),
+			'legacy_category_slugs'  => __( 'Legacy categories', 'sidrena-cijena-eu' ),
+			'rule_version'           => __( 'Legal-rule version', 'sidrena-cijena-eu' ),
 		);
 
 		$key = (string) $key;
@@ -267,11 +267,11 @@ final class Labels {
 	 */
 	public static function import_status( $status ) {
 		$labels = array(
-			'valid'     => __( 'Valid', 'titanworks-bazna-cijena' ),
-			'invalid'   => __( 'Invalid', 'titanworks-bazna-cijena' ),
-			'duplicate' => __( 'Duplicate', 'titanworks-bazna-cijena' ),
-			'overwrite' => __( 'Will overwrite', 'titanworks-bazna-cijena' ),
-			'unchanged' => __( 'Unchanged', 'titanworks-bazna-cijena' ),
+			'valid'     => __( 'Valid', 'sidrena-cijena-eu' ),
+			'invalid'   => __( 'Invalid', 'sidrena-cijena-eu' ),
+			'duplicate' => __( 'Duplicate', 'sidrena-cijena-eu' ),
+			'overwrite' => __( 'Will overwrite', 'sidrena-cijena-eu' ),
+			'unchanged' => __( 'Unchanged', 'sidrena-cijena-eu' ),
 		);
 
 		$status = (string) $status;

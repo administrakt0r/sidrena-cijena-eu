@@ -2,22 +2,22 @@
 /**
  * Admin menu unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AdminMenu;
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Admin\CompliancePage;
-use SidrenaCijena\Admin\DashboardPage;
-use SidrenaCijena\Admin\DocumentationPage;
-use SidrenaCijena\Admin\SettingsPage;
-use SidrenaCijena\Admin\SetupGuidePage;
+use Titanworks\SidrenaCijena\Admin\AdminMenu;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Admin\CompliancePage;
+use Titanworks\SidrenaCijena\Admin\DashboardPage;
+use Titanworks\SidrenaCijena\Admin\DocumentationPage;
+use Titanworks\SidrenaCijena\Admin\SettingsPage;
+use Titanworks\SidrenaCijena\Admin\SetupGuidePage;
 
 /**
- * @covers \SidrenaCijena\Admin\AdminMenu
+ * @covers \Titanworks\SidrenaCijena\Admin\AdminMenu
  */
 class AdminMenuTest extends TestCase {
 
@@ -28,12 +28,12 @@ class AdminMenuTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_menu_pages']       = array();
-		$GLOBALS['sidrena_test_submenu_pages']    = array();
-		$GLOBALS['sidrena_test_enqueued_styles']  = array();
-		$GLOBALS['sidrena_test_enqueued_scripts'] = array();
-		$GLOBALS['current_screen']                = null;
-		$_GET                                     = array();
+		$GLOBALS['twbce_test_menu_pages']       = array();
+		$GLOBALS['twbce_test_submenu_pages']    = array();
+		$GLOBALS['twbce_test_enqueued_styles']  = array();
+		$GLOBALS['twbce_test_enqueued_scripts'] = array();
+		$GLOBALS['current_screen']              = null;
+		$_GET                                   = array();
 	}
 
 	/**
@@ -42,12 +42,12 @@ class AdminMenuTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		$GLOBALS['sidrena_test_menu_pages']       = array();
-		$GLOBALS['sidrena_test_submenu_pages']    = array();
-		$GLOBALS['sidrena_test_enqueued_styles']  = array();
-		$GLOBALS['sidrena_test_enqueued_scripts'] = array();
-		$GLOBALS['current_screen']                = null;
-		$_GET                                     = array();
+		$GLOBALS['twbce_test_menu_pages']       = array();
+		$GLOBALS['twbce_test_submenu_pages']    = array();
+		$GLOBALS['twbce_test_enqueued_styles']  = array();
+		$GLOBALS['twbce_test_enqueued_scripts'] = array();
+		$GLOBALS['current_screen']              = null;
+		$_GET                                   = array();
 		parent::tearDown();
 	}
 
@@ -84,13 +84,13 @@ class AdminMenuTest extends TestCase {
 	public function test_register_adds_menu_and_submenus() {
 		AdminMenu::register();
 
-		$this->assertArrayHasKey( AdminMenu::PARENT, $GLOBALS['sidrena_test_menu_pages'] );
-		$main = $GLOBALS['sidrena_test_menu_pages'][ AdminMenu::PARENT ];
+		$this->assertArrayHasKey( AdminMenu::PARENT, $GLOBALS['twbce_test_menu_pages'] );
+		$main = $GLOBALS['twbce_test_menu_pages'][ AdminMenu::PARENT ];
 		$this->assertSame( Capabilities::capability(), $main['capability'] );
 		$this->assertSame( 56, $main['position'] );
 
-		$this->assertNotEmpty( $GLOBALS['sidrena_test_submenu_pages'] );
-		$sub_slugs = array_column( $GLOBALS['sidrena_test_submenu_pages'], 'menu_slug' );
+		$this->assertNotEmpty( $GLOBALS['twbce_test_submenu_pages'] );
+		$sub_slugs = array_column( $GLOBALS['twbce_test_submenu_pages'], 'menu_slug' );
 		$this->assertContains( AdminMenu::PARENT, $sub_slugs );
 		$this->assertContains( SetupGuidePage::SLUG, $sub_slugs );
 		$this->assertContains( 'sidrena-cijena-compliance', $sub_slugs );
@@ -131,7 +131,7 @@ class AdminMenuTest extends TestCase {
 		$_GET['page'] = 'sidrena-cijena-compliance';
 		$this->assertTrue( AdminMenu::is_plugin_screen() );
 
-		$_GET['page'] = 'sidrena_item_list';
+		$_GET['page'] = 'twbce_item_list';
 		$this->assertTrue( AdminMenu::is_plugin_screen() );
 
 		$_GET['page'] = 'unrelated-plugin';
@@ -165,18 +165,18 @@ class AdminMenuTest extends TestCase {
 	public function test_enqueue_assets_enqueues_expected_assets() {
 		// Non-matching hook.
 		AdminMenu::enqueue_assets( 'options-general.php' );
-		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_styles'] );
 
 		// Plugin screen hook.
 		AdminMenu::enqueue_assets( 'toplevel_page_sidrena-cijena' );
-		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_styles'] );
-		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_scripts'] );
-		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_scripts'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 
 		// Styling tab includes frontend css.
 		$_GET['tab'] = 'styling';
 		AdminMenu::enqueue_assets( 'toplevel_page_sidrena-cijena' );
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 	}
 
 	/**

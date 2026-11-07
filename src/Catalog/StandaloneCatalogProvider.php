@@ -1,11 +1,11 @@
 <?php
 /**
- * Catalog provider backed by the private `sidrena_item` post type.
+ * Catalog provider backed by the private `twbce_item` post type.
  *
- * @package SidrenaCijena\Catalog
+ * @package Titanworks\SidrenaCijena\Catalog
  */
 
-namespace SidrenaCijena\Catalog;
+namespace Titanworks\SidrenaCijena\Catalog;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -251,29 +251,29 @@ class StandaloneCatalogProvider implements CatalogProvider {
 		$brand_terms = wp_get_post_terms( $post->ID, StandalonePostType::TAX_BRAND, array( 'fields' => 'names' ) );
 		$brand       = is_array( $brand_terms ) && ! empty( $brand_terms ) ? (string) $brand_terms[0] : '';
 
-		$regular = get_post_meta( $post->ID, '_sidrena_regular_price', true );
-		$sale    = get_post_meta( $post->ID, '_sidrena_sale_price', true );
+		$regular = get_post_meta( $post->ID, '_twbce_regular_price', true );
+		$sale    = get_post_meta( $post->ID, '_twbce_sale_price', true );
 
 		$regular = '' === $regular ? null : (float) $regular;
 		$sale    = '' === $sale ? null : (float) $sale;
 
-		$first_seen = get_post_meta( $post->ID, '_sidrena_first_seen', true );
+		$first_seen = get_post_meta( $post->ID, '_twbce_first_seen', true );
 		$first_seen = $first_seen ? (string) $first_seen : get_the_date( 'Y-m-d', $post );
 
-		$availability = get_post_meta( $post->ID, '_sidrena_availability', true );
-		$currency     = get_post_meta( $post->ID, '_sidrena_currency', true );
-		$tax_meta     = get_post_meta( $post->ID, '_sidrena_tax_inclusive', true );
+		$availability = get_post_meta( $post->ID, '_twbce_availability', true );
+		$currency     = get_post_meta( $post->ID, '_twbce_currency', true );
+		$tax_meta     = get_post_meta( $post->ID, '_twbce_tax_inclusive', true );
 
 		return new CatalogItem(
 			array(
 				'id'            => (int) $post->ID,
 				'type'          => $type,
 				'name'          => (string) $post->post_title,
-				'sku'           => (string) get_post_meta( $post->ID, '_sidrena_sku', true ),
+				'sku'           => (string) get_post_meta( $post->ID, '_twbce_sku', true ),
 				'brand'         => $brand,
-				'barcode'       => (string) get_post_meta( $post->ID, '_sidrena_barcode', true ),
-				'unit'          => (string) get_post_meta( $post->ID, '_sidrena_unit', true ),
-				'unit_price'    => get_post_meta( $post->ID, '_sidrena_unit_price', true ),
+				'barcode'       => (string) get_post_meta( $post->ID, '_twbce_barcode', true ),
+				'unit'          => (string) get_post_meta( $post->ID, '_twbce_unit', true ),
+				'unit_price'    => get_post_meta( $post->ID, '_twbce_unit_price', true ),
 				'currency'      => $currency ? (string) $currency : 'EUR',
 				'availability'  => 'unavailable' === $availability ? 'unavailable' : 'available',
 				'regular_price' => $regular,

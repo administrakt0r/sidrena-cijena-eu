@@ -2,19 +2,19 @@
 /**
  * Publisher unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Export\FilenameGenerator;
-use SidrenaCijena\Export\Publisher;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Export\FilenameGenerator;
+use Titanworks\SidrenaCijena\Export\Publisher;
 
 /**
- * @covers \SidrenaCijena\Export\Publisher
+ * @covers \Titanworks\SidrenaCijena\Export\Publisher
  */
 class PublisherTest extends TestCase {
 
@@ -32,7 +32,7 @@ class PublisherTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$this->temp_dir = sys_get_temp_dir() . '/sidrena_pub_test_' . uniqid();
+		$this->temp_dir = sys_get_temp_dir() . '/twbce_pub_test_' . uniqid();
 		mkdir( $this->temp_dir, 0777, true );
 	}
 

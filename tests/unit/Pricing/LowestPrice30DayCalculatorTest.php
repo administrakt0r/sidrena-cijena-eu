@@ -2,13 +2,13 @@
 /**
  * 30-day lowest price calculator tests.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
 
 /**
  * Covers the exact 30-day window, its boundaries and price applicability.

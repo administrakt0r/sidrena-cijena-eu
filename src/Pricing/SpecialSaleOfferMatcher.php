@@ -2,13 +2,13 @@
 /**
  * Match a WooCommerce sale classification to its captured price interval.
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Support\Currency;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -2,17 +2,17 @@
 /**
  * Unit tests for import row validation.
  *
- * @package SidrenaCijena\Tests\Unit\Import
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Import
  */
 
-namespace SidrenaCijena\Tests\Unit\Import;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Import;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Import\CsvParser;
-use SidrenaCijena\Import\RowValidator;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Import\CsvParser;
+use Titanworks\SidrenaCijena\Import\RowValidator;
 
 /**
  * In-memory catalog provider.

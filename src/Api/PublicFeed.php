@@ -2,14 +2,14 @@
 /**
  * Public price-list feed on a stable, human-readable URL.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Logging\Logger;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,14 +35,14 @@ class PublicFeed {
 	 *
 	 * @var string
 	 */
-	const QUERY_VAR = 'sidrena_cijena_feed';
+	const QUERY_VAR = 'twbce_cijena_feed';
 
 	/**
 	 * Option storing the last queued rebuild timestamp.
 	 *
 	 * @var string
 	 */
-	const OPTION_LAST_QUEUE = 'sidrena_cijena_public_feed_last_queue';
+	const OPTION_LAST_QUEUE = 'twbce_cijena_public_feed_last_queue';
 
 	/**
 	 * Minimum seconds between two queued rebuilds.
@@ -114,11 +114,11 @@ class PublicFeed {
 
 		if ( self::STEM . '.xml' === $request ) {
 			$wp->query_vars[ self::QUERY_VAR ] = 'xml';
-			$wp->matched_rule                  = 'sidrena_cijena_feed_xml';
+			$wp->matched_rule                  = 'twbce_cijena_feed_xml';
 			unset( $wp->query_vars['error'] );
 		} elseif ( self::STEM . '.csv' === $request ) {
 			$wp->query_vars[ self::QUERY_VAR ] = 'csv';
-			$wp->matched_rule                  = 'sidrena_cijena_feed_csv';
+			$wp->matched_rule                  = 'twbce_cijena_feed_csv';
 			unset( $wp->query_vars['error'] );
 		}
 	}
@@ -292,7 +292,7 @@ class PublicFeed {
 		header( 'Content-Type: text/plain; charset=utf-8' );
 		header( 'Retry-After: ' . self::REBUILD_COOLDOWN );
 
-		echo esc_html__( 'The price list is being regenerated. Please try again shortly.', 'titanworks-bazna-cijena' ) . "\n";
+		echo esc_html__( 'The price list is being regenerated. Please try again shortly.', 'sidrena-cijena-eu' ) . "\n";
 		exit;
 	}
 

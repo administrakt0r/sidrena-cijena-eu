@@ -2,12 +2,12 @@
 /**
  * Frontend display settings tab.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,82 +28,82 @@ final class DisplaySettingsPage {
 	 */
 	public static function register_settings() {
 		add_settings_section(
-			'sidrena_cijena_display',
-			__( 'Anchor price display', 'titanworks-bazna-cijena' ),
+			'twbce_cijena_display',
+			__( 'Anchor price display', 'sidrena-cijena-eu' ),
 			array( __CLASS__, 'section_intro' ),
 			self::PAGE
 		);
 
 		$fields = array(
 			'display_enabled'       => array(
-				'label'       => __( 'Enable frontend display', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Enable frontend display', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Show anchor price and 30-day lowest price on the public storefront.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Show anchor price and 30-day lowest price on the public storefront.', 'sidrena-cijena-eu' ),
 			),
 			'anchor_label'          => array(
-				'label'       => __( 'Anchor price label', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Anchor price label', 'sidrena-cijena-eu' ),
 				'type'        => 'anchor_label_preset',
-				'description' => __( 'Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso}).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Statutory label describing the anchor price. Choose a preset or specify a custom label with dynamic tokens ({datum}, {datum_iso}).', 'sidrena-cijena-eu' ),
 			),
 			'thirty_day_label'      => array(
-				'label'       => __( 'Lowest 30-day price label', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Lowest 30-day price label', 'sidrena-cijena-eu' ),
 				'type'        => 'text',
-				'description' => __( 'Statutory label for the lowest price applied in the 30 days before a promotion.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Statutory label for the lowest price applied in the 30 days before a promotion.', 'sidrena-cijena-eu' ),
 			),
 			'currency_display'      => array(
-				'label'       => __( 'Currency display', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Currency display', 'sidrena-cijena-eu' ),
 				'type'        => 'select',
-				'description' => __( 'Format used to display currency alongside the anchor price.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Format used to display currency alongside the anchor price.', 'sidrena-cijena-eu' ),
 			),
 			'display_location'      => array(
-				'label'       => __( 'Display position', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Display position', 'sidrena-cijena-eu' ),
 				'type'        => 'select',
-				'description' => __( 'Placement of the anchor price relative to the regular product price HTML.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Placement of the anchor price relative to the regular product price HTML.', 'sidrena-cijena-eu' ),
 			),
 			'display_priority'      => array(
-				'label'       => __( 'Display priority', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Display priority', 'sidrena-cijena-eu' ),
 				'type'        => 'number',
-				'description' => __( 'Action hook priority (default 15; lower values render earlier).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Action hook priority (default 15; lower values render earlier).', 'sidrena-cijena-eu' ),
 			),
 			'display_product_pages' => array(
-				'label'       => __( 'Product pages', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Product pages', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Render anchor price information on single product pages.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Render anchor price information on single product pages.', 'sidrena-cijena-eu' ),
 			),
 			'display_archives'      => array(
-				'label'       => __( 'Product cards and archives', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Product cards and archives', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Render anchor price information on shop loops, category archives, search results, related products, and minicards.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Render anchor price information on shop loops, category archives, search results, related products, and minicards.', 'sidrena-cijena-eu' ),
 			),
 			'card_display_default'  => array(
-				'label'       => __( 'Show on cards by default', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Show on cards by default', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Display the anchor price on all product cards by default. Can be unchecked on individual products in the product editor.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Display the anchor price on all product cards by default. Can be unchecked on individual products in the product editor.', 'sidrena-cijena-eu' ),
 			),
 			'display_variations'    => array(
-				'label'       => __( 'Variations', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Variations', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Dynamically update the anchor price when a variation is selected.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Dynamically update the anchor price when a variation is selected.', 'sidrena-cijena-eu' ),
 			),
 			'only_when_different'   => array(
-				'label'       => __( 'Only when the anchor differs', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Only when the anchor differs', 'sidrena-cijena-eu' ),
 				'type'        => 'checkbox',
-				'description' => __( 'Hide the anchor price if it equals the current selling price.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Hide the anchor price if it equals the current selling price.', 'sidrena-cijena-eu' ),
 			),
 			'disclaimer'            => array(
-				'label'       => __( 'Administrative disclaimer', 'titanworks-bazna-cijena' ),
+				'label'       => __( 'Administrative disclaimer', 'sidrena-cijena-eu' ),
 				'type'        => 'textarea',
-				'description' => __( 'Optional text displayed alongside anchor prices informing buyers of statutory direct price controls.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Optional text displayed alongside anchor prices informing buyers of statutory direct price controls.', 'sidrena-cijena-eu' ),
 			),
 		);
 
 		foreach ( $fields as $key => $field ) {
 			add_settings_field(
-				'sidrena_cijena_' . $key,
+				'twbce_cijena_' . $key,
 				$field['label'],
 				array( __CLASS__, 'render_field' ),
 				self::PAGE,
-				'sidrena_cijena_display',
+				'twbce_cijena_display',
 				array(
 					'key'         => $key,
 					'type'        => $field['type'],
@@ -120,7 +120,7 @@ final class DisplaySettingsPage {
 	 * @return void
 	 */
 	public static function section_intro() {
-		echo '<p>' . esc_html__( 'Choose where and how the anchor price ("Sidrena cijena") is shown next to current prices.', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p>' . esc_html__( 'Choose where and how the anchor price ("Sidrena cijena") is shown next to current prices.', 'sidrena-cijena-eu' ) . '</p>';
 	}
 
 	/**
@@ -154,14 +154,14 @@ final class DisplaySettingsPage {
 			case 'select':
 				if ( 'currency_display' === $key ) {
 					$choices = array(
-						'symbol' => __( 'Currency symbol (6,99 EUR)', 'titanworks-bazna-cijena' ),
-						'code'   => __( 'Currency code (6,99 EUR)', 'titanworks-bazna-cijena' ),
-						'none'   => __( 'Amount only (6,99)', 'titanworks-bazna-cijena' ),
+						'symbol' => __( 'Currency symbol (6,99 EUR)', 'sidrena-cijena-eu' ),
+						'code'   => __( 'Currency code (6,99 EUR)', 'sidrena-cijena-eu' ),
+						'none'   => __( 'Amount only (6,99)', 'sidrena-cijena-eu' ),
 					);
 				} else {
 					$choices = array(
-						'price_html' => __( 'Inline, next to the price', 'titanworks-bazna-cijena' ),
-						'summary'    => __( 'Separate block below the price', 'titanworks-bazna-cijena' ),
+						'price_html' => __( 'Inline, next to the price', 'sidrena-cijena-eu' ),
+						'summary'    => __( 'Separate block below the price', 'sidrena-cijena-eu' ),
 					);
 				}
 
@@ -188,12 +188,12 @@ final class DisplaySettingsPage {
 	 * @return void
 	 */
 	public static function render_anchor_label_field( $key, $value ) {
-		$value   = (string) ( null !== $value && '' !== $value ? $value : __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
+		$value   = (string) ( null !== $value && '' !== $value ? $value : __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
 		$presets = Settings::anchor_label_presets();
 		$option  = Settings::OPTION;
 
 		echo '<div class="sidrena-label-presets-wrap">';
-		echo '<p class="sidrena-label-presets-heading">' . esc_html__( 'Odaberite predloženi naziv ili upišite vlastiti:', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="sidrena-label-presets-heading">' . esc_html__( 'Odaberite predloženi naziv ili upišite vlastiti:', 'sidrena-cijena-eu' ) . '</p>';
 		echo '<div class="sidrena-label-presets">';
 
 		foreach ( $presets as $preset_key => $preset_label ) {
@@ -204,17 +204,17 @@ final class DisplaySettingsPage {
 		echo '</div>';
 
 		echo '<div class="sidrena-label-input-row">';
-		echo '<input type="text" id="' . esc_attr( $key ) . '" name="' . esc_attr( $option . '[' . $key . ']' ) . '" value="' . esc_attr( $value ) . '" class="regular-text" placeholder="' . esc_attr__( 'Sidrena cijena', 'titanworks-bazna-cijena' ) . '" />';
-		echo '<button type="button" class="button button-secondary sidrena-token-btn" data-token="{datum}" title="' . esc_attr__( 'Umetni oznaku za datum', 'titanworks-bazna-cijena' ) . '">+ {datum}</button>';
+		echo '<input type="text" id="' . esc_attr( $key ) . '" name="' . esc_attr( $option . '[' . $key . ']' ) . '" value="' . esc_attr( $value ) . '" class="regular-text" placeholder="' . esc_attr__( 'Sidrena cijena', 'sidrena-cijena-eu' ) . '" />';
+		echo '<button type="button" class="button button-secondary sidrena-token-btn" data-token="{datum}" title="' . esc_attr__( 'Umetni oznaku za datum', 'sidrena-cijena-eu' ) . '">+ {datum}</button>';
 		echo '</div>';
 
 		echo '<div class="sidrena-label-preview-box">';
-		echo '<p class="sidrena-label-preview-title">' . esc_html__( 'Prikaz u trgovini (pregled uživo):', 'titanworks-bazna-cijena' ) . '</p>';
-		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Hrana / piće / kućanstvo:', 'titanworks-bazna-cijena' ) . '</strong> <span id="sidrena-preview-food" class="sidrena-label-preview-val"></span>: 12,49 €</div>';
-		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Odjeća / tehnika / usluge:', 'titanworks-bazna-cijena' ) . '</strong> <span id="sidrena-preview-general" class="sidrena-label-preview-val"></span>: 17,99 €</div>';
+		echo '<p class="sidrena-label-preview-title">' . esc_html__( 'Prikaz u trgovini (pregled uživo):', 'sidrena-cijena-eu' ) . '</p>';
+		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Hrana / piće / kućanstvo:', 'sidrena-cijena-eu' ) . '</strong> <span id="sidrena-preview-food" class="sidrena-label-preview-val"></span>: 12,49 €</div>';
+		echo '<div class="sidrena-label-preview-row"><strong>' . esc_html__( 'Odjeća / tehnika / usluge:', 'sidrena-cijena-eu' ) . '</strong> <span id="sidrena-preview-general" class="sidrena-label-preview-val"></span>: 17,99 €</div>';
 		echo '</div>';
 
-		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (02.05.2025. za hranu, 10.09.2026. za ostalu robu i usluge).', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="description sidrena-label-presets-help">' . esc_html__( 'Prema pojašnjenju Ministarstva gospodarstva, trgovci mogu koristiti izraze poput "Bazna cijena", "Referentna cijena" ili "Cijena na [datum]". Oznaka {datum} se automatski zamjenjuje točnim zakonskim datumom za svaki proizvod (02.05.2025. za hranu, 10.09.2026. za ostalu robu i usluge).', 'sidrena-cijena-eu' ) . '</p>';
 		echo '</div>';
 	}
 

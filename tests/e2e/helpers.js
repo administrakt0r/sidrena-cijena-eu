@@ -20,40 +20,34 @@ const WP_ENV_CLI = process.env.WP_ENV_CLI || 'tests-cli';
  * @param {string[]} args WP-CLI arguments.
  * @return {string} Command output.
  */
-function wpCli( args ) {
-	const bin = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+let cachedPluginSlug = null;
 
-	// Normalize plugin slug references for sidrena-cijena / titanworks-bazna-cijena / titanworks-bazna-cijena
-	if ( args[0] === 'plugin' && ( args[1] === 'activate' || args[1] === 'deactivate' || args[1] === 'is-active' ) ) {
-		const targetIdx = args.findIndex( ( a ) => a === 'sidrena-cijena' || a === 'titanworks-bazna-cijena' || a === 'titanworks-bazna-cijena' );
-		if ( targetIdx !== -1 ) {
-			try {
-				const listOut = execFileSync( bin, [ 'wp-env', 'run', WP_ENV_CLI, 'wp', 'plugin', 'list', '--field=name' ], {
-					cwd: REPO_ROOT,
-					encoding: 'utf8',
-					stdio: [ 'ignore', 'pipe', 'pipe' ],
-				} );
-				const match = listOut.split( '\n' ).map( ( s ) => s.trim() ).find( ( s ) => s.includes( 'titanworks' ) || s.includes( 'sidrena' ) );
-				if ( match ) {
-					const resolvedArgs = [ ...args ];
-					resolvedArgs[ targetIdx ] = match;
-					return execFileSync( bin, [ 'wp-env', 'run', WP_ENV_CLI, 'wp', ...resolvedArgs ], {
-						cwd: REPO_ROOT,
-						encoding: 'utf8',
-						stdio: [ 'ignore', 'pipe', 'pipe' ],
-					} );
-				}
-			} catch {
-				// Fall back to direct execution
+function runWpCli( args ) {
+	const options = { cwd: REPO_ROOT, encoding: 'utf8', stdio: [ 'ignore', 'pipe', 'pipe' ] };
+	if ( process.env.TWBCE_WP_CLI_CONTAINER ) {
+		return execFileSync( 'docker', [
+			'exec', '--workdir', '/var/www/html',
+			'--user', `${ process.getuid() }:${ process.getgid() }`,
+			process.env.TWBCE_WP_CLI_CONTAINER, 'wp', ...args,
+		], options );
+	}
+	return execFileSync( process.execPath, [ path.join( path.dirname( require.resolve( '@wordpress/env/package.json' ) ), 'bin/wp-env' ), 'run', WP_ENV_CLI, 'wp', ...args ], options );
+}
+
+function wpCli( args ) {
+	if ( args[ 0 ] === 'plugin' && [ 'activate', 'deactivate', 'is-active' ].includes( args[ 1 ] ) ) {
+		const aliases = [ 'sidrena-cijena', 'sidrena-cijena-eu', 'titanworks-bazna-cijena' ];
+		const index = args.findIndex( ( value ) => aliases.includes( value ) );
+		if ( index !== -1 ) {
+			if ( ! cachedPluginSlug ) {
+				const names = runWpCli( [ 'plugin', 'list', '--field=name' ] ).split( '\n' ).map( ( name ) => name.trim() );
+				cachedPluginSlug = names.find( ( name ) => aliases.includes( name ) ) || names.find( ( name ) => /^titanworks.*(?:sidrena|bazna)/.test( name ) ) || args[ index ];
 			}
+			args = [ ...args ];
+			args[ index ] = cachedPluginSlug;
 		}
 	}
-
-	return execFileSync( bin, [ 'wp-env', 'run', WP_ENV_CLI, 'wp', ...args ], {
-		cwd: REPO_ROOT,
-		encoding: 'utf8',
-		stdio: [ 'ignore', 'pipe', 'pipe' ],
-	} );
+	return runWpCli( args );
 }
 
 /**

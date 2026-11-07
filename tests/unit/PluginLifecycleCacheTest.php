@@ -2,16 +2,16 @@
 /**
  * Unit tests for catalog lifecycle cache invalidation.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit;
+namespace Titanworks\SidrenaCijena\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\RestCache;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorCache;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Api\RestCache;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorCache;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once __DIR__ . '/PluginSwap.php';
 
@@ -25,7 +25,7 @@ class LifecycleTestPost {
 	 *
 	 * @var string
 	 */
-	public $post_type = 'sidrena_item';
+	public $post_type = 'twbce_item';
 
 	/**
 	 * Post status.
@@ -80,9 +80,9 @@ class CountingAnchorCache extends AnchorCache {
 }
 
 /**
- * @covers \SidrenaCijena\Plugin::catalog_post_types
- * @covers \SidrenaCijena\Plugin::flush_on_catalog_status_change
- * @covers \SidrenaCijena\Plugin::flush_on_catalog_item_deleted
+ * @covers \Titanworks\SidrenaCijena\Plugin::catalog_post_types
+ * @covers \Titanworks\SidrenaCijena\Plugin::flush_on_catalog_status_change
+ * @covers \Titanworks\SidrenaCijena\Plugin::flush_on_catalog_item_deleted
  */
 class PluginLifecycleCacheTest extends TestCase {
 
@@ -134,7 +134,7 @@ class PluginLifecycleCacheTest extends TestCase {
 	 * @param string $post_status Post status.
 	 * @return LifecycleTestPost
 	 */
-	protected function post( $post_type = 'sidrena_item', $post_status = 'publish' ) {
+	protected function post( $post_type = 'twbce_item', $post_status = 'publish' ) {
 		$post              = new LifecycleTestPost();
 		$post->post_type   = $post_type;
 		$post->post_status = $post_status;
@@ -160,7 +160,7 @@ class PluginLifecycleCacheTest extends TestCase {
 	public function test_catalog_post_types_cover_both_catalogs() {
 		$types = Plugin::catalog_post_types();
 
-		$this->assertContains( 'sidrena_item', $types );
+		$this->assertContains( 'twbce_item', $types );
 		$this->assertContains( 'product', $types );
 		$this->assertContains( 'product_variation', $types );
 	}

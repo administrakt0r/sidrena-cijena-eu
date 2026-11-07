@@ -2,12 +2,12 @@
 /**
  * 30-day lowest price calculator.
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 

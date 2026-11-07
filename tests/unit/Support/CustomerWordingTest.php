@@ -2,20 +2,20 @@
 /**
  * Regression tests for customer-visible Croatian wording and English fallback.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\DisplaySettingsPage;
-use SidrenaCijena\Api\TemplateFunctions;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Support\Labels;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\Tests\Support\PluginSwap;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\Admin\DisplaySettingsPage;
+use Titanworks\SidrenaCijena\Api\TemplateFunctions;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 require_once dirname( __DIR__ ) . '/wc-stubs.php';
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
@@ -77,10 +77,10 @@ class WordingSaleFake extends SpecialSaleRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Support\Settings
- * @covers \SidrenaCijena\Admin\DisplaySettingsPage
- * @covers \SidrenaCijena\WooCommerce\Display\PriceDisplay
- * @covers \SidrenaCijena\Api\TemplateFunctions
+ * @covers \Titanworks\SidrenaCijena\Support\Settings
+ * @covers \Titanworks\SidrenaCijena\Admin\DisplaySettingsPage
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay
+ * @covers \Titanworks\SidrenaCijena\Api\TemplateFunctions
  */
 class CustomerWordingTest extends TestCase {
 
@@ -92,14 +92,14 @@ class CustomerWordingTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']           = array();
-		$GLOBALS['sidrena_test_transients']        = array();
-		$GLOBALS['sidrena_test_textdomains']       = array();
-		$GLOBALS['sidrena_test_translations']      = array();
-		$GLOBALS['sidrena_test_settings_fields']   = array();
-		$GLOBALS['sidrena_test_settings_sections'] = array();
-		$GLOBALS['sidrena_test_locale']            = 'en_US';
-		$GLOBALS['wp_filter']                      = array();
+		$GLOBALS['twbce_test_options']           = array();
+		$GLOBALS['twbce_test_transients']        = array();
+		$GLOBALS['twbce_test_textdomains']       = array();
+		$GLOBALS['twbce_test_translations']      = array();
+		$GLOBALS['twbce_test_settings_fields']   = array();
+		$GLOBALS['twbce_test_settings_sections'] = array();
+		$GLOBALS['twbce_test_locale']            = 'en_US';
+		$GLOBALS['wp_filter']                    = array();
 	}
 
 	/**
@@ -162,14 +162,14 @@ class CustomerWordingTest extends TestCase {
 		DisplaySettingsPage::register_settings();
 
 		$keys = array();
-		if ( isset( $GLOBALS['sidrena_test_settings_fields'][ DisplaySettingsPage::PAGE ] ) ) {
-			foreach ( $GLOBALS['sidrena_test_settings_fields'][ DisplaySettingsPage::PAGE ] as $field ) {
+		if ( isset( $GLOBALS['twbce_test_settings_fields'][ DisplaySettingsPage::PAGE ] ) ) {
+			foreach ( $GLOBALS['twbce_test_settings_fields'][ DisplaySettingsPage::PAGE ] as $field ) {
 				$keys[] = $field['id'];
 			}
 		}
 
-		$this->assertContains( 'sidrena_cijena_anchor_label', $keys );
-		$this->assertContains( 'sidrena_cijena_thirty_day_label', $keys );
+		$this->assertContains( 'twbce_cijena_anchor_label', $keys );
+		$this->assertContains( 'twbce_cijena_thirty_day_label', $keys );
 	}
 
 	/**
@@ -234,9 +234,9 @@ class CustomerWordingTest extends TestCase {
 		$html_args = $display->call_render_thirty_day( $item, 'single', array( 'thirty_day_label' => 'Posebna referentna cijena' ) );
 		$this->assertStringContainsString( 'Posebna referentna cijena', $html_args );
 
-		// 3. Filter hook sidrena_cijena_thirty_day_label.
+		// 3. Filter hook twbce_cijena_thirty_day_label.
 		add_filter(
-			'sidrena_cijena_thirty_day_label',
+			'twbce_cijena_thirty_day_label',
 			function ( $label, $filter_item, $context ) {
 				return $label . ' (filtrirano ' . $context . ')';
 			},
@@ -254,7 +254,7 @@ class CustomerWordingTest extends TestCase {
 	 * @return void
 	 */
 	public function test_english_fallback_when_translations_not_loaded() {
-		// No translations loaded in $GLOBALS['sidrena_test_translations'].
+		// No translations loaded in $GLOBALS['twbce_test_translations'].
 		$defaults = Settings::defaults();
 
 		$this->assertSame( 'Najniža cijena u zadnjih 30 dana', $defaults['thirty_day_label'] );
@@ -270,7 +270,7 @@ class CustomerWordingTest extends TestCase {
 	 * @return void
 	 */
 	public function test_textdomain_loading_and_filter() {
-		if ( ! function_exists( 'titanworks_bazna_cijena_load_textdomain' ) && ! function_exists( 'titanworks_sidrena_bazna_cijena_load_textdomain' ) && ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
+		if ( ! function_exists( 'titanworks_bazna_cijena_load_textdomain' ) ) {
 			$bootstrap = file_exists( dirname( __DIR__, 3 ) . '/titanworks-bazna-cijena.php' )
 				? dirname( __DIR__, 3 ) . '/titanworks-bazna-cijena.php'
 				: ( file_exists( dirname( __DIR__, 3 ) . '/titanworks-sidrena-bazna-cijena.php' )
@@ -280,30 +280,30 @@ class CustomerWordingTest extends TestCase {
 		}
 
 		// 1. With Croatian locale, loads Croatian catalog.
-		unload_textdomain( 'titanworks-bazna-cijena' );
-		$GLOBALS['sidrena_test_locale'] = 'hr_HR';
+		unload_textdomain( 'sidrena-cijena-eu' );
+		$GLOBALS['twbce_test_locale'] = 'hr_HR';
 		titanworks_bazna_cijena_load_textdomain();
-		$this->assertTrue( is_textdomain_loaded( 'titanworks-bazna-cijena' ) );
-		$this->assertStringEndsWith( 'titanworks-bazna-cijena-hr.mo', $GLOBALS['sidrena_test_textdomains']['titanworks-bazna-cijena'] );
+		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
+		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['twbce_test_textdomains']['sidrena-cijena-eu'] );
 
 		// 2. Already loaded - calling again does not reload.
-		$first_loaded = $GLOBALS['sidrena_test_textdomains']['titanworks-bazna-cijena'];
+		$first_loaded = $GLOBALS['twbce_test_textdomains']['sidrena-cijena-eu'];
 		titanworks_bazna_cijena_load_textdomain();
-		$this->assertSame( $first_loaded, $GLOBALS['sidrena_test_textdomains']['titanworks-bazna-cijena'] );
+		$this->assertSame( $first_loaded, $GLOBALS['twbce_test_textdomains']['sidrena-cijena-eu'] );
 
 		// 3. In en_US locale, Croatian catalog is not loaded (WP core handles translations JIT).
-		unload_textdomain( 'titanworks-bazna-cijena' );
-		$GLOBALS['sidrena_test_locale'] = 'en_US';
+		unload_textdomain( 'sidrena-cijena-eu' );
+		$GLOBALS['twbce_test_locale'] = 'en_US';
 		titanworks_bazna_cijena_load_textdomain();
-		$this->assertFalse( is_textdomain_loaded( 'titanworks-bazna-cijena' ) );
+		$this->assertFalse( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
 
 		// 4. In en_US locale with filter forcing Croatian -> loads Croatian catalog.
-		unload_textdomain( 'titanworks-bazna-cijena' );
-		add_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
+		unload_textdomain( 'sidrena-cijena-eu' );
+		add_filter( 'twbce_cijena_load_croatian_catalog', '__return_true' );
 		titanworks_bazna_cijena_load_textdomain();
-		$this->assertTrue( is_textdomain_loaded( 'titanworks-bazna-cijena' ) );
-		$this->assertStringEndsWith( 'titanworks-bazna-cijena-hr.mo', $GLOBALS['sidrena_test_textdomains']['titanworks-bazna-cijena'] );
-		remove_filter( 'sidrena_cijena_load_croatian_catalog', '__return_true' );
+		$this->assertTrue( is_textdomain_loaded( 'sidrena-cijena-eu' ) );
+		$this->assertStringEndsWith( 'sidrena-cijena-eu-hr.mo', $GLOBALS['twbce_test_textdomains']['sidrena-cijena-eu'] );
+		remove_filter( 'twbce_cijena_load_croatian_catalog', '__return_true' );
 	}
 
 	/**

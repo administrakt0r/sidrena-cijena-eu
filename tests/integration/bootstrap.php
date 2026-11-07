@@ -6,7 +6,7 @@
  * `/wordpress-phpunit` (WP_TESTS_DIR). Locally it can be pointed at any
  * checkout of the WordPress test suite.
  *
- * @package SidrenaCijena\Tests
+ * @package Titanworks\SidrenaCijena\Tests
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );

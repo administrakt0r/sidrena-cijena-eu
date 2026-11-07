@@ -2,24 +2,24 @@
 /**
  * Typed plugin settings with defaults.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
-use SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Logging\Logger;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Reads and writes the `sidrena_cijena_settings` option.
+ * Reads and writes the `twbce_cijena_settings` option.
  */
 final class Settings {
 
 	/**
 	 * Option name.
 	 */
-	const OPTION = 'sidrena_cijena_settings';
+	const OPTION = 'twbce_cijena_settings';
 
 	/**
 	 * Default settings.
@@ -29,12 +29,12 @@ final class Settings {
 	public static function defaults() {
 		return array(
 			'display_enabled'              => true,
-			'anchor_label'                 => __( 'Sidrena cijena', 'titanworks-bazna-cijena' ),
+			'anchor_label'                 => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
 			'currency_display'             => 'symbol',
 			'display_location'             => 'price_html',
 			'product_display_style'        => 'tooltip',
 			'anchor_date_mode'             => 'tooltip',
-			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ),
+			'anchor_tooltip_text'          => __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ),
 			'anchor_font_weight'           => 'normal',
 			'display_size'                 => 40,
 			'card_display_default'         => true,
@@ -60,7 +60,7 @@ final class Settings {
 			'sale_types'                   => array( 'akcija', 'snizenje', 'sezonsko_snizenje', 'rasprodaja' ),
 			'filename_separator'           => '_',
 			'filename_case'                => 'upper',
-			'thirty_day_label'             => __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' ),
+			'thirty_day_label'             => __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ),
 		);
 	}
 
@@ -75,13 +75,13 @@ final class Settings {
 	 */
 	public static function anchor_label_presets() {
 		return array(
-			'sidrena'         => __( 'Sidrena cijena', 'titanworks-bazna-cijena' ),
-			'bazna'           => __( 'Bazna cijena', 'titanworks-bazna-cijena' ),
-			'referentna'      => __( 'Referentna cijena', 'titanworks-bazna-cijena' ),
-			'dodatna'         => __( 'Dodatna cijena', 'titanworks-bazna-cijena' ),
-			'cijena_na_dan'   => __( 'Cijena na dan {datum}', 'titanworks-bazna-cijena' ),
-			'cijena_na'       => __( 'Cijena na {datum}', 'titanworks-bazna-cijena' ),
-			'najniza_redovna' => __( 'Najniža redovna cijena ({datum})', 'titanworks-bazna-cijena' ),
+			'sidrena'         => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			'bazna'           => __( 'Bazna cijena', 'sidrena-cijena-eu' ),
+			'referentna'      => __( 'Referentna cijena', 'sidrena-cijena-eu' ),
+			'dodatna'         => __( 'Dodatna cijena', 'sidrena-cijena-eu' ),
+			'cijena_na_dan'   => __( 'Cijena na dan {datum}', 'sidrena-cijena-eu' ),
+			'cijena_na'       => __( 'Cijena na {datum}', 'sidrena-cijena-eu' ),
+			'najniza_redovna' => __( 'Najniža redovna cijena ({datum})', 'sidrena-cijena-eu' ),
 		);
 	}
 
@@ -115,7 +115,7 @@ final class Settings {
 	 * @return void
 	 */
 	public static function register() {
-		add_action( 'sidrena_cijena_settings_changed', array( __CLASS__, 'reset_cache' ) );
+		add_action( 'twbce_cijena_settings_changed', array( __CLASS__, 'reset_cache' ) );
 		add_action( 'update_option_' . self::OPTION, array( __CLASS__, 'reset_cache' ) );
 	}
 
@@ -136,7 +136,7 @@ final class Settings {
 		}
 
 		if ( isset( $stored['thirty_day_label'] ) && 'Lowest price in the last 30 days' === $stored['thirty_day_label'] ) {
-			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' );
+			$stored['thirty_day_label'] = __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' );
 		}
 
 		$legacy_tooltip_texts = array(
@@ -146,7 +146,7 @@ final class Settings {
 			'Anchor price is the lowest price in the last 30 days before the start of a special form of sale.',
 		);
 		if ( isset( $stored['anchor_tooltip_text'] ) && in_array( trim( (string) $stored['anchor_tooltip_text'] ), $legacy_tooltip_texts, true ) ) {
-			$stored['anchor_tooltip_text'] = __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' );
+			$stored['anchor_tooltip_text'] = __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' );
 		}
 
 		self::$memo_source = $stored;
@@ -225,7 +225,7 @@ final class Settings {
 
 		Logger::info(
 			'settings_change',
-			__( 'Plugin settings changed.', 'titanworks-bazna-cijena' ),
+			__( 'Plugin settings changed.', 'sidrena-cijena-eu' ),
 			array(
 				'changed' => $changed,
 				'user_id' => (int) $user_id,
@@ -238,7 +238,7 @@ final class Settings {
 		 * @param array<mixed> $changed Changed keys with old/new values.
 		 * @param array<mixed> $new     Complete new settings.
 		 */
-		do_action( 'sidrena_cijena_settings_changed', $changed, $new );
+		do_action( 'twbce_cijena_settings_changed', $changed, $new );
 	}
 
 	/**

@@ -5,25 +5,25 @@
  * Findings are computed on demand and never modify data (FR-058 to FR-061).
  * Rule callbacks receive a pre-loaded context so rules stay pure and testable.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance;
+namespace Titanworks\SidrenaCijena\Compliance;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\Rules\AnchorRules;
-use SidrenaCijena\Compliance\Rules\CatalogRules;
-use SidrenaCijena\Compliance\Rules\PublicationRules;
-use SidrenaCijena\Compliance\Rules\SaleRules;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\Rules\AnchorRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\CatalogRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\PublicationRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\SaleRules;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -386,7 +386,7 @@ class Validator {
 		 *
 		 * @param string $currency Currency code.
 		 */
-		return (string) apply_filters( 'sidrena_cijena_expected_currency', Currency::DEFAULT_CURRENCY );
+		return (string) apply_filters( 'twbce_cijena_expected_currency', Currency::DEFAULT_CURRENCY );
 	}
 
 	/**

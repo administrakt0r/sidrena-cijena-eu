@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: titanworks-bazna-cijena-v${{ steps.get_version.outputs.VERSION }}
-          path: versions/${{ steps.get_version.outputs.VERSION }}/titanworks-bazna-cijena.zip
+          path: versions/${{ steps.get_version.outputs.VERSION }}/sidrena-cijena-eu.zip

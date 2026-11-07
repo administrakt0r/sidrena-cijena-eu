@@ -2,17 +2,17 @@
 /**
  * Tests for the import preview table.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\ImportPage;
+use Titanworks\SidrenaCijena\Admin\ImportPage;
 
 /**
- * @covers \SidrenaCijena\Admin\ImportPage
- * @covers \SidrenaCijena\Admin\Pagination
+ * @covers \Titanworks\SidrenaCijena\Admin\ImportPage
+ * @covers \Titanworks\SidrenaCijena\Admin\Pagination
  */
 final class ImportPageTest extends TestCase {
 
@@ -21,9 +21,9 @@ final class ImportPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_GET                               = array();
-		$GLOBALS['sidrena_test_transients'] = array();
-		$GLOBALS['sidrena_test_options']    = array();
+		$_GET                             = array();
+		$GLOBALS['twbce_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
 	}
 
 	/**

@@ -2,10 +2,10 @@
 /**
  * REST response cache.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,7 +22,7 @@ class RestCache {
 	 *
 	 * @var string
 	 */
-	const GROUP = 'sidrena_cijena_rest';
+	const GROUP = 'twbce_cijena_rest';
 
 	/**
 	 * Cache lifetime in seconds.
@@ -36,7 +36,7 @@ class RestCache {
 	 *
 	 * @var string
 	 */
-	const GENERATION_OPTION = 'sidrena_cijena_rest_generation';
+	const GENERATION_OPTION = 'twbce_cijena_rest_generation';
 
 	/**
 	 * Current cache generation.
@@ -56,7 +56,7 @@ class RestCache {
 	public function key( array $args ) {
 		ksort( $args );
 
-		return 'sidrena_rest_' . $this->generation() . '_' . md5( (string) wp_json_encode( $args ) );
+		return 'twbce_rest_' . $this->generation() . '_' . md5( (string) wp_json_encode( $args ) );
 	}
 
 	/**

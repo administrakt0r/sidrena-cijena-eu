@@ -2,16 +2,16 @@
 /**
  * Tests for the shared admin pagination helper.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\Pagination;
+use Titanworks\SidrenaCijena\Admin\Pagination;
 
 /**
- * @covers \SidrenaCijena\Admin\Pagination
+ * @covers \Titanworks\SidrenaCijena\Admin\Pagination
  */
 final class PaginationTest extends TestCase {
 

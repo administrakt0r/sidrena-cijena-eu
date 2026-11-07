@@ -2,15 +2,15 @@
 /**
  * Log viewer screen.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Database\LogRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,7 +40,7 @@ class LogsPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only log filters.
@@ -66,14 +66,14 @@ class LogsPage {
 		$result = Plugin::instance()->logs()->query( $args );
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'titanworks-bazna-cijena' ) . '</h1>';
-		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Logs', 'sidrena-cijena-eu' ) . '</h1>';
+		echo '<p>' . esc_html__( 'Operational events only. Secrets and customer personal data are never written to these logs.', 'sidrena-cijena-eu' ) . '</p>';
 
 		echo '<form method="get" action="' . esc_url( admin_url( 'admin.php' ) ) . '">';
 		echo '<input type="hidden" name="page" value="' . esc_attr( self::SLUG ) . '" />';
 
-		echo '<label>' . esc_html__( 'Level', 'titanworks-bazna-cijena' ) . ' <select name="level">';
-		echo '<option value="">' . esc_html__( 'All levels', 'titanworks-bazna-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Level', 'sidrena-cijena-eu' ) . ' <select name="level">';
+		echo '<option value="">' . esc_html__( 'All levels', 'sidrena-cijena-eu' ) . '</option>';
 
 		foreach ( LogRepository::LEVELS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $level, $candidate, false ) . '>' . esc_html( Labels::log_level( $candidate ) ) . '</option>';
@@ -81,33 +81,33 @@ class LogsPage {
 
 		echo '</select></label> ';
 
-		echo '<label>' . esc_html__( 'Event', 'titanworks-bazna-cijena' ) . ' <select name="event">';
-		echo '<option value="">' . esc_html__( 'All events', 'titanworks-bazna-cijena' ) . '</option>';
+		echo '<label>' . esc_html__( 'Event', 'sidrena-cijena-eu' ) . ' <select name="event">';
+		echo '<option value="">' . esc_html__( 'All events', 'sidrena-cijena-eu' ) . '</option>';
 
 		foreach ( LogRepository::EVENTS as $candidate ) {
 			echo '<option value="' . esc_attr( $candidate ) . '"' . selected( $event, $candidate, false ) . '>' . esc_html( Labels::log_event( $candidate ) ) . '</option>';
 		}
 
 		echo '</select></label> ';
-		submit_button( __( 'Filter', 'titanworks-bazna-cijena' ), 'secondary', 'submit', false );
+		submit_button( __( 'Filter', 'sidrena-cijena-eu' ), 'secondary', 'submit', false );
 		echo '</form>';
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Log entries', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
 		foreach ( array(
-			__( 'Time', 'titanworks-bazna-cijena' ),
-			__( 'Level', 'titanworks-bazna-cijena' ),
-			__( 'Event', 'titanworks-bazna-cijena' ),
-			__( 'Message', 'titanworks-bazna-cijena' ),
-			__( 'User', 'titanworks-bazna-cijena' ),
+			__( 'Time', 'sidrena-cijena-eu' ),
+			__( 'Level', 'sidrena-cijena-eu' ),
+			__( 'Event', 'sidrena-cijena-eu' ),
+			__( 'Message', 'sidrena-cijena-eu' ),
+			__( 'User', 'sidrena-cijena-eu' ),
 		) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 
 		if ( empty( $result['items'] ) ) {
-			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'titanworks-bazna-cijena' ) . '</td></tr>';
+			echo '<tr><td colspan="5">' . esc_html__( 'No log entries match these filters.', 'sidrena-cijena-eu' ) . '</td></tr>';
 		}
 
 		foreach ( $result['items'] as $row ) {
@@ -140,7 +140,7 @@ class LogsPage {
 			: ( isset( $context['user_id'] ) ? (int) $context['user_id'] : 0 );
 
 		if ( $user_id <= 0 ) {
-			return __( 'system', 'titanworks-bazna-cijena' );
+			return __( 'system', 'sidrena-cijena-eu' );
 		}
 
 		$user = get_userdata( $user_id );

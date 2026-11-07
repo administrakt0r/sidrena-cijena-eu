@@ -2,10 +2,10 @@
 /**
  * Integration tests for WooCommerce CRUD price-history capture.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
 
 /**
  * Exercises actual WooCommerce save and scheduled-sale hooks.

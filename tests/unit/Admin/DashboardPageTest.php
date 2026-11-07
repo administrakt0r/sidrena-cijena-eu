@@ -2,20 +2,20 @@
 /**
  * Dashboard aggregate batching and classification tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\DashboardPage;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Admin\DashboardPage;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 /**
  * In-memory catalog provider.
@@ -313,7 +313,7 @@ class DashboardPublicationsFake {
 /**
  * Covers aggregate query batching and per-item classification.
  *
- * @covers \SidrenaCijena\Admin\DashboardPage::aggregate
+ * @covers \Titanworks\SidrenaCijena\Admin\DashboardPage::aggregate
  */
 class DashboardPageTest extends TestCase {
 
@@ -332,8 +332,8 @@ class DashboardPageTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 		Plugin::instance()->rest_cache()->flush();
 
 		$this->services = array(
@@ -547,8 +547,8 @@ class DashboardPageTest extends TestCase {
 		);
 
 		$validator->findings = array(
-			new \SidrenaCijena\Compliance\Finding(
-				\SidrenaCijena\Compliance\Finding::ERROR,
+			new \Titanworks\SidrenaCijena\Compliance\Finding(
+				\Titanworks\SidrenaCijena\Compliance\Finding::ERROR,
 				'missing_anchor',
 				'Anchor is missing.'
 			),
@@ -556,7 +556,7 @@ class DashboardPageTest extends TestCase {
 
 		$first = DashboardPage::aggregate();
 		$this->assertNotEmpty( $first['findings'] );
-		$this->assertGreaterThan( 0, $first['counts'][ \SidrenaCijena\Compliance\Finding::ERROR ] );
+		$this->assertGreaterThan( 0, $first['counts'][ \Titanworks\SidrenaCijena\Compliance\Finding::ERROR ] );
 		$this->assertSame( 2, $history->latest_map_calls );
 
 		$second = DashboardPage::aggregate();

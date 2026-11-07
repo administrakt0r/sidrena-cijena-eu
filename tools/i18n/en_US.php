@@ -2,7 +2,7 @@
 /**
  * Source string registry (en_US baseline).
  *
- * @package SidrenaCijena\Tools
+ * @package Titanworks\SidrenaCijena\Tools
  */
 
 return array (
@@ -275,14 +275,14 @@ return array (
   'Javni CSV feed važećeg cjenika.' => 'Javni CSV feed važećeg cjenika.',
   'Javni URL-ovi dostupni kupcima i inspekciji:' => 'Javni URL-ovi dostupni kupcima i inspekciji:',
   'Javni XML feed važećeg cjenika.' => 'Javni XML feed važećeg cjenika.',
-  'Kada se promijeni cijena usluge (_sidrena_item_type=service), cjenik se prema zakonu mora ažurirati bez odgode, stoga dodatak automatski pokreće asinkrono regeneriranje.' => 'Kada se promijeni cijena usluge (_sidrena_item_type=service), cjenik se prema zakonu mora ažurirati bez odgode, stoga dodatak automatski pokreće asinkrono regeneriranje.',
+  'Kada se promijeni cijena usluge (_twbce_item_type=service), cjenik se prema zakonu mora ažurirati bez odgode, stoga dodatak automatski pokreće asinkrono regeneriranje.' => 'Kada se promijeni cijena usluge (_twbce_item_type=service), cjenik se prema zakonu mora ažurirati bez odgode, stoga dodatak automatski pokreće asinkrono regeneriranje.',
   'Kako ne biste morali ručno unositi sidrenu cijenu za svaki proizvod pojedinačno, dostupni su brzi skupni alati na stranici Sidrena cijena → Sidrene cijene:' => 'Kako ne biste morali ručno unositi sidrenu cijenu za svaki proizvod pojedinačno, dostupni su brzi skupni alati na stranici Sidrena cijena → Sidrene cijene:',
   'Kategorija / Vrsta' => 'Kategorija / Vrsta',
   'Kompatibilnost tema i graditelja stranica:' => 'Kompatibilnost tema i graditelja stranica:',
   'Korištenjem gumba \\' => 'Korištenjem gumba \\',
   'Korištenjem gumba „Odaberi sve na ovoj stranici” i „Poništi odabir”, ili klikom na potvrdni okvir u zaglavlju tablice, možete u sekundi označiti sve prikazane proizvode i spremiti predložene vrijednosti.' => 'Korištenjem gumba „Odaberi sve na ovoj stranici” i „Poništi odabir”, ili klikom na potvrdni okvir u zaglavlju tablice, možete u sekundi označiti sve prikazane proizvode i spremiti predložene vrijednosti.',
   'Kuka' => 'Kuka',
-  'Kuka sidrena_cijena_daily_event planira se u vremenskoj zoni Europe/Zagreb tako da generira i objavi cjenik prije 08:00 sati ujutro.' => 'Kuka sidrena_cijena_daily_event planira se u vremenskoj zoni Europe/Zagreb tako da generira i objavi cjenik prije 08:00 sati ujutro.',
+  'Kuka twbce_cijena_daily_event planira se u vremenskoj zoni Europe/Zagreb tako da generira i objavi cjenik prije 08:00 sati ujutro.' => 'Kuka twbce_cijena_daily_event planira se u vremenskoj zoni Europe/Zagreb tako da generira i objavi cjenik prije 08:00 sati ujutro.',
   'Kuke za programere' => 'Kuke za programere',
   'Last generation failed:' => 'Last generation failed:',
   'Last generation status' => 'Last generation status',

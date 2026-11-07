@@ -2,17 +2,17 @@
 /**
  * Compliance check screen tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\CompliancePage;
-use SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Admin\CompliancePage;
+use Titanworks\SidrenaCijena\Compliance\Finding;
 
 /**
- * @covers \SidrenaCijena\Admin\CompliancePage
+ * @covers \Titanworks\SidrenaCijena\Admin\CompliancePage
  */
 class CompliancePageTest extends TestCase {
 
@@ -23,9 +23,9 @@ class CompliancePageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_GET                               = array();
-		$GLOBALS['sidrena_test_transients'] = array();
-		$GLOBALS['sidrena_test_options']    = array();
+		$_GET                             = array();
+		$GLOBALS['twbce_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
 	}
 
 	/**
@@ -51,7 +51,7 @@ class CompliancePageTest extends TestCase {
 	public function test_render_report_formats_datetime_and_displays_findings(): void {
 		$user_id = get_current_user_id();
 		set_transient(
-			'sidrena_cijena_report_' . $user_id,
+			'twbce_cijena_report_' . $user_id,
 			array(
 				'generated_at' => '2026-09-28T10:30:00+02:00',
 				'scanned'      => 10,
@@ -105,7 +105,7 @@ class CompliancePageTest extends TestCase {
 	public function test_render_filters_by_severity(): void {
 		$user_id = get_current_user_id();
 		set_transient(
-			'sidrena_cijena_report_' . $user_id,
+			'twbce_cijena_report_' . $user_id,
 			array(
 				'generated_at' => '2026-09-28T10:30:00+02:00',
 				'scanned'      => 5,

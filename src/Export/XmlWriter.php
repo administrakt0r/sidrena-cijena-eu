@@ -2,13 +2,13 @@
 /**
  * Deterministic price-list XML writer.
  *
- * @package SidrenaCijena\Export
+ * @package Titanworks\SidrenaCijena\Export
  */
 
-namespace SidrenaCijena\Export;
+namespace Titanworks\SidrenaCijena\Export;
 
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 

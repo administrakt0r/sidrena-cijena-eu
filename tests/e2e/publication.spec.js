@@ -5,7 +5,7 @@ test.describe('Price-list publication', () => {
   let productId = 0;
 
   test.beforeAll(async () => {
-    wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
+    wpCli(['plugin', 'activate', 'sidrena-cijena-eu']);
 
     const id = wpEval(`
       $product = new WC_Product_Simple();
@@ -14,11 +14,11 @@ test.describe('Price-list publication', () => {
       $product->set_sku('E2E-PUB-1');
       $product->set_status('publish');
       $product->save();
-      $item = \\SidrenaCijena\\Plugin::instance()->catalog()->get_item($product->get_id());
+      $item = \\Titanworks\\SidrenaCijena\\Plugin::instance()->catalog()->get_item($product->get_id());
       if ($item) {
-        \\SidrenaCijena\\Plugin::instance()->anchors()->record($item, 12.50, array('source' => 'manual'));
+        \\Titanworks\\SidrenaCijena\\Plugin::instance()->anchors()->record($item, 12.50, array('source' => 'manual'));
       }
-      $locations = new \\SidrenaCijena\\Database\\LocationRepository();
+      $locations = new \\Titanworks\\SidrenaCijena\\Database\\LocationRepository();
       $has_store = false;
       foreach ($locations->all(true) as $location) {
         if ('prodavaonica' === $location['type']) {
@@ -62,10 +62,10 @@ test.describe('Price-list publication', () => {
     // refuses to guess between them, so ask for the webshop explicitly.
     const locationId = parseInt(
       wpEval(`
-        foreach ( \\SidrenaCijena\\Plugin::instance()->locations()->all( true ) as $location ) {
+        foreach ( \\Titanworks\\SidrenaCijena\\Plugin::instance()->locations()->all( true ) as $location ) {
           if ( "webshop" === $location["type"] ) { echo (int) $location["id"]; return; }
         }
-        foreach ( \\SidrenaCijena\\Plugin::instance()->locations()->all( true ) as $location ) {
+        foreach ( \\Titanworks\\SidrenaCijena\\Plugin::instance()->locations()->all( true ) as $location ) {
           echo (int) $location["id"]; return;
         }
       `).trim(),

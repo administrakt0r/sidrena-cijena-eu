@@ -2,16 +2,16 @@
 /**
  * Log viewer screen unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\LogsPage;
+use Titanworks\SidrenaCijena\Admin\LogsPage;
 
 /**
- * @covers \SidrenaCijena\Admin\LogsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\LogsPage
  */
 class LogsPageTest extends TestCase {
 
@@ -22,13 +22,13 @@ class LogsPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_GET                                    = array();
-		$GLOBALS['sidrena_test_options']         = array();
-		$GLOBALS['sidrena_test_transients']      = array();
-		$GLOBALS['sidrena_test_db_results']      = array();
-		$GLOBALS['sidrena_test_db_var']          = 0;
-		$GLOBALS['sidrena_test_users']           = array();
-		$GLOBALS['sidrena_test_current_user_id'] = 1;
+		$_GET                                  = array();
+		$GLOBALS['twbce_test_options']         = array();
+		$GLOBALS['twbce_test_transients']      = array();
+		$GLOBALS['twbce_test_db_results']      = array();
+		$GLOBALS['twbce_test_db_var']          = 0;
+		$GLOBALS['twbce_test_users']           = array();
+		$GLOBALS['twbce_test_current_user_id'] = 1;
 	}
 
 	/**
@@ -38,10 +38,10 @@ class LogsPageTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_db_results'],
-			$GLOBALS['sidrena_test_db_var'],
-			$GLOBALS['sidrena_test_users'],
-			$GLOBALS['sidrena_test_current_user_id']
+			$GLOBALS['twbce_test_db_results'],
+			$GLOBALS['twbce_test_db_var'],
+			$GLOBALS['twbce_test_users'],
+			$GLOBALS['twbce_test_current_user_id']
 		);
 		parent::tearDown();
 	}
@@ -68,14 +68,14 @@ class LogsPageTest extends TestCase {
 	 * @return void
 	 */
 	public function test_render_log_rows_with_user_labels(): void {
-		$GLOBALS['sidrena_test_users'][7] = array(
+		$GLOBALS['twbce_test_users'][7] = array(
 			'ID'           => 7,
 			'user_login'   => 'ana_manager',
 			'display_name' => 'Ana Anić',
 		);
 
-		$GLOBALS['sidrena_test_db_var']     = 2;
-		$GLOBALS['sidrena_test_db_results'] = array(
+		$GLOBALS['twbce_test_db_var']     = 2;
+		$GLOBALS['twbce_test_db_results'] = array(
 			array(
 				'id'         => 101,
 				'level'      => 'info',

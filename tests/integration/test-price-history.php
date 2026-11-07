@@ -2,17 +2,17 @@
 /**
  * Integration tests for price history and audit trail.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Admin\AuditPage;
-use SidrenaCijena\Admin\PriceHistoryPage;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\LogRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Admin\AuditPage;
+use Titanworks\SidrenaCijena\Admin\PriceHistoryPage;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Covers chronological listing, corrections preserving originals and audit entries.
@@ -63,8 +63,8 @@ class Test_Price_History extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 

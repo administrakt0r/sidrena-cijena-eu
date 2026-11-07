@@ -2,16 +2,16 @@
 /**
  * Capabilities unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
 
 /**
- * @covers \SidrenaCijena\Admin\Capabilities
+ * @covers \Titanworks\SidrenaCijena\Admin\Capabilities
  */
 class CapabilitiesTest extends TestCase {
 
@@ -23,9 +23,9 @@ class CapabilitiesTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		unset(
-			$GLOBALS['sidrena_test_roles'],
-			$GLOBALS['sidrena_test_can'],
-			$GLOBALS['wp_filter']['sidrena_cijena_capability']
+			$GLOBALS['twbce_test_roles'],
+			$GLOBALS['twbce_test_can'],
+			$GLOBALS['wp_filter']['twbce_cijena_capability']
 		);
 	}
 
@@ -36,20 +36,20 @@ class CapabilitiesTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_roles'],
-			$GLOBALS['sidrena_test_can'],
-			$GLOBALS['wp_filter']['sidrena_cijena_capability']
+			$GLOBALS['twbce_test_roles'],
+			$GLOBALS['twbce_test_can'],
+			$GLOBALS['wp_filter']['twbce_cijena_capability']
 		);
 		parent::tearDown();
 	}
 
 	/**
-	 * Base capability defaults to manage_sidrena_cijena.
+	 * Base capability defaults to twbce_manage_prices.
 	 *
 	 * @return void
 	 */
 	public function test_default_capability(): void {
-		$this->assertSame( 'manage_sidrena_cijena', Capabilities::capability() );
+		$this->assertSame( 'twbce_manage_prices', Capabilities::capability() );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class CapabilitiesTest extends TestCase {
 	 */
 	public function test_capability_filter(): void {
 		add_filter(
-			'sidrena_cijena_capability',
+			'twbce_cijena_capability',
 			static function () {
 				return 'custom_manage_cap';
 			}
@@ -76,7 +76,7 @@ class CapabilitiesTest extends TestCase {
 	public function test_current_user_can(): void {
 		$this->assertTrue( Capabilities::current_user_can() );
 
-		$GLOBALS['sidrena_test_can'] = false;
+		$GLOBALS['twbce_test_can'] = false;
 		$this->assertFalse( Capabilities::current_user_can() );
 	}
 

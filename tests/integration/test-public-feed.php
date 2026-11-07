@@ -2,14 +2,14 @@
 /**
  * Public price-list feed integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Api\PublicFeed;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Api\PublicFeed;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Covers the `/sidrena-cijena.xml` and `/sidrena-cijena.csv` feed.
@@ -199,8 +199,8 @@ class Test_Public_Feed extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 
 		Plugin::instance()->anchors()->record(

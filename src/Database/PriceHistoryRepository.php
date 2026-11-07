@@ -5,13 +5,13 @@
  * Rows are never updated or deleted through this repository; corrections are
  * new rows referencing the original (FR-005, FR-028).
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -219,16 +219,16 @@ class PriceHistoryRepository {
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
-		$params       = array_merge( array( $price_type ), $product_ids );
+		$params       = array_merge( array( $this->table, $this->table, $price_type ), $product_ids );
 
 		// Select only each item's greatest ledger ID. Corrections are appended,
 		// so this preserves the existing latest-by-ID rule without loading history.
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$sql = $wpdb->prepare(
-			"SELECT history.* FROM {$this->table} AS history
+			"SELECT history.* FROM %i AS history
 			INNER JOIN (
 				SELECT product_id, variation_id, MAX(id) AS latest_id
-				FROM {$this->table}
+				FROM %i
 				WHERE price_type = %s AND product_id IN ({$placeholders})
 				GROUP BY product_id, variation_id
 			) AS latest ON latest.latest_id = history.id
@@ -276,20 +276,20 @@ class PriceHistoryRepository {
 
 		if ( ! empty( $missing_ids ) ) {
 			$placeholders = implode( ',', array_fill( 0, count( $missing_ids ), '%d' ) );
-			$params       = array_merge( $missing_ids, $missing_ids );
+			$params       = array_merge( array( $this->table, $this->table, $this->table ), $missing_ids, $missing_ids, array( $this->table ) );
 
 			// The first non-null price after the latest closure identifies this offer;
 			// later reductions keep the same start row and reference window.
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			$sql = $wpdb->prepare(
 				"SELECT history.product_id, COALESCE(history.variation_id, 0) AS variation_id, history.price, history.valid_from, closure_event.valid_from AS prior_closure_at
-				FROM {$this->table} AS history
+				FROM %i AS history
 				INNER JOIN (
 					SELECT sale.product_id, sale.variation_id, MIN(sale.id) AS start_id, MAX(closure.closure_id) AS closure_id
-					FROM {$this->table} AS sale
+					FROM %i AS sale
 					LEFT JOIN (
 						SELECT product_id, variation_id, MAX(id) AS closure_id
-						FROM {$this->table}
+						FROM %i
 						WHERE price_type = 'sale' AND price IS NULL AND product_id IN ({$placeholders})
 						GROUP BY product_id, variation_id
 					) AS closure ON closure.product_id = sale.product_id AND closure.variation_id <=> sale.variation_id
@@ -297,7 +297,7 @@ class PriceHistoryRepository {
 					AND sale.id > COALESCE(closure.closure_id, 0)
 					GROUP BY sale.product_id, sale.variation_id
 				) AS period ON period.start_id = history.id
-				LEFT JOIN {$this->table} AS closure_event ON closure_event.id = period.closure_id
+				LEFT JOIN %i AS closure_event ON closure_event.id = period.closure_id
 				ORDER BY history.id ASC",
 				$params
 			);
@@ -347,11 +347,11 @@ class PriceHistoryRepository {
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
-		$params       = array_merge( array( $price_type ), $product_ids );
+		$params       = array_merge( array( $this->table, $price_type ), $product_ids );
 
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$sql = $wpdb->prepare(
-			"SELECT DISTINCT product_id, variation_id FROM {$this->table} WHERE price_type = %s AND product_id IN ({$placeholders})",
+			"SELECT DISTINCT product_id, variation_id FROM %i WHERE price_type = %s AND product_id IN ({$placeholders})",
 			$params
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -380,18 +380,43 @@ class PriceHistoryRepository {
 	public function query( array $args = array() ) {
 		global $wpdb;
 
-		list( $where, $params ) = $this->build_where( $args );
+		$orderby   = $this->sanitize_orderby( isset( $args['orderby'] ) ? $args['orderby'] : 'created_at' );
+		$ascending = isset( $args['order'] ) && 'ASC' === strtoupper( (string) $args['order'] );
+		$limit     = isset( $args['limit'] ) ? max( 1, (int) $args['limit'] ) : 100;
+		$offset    = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
+		$params    = array_merge( array( $this->table ), $this->filter_parameters( $args ), array( $orderby, $limit, $offset ) );
 
-		$orderby = $this->sanitize_orderby( isset( $args['orderby'] ) ? $args['orderby'] : 'created_at' );
-		$order   = isset( $args['order'] ) && 'ASC' === strtoupper( (string) $args['order'] ) ? 'ASC' : 'DESC';
-
-		$limit  = isset( $args['limit'] ) ? max( 1, (int) $args['limit'] ) : 100;
-		$offset = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
-
-		$params = array_merge( array( $this->table ), $params, array( $limit, $offset ) );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where and $orderby are validated against strict whitelists and values bound by prepare().
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $params ), ARRAY_A );
+		if ( $ascending ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+			$rows = $wpdb->get_results(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+				$wpdb->prepare(
+					"SELECT * FROM %i WHERE (%d = 0 OR product_id = %d)
+			AND (%d = 0 OR (%d > 0 AND variation_id = %d) OR (%d <= 0 AND variation_id IS NULL))
+			AND (%s = '' OR price_type = %s) AND (%s = '' OR source = %s)
+			AND (%s = '' OR item_type = %s) AND (%s = '' OR sku = %s)
+			AND (%s = '' OR reference_date = %s) AND (%s = '' OR created_at >= %s)
+			AND (%s = '' OR created_at <= %s) AND (%d = 0 OR correction_of = %d) ORDER BY %i ASC LIMIT %d OFFSET %d",
+					$params
+				),
+				ARRAY_A
+			);
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+			$rows = $wpdb->get_results(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+				$wpdb->prepare(
+					"SELECT * FROM %i WHERE (%d = 0 OR product_id = %d)
+			AND (%d = 0 OR (%d > 0 AND variation_id = %d) OR (%d <= 0 AND variation_id IS NULL))
+			AND (%s = '' OR price_type = %s) AND (%s = '' OR source = %s)
+			AND (%s = '' OR item_type = %s) AND (%s = '' OR sku = %s)
+			AND (%s = '' OR reference_date = %s) AND (%s = '' OR created_at >= %s)
+			AND (%s = '' OR created_at <= %s) AND (%d = 0 OR correction_of = %d) ORDER BY %i DESC LIMIT %d OFFSET %d",
+					$params
+				),
+				ARRAY_A
+			);
+		}
 
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -410,12 +435,20 @@ class PriceHistoryRepository {
 
 		global $wpdb;
 
-		list( $where, $params ) = $this->build_where( $args );
-
-		$params = array_merge( array( $this->table ), $params );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is validated against strict conditions and values bound by prepare().
-		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $params ) );
+		$params = array_merge( array( $this->table ), $this->filter_parameters( $args ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+		$total = (int) $wpdb->get_var(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM %i WHERE (%d = 0 OR product_id = %d)
+			AND (%d = 0 OR (%d > 0 AND variation_id = %d) OR (%d <= 0 AND variation_id IS NULL))
+			AND (%s = '' OR price_type = %s) AND (%s = '' OR source = %s)
+			AND (%s = '' OR item_type = %s) AND (%s = '' OR sku = %s)
+			AND (%s = '' OR reference_date = %s) AND (%s = '' OR created_at >= %s)
+			AND (%s = '' OR created_at <= %s) AND (%d = 0 OR correction_of = %d)",
+				$params
+			)
+		);
 
 		self::$count_cache[ $cache_key ] = $total;
 
@@ -438,20 +471,19 @@ class PriceHistoryRepository {
 	public function timeline( $product_id, $variation_id, $until_date, $since_date = '' ) {
 		global $wpdb;
 
-		$variation_sql    = (int) $variation_id > 0 ? 'variation_id = %d' : 'variation_id IS NULL';
-		$variation_params = (int) $variation_id > 0 ? array( (int) $variation_id ) : array();
+		$variation_id = (int) $variation_id;
 
 		$lower_bound = '' !== (string) $since_date ? (string) $since_date : (string) $until_date;
 
-		$params = array_merge( array( $this->table, (int) $product_id ), $variation_params, array( $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' ) );
+		$params = array( $this->table, (int) $product_id, $variation_id, $variation_id, $variation_id, $until_date . ' 23:59:59', $lower_bound . ' 00:00:00' );
 
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Safe parameters bound by prepare().
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
 		$rows = $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
 			$wpdb->prepare(
 				"SELECT * FROM %i
 			WHERE product_id = %d
-			AND {$variation_sql}
+			AND ((%d > 0 AND variation_id = %d) OR (%d <= 0 AND variation_id IS NULL))
 			AND price_type IN ('regular','sale','historical','lowest_30_day')
 			AND ( valid_from IS NULL OR valid_from <= %s )
 			AND ( valid_to IS NULL OR valid_to >= %s )
@@ -460,7 +492,6 @@ class PriceHistoryRepository {
 			),
 			ARRAY_A
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -569,76 +600,24 @@ class PriceHistoryRepository {
 	}
 
 	/**
-	 * Build a WHERE clause with prepared values.
+	 * Bind optional filters to the fixed query predicates.
 	 *
 	 * @param array<mixed> $args Query arguments.
-	 * @return array{0:string,1:array}
+	 * @return array<int,int|string>
 	 */
-	protected function build_where( array $args ) {
-		global $wpdb;
-
-		$conditions = array();
-		$params     = array();
-
-		if ( ! empty( $args['product_id'] ) ) {
-			$conditions[] = 'product_id = %d';
-			$params[]     = (int) $args['product_id'];
+	protected function filter_parameters( array $args ) {
+		$product   = ! empty( $args['product_id'] ) ? (int) $args['product_id'] : 0;
+		$variation = isset( $args['variation_id'] ) ? (int) $args['variation_id'] : 0;
+		$params    = array( $product, $product, isset( $args['variation_id'] ) ? 1 : 0, $variation, $variation, $variation );
+		foreach ( array( 'price_type', 'source', 'item_type', 'sku', 'reference_date', 'date_from', 'date_to' ) as $key ) {
+			$value    = ! empty( $args[ $key ] ) ? (string) $args[ $key ] : '';
+			$params[] = $value;
+			$params[] = $value;
 		}
-
-		if ( array_key_exists( 'variation_id', $args ) && null !== $args['variation_id'] ) {
-			if ( (int) $args['variation_id'] > 0 ) {
-				$conditions[] = 'variation_id = %d';
-				$params[]     = (int) $args['variation_id'];
-			} else {
-				$conditions[] = 'variation_id IS NULL';
-			}
-		}
-
-		if ( ! empty( $args['price_type'] ) ) {
-			$conditions[] = 'price_type = %s';
-			$params[]     = (string) $args['price_type'];
-		}
-
-		if ( ! empty( $args['source'] ) ) {
-			$conditions[] = 'source = %s';
-			$params[]     = (string) $args['source'];
-		}
-
-		if ( ! empty( $args['item_type'] ) ) {
-			$conditions[] = 'item_type = %s';
-			$params[]     = (string) $args['item_type'];
-		}
-
-		if ( ! empty( $args['sku'] ) ) {
-			$conditions[] = 'sku = %s';
-			$params[]     = (string) $args['sku'];
-		}
-
-		if ( ! empty( $args['reference_date'] ) ) {
-			$conditions[] = 'reference_date = %s';
-			$params[]     = (string) $args['reference_date'];
-		}
-
-		if ( ! empty( $args['date_from'] ) ) {
-			$conditions[] = 'created_at >= %s';
-			$params[]     = (string) $args['date_from'];
-		}
-
-		if ( ! empty( $args['date_to'] ) ) {
-			$conditions[] = 'created_at <= %s';
-			$params[]     = (string) $args['date_to'];
-		}
-
-		if ( ! empty( $args['correction_of'] ) ) {
-			$conditions[] = 'correction_of = %d';
-			$params[]     = (int) $args['correction_of'];
-		}
-
-		$where = empty( $conditions ) ? '' : 'WHERE ' . implode( ' AND ', $conditions );
-
-		unset( $wpdb );
-
-		return array( $where, $params );
+		$correction = ! empty( $args['correction_of'] ) ? (int) $args['correction_of'] : 0;
+		$params[]   = $correction;
+		$params[]   = $correction;
+		return $params;
 	}
 
 	/**

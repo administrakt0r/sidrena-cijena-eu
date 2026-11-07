@@ -2,15 +2,15 @@
 /**
  * Integration tests for the compliance dashboard and report.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Admin\DashboardPage;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\ComplianceReport;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Admin\DashboardPage;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\ComplianceReport;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Dashboard aggregation and report generation.
@@ -27,7 +27,7 @@ class Test_Dashboard extends WP_UnitTestCase {
 	/**
 	 * Price history repository.
 	 *
-	 * @var \SidrenaCijena\Database\PriceHistoryRepository
+	 * @var \Titanworks\SidrenaCijena\Database\PriceHistoryRepository
 	 */
 	protected $history;
 
@@ -88,8 +88,8 @@ class Test_Dashboard extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -142,7 +142,7 @@ class Test_Dashboard extends WP_UnitTestCase {
 		$item_errors = 0;
 
 		foreach ( $data['findings'] as $finding ) {
-			if ( \SidrenaCijena\Compliance\Finding::ERROR === $finding->severity && 'catalog_item' === $finding->entity_type ) {
+			if ( \Titanworks\SidrenaCijena\Compliance\Finding::ERROR === $finding->severity && 'catalog_item' === $finding->entity_type ) {
 				++$item_errors;
 			}
 		}
@@ -156,8 +156,8 @@ class Test_Dashboard extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_aggregate_reports_sale_warnings() {
-		$promo      = $this->create_item( 'Krema 50 ml', 'KRE-50', 10.0, array( '_sidrena_sale_price' => 8.0 ) );
-		$classified = $this->create_item( 'Gel 200 ml', 'GEL-200', 6.0, array( '_sidrena_sale_price' => 4.0 ) );
+		$promo      = $this->create_item( 'Krema 50 ml', 'KRE-50', 10.0, array( '_twbce_sale_price' => 8.0 ) );
+		$classified = $this->create_item( 'Gel 200 ml', 'GEL-200', 6.0, array( '_twbce_sale_price' => 4.0 ) );
 
 		$this->plugin->special_sales()->insert(
 			array(

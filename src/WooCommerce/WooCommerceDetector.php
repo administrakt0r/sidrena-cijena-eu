@@ -2,10 +2,10 @@
 /**
  * WooCommerce availability detection.
  *
- * @package SidrenaCijena\WooCommerce
+ * @package Titanworks\SidrenaCijena\WooCommerce
  */
 
-namespace SidrenaCijena\WooCommerce;
+namespace Titanworks\SidrenaCijena\WooCommerce;
 
 defined( 'ABSPATH' ) || exit;
 

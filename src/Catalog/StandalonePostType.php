@@ -5,20 +5,20 @@
  * Used when WooCommerce is absent, so the full compliance workflow remains
  * available on a manually managed catalog (FR-084, FR-091).
  *
- * @package SidrenaCijena\Catalog
+ * @package Titanworks\SidrenaCijena\Catalog
  */
 
-namespace SidrenaCijena\Catalog;
+namespace Titanworks\SidrenaCijena\Catalog;
 
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Registers the private `sidrena_item` post type, its taxonomies, meta fields
+ * Registers the private `twbce_item` post type, its taxonomies, meta fields
  * and price-change capture.
  */
 final class StandalonePostType {
@@ -26,17 +26,17 @@ final class StandalonePostType {
 	/**
 	 * Post type name.
 	 */
-	const POST_TYPE = 'sidrena_item';
+	const POST_TYPE = 'twbce_item';
 
 	/**
 	 * Brand taxonomy.
 	 */
-	const TAX_BRAND = 'sidrena_brand';
+	const TAX_BRAND = 'twbce_brand';
 
 	/**
 	 * Item type taxonomy.
 	 */
-	const TAX_TYPE = 'sidrena_item_type';
+	const TAX_TYPE = 'twbce_item_type';
 
 	/**
 	 * Register the post type and taxonomies.
@@ -48,12 +48,12 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Standalone catalog', 'titanworks-bazna-cijena' ),
-					'singular_name' => __( 'Catalog item', 'titanworks-bazna-cijena' ),
-					'add_new_item'  => __( 'Add catalog item', 'titanworks-bazna-cijena' ),
-					'edit_item'     => __( 'Edit catalog item', 'titanworks-bazna-cijena' ),
-					'search_items'  => __( 'Search catalog items', 'titanworks-bazna-cijena' ),
-					'not_found'     => __( 'No catalog items found.', 'titanworks-bazna-cijena' ),
+					'name'          => __( 'Standalone catalog', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Catalog item', 'sidrena-cijena-eu' ),
+					'add_new_item'  => __( 'Add catalog item', 'sidrena-cijena-eu' ),
+					'edit_item'     => __( 'Edit catalog item', 'sidrena-cijena-eu' ),
+					'search_items'  => __( 'Search catalog items', 'sidrena-cijena-eu' ),
+					'not_found'     => __( 'No catalog items found.', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -71,8 +71,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Brands', 'titanworks-bazna-cijena' ),
-					'singular_name' => __( 'Brand', 'titanworks-bazna-cijena' ),
+					'name'          => __( 'Brands', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Brand', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -86,8 +86,8 @@ final class StandalonePostType {
 			self::POST_TYPE,
 			array(
 				'labels'       => array(
-					'name'          => __( 'Item types', 'titanworks-bazna-cijena' ),
-					'singular_name' => __( 'Item type', 'titanworks-bazna-cijena' ),
+					'name'          => __( 'Item types', 'sidrena-cijena-eu' ),
+					'singular_name' => __( 'Item type', 'sidrena-cijena-eu' ),
 				),
 				'public'       => false,
 				'show_ui'      => true,
@@ -107,7 +107,7 @@ final class StandalonePostType {
 	 * @return void
 	 */
 	public static function seed_terms() {
-		if ( get_option( 'sidrena_cijena_terms_seeded' ) ) {
+		if ( get_option( 'twbce_cijena_terms_seeded' ) ) {
 			return;
 		}
 
@@ -119,7 +119,7 @@ final class StandalonePostType {
 			wp_insert_term( 'service', self::TAX_TYPE, array( 'slug' => 'service' ) );
 		}
 
-		update_option( 'sidrena_cijena_terms_seeded', 1, false );
+		update_option( 'twbce_cijena_terms_seeded', 1, false );
 	}
 
 	/**
@@ -130,7 +130,7 @@ final class StandalonePostType {
 	public static function register_meta_box() {
 		add_meta_box(
 			'sidrena-cijena-item-fields',
-			__( 'Sidrena cijena - item data', 'titanworks-bazna-cijena' ),
+			__( 'Sidrena cijena - item data', 'sidrena-cijena-eu' ),
 			array( __CLASS__, 'render_meta_box' ),
 			self::POST_TYPE,
 			'normal',
@@ -145,63 +145,63 @@ final class StandalonePostType {
 	 */
 	public static function fields() {
 		return array(
-			'_sidrena_sku'           => array(
-				'label'       => __( 'SKU / code', 'titanworks-bazna-cijena' ),
+			'_twbce_sku'           => array(
+				'label'       => __( 'SKU / code', 'sidrena-cijena-eu' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. ART-001', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Catalog SKU or internal product code.', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. ART-001', 'sidrena-cijena-eu' ),
+				'description' => __( 'Catalog SKU or internal product code.', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_barcode'       => array(
-				'label'       => __( 'Barcode', 'titanworks-bazna-cijena' ),
+			'_twbce_barcode'       => array(
+				'label'       => __( 'Barcode', 'sidrena-cijena-eu' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. 3850123456789', 'titanworks-bazna-cijena' ),
-				'description' => __( 'EAN, UPC, or GTIN barcode.', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 3850123456789', 'sidrena-cijena-eu' ),
+				'description' => __( 'EAN, UPC, or GTIN barcode.', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_unit'          => array(
-				'label'       => __( 'Unit of measure', 'titanworks-bazna-cijena' ),
+			'_twbce_unit'          => array(
+				'label'       => __( 'Unit of measure', 'sidrena-cijena-eu' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. kom, kg, l', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. kom, kg, l', 'sidrena-cijena-eu' ),
+				'description' => __( 'Standard unit of measure (e.g. piece, kg, liter).', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_unit_price'    => array(
-				'label'       => __( 'Price per unit of measure', 'titanworks-bazna-cijena' ),
+			'_twbce_unit_price'    => array(
+				'label'       => __( 'Price per unit of measure', 'sidrena-cijena-eu' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 9.99', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Calculated selling price per unit of measure.', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 9.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Calculated selling price per unit of measure.', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_regular_price' => array(
-				'label'       => __( 'Regular price', 'titanworks-bazna-cijena' ),
+			'_twbce_regular_price' => array(
+				'label'       => __( 'Regular price', 'sidrena-cijena-eu' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 19.99', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Regular selling price before discounts.', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 19.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Regular selling price before discounts.', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_sale_price'    => array(
-				'label'       => __( 'Sale price', 'titanworks-bazna-cijena' ),
+			'_twbce_sale_price'    => array(
+				'label'       => __( 'Sale price', 'sidrena-cijena-eu' ),
 				'type'        => 'price',
-				'placeholder' => __( 'e.g. 14.99', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Promotional selling price if currently discounted.', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. 14.99', 'sidrena-cijena-eu' ),
+				'description' => __( 'Promotional selling price if currently discounted.', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_availability'  => array(
-				'label'   => __( 'Availability', 'titanworks-bazna-cijena' ),
+			'_twbce_availability'  => array(
+				'label'   => __( 'Availability', 'sidrena-cijena-eu' ),
 				'type'    => 'select',
 				'options' => array(
-					'available'   => __( 'Available', 'titanworks-bazna-cijena' ),
-					'unavailable' => __( 'Unavailable', 'titanworks-bazna-cijena' ),
+					'available'   => __( 'Available', 'sidrena-cijena-eu' ),
+					'unavailable' => __( 'Unavailable', 'sidrena-cijena-eu' ),
 				),
 			),
-			'_sidrena_currency'      => array(
-				'label'       => __( 'Currency', 'titanworks-bazna-cijena' ),
+			'_twbce_currency'      => array(
+				'label'       => __( 'Currency', 'sidrena-cijena-eu' ),
 				'type'        => 'text',
-				'placeholder' => __( 'e.g. EUR', 'titanworks-bazna-cijena' ),
-				'description' => __( 'Three-letter currency code (defaults to EUR).', 'titanworks-bazna-cijena' ),
+				'placeholder' => __( 'e.g. EUR', 'sidrena-cijena-eu' ),
+				'description' => __( 'Three-letter currency code (defaults to EUR).', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_first_seen'    => array(
-				'label'       => __( 'First appearance date', 'titanworks-bazna-cijena' ),
+			'_twbce_first_seen'    => array(
+				'label'       => __( 'First appearance date', 'sidrena-cijena-eu' ),
 				'type'        => 'date',
-				'description' => __( 'Date the item was first offered in the store (d.m.Y.).', 'titanworks-bazna-cijena' ),
+				'description' => __( 'Date the item was first offered in the store (d.m.Y.).', 'sidrena-cijena-eu' ),
 			),
-			'_sidrena_tax_inclusive' => array(
-				'label' => __( 'Prices include tax', 'titanworks-bazna-cijena' ),
+			'_twbce_tax_inclusive' => array(
+				'label' => __( 'Prices include tax', 'sidrena-cijena-eu' ),
 				'type'  => 'checkbox',
 			),
 		);
@@ -214,7 +214,7 @@ final class StandalonePostType {
 	 * @return void
 	 */
 	public static function render_meta_box( $post ) {
-		wp_nonce_field( 'sidrena_cijena_save_item', 'sidrena_cijena_item_nonce' );
+		wp_nonce_field( 'twbce_cijena_save_item', 'twbce_cijena_item_nonce' );
 
 		echo '<table class="form-table" role="presentation"><tbody>';
 
@@ -255,7 +255,7 @@ final class StandalonePostType {
 
 		echo '</tbody></table>';
 
-		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Price changes are recorded in the price history; the anchor price is recorded on the Sidrena cijena screens.', 'sidrena-cijena-eu' ) . '</p>';
 	}
 
 	/**
@@ -273,13 +273,13 @@ final class StandalonePostType {
 			return;
 		}
 
-		if ( ! isset( $_POST['sidrena_cijena_item_nonce'] ) ) {
+		if ( ! isset( $_POST['twbce_cijena_item_nonce'] ) ) {
 			return;
 		}
 
-		$nonce = sanitize_text_field( wp_unslash( $_POST['sidrena_cijena_item_nonce'] ) );
+		$nonce = sanitize_text_field( wp_unslash( $_POST['twbce_cijena_item_nonce'] ) );
 
-		if ( ! wp_verify_nonce( $nonce, 'sidrena_cijena_save_item' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'twbce_cijena_save_item' ) ) {
 			return;
 		}
 
@@ -287,8 +287,8 @@ final class StandalonePostType {
 			return;
 		}
 
-		$previous_regular = get_post_meta( $post_id, '_sidrena_regular_price', true );
-		$previous_sale    = get_post_meta( $post_id, '_sidrena_sale_price', true );
+		$previous_regular = get_post_meta( $post_id, '_twbce_regular_price', true );
+		$previous_sale    = get_post_meta( $post_id, '_twbce_sale_price', true );
 
 		foreach ( self::fields() as $key => $field ) {
 			if ( 'checkbox' === $field['type'] ) {
@@ -312,16 +312,16 @@ final class StandalonePostType {
 		}
 
 		// Item type taxonomy.
-		if ( isset( $_POST['_sidrena_item_type'] ) ) {
-			$type = sanitize_key( wp_unslash( $_POST['_sidrena_item_type'] ) );
+		if ( isset( $_POST['_twbce_item_type'] ) ) {
+			$type = sanitize_key( wp_unslash( $_POST['_twbce_item_type'] ) );
 			wp_set_object_terms( $post_id, in_array( $type, array( 'product', 'service' ), true ) ? $type : 'product', self::TAX_TYPE );
 		}
 
-		$regular = get_post_meta( $post_id, '_sidrena_regular_price', true );
-		$sale    = get_post_meta( $post_id, '_sidrena_sale_price', true );
+		$regular = get_post_meta( $post_id, '_twbce_regular_price', true );
+		$sale    = get_post_meta( $post_id, '_twbce_sale_price', true );
 
-		if ( '' === $regular && '' === get_post_meta( $post_id, '_sidrena_first_seen', true ) ) {
-			update_post_meta( $post_id, '_sidrena_first_seen', get_the_date( 'Y-m-d', $post_id ) );
+		if ( '' === $regular && '' === get_post_meta( $post_id, '_twbce_first_seen', true ) ) {
+			update_post_meta( $post_id, '_twbce_first_seen', get_the_date( 'Y-m-d', $post_id ) );
 		}
 
 		self::capture_price_changes( $post_id, $previous_regular, $previous_sale, $regular, $sale );
@@ -398,11 +398,11 @@ final class StandalonePostType {
 			 * @param float|null  $new          New price.
 			 * @param string      $source       Source identifier.
 			 */
-			do_action( 'sidrena_cijena_price_changed', $post_id, 0, Currency::to_storage( $previous_regular ), $new_regular, 'standalone' );
+			do_action( 'twbce_cijena_price_changed', $post_id, 0, Currency::to_storage( $previous_regular ), $new_regular, 'standalone' );
 		}
 
 		if ( null !== $new_sale && (float) $previous_sale !== $new_sale ) {
-			do_action( 'sidrena_cijena_price_changed', $post_id, 0, Currency::to_storage( $previous_sale ), $new_sale, 'standalone' );
+			do_action( 'twbce_cijena_price_changed', $post_id, 0, Currency::to_storage( $previous_sale ), $new_sale, 'standalone' );
 		}
 	}
 }

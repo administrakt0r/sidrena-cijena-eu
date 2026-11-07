@@ -2,21 +2,21 @@
 /**
  * HistoryCommand unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Cli\HistoryCommand;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\HistoryCommand;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Cli\HistoryCommand
+ * @covers \Titanworks\SidrenaCijena\Cli\HistoryCommand
  */
 class HistoryCommandTest extends TestCase {
 

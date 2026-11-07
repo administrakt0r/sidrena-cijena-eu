@@ -2,7 +2,7 @@
 
 WooCommerce is **optional**. The plugin never fatals when it is absent,
 disabled or uninstalled: `WooCommerceDetector` gates every integration
-point, and a standalone catalog (`sidrena_item` post type) covers shops
+point, and a standalone catalog (`twbce_item` post type) covers shops
 without WooCommerce. No WooCommerce, core or theme files are ever
 modified.
 
@@ -13,9 +13,9 @@ modified.
   variation payload extension, per-variation display).
 * Brands from the `product_brand` taxonomy when present; units, unit
   prices and barcodes from common meta keys (barcode keys filterable via
-  `sidrena_cijena_barcode_meta_keys`).
-* Item classification (product vs service) via `_sidrena_item_type` meta
-  or the `sidrena_cijena_wc_item_type` filter.
+  `twbce_cijena_barcode_meta_keys`).
+* Item classification (product vs service) via `_twbce_item_type` meta
+  or the `twbce_cijena_wc_item_type` filter.
 
 Native price fields are only **read** (CRUD getters). The plugin never
 writes WooCommerce price meta and never touches checkout, payment,
@@ -31,7 +31,7 @@ shipping or coupons.
 * `woocommerce_store_api_product_data` — block-template coverage.
 * `woocommerce_new_product` / `woocommerce_update_product` and variation
   equivalents — regular and active sale price observations and the
-  `sidrena_cijena_price_changed` signal. WooCommerce scheduled-sale callbacks
+  `twbce_cijena_price_changed` signal. WooCommerce scheduled-sale callbacks
   and legacy batch hooks record effective start/end boundaries after the
   price state is applied.
 * `wp_enqueue_scripts` — `assets/css/frontend.css`,
@@ -58,11 +58,11 @@ unclear eligibility needs human review.
 
 ## Template functions, shortcode, blocks
 
-* PHP: `sidrena_cijena_get_anchor_price()`,
-  `sidrena_cijena_get_lowest_30_day_price()`,
-  `sidrena_cijena_render_anchor_price()` (also namespaced under
-  `SidrenaCijena\Api`).
-* Shortcode: `[sidrena_cijena product_id="…" variation_id="…"
+* PHP: `twbce_cijena_get_anchor_price()`,
+  `twbce_cijena_get_lowest_30_day_price()`,
+  `twbce_cijena_render_anchor_price()` (also namespaced under
+  `Titanworks\SidrenaCijena\Api`).
+* Shortcode: `[twbce_cijena product_id="…" variation_id="…"
   show_current="yes" show_anchor="yes" show_30_day="yes" label="…"]`
   rendering `.sidrena-cijena__current`, `__anchor` and `__30-day` blocks.
 * Templates in `templates/` are overridable via

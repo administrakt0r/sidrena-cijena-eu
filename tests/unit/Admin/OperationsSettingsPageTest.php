@@ -2,16 +2,16 @@
 /**
  * Operations settings page tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\OperationsSettingsPage;
+use Titanworks\SidrenaCijena\Admin\OperationsSettingsPage;
 
 /**
- * @covers \SidrenaCijena\Admin\OperationsSettingsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\OperationsSettingsPage
  */
 class OperationsSettingsPageTest extends TestCase {
 
@@ -22,9 +22,9 @@ class OperationsSettingsPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_settings_sections'] = array();
-		$GLOBALS['sidrena_test_settings_fields']   = array();
-		$GLOBALS['sidrena_test_options']           = array();
+		$GLOBALS['twbce_test_settings_sections'] = array();
+		$GLOBALS['twbce_test_settings_fields']   = array();
+		$GLOBALS['twbce_test_options']           = array();
 	}
 
 	/**
@@ -34,9 +34,9 @@ class OperationsSettingsPageTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_settings_sections'],
-			$GLOBALS['sidrena_test_settings_fields'],
-			$GLOBALS['sidrena_test_options']
+			$GLOBALS['twbce_test_settings_sections'],
+			$GLOBALS['twbce_test_settings_fields'],
+			$GLOBALS['twbce_test_options']
 		);
 		parent::tearDown();
 	}
@@ -64,22 +64,22 @@ class OperationsSettingsPageTest extends TestCase {
 		OperationsSettingsPage::register_settings();
 
 		$page = OperationsSettingsPage::PAGE;
-		$this->assertArrayHasKey( $page, $GLOBALS['sidrena_test_settings_sections'] );
-		$this->assertArrayHasKey( 'sidrena_cijena_operations', $GLOBALS['sidrena_test_settings_sections'][ $page ] );
+		$this->assertArrayHasKey( $page, $GLOBALS['twbce_test_settings_sections'] );
+		$this->assertArrayHasKey( 'twbce_cijena_operations', $GLOBALS['twbce_test_settings_sections'][ $page ] );
 
-		$this->assertArrayHasKey( $page, $GLOBALS['sidrena_test_settings_fields'] );
-		$fields = $GLOBALS['sidrena_test_settings_fields'][ $page ];
+		$this->assertArrayHasKey( $page, $GLOBALS['twbce_test_settings_fields'] );
+		$fields = $GLOBALS['twbce_test_settings_fields'][ $page ];
 		$ids    = array_column( $fields, 'id' );
 
-		$this->assertContains( 'sidrena_cijena_public_archive_enabled', $ids );
-		$this->assertContains( 'sidrena_cijena_archive_footer_link', $ids );
-		$this->assertContains( 'sidrena_cijena_archive_sitemap_link', $ids );
-		$this->assertContains( 'sidrena_cijena_deadline', $ids );
-		$this->assertContains( 'sidrena_cijena_retention_days', $ids );
-		$this->assertContains( 'sidrena_cijena_log_retention_days', $ids );
-		$this->assertContains( 'sidrena_cijena_formats', $ids );
-		$this->assertContains( 'sidrena_cijena_allow_generation_with_errors', $ids );
-		$this->assertContains( 'sidrena_cijena_delete_data_on_uninstall', $ids );
+		$this->assertContains( 'twbce_cijena_public_archive_enabled', $ids );
+		$this->assertContains( 'twbce_cijena_archive_footer_link', $ids );
+		$this->assertContains( 'twbce_cijena_archive_sitemap_link', $ids );
+		$this->assertContains( 'twbce_cijena_deadline', $ids );
+		$this->assertContains( 'twbce_cijena_retention_days', $ids );
+		$this->assertContains( 'twbce_cijena_log_retention_days', $ids );
+		$this->assertContains( 'twbce_cijena_formats', $ids );
+		$this->assertContains( 'twbce_cijena_allow_generation_with_errors', $ids );
+		$this->assertContains( 'twbce_cijena_delete_data_on_uninstall', $ids );
 	}
 
 	/**

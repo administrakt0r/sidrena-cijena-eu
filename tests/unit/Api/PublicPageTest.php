@@ -2,21 +2,21 @@
 /**
  * Unit tests for the public HTML price list and archive pages.
  *
- * @package SidrenaCijena\Tests\Unit\Api
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Api
  */
 
-namespace SidrenaCijena\Tests\Unit\Api;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\PublicPage;
-use SidrenaCijena\Api\TemplateFunctions;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Api\PublicPage;
+use Titanworks\SidrenaCijena\Api\TemplateFunctions;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -375,7 +375,7 @@ class PublicPageProbe extends PublicPage {
 /**
  * Covers search matching, display formatting, request sanitizing and list filtering.
  *
- * @covers \SidrenaCijena\Api\PublicPage
+ * @covers \Titanworks\SidrenaCijena\Api\PublicPage
  */
 class PublicPageTest extends TestCase {
 
@@ -414,11 +414,11 @@ class PublicPageTest extends TestCase {
 		PluginSwap::swap( 'anchor_cache', null );
 		PublicPageProbe::reset_styles();
 
-		unset( $GLOBALS['sidrena_test_timezone'] );
+		unset( $GLOBALS['twbce_test_timezone'] );
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
-		$_GET                               = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
+		$_GET                             = array();
 	}
 
 	/**
@@ -542,14 +542,14 @@ class PublicPageTest extends TestCase {
 	public function test_display_row_reference_date_ignores_site_timezone() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_timezone'] = new \DateTimeZone( 'America/New_York' );
+		$GLOBALS['twbce_test_timezone'] = new \DateTimeZone( 'America/New_York' );
 
 		try {
 			$out = ( new PublicPageProbe() )->decorate( $this->row() );
 
 			$this->assertSame( '02.05.2025.', $out['reference_display'] );
 		} finally {
-			unset( $GLOBALS['sidrena_test_timezone'] );
+			unset( $GLOBALS['twbce_test_timezone'] );
 		}
 	}
 
@@ -685,16 +685,16 @@ class PublicPageTest extends TestCase {
 	 */
 	public function test_styles_are_emitted_once() {
 		$this->reset_state();
-		$GLOBALS['sidrena_test_enqueued_styles'] = array();
+		$GLOBALS['twbce_test_enqueued_styles'] = array();
 
 		$probe = new PublicPageProbe();
 
 		$this->assertSame( '', $probe->styles() );
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 
-		unset( $GLOBALS['sidrena_test_enqueued_styles']['sidrena-cijena-frontend'] );
+		unset( $GLOBALS['twbce_test_enqueued_styles']['sidrena-cijena-frontend'] );
 		$this->assertSame( '', $probe->styles() );
-		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 	}
 
 	/**
@@ -775,7 +775,7 @@ class PublicPageTest extends TestCase {
 	/**
 	 * The price shortcode defaults to one 30-day block and honors its override.
 	 *
-	 * @covers \SidrenaCijena\Api\TemplateFunctions::shortcode
+	 * @covers \Titanworks\SidrenaCijena\Api\TemplateFunctions::shortcode
 	 * @return void
 	 */
 	public function test_price_shortcode_honors_30_day_visibility_without_duplicate_blocks() {
@@ -1227,25 +1227,25 @@ class PublicPageTest extends TestCase {
 		$page = new PublicPage();
 
 		// When footer link setting is disabled, nothing outputs.
-		\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => false ) );
+		\Titanworks\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => false ) );
 		ob_start();
 		$page->footer_link();
 		$disabled_out = ob_get_clean();
 		$this->assertSame( '', $disabled_out );
 
 		// When enabled, outputs small link with default text "Cjenici" and enqueues stylesheet.
-		\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => true ) );
+		\Titanworks\SidrenaCijena\Support\Settings::update( array( 'archive_footer_link' => true ) );
 		ob_start();
 		$page->footer_link();
 		$out = ob_get_clean();
 		$this->assertStringContainsString( 'sidrena-cijena-archive-link', $out );
 		$this->assertStringContainsString( 'Cjenici', $out );
 		$this->assertStringContainsString( PublicPage::STEM_ARCHIVE, $out );
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 
-		// Filter hook sidrena_cijena_footer_link_text.
+		// Filter hook twbce_cijena_footer_link_text.
 		add_filter(
-			'sidrena_cijena_footer_link_text',
+			'twbce_cijena_footer_link_text',
 			static function () {
 				return 'Službeni cjenici';
 			}
@@ -1265,14 +1265,14 @@ class PublicPageTest extends TestCase {
 		$this->reset_state();
 		$page = new PublicPage();
 
-		$GLOBALS['sidrena_test_options']['rewrite_rules'] = array(
+		$GLOBALS['twbce_test_options']['rewrite_rules'] = array(
 			'^some-other-slug/?$' => 'index.php?page=other',
 		);
-		$GLOBALS['sidrena_test_flushed_rules']            = 0;
+		$GLOBALS['twbce_test_flushed_rules']            = 0;
 
 		$page->add_rewrites();
 
-		$this->assertGreaterThan( 0, $GLOBALS['sidrena_test_flushed_rules'] );
+		$this->assertGreaterThan( 0, $GLOBALS['twbce_test_flushed_rules'] );
 	}
 
 	/**

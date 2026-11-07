@@ -5,9 +5,9 @@
  * @package SidrenaCijena
  */
 
-namespace SidrenaCijena\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\WooCommerce\Display;
 
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 

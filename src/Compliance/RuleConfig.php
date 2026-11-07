@@ -5,18 +5,18 @@
  * Changing rule configuration never rewrites price history; every change is
  * appended to an audit option (FR-006, FR-008).
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance;
+namespace Titanworks\SidrenaCijena\Compliance;
 
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Reads and writes the `sidrena_cijena_rule_config` option.
+ * Reads and writes the `twbce_cijena_rule_config` option.
  */
 final class RuleConfig {
 	/**
@@ -29,12 +29,12 @@ final class RuleConfig {
 	/**
 	 * Option name.
 	 */
-	const OPTION = 'sidrena_cijena_rule_config';
+	const OPTION = 'twbce_cijena_rule_config';
 
 	/**
 	 * Audit option name.
 	 */
-	const HISTORY_OPTION = 'sidrena_cijena_rule_config_history';
+	const HISTORY_OPTION = 'twbce_cijena_rule_config_history';
 
 	/**
 	 * Default general reference date.
@@ -201,7 +201,7 @@ final class RuleConfig {
 
 		Logger::info(
 			'settings_change',
-			__( 'Legal rule configuration changed.', 'titanworks-bazna-cijena' ),
+			__( 'Legal rule configuration changed.', 'sidrena-cijena-eu' ),
 			array(
 				'user_id' => (int) $user_id,
 				'reason'  => $reason,
@@ -215,7 +215,7 @@ final class RuleConfig {
 		 * @param array<mixed> $new Complete new configuration.
 		 * @param array<mixed> $old Previous configuration.
 		 */
-		do_action( 'sidrena_cijena_rule_config_changed', $new, $old );
+		do_action( 'twbce_cijena_rule_config_changed', $new, $old );
 
 		return $new;
 	}

@@ -3,7 +3,7 @@ const { login, wpCli, wpEval } = require('./helpers');
 
 test.describe('Operations and administration', () => {
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'sidrena-cijena-eu']);
   });
 
   test('operations settings can be changed and persist', async ({ page }) => {
@@ -14,9 +14,9 @@ test.describe('Operations and administration', () => {
 
     await expect(page.locator('h1')).toContainText(/settings|postavke/i);
 
-    await page.fill('input[name="sidrena_cijena_settings[deadline]"]', '07:30');
+    await page.fill('input[name="twbce_cijena_settings[deadline]"]', '07:30');
     await page.fill(
-      'input[name="sidrena_cijena_settings[retention_days]"]',
+      'input[name="twbce_cijena_settings[retention_days]"]',
       '45'
     );
     await page.locator('#submit, input[type="submit"]').first().click();
@@ -25,14 +25,14 @@ test.describe('Operations and administration', () => {
 
     await page.reload();
     await expect(
-      page.locator('input[name="sidrena_cijena_settings[deadline]"]')
+      page.locator('input[name="twbce_cijena_settings[deadline]"]')
     ).toHaveValue('07:30');
     await expect(
-      page.locator('input[name="sidrena_cijena_settings[retention_days]"]')
+      page.locator('input[name="twbce_cijena_settings[retention_days]"]')
     ).toHaveValue('45');
 
     await wpEval(`
-      update_option( 'sidrena_cijena_settings', array_merge( get_option( 'sidrena_cijena_settings', array() ), array( 'deadline' => '08:00', 'retention_days' => 30 ) ) );
+      update_option( 'twbce_cijena_settings', array_merge( get_option( 'twbce_cijena_settings', array() ), array( 'deadline' => '08:00', 'retention_days' => 30 ) ) );
       return 'ok';
     `);
   });
@@ -44,20 +44,20 @@ test.describe('Operations and administration', () => {
     );
 
     await page.fill(
-      'input[name="sidrena_cijena_settings[retention_days]"]',
+      'input[name="twbce_cijena_settings[retention_days]"]',
       '7'
     );
     await page.locator('#submit, input[type="submit"]').first().click();
     await page.reload();
 
     await expect(
-      page.locator('input[name="sidrena_cijena_settings[retention_days]"]')
+      page.locator('input[name="twbce_cijena_settings[retention_days]"]')
     ).toHaveValue('30');
   });
 
   test('log entries are visible and filterable', async ({ page }) => {
     await wpEval(`
-      ( new \\SidrenaCijena\\Database\\LogRepository() )->insert( 'info', 'import', 'E2E log entry', array(), 0 );
+      ( new \\Titanworks\\SidrenaCijena\\Database\\LogRepository() )->insert( 'info', 'import', 'E2E log entry', array(), 0 );
       return 'ok';
     `);
 

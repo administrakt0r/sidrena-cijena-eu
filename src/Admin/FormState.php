@@ -2,10 +2,10 @@
 /**
  * Submitted form state kept across redirects.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class FormState {
 
-	const PREFIX = 'sidrena_cijena_form_';
+	const PREFIX = 'twbce_cijena_form_';
 
 	const TTL = 300;
 
@@ -85,6 +85,20 @@ class FormState {
 		}
 
 		return ' aria-invalid="true" aria-describedby="' . esc_attr( $id . '-error' ) . '"';
+	}
+
+	/**
+	 * Print validation attributes, escaping their values at the output boundary.
+	 *
+	 * @param array<string,string> $errors Field errors.
+	 * @param string               $field Field name.
+	 * @param string               $id Control ID.
+	 * @return void
+	 */
+	public static function render_error_attributes( array $errors, $field, $id ) {
+		if ( isset( $errors[ $field ] ) ) {
+			echo ' aria-invalid="true" aria-describedby="' . esc_attr( $id . '-error' ) . '"';
+		}
 	}
 
 	/**

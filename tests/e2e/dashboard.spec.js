@@ -6,7 +6,7 @@ const ITEM_SKU = 'E2E-DASH-1';
 
 test.describe('Compliance dashboard', () => {
 	test.beforeAll(async () => {
-		wpCli(['plugin', 'activate', 'titanworks-bazna-cijena', '--quiet']);
+		wpCli(['plugin', 'activate', 'sidrena-cijena-eu', '--quiet']);
 
 		wpEval(`
 			$existing = get_posts( array( 'post_type' => 'product', 'meta_key' => '_sku', 'meta_value' => '${ITEM_SKU}', 'numberposts' => 1 ) );
@@ -17,13 +17,13 @@ test.describe('Compliance dashboard', () => {
 				$product->set_regular_price( '15.00' );
 				$product->save();
 			}
-			$locations = SidrenaCijena\\Plugin::instance()->locations()->all();
+			$locations = Titanworks\\SidrenaCijena\\Plugin::instance()->locations()->all();
 			$found = false;
 			foreach ( $locations as $location ) {
 				if ( 'E2E-P1' === $location['identifier'] ) { $found = true; }
 			}
 			if ( ! $found ) {
-				SidrenaCijena\\Plugin::instance()->locations()->insert( array(
+				Titanworks\\SidrenaCijena\\Plugin::instance()->locations()->insert( array(
 					'name' => 'E2E prodavaonica',
 					'type' => 'prodavaonica',
 					'address' => 'Vlaška 68',
@@ -64,15 +64,15 @@ test.describe('Compliance dashboard', () => {
 		await expect(page.locator('.sidrena-cijena-notice')).toBeVisible();
 
 		await expect(page.getByText('missing_anchor_price').first()).toBeVisible();
-		await expect(page.locator('a[href*="sidrena_cijena_export_report"]').first()).toBeVisible();
+		await expect(page.locator('a[href*="twbce_cijena_export_report"]').first()).toBeVisible();
 	});
 
 	test('compliance report exports as CSV', async ({ page }) => {
 		await login(page);
 		await page.goto('/wp-admin/admin.php?page=sidrena-cijena-compliance');
 
-		const href = await page.locator('a[href*="sidrena_cijena_export_report"]').first().getAttribute('href');
-		expect(href).toContain('sidrena_cijena_export_report');
+		const href = await page.locator('a[href*="twbce_cijena_export_report"]').first().getAttribute('href');
+		expect(href).toContain('twbce_cijena_export_report');
 
 		const response = await page.request.get(href);
 

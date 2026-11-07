@@ -2,13 +2,13 @@
 /**
  * Public REST API integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * US2 REST coverage.
@@ -58,8 +58,8 @@ class Test_Rest extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', 'KAV-250' );
-		update_post_meta( $post_id, '_sidrena_regular_price', 6.99 );
+		update_post_meta( $post_id, '_twbce_sku', 'KAV-250' );
+		update_post_meta( $post_id, '_twbce_regular_price', 6.99 );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 	}
 
@@ -144,13 +144,13 @@ class Test_Rest extends WP_UnitTestCase {
 		$csv_data = $csv->get_data();
 		$xml_data = $xml->get_data();
 
-		$this->assertArrayHasKey( 'sidrena_download', $csv_data );
-		$this->assertStringContainsString( 'vrsta;naziv;sifra;', $csv_data['sidrena_download']['content'] );
-		$this->assertSame( 'text/csv; charset=utf-8', $csv_data['sidrena_download']['content_type'] );
-		$this->assertMatchesRegularExpression( '/\.CSV$/', $csv_data['sidrena_download']['filename'] );
+		$this->assertArrayHasKey( 'twbce_download', $csv_data );
+		$this->assertStringContainsString( 'vrsta;naziv;sifra;', $csv_data['twbce_download']['content'] );
+		$this->assertSame( 'text/csv; charset=utf-8', $csv_data['twbce_download']['content_type'] );
+		$this->assertMatchesRegularExpression( '/\.CSV$/', $csv_data['twbce_download']['filename'] );
 
-		$this->assertStringContainsString( '<cjenik', $xml_data['sidrena_download']['content'] );
-		$this->assertSame( 'application/xml; charset=utf-8', $xml_data['sidrena_download']['content_type'] );
+		$this->assertStringContainsString( '<cjenik', $xml_data['twbce_download']['content'] );
+		$this->assertSame( 'application/xml; charset=utf-8', $xml_data['twbce_download']['content_type'] );
 	}
 
 	/**

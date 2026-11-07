@@ -21,7 +21,7 @@
 
 - Default-on card visibility: enabled anchor price display on product cards, category archives, search results, related products, and minicards by default across all products (`CardVisibility::is_visible()` defaults to true). Merchants can toggle globally in Settings → Display (`display_archives` and `card_display_default`) or override per-product via the "Product cards" checkbox in the product data panel.
 - Dedicated card styling presets: added full preset gallery and customizable controls for product cards and archives in Settings → Display styles (`card_display_style`, `card_date_mode`, `card_font_weight`, `card_display_size`), supporting "Same as product page" or independent presets (`tooltip`, `subtle`, `minimal`, `badge`, `card`, `pill`, `tag`, etc.) tailored for compact grid cards.
-- Barcode / EAN auto-detection & WooCommerce field: expanded barcode meta detection in `WooCommerceCatalogProvider` to inspect `_sidrena_barcode`, `_barcode`, `barcode`, `_ean`, `ean`, `_gtin`, `gtin`, attributes (`pa_ean`, `pa_barcode`, `pa_barkod`), and automatic fallback to `sku` via filter `sidrena_cijena_barcode_fallback_to_sku`. Added a native Barcode/EAN field in WooCommerce Product Data (`AnchorMetaBox`) so merchants can view and edit barcodes directly without needing extra plugins.
+- Barcode / EAN auto-detection & WooCommerce field: expanded barcode meta detection in `WooCommerceCatalogProvider` to inspect `_twbce_barcode`, `_barcode`, `barcode`, `_ean`, `ean`, `_gtin`, `gtin`, attributes (`pa_ean`, `pa_barcode`, `pa_barkod`), and automatic fallback to `sku` via filter `twbce_cijena_barcode_fallback_to_sku`. Added a native Barcode/EAN field in WooCommerce Product Data (`AnchorMetaBox`) so merchants can view and edit barcodes directly without needing extra plugins.
 - Test coverage & quality: 611 unit tests (2,315 assertions), 0 failures; Croatian translation catalog complete (840 translated strings / 0 untranslated in `languages/hr_HR.po`).
 
 ## UI/UX pass 16 — Admin Entity Navigation Links, Style Hygiene & Public Price List UX (2026-11-06)
@@ -66,7 +66,7 @@
 
 - Guaranteed Croatian translation catalogs in release archives: bundled compiled binary Croatian catalog files (`languages/sidrena-cijena-eu-hr.mo` and `languages/sidrena-cijena-eu-hr_HR.mo`) directly inside installable release packages. Removed `.gitattributes` and `tools/build-zip.sh` exclusions that previously stripped `.mo` translation catalogs from release zip distribution.
 - Statutory language guarantee on public price lists & archives: enforced Croatian textdomain catalog loading in `src/Api/PublicPage.php` (`ensure_croatian_catalog()`), guaranteeing that public customer-facing price lists and archive tables (`/sidrena-cjenik/`, `/arhiva-sidrene-cijene/`) render strictly in the Croatian language in compliance with statutory decrees (NN 101/2026-1212 & NN 101/2026-1213 / Pravilnik o cjenicima), regardless of site default or visitor session locale.
-- Cache invalidation & LiteSpeed Cache integration: versioned internal page cache keys with `SIDRENA_CIJENA_VERSION` in `PublicPage::render_list()` and `render_archive()`, instantly clearing stale English cached fragments upon plugin upgrade; dispatched `litespeed_control_set_nocache` action on public endpoints.
+- Cache invalidation & LiteSpeed Cache integration: versioned internal page cache keys with `TWBCE_CIJENA_VERSION` in `PublicPage::render_list()` and `render_archive()`, instantly clearing stale English cached fragments upon plugin upgrade; dispatched `litespeed_control_set_nocache` action on public endpoints.
 - Unblocked price list generation with compliance warnings: aligned `GenerationService::generate()` so that when `allow_generation_with_errors` is enabled (default `true`), generation is not blocked even if facility identifier or catalog items have compliance issues; uses safe fallback identifier `'P1'`, records compliance findings with actionable remediation proposals, and ensures daily statutory price lists are published on time.
 - Test coverage & quality: 530 unit tests (1,896 assertions), 0 failures; Croatian translation catalog complete (797 translated strings / 0 untranslated in `languages/hr_HR.po`).
 - Built `versions/2.0.18/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.18` and verified with `unzip -t`.
@@ -101,7 +101,7 @@
 ## Release 2.0.11 — Static Audit, Capability Enforcement & Settings Unit Coverage (2026-09-28)
 
 - Full static audit pass per `AGENTARDS/01-audit-and-fix.md` (SEC-06).
-- Security sweep & capability enforcement (`src/Admin/SettingsPage.php`): explicitly configured `'capability' => Capabilities::capability()` on `register_setting` calls for both plugin settings and statutory legal rules, enforcing `manage_sidrena_cijena` capability when updating settings through `options.php`.
+- Security sweep & capability enforcement (`src/Admin/SettingsPage.php`): explicitly configured `'capability' => Capabilities::capability()` on `register_setting` calls for both plugin settings and statutory legal rules, enforcing `twbce_manage_prices` capability when updating settings through `options.php`.
 - Test harness & coverage: added `register_setting` stub to `tests/unit/wp-stubs.php` and created `tests/unit/Admin/SettingsPageTest.php` with unit test coverage for capability binding and tab routing.
 - Quality gates: 438 unit tests (1,557 assertions), 0 failures; PHPCS clean across 181 files; PHPStan level 6 clean (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
 - Built `versions/2.0.11/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.11` and verified with `unzip -t`.
@@ -137,7 +137,7 @@
 ## Release 2.0.7 — Static Audit, Path Hardening & Security Sweep (2026-09-27)
 
 - Full static audit and security sweep per `AGENTARDS/01-audit-and-fix.md` (SEC-02).
-- Security audit & capability verification: verified that every administrative action (`admin_post_*`) strictly verifies `manage_sidrena_cijena` capability via `Capabilities::current_user_can()` and authenticates valid nonces via `check_admin_referer()`.
+- Security audit & capability verification: verified that every administrative action (`admin_post_*`) strictly verifies `twbce_manage_prices` capability via `Capabilities::current_user_can()` and authenticates valid nonces via `check_admin_referer()`.
 - Output escaping & query preparation: audited direct and template echoes to ensure strict output escaping (`esc_html`, `esc_attr`, `esc_url`); verified dynamic SQL queries are prepared via `$wpdb->prepare()`.
 - Allowed import path validation & directory traversal hardening (`src/Import/CsvParser.php`): audited `CsvParser::is_allowed_path()` directory containment against allowed roots (temporary upload directory and WordPress uploads directory); added unit test verifying paths containing directory traversal (`../`) are cleanly rejected (`CsvParserEncodingTest::test_parse_file_rejects_temp_dir_path_traversal`).
 - Welcome banner activation redirect guards (`src/Admin/WelcomeBanner.php`): verified that `WelcomeBanner::maybe_redirect()` suppresses redirection on bulk activations, AJAX, WP-CLI, WP-Cron, network admin, and REST requests; added unit test verifying `REST_REQUEST` context prevents redirection while retaining the pending option (`WelcomeTest::test_maybe_redirect_guards_against_rest_request`).
@@ -147,13 +147,13 @@
 ## Release 2.0.6 — Performance Pass 2: Caching, Request-Time Work & Asset Loading (2026-09-27)
 
 - Performance pass 2 per `AGENTARDS/07-performance-caching-runtime.md` (PERF-08..PERF-15).
-- Cron catch-up decoupling (`src/Cron/Scheduler.php`): `maybe_catchup()` now gates execution to admin, cron, and CLI requests with a fast-fail transient lock check; heavy catch-up generation is offloaded to an asynchronous background queue event (`sidrena_cijena_catchup_event` via `Scheduler::handle_catchup_event()`), keeping front-end visitor page loads light and responsive while preserving REL-06 missed-run detection, failure recording and CLI diagnostics.
+- Cron catch-up decoupling (`src/Cron/Scheduler.php`): `maybe_catchup()` now gates execution to admin, cron, and CLI requests with a fast-fail transient lock check; heavy catch-up generation is offloaded to an asynchronous background queue event (`twbce_cijena_catchup_event` via `Scheduler::handle_catchup_event()`), keeping front-end visitor page loads light and responsive while preserving REL-06 missed-run detection, failure recording and CLI diagnostics.
 - Canonical page caching (`src/Api/PublicPage.php`): `render_list()` caches the canonical row set once per location per generation via `RestCache`, delegating query string (`q`), type (`type`), and pagination filtering to PHP in-memory. Eliminates options-table cache proliferation across arbitrary search terms.
 - Generation-keyed hot paths (`src/Admin/DashboardPage.php`, `src/Api/PublicPage.php`, `src/Api/PriceListController.php`): added short-TTL generation-keyed caching to dashboard aggregate stats (with compliance ERROR bypass and manual force bypass), publication archive HTML (`render_archive`), and REST `/publications` and `/status` endpoints; automatically invalidated via `Plugin::flush_rest_cache()` on publication, price change, anchor record, or settings change.
 - AnchorCache write optimization (`src/Pricing/AnchorCache.php`): `flush()` stores the generation marker using `update_option(..., false)` so no cache bookkeeping row is added to autoloaded options; on hosts with a persistent object cache (`wp_using_ext_object_cache()`), individual transient DB options writes are bypassed entirely in favor of direct object cache.
 - Textdomain consolidation (`sidrena-cijena.php`): consolidated translation catalog registration from duplicate `plugins_loaded` and `init` hooks to a single `init` hook, respecting the active user locale and loading the bundled Croatian MO catalog for Croatian requests without redundant filesystem hits on other locales.
 - Context-restricted asset loading & admin dependency cleanup (`src/WooCommerce/Display/PriceDisplay.php`, `src/Admin/AdminMenu.php`): `PriceDisplay::enqueue_assets()` restricts frontend styles and scripts to single product pages and shop/product archives while preserving builder compatibility; removed unused `wp-i18n` script dependency from `admin.js`.
-- Settings per-request memoization (`src/Support/Settings.php`): `Settings::get()` memoizes parsed settings in a static request cache, eliminating redundant `wp_parse_args()` and defaults processing across repeated product card renders (~10 calls per product). Invalidated automatically on `sidrena_cijena_settings_changed`, `Settings::update()`, and in tests via `Settings::reset()`.
+- Settings per-request memoization (`src/Support/Settings.php`): `Settings::get()` memoizes parsed settings in a static request cache, eliminating redundant `wp_parse_args()` and defaults processing across repeated product card renders (~10 calls per product). Invalidated automatically on `twbce_cijena_settings_changed`, `Settings::update()`, and in tests via `Settings::reset()`.
 - REST per-IP throttle object caching (`src/Api/PriceListController.php`): `throttle()` leverages `wp_cache_get()`/`wp_cache_set()` when an external persistent object cache is present, eliminating repeated options-table round-trips for API rate limiting.
 - Quality gates: 420 unit tests (1,509 assertions), 0 failures; PHPCS clean across 179 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (749 translated strings / 0 untranslated in `languages/hr_HR.po`).
 - Built `versions/2.0.6/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.6` and verified with `unzip -t`.
@@ -161,7 +161,7 @@
 ## Release 2.0.5 — Robustness, Lifecycle Cleanup & Compatibility Pass (2026-09-27)
 
 - General improvement pass per `AGENTARDS/04-improve.md` (ROB-01..ROB-03).
-- Lifecycle cleanup & transient hygiene (`src/Support/Uninstaller.php`, `src/Support/Deactivator.php`): opt-in uninstall cleanup now removes all plugin transients from `wp_options` (`_transient_sidrena_%` and `_transient_timeout_sidrena_%`) while strictly preserving append-only anchor and 30-day legal evidence in `wp_sidrena_price_history`; plugin deactivation removes active catch-up locks while retaining all data.
+- Lifecycle cleanup & transient hygiene (`src/Support/Uninstaller.php`, `src/Support/Deactivator.php`): opt-in uninstall cleanup now removes all plugin transients from `wp_options` (`_transient_twbce_%` and `_transient_timeout_twbce_%`) while strictly preserving append-only anchor and 30-day legal evidence in `wp_sidrena_price_history`; plugin deactivation removes active catch-up locks while retaining all data.
 - Public feed corruption protection (`src/Api/PublicFeed.php`): public XML and CSV feeds verify publication file readability, non-empty size (>0 bytes), and match SHA-256 checksums before serving, triggering automatic 503 recovery and queuing clean background rebuilds on file tampering or corruption.
 - Resilient CSV date parsing (`src/Import/RowValidator.php`): enhanced `normalize_date()` to seamlessly parse common ERP date variations (including single-digit days/months like `10.9.2026`, `1.5.2025`, slashes `10/09/2026`, dashes `10-09-2026`, and trailing dots `10.09.2026.`), normalizing accurately to canonical `Y-m-d`.
 - Admin forms UX & decimal input ergonomics (`src/Admin/LocationsPage.php`, `src/Admin/AnchorMetaBox.php`, `src/Admin/SpecialSaleMetaBox.php`, `src/Admin/PriceHistoryPage.php`): added clear format hints and placeholders for addresses (`e.g. Vlaška 68`), cities (`e.g. Zagreb`), facility identifiers (`e.g. P1, W1`), and price inputs, with decimal `inputmode` on mobile/tablets.
@@ -176,7 +176,7 @@
 - Compliance findings pagination (`src/Admin/CompliancePage.php`): replaced hardcoded 200 cutoff with `FINDINGS_PER_PAGE = 50` and `Pagination::render()` screen-reader navigation.
 - WooCommerce editor date formatting (`src/Admin/SpecialSaleMetaBox.php`, `src/Admin/AnchorMetaBox.php`): formatted sale periods, 30-day calculation explanation start dates, applicable reference dates, and recorded-for dates with Croatian date display (`d.m.Y.`).
 - Admin value and notice formatting (`src/Admin/LegalSettingsPage.php`, `src/Admin/PublicationsPage.php`): formatted string boolean values `'true'`/`'false'` as translated `Yes`/`No` (`Da`/`Ne`) in legal settings change logs, and added `is-dismissible` to generation failure notice.
-- In-dashboard documentation expansion (`src/Admin/DocumentationPage.php`): updated Section 3 (Prikaz na trgovini) to explain storefront presets (tooltip `(?)`, minimal, tag, accent, subtle), date display modes, and font weights; updated Section 7 (Kuke za programere) to document `sidrena_cijena_thirty_day_label` and `sidrena_cijena_footer_link_text`.
+- In-dashboard documentation expansion (`src/Admin/DocumentationPage.php`): updated Section 3 (Prikaz na trgovini) to explain storefront presets (tooltip `(?)`, minimal, tag, accent, subtle), date display modes, and font weights; updated Section 7 (Kuke za programere) to document `twbce_cijena_thirty_day_label` and `twbce_cijena_footer_link_text`.
 - Quality gates: 384 unit tests (1,393 assertions), 0 failures; PHPCS clean across 175 files; PHPStan level 6 (0 errors across 117 files); ESLint clean; Croatian translation catalog complete (741 translated strings / 0 untranslated in `languages/hr_HR.po`).
 - Built `versions/2.0.4/sidrena-cijena-eu.zip` using `tools/build-zip.sh 2.0.4` and verified with `unzip -t`.
 
@@ -337,7 +337,7 @@ assets, templates, catalogs and documentation; development dependencies are excl
 
 ## Release 1.0.6 (2026-09-26)
 
-- **Opt-in Uninstaller Hardening**: Extended `Uninstaller::$options` with `sidrena_cijena_rest_generation`, `sidrena_cijena_public_feed_last_queue`, and `sidrena_cijena_terms_seeded` ensuring pristine cleanup while strictly preserving legal anchor and 30-day evidence rows.
+- **Opt-in Uninstaller Hardening**: Extended `Uninstaller::$options` with `twbce_cijena_rest_generation`, `twbce_cijena_public_feed_last_queue`, and `twbce_cijena_terms_seeded` ensuring pristine cleanup while strictly preserving legal anchor and 30-day evidence rows.
 - **XML Price-List Specification Alignment**: Documented `datumSidreneCijene` in `docs/price-list-format.md` conforming with the verified XML generator implementation.
 - **Integration Test Isolation**: Added table reset to `ActivationTest::set_up()` and `Test_Cli::set_up()` ensuring idempotent test runs regardless of prior E2E execution state.
 - **Unit Test Coverage**: Added `tests/unit/Support/UninstallerTest.php` covering evidence preservation, option lists, and opt-in execution gates (unit suite increased from 180 to 184 tests, 571 assertions).
@@ -417,7 +417,7 @@ append-only history are untouched, and `docs/legal-rules.md` is unchanged.
 - **WooCommerce display**: variation anchors use the same tax-aware
   `PriceDisplay::display_price()` helper, stored `tax_inclusive` anchors are not
   re-taxed, `BuilderCompat` only appends the queried product (no related/upsell
-  leakage), and price changes fire `sidrena_cijena_price_changed`.
+  leakage), and price changes fire `twbce_cijena_price_changed`.
 - **Admin / settings**: saving one settings tab preserves the flags of the other
   tabs (hidden companion inputs), the uninstall data-deletion opt-in reads the
   `Settings` option, the bulk anchor screen paginates the filtered missing set,
@@ -430,7 +430,7 @@ append-only history are untouched, and `docs/legal-rules.md` is unchanged.
   corrected overview.
 - **ZIP smoke**: archive extracted and activated on the wp-env WordPress with
   WooCommerce active and again with WooCommerce deactivated: runtime constant
-  `SIDRENA_CIJENA_VERSION` is `1.0.8`, the five `wp_sidrena_*` tables exist, the
+  `TWBCE_CIJENA_VERSION` is `1.0.8`, the five `wp_twbce_*` tables exist, the
   Croatian catalog loads (`Najniža cijena u zadnjih 30 dana`), and no dev
   dependencies ship inside the archive.
 - **Translations**: 572/572 Croatian strings, 0 untranslated.
@@ -454,7 +454,7 @@ history are untouched, and `docs/legal-rules.md` is unchanged.
   sale, publication, location and settings changes).
 - **Performance**: `Plugin::anchors()` now constructs `AnchorPriceService`
   with the shared `AnchorCache`, so storefront lookups reuse a record until
-  the next invalidation or flush. `sidrena_cijena_anchor_recorded`
+  the next invalidation or flush. `twbce_cijena_anchor_recorded`
   additionally forgets the recorded item via
   `Plugin::invalidate_anchor_cache()`, covering anchor writes that reach the
   history table through any path.
@@ -510,7 +510,7 @@ window, the filename pattern, retention and the append-only history are
 untouched, and `docs/legal-rules.md` is unchanged.
 
 - **Robustness**: trashing, deleting, or unpublishing a catalog item
-  (`sidrena_item`, `product`, `product_variation`) now flushes the shared
+  (`twbce_item`, `product`, `product_variation`) now flushes the shared
   anchor and REST cache generations immediately (`transition_post_status`
   and `before_delete_post` in `Plugin`). Previously the public price-list
   page and the REST `/prices`, CSV and XML endpoints kept serving removed
@@ -550,7 +550,7 @@ changed, so the Croatian catalogs were not regenerated.
   Previously the public price list passed the reference date through
   `strtotime()` and `wp_date()`, so sites west of UTC displayed the previous
   calendar day; the price-history table now uses the same helper. The unit
-  `wp_timezone()` stub honours an overridable `$GLOBALS['sidrena_test_timezone']`
+  `wp_timezone()` stub honours an overridable `$GLOBALS['twbce_test_timezone']`
   so the regression is pinned with an `America/New_York` case.
 - **Dashboard**: `DashboardPage::aggregate()` resolves a variation's inherited
   parent sale before counting "Items with no price history", so variable
@@ -655,10 +655,10 @@ filename pattern and the append-only history contract are untouched.
   were the only admin entry points without the capability check — they exposed
   the recorded anchor price, its reference date and the 30-day lowest price on
   every supported edit screen, and offered a form whose handler answered with
-  `wp_die()`. Both now return early without `manage_sidrena_cijena`.
+  `wp_die()`. Both now return early without `twbce_manage_prices`.
 - **Tests**: new `MetaBoxCapabilityTest` (5 cases) plus `post_type_exists()` /
   `add_meta_box()` stubs in `tests/unit/wp-stubs.php` — the first unit tests to
-  pin the `manage_sidrena_cijena` contract. Unit suite 301/1078 → **306/1083**.
+  pin the `twbce_manage_prices` contract. Unit suite 301/1078 → **306/1083**.
 - **Translations**: 632 strings, **0 untranslated**; no translatable string was
   added or changed, `tools/i18n/make-pot.php` and `--locale=hr_HR` only
   refreshed the POT/PO timestamps.

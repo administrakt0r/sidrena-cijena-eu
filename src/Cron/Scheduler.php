@@ -6,17 +6,17 @@
  * with WooCommerce) is preferred for queued service regeneration when
  * available. Production documentation recommends a real system cron entry.
  *
- * @package SidrenaCijena\Cron
+ * @package Titanworks\SidrenaCijena\Cron
  */
 
-namespace SidrenaCijena\Cron;
+namespace Titanworks\SidrenaCijena\Cron;
 
-use SidrenaCijena\Admin\AdminMenu;
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Admin\PublicationsPage;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Admin\AdminMenu;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Admin\PublicationsPage;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,22 +28,22 @@ final class Scheduler {
 	/**
 	 * Daily generation hook.
 	 */
-	const HOOK_DAILY = 'sidrena_cijena_daily_generation';
+	const HOOK_DAILY = 'twbce_cijena_daily_generation';
 
 	/**
 	 * Queued service regeneration hook.
 	 */
-	const HOOK_SERVICE = 'sidrena_cijena_service_regeneration';
+	const HOOK_SERVICE = 'twbce_cijena_service_regeneration';
 
 	/**
 	 * Daily cleanup hook.
 	 */
-	const HOOK_CLEANUP = 'sidrena_cijena_daily_cleanup';
+	const HOOK_CLEANUP = 'twbce_cijena_daily_cleanup';
 
 	/**
 	 * Queued catch-up generation hook.
 	 */
-	const HOOK_CATCHUP = 'sidrena_cijena_catchup_generation';
+	const HOOK_CATCHUP = 'twbce_cijena_catchup_generation';
 
 	/**
 	 * Action Scheduler group.
@@ -53,12 +53,12 @@ final class Scheduler {
 	/**
 	 * Dismiss failure action.
 	 */
-	const DISMISS_FAILURE_ACTION = 'sidrena_cijena_dismiss_generation_failure';
+	const DISMISS_FAILURE_ACTION = 'twbce_cijena_dismiss_generation_failure';
 
 	/**
 	 * Catch-up transient lock.
 	 */
-	const CATCHUP_LOCK = 'sidrena_cijena_catchup_lock';
+	const CATCHUP_LOCK = 'twbce_cijena_catchup_lock';
 
 	/**
 	 * Register cron callbacks.
@@ -149,7 +149,7 @@ final class Scheduler {
 	 * @return void
 	 */
 	public static function queue_catchup() {
-		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'sidrena_cijena_use_action_scheduler', true ) ) {
+		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'twbce_cijena_use_action_scheduler', true ) ) {
 			as_schedule_single_action( time(), self::HOOK_CATCHUP, array(), self::AS_GROUP );
 
 			return;
@@ -183,7 +183,7 @@ final class Scheduler {
 		// arguments, so the request array has to be wrapped to stay one argument.
 		$event_args = empty( $args ) ? array() : array( $args );
 
-		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'sidrena_cijena_use_action_scheduler', true ) ) {
+		if ( function_exists( 'as_schedule_single_action' ) && apply_filters( 'twbce_cijena_use_action_scheduler', true ) ) {
 			as_schedule_single_action( time() + max( 0, (int) $delay ), self::HOOK_SERVICE, $event_args, self::AS_GROUP );
 
 			return;
@@ -242,22 +242,22 @@ final class Scheduler {
 			$failed_count = isset( $failure['summary']['failed'] ) ? (int) $failure['summary']['failed'] : 1;
 			$details      = ! empty( $failure['errors'] ) ? implode( '; ', (array) $failure['errors'] ) : '';
 			$message      = 1 === $failed_count
-				? __( '1 price list failed to publish.', 'titanworks-bazna-cijena' )
+				? __( '1 price list failed to publish.', 'sidrena-cijena-eu' )
 				: sprintf(
 					/* translators: %d: count of failed price lists */
-					__( '%d price lists failed to publish.', 'titanworks-bazna-cijena' ),
+					__( '%d price lists failed to publish.', 'sidrena-cijena-eu' ),
 					$failed_count
 				);
 
 			printf(
 				'<div class="notice notice-error"><p><strong>%1$s</strong> %2$s %3$s <a href="%4$s">%5$s</a> | <a href="%6$s">%7$s</a></p></div>',
-				esc_html__( 'Sidrena cijena: daily price-list generation failed.', 'titanworks-bazna-cijena' ),
+				esc_html__( 'Sidrena cijena: daily price-list generation failed.', 'sidrena-cijena-eu' ),
 				esc_html( $message ),
 				$details ? esc_html( '(' . $details . ')' ) : '',
 				esc_url( $pub_url ),
-				esc_html__( 'Open the price lists screen', 'titanworks-bazna-cijena' ),
+				esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' ),
 				esc_url( $dismiss_url ),
-				esc_html__( 'Dismiss', 'titanworks-bazna-cijena' )
+				esc_html__( 'Dismiss', 'sidrena-cijena-eu' )
 			);
 
 			return;
@@ -271,11 +271,11 @@ final class Scheduler {
 				'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
 				sprintf(
 					/* translators: %s: deadline time */
-					esc_html__( 'Sidrena cijena: today\'s %s deadline passed without a successful price-list publication. Catch-up generation is pending.', 'titanworks-bazna-cijena' ),
+					esc_html__( 'Sidrena cijena: today\'s %s deadline passed without a successful price-list publication. Catch-up generation is pending.', 'sidrena-cijena-eu' ),
 					esc_html( $deadline )
 				),
 				esc_url( $url ),
-				esc_html__( 'Open the price lists screen', 'titanworks-bazna-cijena' )
+				esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' )
 			);
 
 			return;
@@ -291,9 +291,9 @@ final class Scheduler {
 
 		printf(
 			'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale.', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Sidrena cijena: daily price-list generation is not scheduled or is overdue. Publications may become stale.', 'sidrena-cijena-eu' ),
 			esc_url( $url ),
-			esc_html__( 'Open the price lists screen', 'titanworks-bazna-cijena' )
+			esc_html__( 'Open the price lists screen', 'sidrena-cijena-eu' )
 		);
 	}
 
@@ -304,7 +304,7 @@ final class Scheduler {
 	 */
 	public static function handle_dismiss_failure() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to perform this action.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::DISMISS_FAILURE_ACTION );

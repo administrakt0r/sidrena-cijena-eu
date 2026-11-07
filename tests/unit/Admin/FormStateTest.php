@@ -2,16 +2,16 @@
 /**
  * Form state helper tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\FormState;
+use Titanworks\SidrenaCijena\Admin\FormState;
 
 /**
- * @covers \SidrenaCijena\Admin\FormState
+ * @covers \Titanworks\SidrenaCijena\Admin\FormState
  */
 class FormStateTest extends TestCase {
 
@@ -21,7 +21,7 @@ class FormStateTest extends TestCase {
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**

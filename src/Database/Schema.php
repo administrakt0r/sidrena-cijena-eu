@@ -4,10 +4,10 @@
  *
  * Tables follow the data model documented in `docs/price-history.md` and `docs/operations.md`.
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
 defined( 'ABSPATH' ) || exit;
 

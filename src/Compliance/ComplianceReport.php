@@ -2,12 +2,12 @@
 /**
  * Compliance report value object.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance;
+namespace Titanworks\SidrenaCijena\Compliance;
 
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 

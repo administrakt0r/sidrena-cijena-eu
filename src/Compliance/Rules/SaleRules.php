@@ -2,17 +2,17 @@
 /**
  * Special form of sale validation rules.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance\Rules;
+namespace Titanworks\SidrenaCijena\Compliance\Rules;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
-use SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
+use Titanworks\SidrenaCijena\Support\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -68,7 +68,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_sale_type',
-				__( 'The current promotional price has no matching classified special form of sale. Classify this offer before publishing.', 'titanworks-bazna-cijena' ),
+				__( 'The current promotional price has no matching classified special form of sale. Classify this offer before publishing.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -119,7 +119,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'missing_30_day_price',
-				__( 'The special form of sale has no usable lowest price for the 30-day period before its start. Recalculate the sale and review any applicable legal exception before publishing.', 'titanworks-bazna-cijena' ),
+				__( 'The special form of sale has no usable lowest price for the 30-day period before its start. Recalculate the sale and review any applicable legal exception before publishing.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -213,7 +213,7 @@ class SaleRules {
 
 			$findings[] = Finding::error(
 				'sale_price_not_below_reference',
-				__( 'The current promotional price is not below the applicable lowest price from the preceding 30 days. Review the offer and its reference price before publishing.', 'titanworks-bazna-cijena' ),
+				__( 'The current promotional price is not below the applicable lowest price from the preceding 30 days. Review the offer and its reference price before publishing.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,

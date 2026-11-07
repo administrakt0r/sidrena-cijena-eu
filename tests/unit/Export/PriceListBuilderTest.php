@@ -2,17 +2,17 @@
 /**
  * Price-list builder query batching tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Export\PriceListBuilder;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Export\PriceListBuilder;
 
 /**
  * Counting catalog provider.
@@ -238,7 +238,7 @@ class BuilderFakeSales extends SpecialSaleRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Export\PriceListBuilder
+ * @covers \Titanworks\SidrenaCijena\Export\PriceListBuilder
  */
 class PriceListBuilderTest extends TestCase {
 
@@ -250,7 +250,7 @@ class PriceListBuilderTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**

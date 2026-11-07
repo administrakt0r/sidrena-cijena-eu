@@ -37,7 +37,7 @@
 
 ## Permissions
 
-* Everything sits behind the single `manage_sidrena_cijena` capability
+* Everything sits behind the single `twbce_manage_prices` capability
   (administrators by default, grantable to e.g. shop managers via
   `Admin → Capabilities` handling on activation).
 * Subscribers hitting an admin screen get "You are not allowed…".

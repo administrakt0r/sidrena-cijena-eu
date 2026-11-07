@@ -2,18 +2,18 @@
 /**
  * Bulk anchor entry screen tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\BulkAnchorEntryPage;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -186,7 +186,7 @@ class BulkFakeHistory extends PriceHistoryRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Admin\BulkAnchorEntryPage
+ * @covers \Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage
  */
 class BulkAnchorEntryTest extends TestCase {
 
@@ -200,7 +200,7 @@ class BulkAnchorEntryTest extends TestCase {
 
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 
 		PluginSwap::swap( 'catalog', null );
 		PluginSwap::swap( 'history', null );
@@ -213,8 +213,8 @@ class BulkAnchorEntryTest extends TestCase {
 	 */
 	public function test_constants() {
 		$this->assertSame( 'sidrena-cijena-anchors', BulkAnchorEntryPage::SLUG );
-		$this->assertSame( 'sidrena_cijena_bulk_anchors', BulkAnchorEntryPage::ACTION );
-		$this->assertSame( 'sidrena_cijena_set_all_anchors_current', BulkAnchorEntryPage::ACTION_ALL_CURRENT );
+		$this->assertSame( 'twbce_cijena_bulk_anchors', BulkAnchorEntryPage::ACTION );
+		$this->assertSame( 'twbce_cijena_set_all_anchors_current', BulkAnchorEntryPage::ACTION_ALL_CURRENT );
 	}
 
 	/**

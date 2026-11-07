@@ -5,13 +5,13 @@
  * Reads products and variations exclusively through `wc_get_product()` and
  * `wc_get_products()`; native price fields are never written (FR-085).
  *
- * @package SidrenaCijena\WooCommerce
+ * @package Titanworks\SidrenaCijena\WooCommerce
  */
 
-namespace SidrenaCijena\WooCommerce;
+namespace Titanworks\SidrenaCijena\WooCommerce;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -26,7 +26,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 	 * @var string[]
 	 */
 	protected $barcode_keys = array(
-		'_sidrena_barcode',
+		'_twbce_barcode',
 		'_barcode',
 		'barcode',
 		'_ean',
@@ -430,7 +430,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$brand = (string) $brand_terms[0]->name;
 		}
 
-		$first_seen = get_post_meta( $id, '_sidrena_first_seen', true );
+		$first_seen = get_post_meta( $id, '_twbce_first_seen', true );
 		$first_seen = $first_seen ? (string) $first_seen : get_the_date( 'Y-m-d', $id );
 
 		return new CatalogItem(
@@ -443,8 +443,8 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 				'sku'           => $sku,
 				'brand'         => $brand,
 				'barcode'       => $this->get_barcode( $product ),
-				'unit'          => (string) $this->get_meta_first( $product, array( '_sidrena_unit', '_unit' ) ),
-				'unit_price'    => $this->get_meta_first( $product, array( '_sidrena_unit_price', '_unit_price' ) ),
+				'unit'          => (string) $this->get_meta_first( $product, array( '_twbce_unit', '_unit' ) ),
+				'unit_price'    => $this->get_meta_first( $product, array( '_twbce_unit_price', '_unit_price' ) ),
 				'currency'      => function_exists( 'get_woocommerce_currency' ) ? (string) get_woocommerce_currency() : 'EUR',
 				'availability'  => $product->is_in_stock() ? 'available' : 'unavailable',
 				'regular_price' => $regular,
@@ -471,7 +471,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			$id = (int) $product->get_parent_id();
 		}
 
-		$type = get_post_meta( $id, '_sidrena_item_type', true );
+		$type = get_post_meta( $id, '_twbce_item_type', true );
 
 		if ( 'service' === $type ) {
 			return 'service';
@@ -483,7 +483,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		 * @param string      $type    `product` or `service`.
 		 * @param \WC_Product $product Product.
 		 */
-		return 'service' === apply_filters( 'sidrena_cijena_wc_item_type', 'product', $product ) ? 'service' : 'product';
+		return 'service' === apply_filters( 'twbce_cijena_wc_item_type', 'product', $product ) ? 'service' : 'product';
 	}
 
 	/**
@@ -504,7 +504,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 		 * @param string[]    $keys    Meta keys.
 		 * @param \WC_Product $product Product.
 		 */
-		$keys = apply_filters( 'sidrena_cijena_barcode_meta_keys', $this->barcode_keys, $product );
+		$keys = apply_filters( 'twbce_cijena_barcode_meta_keys', $this->barcode_keys, $product );
 
 		foreach ( (array) $keys as $key ) {
 			$value = $product->get_meta( $key );
@@ -536,7 +536,7 @@ class WooCommerceCatalogProvider implements CatalogProvider {
 			 * @param string      $sku      Product SKU.
 			 * @param \WC_Product $product  Product instance.
 			 */
-			$allow_sku_fallback = apply_filters( 'sidrena_cijena_barcode_fallback_to_sku', true, $sku, $product );
+			$allow_sku_fallback = apply_filters( 'twbce_cijena_barcode_fallback_to_sku', true, $sku, $product );
 			if ( $allow_sku_fallback ) {
 				$this->barcode_cache[ $id ] = $sku;
 				return $this->barcode_cache[ $id ];

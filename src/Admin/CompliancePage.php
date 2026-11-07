@@ -2,19 +2,19 @@
 /**
  * Compliance check screen.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Compliance\ComplianceReport;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\RemediationProposer;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Compliance\ComplianceReport;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\RemediationProposer;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -26,17 +26,17 @@ class CompliancePage {
 	/**
 	 * Run-check form action.
 	 */
-	const ACTION_RUN = 'sidrena_cijena_run_compliance';
+	const ACTION_RUN = 'twbce_cijena_run_compliance';
 
 	/**
 	 * Report export action.
 	 */
-	const ACTION_EXPORT = 'sidrena_cijena_export_report';
+	const ACTION_EXPORT = 'twbce_cijena_export_report';
 
 	/**
 	 * Transient prefix for the stored report.
 	 */
-	const TRANSIENT_PREFIX = 'sidrena_cijena_report_';
+	const TRANSIENT_PREFIX = 'twbce_cijena_report_';
 
 	/**
 	 * Maximum items checked in one run.
@@ -55,13 +55,13 @@ class CompliancePage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		$report = self::stored_report();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'titanworks-bazna-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Compliance check', 'sidrena-cijena-eu' ) . '</h1>';
 
 		self::notice();
 		self::render_statutory_guide();
@@ -69,11 +69,11 @@ class CompliancePage {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_RUN ) . '" />';
 		wp_nonce_field( self::ACTION_RUN );
-		submit_button( __( 'Run compliance check', 'titanworks-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
+		submit_button( __( 'Run compliance check', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		if ( ! $report ) {
-			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'titanworks-bazna-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'No report has been generated yet. Run the compliance check to validate the catalog and the published price lists.', 'sidrena-cijena-eu' ) . '</p>';
 			echo '</div>';
 
 			return;
@@ -88,7 +88,7 @@ class CompliancePage {
 			esc_html(
 				sprintf(
 					/* translators: 1: generation timestamp, 2: scanned items, 3: total items. */
-					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'titanworks-bazna-cijena' ),
+					__( 'Report generated %1$s from %2$d of %3$d catalog items.', 'sidrena-cijena-eu' ),
 					$gen_at,
 					isset( $report['scanned'] ) ? (int) $report['scanned'] : 0,
 					isset( $report['total'] ) ? (int) $report['total'] : 0
@@ -112,7 +112,7 @@ class CompliancePage {
 
 		echo '<p>';
 		foreach ( array(
-			''               => __( 'All', 'titanworks-bazna-cijena' ),
+			''               => __( 'All', 'sidrena-cijena-eu' ),
 			Finding::ERROR   => Labels::severity( Finding::ERROR ),
 			Finding::WARNING => Labels::severity( Finding::WARNING ),
 			Finding::INFO    => Labels::severity( Finding::INFO ),
@@ -131,17 +131,17 @@ class CompliancePage {
 		printf(
 			'<a class="button" href="%1$s">%2$s</a> ',
 			esc_url( self::export_url( 'csv' ) ),
-			esc_html__( 'Export report (CSV)', 'titanworks-bazna-cijena' )
+			esc_html__( 'Export report (CSV)', 'sidrena-cijena-eu' )
 		);
 		printf(
 			'<a class="button" href="%1$s">%2$s</a>',
 			esc_url( self::export_url( 'json' ) ),
-			esc_html__( 'Export report (JSON)', 'titanworks-bazna-cijena' )
+			esc_html__( 'Export report (JSON)', 'sidrena-cijena-eu' )
 		);
 		echo '</p>';
 
 		if ( empty( $filtered ) ) {
-			echo '<p>' . esc_html__( 'No findings for this filter.', 'titanworks-bazna-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'No findings for this filter.', 'sidrena-cijena-eu' ) . '</p>';
 			echo '</div>';
 
 			return;
@@ -154,14 +154,14 @@ class CompliancePage {
 		$slice  = array_slice( $filtered, $offset, self::FINDINGS_PER_PAGE );
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Compliance findings', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Severity', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Code', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Entity', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Explanation', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Proposed change', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Rule', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Entity', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Proposed change', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Rule', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $slice as $finding ) {
@@ -196,7 +196,7 @@ class CompliancePage {
 	 */
 	public static function handle_run() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to run the compliance check.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION_RUN );
@@ -230,10 +230,10 @@ class CompliancePage {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'                  => 'sidrena-cijena-compliance',
-					'sidrena_cijena_notice' => 'report',
-					'errors'                => (int) $payload['counts'][ Finding::ERROR ],
-					'warnings'              => (int) $payload['counts'][ Finding::WARNING ],
+					'page'                => 'sidrena-cijena-compliance',
+					'twbce_cijena_notice' => 'report',
+					'errors'              => (int) $payload['counts'][ Finding::ERROR ],
+					'warnings'            => (int) $payload['counts'][ Finding::WARNING ],
 				),
 				admin_url( 'admin.php' )
 			)
@@ -248,7 +248,7 @@ class CompliancePage {
 	 */
 	public static function handle_export() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to export the compliance report.', 'sidrena-cijena-eu' ) );
 		}
 
 		check_admin_referer( self::ACTION_EXPORT );
@@ -290,14 +290,15 @@ class CompliancePage {
 
 		$filename = 'sidrena-cijena-compliance-report-' . gmdate( 'Ymd-Hi' );
 
+		header( 'X-Content-Type-Options: nosniff' );
 		if ( 'json' === $format ) {
 			header( 'Content-Type: application/json; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=' . $filename . '.json' );
-			echo $report->to_json(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Machine-readable download.
+			wp_send_json( $report->to_array() );
 		} else {
 			header( 'Content-Type: text/csv; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=' . $filename . '.csv' );
-			echo $report->to_csv(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Machine-readable download.
+			\Titanworks\SidrenaCijena\Support\Download::write( $report->to_csv() );
 		}
 
 		exit;
@@ -374,7 +375,7 @@ class CompliancePage {
 	 */
 	protected static function notice() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice.
-		$notice = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
+		$notice = isset( $_GET['twbce_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['twbce_cijena_notice'] ) ) : '';
 
 		if ( 'report' !== $notice ) {
 			return;
@@ -387,7 +388,7 @@ class CompliancePage {
 			$errors > 0 ? 'error' : 'success',
 			sprintf(
 				/* translators: 1: error count, 2: warning count. */
-				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'titanworks-bazna-cijena' ),
+				__( 'Compliance check finished: %1$d errors and %2$d warnings.', 'sidrena-cijena-eu' ),
 				$errors,
 				$warnings
 			)
@@ -405,52 +406,52 @@ class CompliancePage {
 
 		echo '<div class="sidrena-statutory-guide">';
 		echo '<div class="sidrena-statutory-guide__header">';
-		echo '<h2>' . esc_html__( 'Croatian Statutory Compliance Framework & Conditions', 'titanworks-bazna-cijena' ) . '</h2>';
-		echo '<span class="sidrena-statutory-badge">' . esc_html__( 'Enforcement: 17 November 2026 (NN 110/2026)', 'titanworks-bazna-cijena' ) . '</span>';
+		echo '<h2>' . esc_html__( 'Croatian Statutory Compliance Framework & Conditions', 'sidrena-cijena-eu' ) . '</h2>';
+		echo '<span class="sidrena-statutory-badge">' . esc_html__( 'Enforcement: 17 November 2026 (NN 110/2026)', 'sidrena-cijena-eu' ) . '</span>';
 		echo '</div>';
-		echo '<p class="sidrena-statutory-intro">' . esc_html__( 'This cross-compliance engine continuously audits your catalog and publications against Croatian statutory decrees (NN 101/2026-1212, NN 101/2026-1213, NN 110/2026, NN 40/25) and the Consumer Protection Act (NN 19/22, 59/26, Art. 19).', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<p class="sidrena-statutory-intro">' . esc_html__( 'This cross-compliance engine continuously audits your catalog and publications against Croatian statutory decrees (NN 101/2026-1212, NN 101/2026-1213, NN 110/2026, NN 40/25) and the Consumer Protection Act (NN 19/22, 59/26, Art. 19).', 'sidrena-cijena-eu' ) . '</p>';
 
 		echo '<div class="sidrena-statutory-grid">';
 
 		// Pillar 1: Anchor / Base Price.
 		echo '<div class="sidrena-statutory-col">';
-		echo '<h3><span class="dashicons dashicons-calendar-alt"></span> ' . esc_html__( '1. Bazna / Sidrena cijena', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<h3><span class="dashicons dashicons-calendar-alt"></span> ' . esc_html__( '1. Bazna / Sidrena cijena', 'sidrena-cijena-eu' ) . '</h3>';
 		echo '<ul>';
-		echo '<li><strong>' . esc_html__( 'General reference date:', 'titanworks-bazna-cijena' ) . '</strong> <code>' . esc_html( $gen_date ) . '</code> (' . esc_html__( 'all B2C products & services', 'titanworks-bazna-cijena' ) . ')</li>';
-		echo '<li><strong>' . esc_html__( 'Legacy reference date:', 'titanworks-bazna-cijena' ) . '</strong> <code>' . esc_html( $leg_date ) . '</code> (' . esc_html__( 'food, drinks, cosmetics, household', 'titanworks-bazna-cijena' ) . ')</li>';
-		echo '<li><strong>' . esc_html__( 'Permitted labels:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Bazna cijena, Sidrena cijena, Cijena na [datum], Referentna cijena, Dodatna cijena', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Post-reference listings:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Verified first-offer price & date mandatory; blank anchor is prohibited.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'General reference date:', 'sidrena-cijena-eu' ) . '</strong> <code>' . esc_html( $gen_date ) . '</code> (' . esc_html__( 'all B2C products & services', 'sidrena-cijena-eu' ) . ')</li>';
+		echo '<li><strong>' . esc_html__( 'Legacy reference date:', 'sidrena-cijena-eu' ) . '</strong> <code>' . esc_html( $leg_date ) . '</code> (' . esc_html__( 'food, drinks, cosmetics, household', 'sidrena-cijena-eu' ) . ')</li>';
+		echo '<li><strong>' . esc_html__( 'Permitted labels:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Bazna cijena, Sidrena cijena, Cijena na [datum], Referentna cijena, Dodatna cijena', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Post-reference listings:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Verified first-offer price & date mandatory; blank anchor is prohibited.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '</ul>';
 		echo '</div>';
 
 		// Pillar 2: Triple Price Rule for Promotions.
 		echo '<div class="sidrena-statutory-col">';
-		echo '<h3><span class="dashicons dashicons-tag"></span> ' . esc_html__( '2. Special Sales: "Triple Price" Rule', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<h3><span class="dashicons dashicons-tag"></span> ' . esc_html__( '2. Special Sales: "Triple Price" Rule', 'sidrena-cijena-eu' ) . '</h3>';
 		echo '<ul>';
-		echo '<li><strong>' . esc_html__( 'Three distinct prices:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'When an item is discounted (akcija, sniženje), you must display: (1) Promotional price, (2) Lowest price in preceding 30 days, and (3) Anchor/base price.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Strict legal separation:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'The anchor price must never be used as the 30-day price, and the 30-day price must never be used as the anchor price.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Price condition:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Promotional price must be strictly lower than the lowest price from the preceding 30 days.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Three distinct prices:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'When an item is discounted (akcija, sniženje), you must display: (1) Promotional price, (2) Lowest price in preceding 30 days, and (3) Anchor/base price.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Strict legal separation:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'The anchor price must never be used as the 30-day price, and the 30-day price must never be used as the anchor price.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Price condition:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Promotional price must be strictly lower than the lowest price from the preceding 30 days.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '</ul>';
 		echo '</div>';
 
 		// Pillar 3: Daily Price List.
 		echo '<div class="sidrena-statutory-col">';
-		echo '<h3><span class="dashicons dashicons-media-spreadsheet"></span> ' . esc_html__( '3. Daily Machine-Readable Price List', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<h3><span class="dashicons dashicons-media-spreadsheet"></span> ' . esc_html__( '3. Daily Machine-Readable Price List', 'sidrena-cijena-eu' ) . '</h3>';
 		echo '<ul>';
-		echo '<li><strong>' . esc_html__( 'Daily publication:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Every working morning before 08:00 (products) and upon every price change (services).', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Formats:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'CSV (; delimiter, comma decimals, 12 columns) and XML formats.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( '30-day public archive:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Dated publication archive must remain accessible for at least 30 calendar days.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Filename contract:', 'titanworks-bazna-cijena' ) . '</strong> <code>{FORM}_{ADDRESS}_{ID}_{SEQ}_{DATE}_{TIME}.EXT</code></li>';
+		echo '<li><strong>' . esc_html__( 'Daily publication:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Every working morning before 08:00 (products) and upon every price change (services).', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Formats:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'CSV (; delimiter, comma decimals, 12 columns) and XML formats.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( '30-day public archive:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Dated publication archive must remain accessible for at least 30 calendar days.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Filename contract:', 'sidrena-cijena-eu' ) . '</strong> <code>{FORM}_{ADDRESS}_{ID}_{SEQ}_{DATE}_{TIME}.EXT</code></li>';
 		echo '</ul>';
 		echo '</div>';
 
 		// Pillar 4: Audit & Remediation Proposals.
 		echo '<div class="sidrena-statutory-col">';
-		echo '<h3><span class="dashicons dashicons-yes-alt"></span> ' . esc_html__( '4. Audit & Remediation Proposals', 'titanworks-bazna-cijena' ) . '</h3>';
+		echo '<h3><span class="dashicons dashicons-yes-alt"></span> ' . esc_html__( '4. Audit & Remediation Proposals', 'sidrena-cijena-eu' ) . '</h3>';
 		echo '<ul>';
-		echo '<li><strong>' . esc_html__( 'Supervisory body:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'State Inspectorate (Državni inspektorat) enforces compliance and penal sanctions.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Mandatory attributes:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Barcodes (EAN/GTIN) and unit prices (per kg/l) are checked where applicable.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li><strong>' . esc_html__( 'Actionable fixes:', 'titanworks-bazna-cijena' ) . '</strong> ' . esc_html__( 'Every detected warning or error includes a concrete proposal ("Prijedlog izmjene") to resolve findings before publication.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Supervisory body:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'State Inspectorate (Državni inspektorat) enforces compliance and penal sanctions.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Mandatory attributes:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Barcodes (EAN/GTIN) and unit prices (per kg/l) are checked where applicable.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li><strong>' . esc_html__( 'Actionable fixes:', 'sidrena-cijena-eu' ) . '</strong> ' . esc_html__( 'Every detected warning or error includes a concrete proposal ("Prijedlog izmjene") to resolve findings before publication.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '</ul>';
 		echo '</div>';
 

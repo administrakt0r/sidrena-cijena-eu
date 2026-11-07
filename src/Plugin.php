@@ -9,43 +9,43 @@
  * @package SidrenaCijena
  */
 
-namespace SidrenaCijena;
+namespace Titanworks\SidrenaCijena;
 
-use SidrenaCijena\Admin\AdminMenu;
-use SidrenaCijena\Admin\AnchorMetaBox;
-use SidrenaCijena\Admin\BulkAnchorEntryPage;
-use SidrenaCijena\Admin\CompliancePage;
-use SidrenaCijena\Admin\ImportPage;
-use SidrenaCijena\Admin\LocationsPage;
-use SidrenaCijena\Admin\PriceHistoryPage;
-use SidrenaCijena\Admin\PublicationsPage;
-use SidrenaCijena\Admin\SettingsPage;
-use SidrenaCijena\Admin\SetupGuidePage;
-use SidrenaCijena\Admin\SpecialSaleMetaBox;
-use SidrenaCijena\Admin\WelcomeBanner;
-use SidrenaCijena\Api\PriceListController;
-use SidrenaCijena\Api\PublicFeed;
-use SidrenaCijena\Api\PublicPage;
-use SidrenaCijena\Api\TemplateFunctions;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\Migrator;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\WooCommerce\PriceHistoryRecorder;
-use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
-use SidrenaCijena\WooCommerce\Display\BuilderCompat;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
-use SidrenaCijena\WooCommerce\Display\CardVisibility;
-use SidrenaCijena\WooCommerce\Display\VariationDisplay;
+use Titanworks\SidrenaCijena\Admin\AdminMenu;
+use Titanworks\SidrenaCijena\Admin\AnchorMetaBox;
+use Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage;
+use Titanworks\SidrenaCijena\Admin\CompliancePage;
+use Titanworks\SidrenaCijena\Admin\ImportPage;
+use Titanworks\SidrenaCijena\Admin\LocationsPage;
+use Titanworks\SidrenaCijena\Admin\PriceHistoryPage;
+use Titanworks\SidrenaCijena\Admin\PublicationsPage;
+use Titanworks\SidrenaCijena\Admin\SettingsPage;
+use Titanworks\SidrenaCijena\Admin\SetupGuidePage;
+use Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox;
+use Titanworks\SidrenaCijena\Admin\WelcomeBanner;
+use Titanworks\SidrenaCijena\Api\PriceListController;
+use Titanworks\SidrenaCijena\Api\PublicFeed;
+use Titanworks\SidrenaCijena\Api\PublicPage;
+use Titanworks\SidrenaCijena\Api\TemplateFunctions;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\Migrator;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\WooCommerce\PriceHistoryRecorder;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceDetector;
+use Titanworks\SidrenaCijena\WooCommerce\Display\BuilderCompat;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility;
+use Titanworks\SidrenaCijena\WooCommerce\Display\VariationDisplay;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -99,35 +99,35 @@ final class Plugin {
 	/**
 	 * Anchor price service.
 	 *
-	 * @var \SidrenaCijena\Pricing\AnchorPriceService|null
+	 * @var \Titanworks\SidrenaCijena\Pricing\AnchorPriceService|null
 	 */
 	private $anchors = null;
 
 	/**
 	 * Anchor cache.
 	 *
-	 * @var \SidrenaCijena\Pricing\AnchorCache|null
+	 * @var \Titanworks\SidrenaCijena\Pricing\AnchorCache|null
 	 */
 	private $anchor_cache = null;
 
 	/**
 	 * 30-day lowest price calculator.
 	 *
-	 * @var \SidrenaCijena\Pricing\LowestPrice30DayCalculator|null
+	 * @var \Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator|null
 	 */
 	private $lowest_price = null;
 
 	/**
 	 * 30-day lowest price explainer.
 	 *
-	 * @var \SidrenaCijena\Pricing\LowestPriceExplainer|null
+	 * @var \Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer|null
 	 */
 	private $lowest_price_explainer = null;
 
 	/**
 	 * Special sale service.
 	 *
-	 * @var \SidrenaCijena\Pricing\SpecialSaleService|null
+	 * @var \Titanworks\SidrenaCijena\Pricing\SpecialSaleService|null
 	 */
 	private $special_sale_service = null;
 
@@ -141,28 +141,28 @@ final class Plugin {
 	/**
 	 * Generation service.
 	 *
-	 * @var \SidrenaCijena\Export\GenerationService|null
+	 * @var \Titanworks\SidrenaCijena\Export\GenerationService|null
 	 */
 	private $generation = null;
 
 	/**
 	 * REST cache.
 	 *
-	 * @var \SidrenaCijena\Api\RestCache|null
+	 * @var \Titanworks\SidrenaCijena\Api\RestCache|null
 	 */
 	private $rest_cache = null;
 
 	/**
 	 * Import service.
 	 *
-	 * @var \SidrenaCijena\Import\ImportService|null
+	 * @var \Titanworks\SidrenaCijena\Import\ImportService|null
 	 */
 	private $import_service = null;
 
 	/**
 	 * Log repository.
 	 *
-	 * @var \SidrenaCijena\Database\LogRepository|null
+	 * @var \Titanworks\SidrenaCijena\Database\LogRepository|null
 	 */
 	private $logs = null;
 
@@ -185,6 +185,7 @@ final class Plugin {
 	 * @return void
 	 */
 	public static function boot() {
+		\Titanworks\SidrenaCijena\Support\IdentifierMigration::run();
 		self::instance()->register_hooks();
 	}
 
@@ -194,7 +195,7 @@ final class Plugin {
 	 * @return void
 	 */
 	public function register_hooks() {
-		( new \SidrenaCijena\Pricing\FirstOfferRecorder() )->register();
+		( new \Titanworks\SidrenaCijena\Pricing\FirstOfferRecorder() )->register();
 		add_action( 'init', array( $this, 'register_standalone_catalog' ) );
 		add_action( 'admin_init', array( Migrator::class, 'maybe_upgrade' ) );
 		add_action( 'admin_menu', array( AdminMenu::class, 'register' ) );
@@ -215,14 +216,14 @@ final class Plugin {
 		add_action( 'admin_post_' . AnchorMetaBox::ACTION, array( AnchorMetaBox::class, 'handle_record' ) );
 		add_action( 'admin_post_' . SpecialSaleMetaBox::ACTION, array( SpecialSaleMetaBox::class, 'handle_save' ) );
 		add_action( 'admin_notices', array( AnchorMetaBox::class, 'maybe_notice' ) );
-		add_action( 'sidrena_cijena_settings_changed', array( $this, 'flush_caches' ) );
-		add_action( 'sidrena_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
-		add_action( 'sidrena_cijena_price_changed', array( $this, 'flush_rest_cache' ) );
-		add_action( 'sidrena_cijena_price_changed', array( $this, 'queue_service_regeneration' ), 10, 2 );
-		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'invalidate_anchor_cache' ), 5, 3 );
-		add_action( 'sidrena_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
-		add_action( 'sidrena_cijena_special_sale_changed', array( $this, 'on_special_sale_changed' ), 10, 3 );
-		add_action( 'sidrena_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
+		add_action( 'twbce_cijena_settings_changed', array( $this, 'flush_caches' ) );
+		add_action( 'twbce_cijena_rule_config_changed', array( $this, 'flush_caches' ) );
+		add_action( 'twbce_cijena_price_changed', array( $this, 'flush_rest_cache' ) );
+		add_action( 'twbce_cijena_price_changed', array( $this, 'queue_service_regeneration' ), 10, 2 );
+		add_action( 'twbce_cijena_anchor_recorded', array( $this, 'invalidate_anchor_cache' ), 5, 3 );
+		add_action( 'twbce_cijena_anchor_recorded', array( $this, 'flush_rest_cache' ) );
+		add_action( 'twbce_cijena_special_sale_changed', array( $this, 'on_special_sale_changed' ), 10, 3 );
+		add_action( 'twbce_cijena_publication_published', array( $this, 'flush_rest_cache' ) );
 		add_action( 'transition_post_status', array( $this, 'flush_on_catalog_status_change' ), 10, 3 );
 		add_action( 'before_delete_post', array( $this, 'flush_on_catalog_item_deleted' ), 10, 2 );
 		add_action( 'rest_api_init', array( PriceListController::class, 'register' ) );
@@ -446,7 +447,7 @@ final class Plugin {
 		 *
 		 * @param bool $enabled Default false.
 		 */
-		if ( apply_filters( 'sidrena_cijena_enable_standalone_catalog', false ) ) {
+		if ( apply_filters( 'twbce_cijena_enable_standalone_catalog', false ) ) {
 			StandalonePostType::register();
 		}
 	}
@@ -534,11 +535,11 @@ final class Plugin {
 	 * Shares the anchor cache so storefront lookups reuse a record until the
 	 * next anchor invalidation or flush.
 	 *
-	 * @return \SidrenaCijena\Pricing\AnchorPriceService
+	 * @return \Titanworks\SidrenaCijena\Pricing\AnchorPriceService
 	 */
 	public function anchors() {
 		if ( null === $this->anchors ) {
-			$this->anchors = new \SidrenaCijena\Pricing\AnchorPriceService( $this->history(), $this->anchor_cache() );
+			$this->anchors = new \Titanworks\SidrenaCijena\Pricing\AnchorPriceService( $this->history(), $this->anchor_cache() );
 		}
 
 		return $this->anchors;
@@ -547,11 +548,11 @@ final class Plugin {
 	/**
 	 * Anchor cache.
 	 *
-	 * @return \SidrenaCijena\Pricing\AnchorCache
+	 * @return \Titanworks\SidrenaCijena\Pricing\AnchorCache
 	 */
 	public function anchor_cache() {
 		if ( null === $this->anchor_cache ) {
-			$this->anchor_cache = new \SidrenaCijena\Pricing\AnchorCache();
+			$this->anchor_cache = new \Titanworks\SidrenaCijena\Pricing\AnchorCache();
 		}
 
 		return $this->anchor_cache;
@@ -560,11 +561,11 @@ final class Plugin {
 	/**
 	 * 30-day lowest price calculator.
 	 *
-	 * @return \SidrenaCijena\Pricing\LowestPrice30DayCalculator
+	 * @return \Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator
 	 */
 	public function lowest_price() {
 		if ( null === $this->lowest_price ) {
-			$this->lowest_price = new \SidrenaCijena\Pricing\LowestPrice30DayCalculator();
+			$this->lowest_price = new \Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator();
 		}
 
 		return $this->lowest_price;
@@ -573,11 +574,11 @@ final class Plugin {
 	/**
 	 * 30-day lowest price explainer.
 	 *
-	 * @return \SidrenaCijena\Pricing\LowestPriceExplainer
+	 * @return \Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer
 	 */
 	public function lowest_price_explainer() {
 		if ( null === $this->lowest_price_explainer ) {
-			$this->lowest_price_explainer = new \SidrenaCijena\Pricing\LowestPriceExplainer(
+			$this->lowest_price_explainer = new \Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer(
 				$this->history(),
 				$this->lowest_price()
 			);
@@ -589,11 +590,11 @@ final class Plugin {
 	/**
 	 * Special sale service.
 	 *
-	 * @return \SidrenaCijena\Pricing\SpecialSaleService
+	 * @return \Titanworks\SidrenaCijena\Pricing\SpecialSaleService
 	 */
 	public function special_sale_service() {
 		if ( null === $this->special_sale_service ) {
-			$this->special_sale_service = new \SidrenaCijena\Pricing\SpecialSaleService( $this->special_sales(), $this->history(), $this->lowest_price() );
+			$this->special_sale_service = new \Titanworks\SidrenaCijena\Pricing\SpecialSaleService( $this->special_sales(), $this->history(), $this->lowest_price() );
 		}
 
 		return $this->special_sale_service;
@@ -615,11 +616,11 @@ final class Plugin {
 	/**
 	 * Generation service.
 	 *
-	 * @return \SidrenaCijena\Export\GenerationService
+	 * @return \Titanworks\SidrenaCijena\Export\GenerationService
 	 */
 	public function generation() {
 		if ( null === $this->generation ) {
-			$this->generation = new \SidrenaCijena\Export\GenerationService( $this->catalog(), $this->locations(), $this->publications(), $this->history(), $this->special_sales() );
+			$this->generation = new \Titanworks\SidrenaCijena\Export\GenerationService( $this->catalog(), $this->locations(), $this->publications(), $this->history(), $this->special_sales() );
 		}
 
 		return $this->generation;
@@ -628,11 +629,11 @@ final class Plugin {
 	/**
 	 * REST cache.
 	 *
-	 * @return \SidrenaCijena\Api\RestCache
+	 * @return \Titanworks\SidrenaCijena\Api\RestCache
 	 */
 	public function rest_cache() {
 		if ( null === $this->rest_cache ) {
-			$this->rest_cache = new \SidrenaCijena\Api\RestCache();
+			$this->rest_cache = new \Titanworks\SidrenaCijena\Api\RestCache();
 		}
 
 		return $this->rest_cache;
@@ -641,14 +642,14 @@ final class Plugin {
 	/**
 	 * Import service.
 	 *
-	 * @return \SidrenaCijena\Import\ImportService
+	 * @return \Titanworks\SidrenaCijena\Import\ImportService
 	 */
 	public function import_service() {
 		if ( null === $this->import_service ) {
-			$parser    = new \SidrenaCijena\Import\CsvParser();
-			$validator = new \SidrenaCijena\Import\RowValidator( $this->catalog(), $this->history() );
+			$parser    = new \Titanworks\SidrenaCijena\Import\CsvParser();
+			$validator = new \Titanworks\SidrenaCijena\Import\RowValidator( $this->catalog(), $this->history() );
 
-			$this->import_service = new \SidrenaCijena\Import\ImportService( $parser, $validator, $this->anchors() );
+			$this->import_service = new \Titanworks\SidrenaCijena\Import\ImportService( $parser, $validator, $this->anchors() );
 		}
 
 		return $this->import_service;
@@ -657,11 +658,11 @@ final class Plugin {
 	/**
 	 * Log repository.
 	 *
-	 * @return \SidrenaCijena\Database\LogRepository
+	 * @return \Titanworks\SidrenaCijena\Database\LogRepository
 	 */
 	public function logs() {
 		if ( null === $this->logs ) {
-			$this->logs = new \SidrenaCijena\Database\LogRepository();
+			$this->logs = new \Titanworks\SidrenaCijena\Database\LogRepository();
 		}
 
 		return $this->logs;

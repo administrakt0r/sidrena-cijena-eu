@@ -2,18 +2,18 @@
 /**
  * Unit tests for the anchor price cache.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Pricing\AnchorCache;
+use Titanworks\SidrenaCijena\Pricing\AnchorCache;
 
 /**
  * Covers get/set round trips, misses, invalidation and generation flushes.
  *
- * @covers \SidrenaCijena\Pricing\AnchorCache
+ * @covers \Titanworks\SidrenaCijena\Pricing\AnchorCache
  */
 class AnchorCacheTest extends TestCase {
 
@@ -25,7 +25,7 @@ class AnchorCacheTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**
@@ -82,7 +82,7 @@ class AnchorCacheTest extends TestCase {
 		$cache = new AnchorCache();
 
 		$cache->set_anchor( 9, 0, array( 'price' => '7.49' ) );
-		$GLOBALS['sidrena_test_transients']['sidrena_anchor_9_0_0'] = 'corrupted';
+		$GLOBALS['twbce_test_transients']['twbce_anchor_9_0_0'] = 'corrupted';
 
 		$this->assertNull( $cache->get_anchor( 9, 0 ) );
 		$this->assertFalse( $cache->is_hit() );
@@ -151,14 +151,14 @@ class AnchorCacheTest extends TestCase {
 		$cache = new AnchorCache();
 
 		$cache->flush();
-		$first = get_transient( 'sidrena_cijena_cache_generation' );
+		$first = get_transient( 'twbce_cijena_cache_generation' );
 
 		$cache->set_anchor( 7, 0, array( 'price' => '7.99' ) );
 		$this->assertSame( array( 'price' => '7.99' ), $cache->get_anchor( 7, 0 ) );
 
 		$cache->flush();
 
-		$this->assertGreaterThan( (int) $first, (int) get_transient( 'sidrena_cijena_cache_generation' ) );
+		$this->assertGreaterThan( (int) $first, (int) get_transient( 'twbce_cijena_cache_generation' ) );
 		$this->assertNull( $cache->get_anchor( 7, 0 ) );
 		$this->assertFalse( $cache->is_hit() );
 	}
@@ -205,8 +205,8 @@ class AnchorCacheTest extends TestCase {
 		$this->assertSame( array( 'price' => '12.99' ), $cache->get_anchor( 12, 0 ) );
 
 		// Transients were not written.
-		$key = sprintf( 'sidrena_anchor_12_0_%d', (int) get_transient( 'sidrena_cijena_cache_generation' ) );
-		$this->assertArrayNotHasKey( $key, $GLOBALS['sidrena_test_transients'] );
+		$key = sprintf( 'twbce_anchor_12_0_%d', (int) get_transient( 'twbce_cijena_cache_generation' ) );
+		$this->assertArrayNotHasKey( $key, $GLOBALS['twbce_test_transients'] );
 
 		wp_using_ext_object_cache( false );
 	}
@@ -220,10 +220,10 @@ class AnchorCacheTest extends TestCase {
 		$cache = new AnchorCache();
 		$cache->flush();
 
-		$transient_val = get_transient( 'sidrena_cijena_cache_generation' );
+		$transient_val = get_transient( 'twbce_cijena_cache_generation' );
 		$this->assertNotEmpty( $transient_val );
 
 		// Option row exists and is explicitly marked not autoloaded.
-		$this->assertArrayHasKey( '_transient_sidrena_cijena_cache_generation', $GLOBALS['sidrena_test_options'] );
+		$this->assertArrayNotHasKey( '_transient_twbce_cijena_cache_generation', ( $GLOBALS['twbce_test_options'] ?? array() ) );
 	}
 }

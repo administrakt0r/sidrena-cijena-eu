@@ -2,16 +2,16 @@
 /**
  * `wp sidrena-cijena status` command.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Database\Schema;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Database\Schema;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -70,7 +70,7 @@ final class StatusCommand {
 				'cron'           => array(
 					'healthy'         => Scheduler::is_healthy(),
 					'next_run'        => $next ? Dates::from_utc( gmdate( 'Y-m-d H:i:s', (int) $next ) )->format( 'c' ) : null,
-					'last_generation' => get_option( \SidrenaCijena\Cron\DailyGeneration::RESULT_OPTION, null ),
+					'last_generation' => get_option( \Titanworks\SidrenaCijena\Cron\DailyGeneration::RESULT_OPTION, null ),
 					'missed_today'    => count( Scheduler::missed_locations_today() ),
 				),
 			);

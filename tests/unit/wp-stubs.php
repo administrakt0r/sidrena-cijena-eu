@@ -6,7 +6,7 @@
  * small surface the domain classes touch is stubbed here; behaviour that
  * depends on WordPress itself is covered by the integration suite.
  *
- * @package SidrenaCijena\Tests
+ * @package Titanworks\SidrenaCijena\Tests
  */
 
 if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
@@ -16,11 +16,11 @@ if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
 	define( 'WEEK_IN_SECONDS', 604800 );
 }
 
-$GLOBALS['sidrena_test_options']      = array();
-$GLOBALS['sidrena_test_transients']   = array();
-$GLOBALS['sidrena_test_scheduled']    = array();
-$GLOBALS['sidrena_test_textdomains']  = array();
-$GLOBALS['sidrena_test_translations'] = array();
+$GLOBALS['twbce_test_options']      = array();
+$GLOBALS['twbce_test_transients']   = array();
+$GLOBALS['twbce_test_scheduled']    = array();
+$GLOBALS['twbce_test_textdomains']  = array();
+$GLOBALS['twbce_test_translations'] = array();
 
 if ( ! function_exists( '__' ) ) {
 	/**
@@ -31,8 +31,8 @@ if ( ! function_exists( '__' ) ) {
 	 * @return string
 	 */
 	function __( $text, $domain = 'default' ) {
-		if ( ! empty( $GLOBALS['sidrena_test_translations'][ $domain ][ $text ] ) ) {
-			return $GLOBALS['sidrena_test_translations'][ $domain ][ $text ];
+		if ( ! empty( $GLOBALS['twbce_test_translations'][ $domain ][ $text ] ) ) {
+			return $GLOBALS['twbce_test_translations'][ $domain ][ $text ];
 		}
 
 		return $text;
@@ -202,6 +202,19 @@ if ( ! function_exists( 'esc_js' ) ) {
 	 */
 	function esc_js( $text ) {
 		return addcslashes( (string) $text, "\\'\"&\n\r<>" );
+	}
+}
+
+if ( ! function_exists( 'wp_kses' ) ) {
+	/**
+	 * HTML sanitizer stub; real attribute filtering is covered by WordPress integration tests.
+	 *
+	 * @param string $content Content.
+	 * @param array  $allowed_html Allowed elements and attributes.
+	 * @return string
+	 */
+	function wp_kses( $content, $allowed_html ) {
+		return $content;
 	}
 }
 
@@ -540,8 +553,8 @@ if ( ! function_exists( 'get_option' ) ) {
 	 * @return mixed
 	 */
 	function get_option( $option, $default = false ) {
-		$options = isset( $GLOBALS['sidrena_test_options'] ) && is_array( $GLOBALS['sidrena_test_options'] )
-			? $GLOBALS['sidrena_test_options']
+		$options = isset( $GLOBALS['twbce_test_options'] ) && is_array( $GLOBALS['twbce_test_options'] )
+			? $GLOBALS['twbce_test_options']
 			: array();
 
 		return array_key_exists( $option, $options )
@@ -559,11 +572,11 @@ if ( ! function_exists( 'update_option' ) ) {
 	 * @return bool
 	 */
 	function update_option( $option, $value ) {
-		if ( isset( $GLOBALS['sidrena_test_option_sanitizers'][ $option ] ) ) {
-			$value = call_user_func( $GLOBALS['sidrena_test_option_sanitizers'][ $option ], $value );
+		if ( isset( $GLOBALS['twbce_test_option_sanitizers'][ $option ] ) ) {
+			$value = call_user_func( $GLOBALS['twbce_test_option_sanitizers'][ $option ], $value );
 		}
 
-		$GLOBALS['sidrena_test_options'][ $option ] = $value;
+		$GLOBALS['twbce_test_options'][ $option ] = $value;
 		return true;
 	}
 }
@@ -577,11 +590,11 @@ if ( ! function_exists( 'add_option' ) ) {
 	 * @return bool
 	 */
 	function add_option( $option, $value ) {
-		if ( array_key_exists( $option, $GLOBALS['sidrena_test_options'] ) ) {
+		if ( array_key_exists( $option, $GLOBALS['twbce_test_options'] ) ) {
 			return false;
 		}
 
-		$GLOBALS['sidrena_test_options'][ $option ] = $value;
+		$GLOBALS['twbce_test_options'][ $option ] = $value;
 		return true;
 	}
 }
@@ -594,7 +607,7 @@ if ( ! function_exists( 'delete_option' ) ) {
 	 * @return bool
 	 */
 	function delete_option( $option ) {
-		unset( $GLOBALS['sidrena_test_options'][ $option ] );
+		unset( $GLOBALS['twbce_test_options'][ $option ] );
 		return true;
 	}
 }
@@ -607,7 +620,7 @@ if ( ! function_exists( 'current_user_can' ) ) {
 	 * @return bool
 	 */
 	function current_user_can( $capability ) {
-		if ( array_key_exists( 'sidrena_test_can', $GLOBALS ) && ! $GLOBALS['sidrena_test_can'] ) {
+		if ( array_key_exists( 'twbce_test_can', $GLOBALS ) && ! $GLOBALS['twbce_test_can'] ) {
 			return false;
 		}
 
@@ -686,13 +699,13 @@ if ( ! function_exists( 'get_role' ) ) {
 	 * @return WP_Role|null
 	 */
 	function get_role( $role ) {
-		if ( ! isset( $GLOBALS['sidrena_test_roles'] ) ) {
-			$GLOBALS['sidrena_test_roles'] = array(
+		if ( ! isset( $GLOBALS['twbce_test_roles'] ) ) {
+			$GLOBALS['twbce_test_roles'] = array(
 				'administrator' => new WP_Role( 'administrator', array( 'manage_options' => true ) ),
 			);
 		}
 
-		return isset( $GLOBALS['sidrena_test_roles'][ $role ] ) ? $GLOBALS['sidrena_test_roles'][ $role ] : null;
+		return isset( $GLOBALS['twbce_test_roles'][ $role ] ) ? $GLOBALS['twbce_test_roles'][ $role ] : null;
 	}
 }
 
@@ -704,7 +717,7 @@ if ( ! function_exists( 'get_transient' ) ) {
 	 * @return mixed
 	 */
 	function get_transient( $key ) {
-		return isset( $GLOBALS['sidrena_test_transients'][ $key ] ) ? $GLOBALS['sidrena_test_transients'][ $key ] : false;
+		return isset( $GLOBALS['twbce_test_transients'][ $key ] ) ? $GLOBALS['twbce_test_transients'][ $key ] : false;
 	}
 }
 
@@ -718,7 +731,7 @@ if ( ! function_exists( 'set_transient' ) ) {
 	 * @return bool
 	 */
 	function set_transient( $key, $value, $expiration = 0 ) {
-		$GLOBALS['sidrena_test_transients'][ $key ] = $value;
+		$GLOBALS['twbce_test_transients'][ $key ] = $value;
 		return true;
 	}
 }
@@ -731,7 +744,7 @@ if ( ! function_exists( 'delete_transient' ) ) {
 	 * @return bool
 	 */
 	function delete_transient( $key ) {
-		unset( $GLOBALS['sidrena_test_transients'][ $key ] );
+		unset( $GLOBALS['twbce_test_transients'][ $key ] );
 		return true;
 	}
 }
@@ -743,8 +756,8 @@ if ( ! function_exists( 'wp_timezone' ) ) {
 	 * @return DateTimeZone
 	 */
 	function wp_timezone() {
-		if ( isset( $GLOBALS['sidrena_test_timezone'] ) && $GLOBALS['sidrena_test_timezone'] instanceof DateTimeZone ) {
-			return $GLOBALS['sidrena_test_timezone'];
+		if ( isset( $GLOBALS['twbce_test_timezone'] ) && $GLOBALS['twbce_test_timezone'] instanceof DateTimeZone ) {
+			return $GLOBALS['twbce_test_timezone'];
 		}
 
 		return new DateTimeZone( 'Europe/Zagreb' );
@@ -921,8 +934,8 @@ if ( ! function_exists( 'get_post' ) ) {
 
 		$id = is_object( $post ) ? (int) $post->ID : (int) $post;
 
-		if ( isset( $GLOBALS['sidrena_test_posts'][ $id ] ) ) {
-			$data = $GLOBALS['sidrena_test_posts'][ $id ];
+		if ( isset( $GLOBALS['twbce_test_posts'][ $id ] ) ) {
+			$data = $GLOBALS['twbce_test_posts'][ $id ];
 
 			return $data instanceof WP_Post ? $data : new WP_Post( $data );
 		}
@@ -945,14 +958,14 @@ if ( ! function_exists( 'get_posts' ) ) {
 	 * @return array
 	 */
 	function get_posts( $args = array() ) {
-		if ( isset( $GLOBALS['sidrena_test_posts'] ) && is_array( $GLOBALS['sidrena_test_posts'] ) ) {
+		if ( isset( $GLOBALS['twbce_test_posts'] ) && is_array( $GLOBALS['twbce_test_posts'] ) ) {
 			$posts       = array();
 			$post_type   = isset( $args['post_type'] ) ? $args['post_type'] : '';
 			$post_status = isset( $args['post_status'] ) ? $args['post_status'] : '';
 			$post_in     = isset( $args['post__in'] ) ? (array) $args['post__in'] : array();
 			$post_not_in = isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array();
 
-			foreach ( $GLOBALS['sidrena_test_posts'] as $id => $data ) {
+			foreach ( $GLOBALS['twbce_test_posts'] as $id => $data ) {
 				$p = $data instanceof WP_Post ? $data : new WP_Post( $data );
 				if ( $post_type && $p->post_type !== $post_type ) {
 					continue;
@@ -987,13 +1000,13 @@ if ( ! function_exists( 'get_post_meta' ) ) {
 	function get_post_meta( $post_id, $key = '', $single = false ) {
 		$post_id = (int) $post_id;
 
-		if ( isset( $GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ] ) ) {
-			$value = $GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ];
+		if ( isset( $GLOBALS['twbce_test_post_meta'][ $post_id ][ $key ] ) ) {
+			$value = $GLOBALS['twbce_test_post_meta'][ $post_id ][ $key ];
 			return $single ? $value : array( $value );
 		}
 
-		if ( isset( $GLOBALS['sidrena_test_wc_products'][ $post_id ]['meta'][ $key ] ) ) {
-			$value = $GLOBALS['sidrena_test_wc_products'][ $post_id ]['meta'][ $key ];
+		if ( isset( $GLOBALS['twbce_test_wc_products'][ $post_id ]['meta'][ $key ] ) ) {
+			$value = $GLOBALS['twbce_test_wc_products'][ $post_id ]['meta'][ $key ];
 			return $single ? $value : array( $value );
 		}
 
@@ -1013,15 +1026,15 @@ if ( ! function_exists( 'update_post_meta' ) ) {
 	function update_post_meta( $post_id, $key, $value ) {
 		$post_id = (int) $post_id;
 
-		if ( ! isset( $GLOBALS['sidrena_test_post_meta'] ) ) {
-			$GLOBALS['sidrena_test_post_meta'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_post_meta'] ) ) {
+			$GLOBALS['twbce_test_post_meta'] = array();
 		}
 
-		if ( ! isset( $GLOBALS['sidrena_test_post_meta'][ $post_id ] ) ) {
-			$GLOBALS['sidrena_test_post_meta'][ $post_id ] = array();
+		if ( ! isset( $GLOBALS['twbce_test_post_meta'][ $post_id ] ) ) {
+			$GLOBALS['twbce_test_post_meta'][ $post_id ] = array();
 		}
 
-		$GLOBALS['sidrena_test_post_meta'][ $post_id ][ $key ] = $value;
+		$GLOBALS['twbce_test_post_meta'][ $post_id ][ $key ] = $value;
 
 		return true;
 	}
@@ -1039,8 +1052,8 @@ if ( ! function_exists( 'wp_get_post_terms' ) ) {
 	function wp_get_post_terms( $post_id, $taxonomy, $args = array() ) {
 		$post_id = (int) $post_id;
 
-		if ( isset( $GLOBALS['sidrena_test_post_terms'][ $post_id ][ $taxonomy ] ) ) {
-			$terms = $GLOBALS['sidrena_test_post_terms'][ $post_id ][ $taxonomy ];
+		if ( isset( $GLOBALS['twbce_test_post_terms'][ $post_id ][ $taxonomy ] ) ) {
+			$terms = $GLOBALS['twbce_test_post_terms'][ $post_id ][ $taxonomy ];
 			if ( isset( $args['fields'] ) && 'slugs' === $args['fields'] ) {
 				return array_map( function( $t ) { return is_array( $t ) ? $t['slug'] : (string) $t; }, $terms );
 			}
@@ -1066,11 +1079,11 @@ if ( ! function_exists( 'wp_set_object_terms' ) ) {
 	function wp_set_object_terms( $object_id, $terms, $taxonomy ) {
 		$object_id = (int) $object_id;
 
-		if ( ! isset( $GLOBALS['sidrena_test_post_terms'] ) ) {
-			$GLOBALS['sidrena_test_post_terms'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_post_terms'] ) ) {
+			$GLOBALS['twbce_test_post_terms'] = array();
 		}
 
-		$GLOBALS['sidrena_test_post_terms'][ $object_id ][ $taxonomy ] = (array) $terms;
+		$GLOBALS['twbce_test_post_terms'][ $object_id ][ $taxonomy ] = (array) $terms;
 
 		return (array) $terms;
 	}
@@ -1117,8 +1130,8 @@ if ( ! function_exists( 'get_terms' ) ) {
 	function get_terms( $args = array() ) {
 		unset( $args );
 
-		if ( isset( $GLOBALS['sidrena_test_taxonomy_terms'] ) ) {
-			return $GLOBALS['sidrena_test_taxonomy_terms'];
+		if ( isset( $GLOBALS['twbce_test_taxonomy_terms'] ) ) {
+			return $GLOBALS['twbce_test_taxonomy_terms'];
 		}
 
 		return array();
@@ -1159,10 +1172,10 @@ if ( ! class_exists( 'WP_Query' ) ) {
 		public function __construct( $args = array() ) {
 			unset( $args );
 
-			if ( isset( $GLOBALS['sidrena_test_wp_query_found_posts'] ) ) {
-				$this->found_posts = (int) $GLOBALS['sidrena_test_wp_query_found_posts'];
-			} elseif ( isset( $GLOBALS['sidrena_test_posts'] ) && is_array( $GLOBALS['sidrena_test_posts'] ) ) {
-				$this->found_posts = count( $GLOBALS['sidrena_test_posts'] );
+			if ( isset( $GLOBALS['twbce_test_wp_query_found_posts'] ) ) {
+				$this->found_posts = (int) $GLOBALS['twbce_test_wp_query_found_posts'];
+			} elseif ( isset( $GLOBALS['twbce_test_posts'] ) && is_array( $GLOBALS['twbce_test_posts'] ) ) {
+				$this->found_posts = count( $GLOBALS['twbce_test_posts'] );
 			}
 		}
 	}
@@ -1227,7 +1240,7 @@ if ( ! function_exists( 'get_locale' ) ) {
 	 * @return string
 	 */
 	function get_locale() {
-		return isset( $GLOBALS['sidrena_test_locale'] ) ? (string) $GLOBALS['sidrena_test_locale'] : 'en_US';
+		return isset( $GLOBALS['twbce_test_locale'] ) ? (string) $GLOBALS['twbce_test_locale'] : 'en_US';
 	}
 }
 
@@ -1250,7 +1263,7 @@ if ( ! function_exists( 'is_textdomain_loaded' ) ) {
 	 * @return bool
 	 */
 	function is_textdomain_loaded( $domain ) {
-		return ! empty( $GLOBALS['sidrena_test_textdomains'][ $domain ] );
+		return ! empty( $GLOBALS['twbce_test_textdomains'][ $domain ] );
 	}
 }
 
@@ -1263,7 +1276,7 @@ if ( ! function_exists( 'load_textdomain' ) ) {
 	 * @return bool
 	 */
 	function load_textdomain( $domain, $mofile ) {
-		$GLOBALS['sidrena_test_textdomains'][ $domain ] = $mofile;
+		$GLOBALS['twbce_test_textdomains'][ $domain ] = $mofile;
 
 		return true;
 	}
@@ -1277,8 +1290,8 @@ if ( ! function_exists( 'unload_textdomain' ) ) {
 	 * @return bool
 	 */
 	function unload_textdomain( $domain ) {
-		unset( $GLOBALS['sidrena_test_textdomains'][ $domain ] );
-		unset( $GLOBALS['sidrena_test_translations'][ $domain ] );
+		unset( $GLOBALS['twbce_test_textdomains'][ $domain ] );
+		unset( $GLOBALS['twbce_test_translations'][ $domain ] );
 
 		return true;
 	}
@@ -1295,7 +1308,7 @@ if ( ! function_exists( 'load_plugin_textdomain' ) ) {
 	 */
 	function load_plugin_textdomain( $domain, $deprecated = false, $plugin_rel_path = false ) {
 		unset( $deprecated );
-		$GLOBALS['sidrena_test_textdomains'][ $domain ] = (string) $plugin_rel_path;
+		$GLOBALS['twbce_test_textdomains'][ $domain ] = (string) $plugin_rel_path;
 
 		return true;
 	}
@@ -1308,7 +1321,7 @@ if ( ! function_exists( 'is_admin' ) ) {
 	 * @return bool
 	 */
 	function is_admin() {
-		return ! empty( $GLOBALS['sidrena_test_is_admin'] );
+		return ! empty( $GLOBALS['twbce_test_is_admin'] );
 	}
 }
 
@@ -1520,13 +1533,13 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 * @return int
 		 */
 		public function query( $query = '' ) {
-			if ( ! isset( $GLOBALS['sidrena_test_db_queries'] ) ) {
-				$GLOBALS['sidrena_test_db_queries'] = array();
+			if ( ! isset( $GLOBALS['twbce_test_db_queries'] ) ) {
+				$GLOBALS['twbce_test_db_queries'] = array();
 			}
-			$GLOBALS['sidrena_test_db_queries'][] = $query;
+			$GLOBALS['twbce_test_db_queries'][] = $query;
 
-			if ( isset( $GLOBALS['sidrena_test_db_query_result'] ) ) {
-				return $GLOBALS['sidrena_test_db_query_result'];
+			if ( isset( $GLOBALS['twbce_test_db_query_result'] ) ) {
+				return $GLOBALS['twbce_test_db_query_result'];
 			}
 
 			return 0;
@@ -1538,8 +1551,8 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 * @return mixed
 		 */
 		public function get_var() {
-			if ( isset( $GLOBALS['sidrena_test_db_var'] ) ) {
-				return $GLOBALS['sidrena_test_db_var'];
+			if ( isset( $GLOBALS['twbce_test_db_var'] ) ) {
+				return $GLOBALS['twbce_test_db_var'];
 			}
 
 			return null;
@@ -1560,8 +1573,8 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 * @return array
 		 */
 		public function get_results() {
-			if ( isset( $GLOBALS['sidrena_test_db_results'] ) ) {
-				return (array) $GLOBALS['sidrena_test_db_results'];
+			if ( isset( $GLOBALS['twbce_test_db_results'] ) ) {
+				return (array) $GLOBALS['twbce_test_db_results'];
 			}
 
 			return array();
@@ -1589,8 +1602,8 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return mixed
 	 */
 	function wp_cache_get( $key, $group = '' ) {
-		if ( wp_using_ext_object_cache() && isset( $GLOBALS['sidrena_test_cache'][ $group ][ $key ] ) ) {
-			return $GLOBALS['sidrena_test_cache'][ $group ][ $key ];
+		if ( wp_using_ext_object_cache() && isset( $GLOBALS['twbce_test_cache'][ $group ][ $key ] ) ) {
+			return $GLOBALS['twbce_test_cache'][ $group ][ $key ];
 		}
 
 		return false;
@@ -1609,11 +1622,11 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 		unset( $expire );
 
 		if ( wp_using_ext_object_cache() ) {
-			if ( ! isset( $GLOBALS['sidrena_test_cache'][ $group ] ) ) {
-				$GLOBALS['sidrena_test_cache'][ $group ] = array();
+			if ( ! isset( $GLOBALS['twbce_test_cache'][ $group ] ) ) {
+				$GLOBALS['twbce_test_cache'][ $group ] = array();
 			}
 
-			$GLOBALS['sidrena_test_cache'][ $group ][ $key ] = $data;
+			$GLOBALS['twbce_test_cache'][ $group ][ $key ] = $data;
 		}
 
 		return true;
@@ -1628,7 +1641,7 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 */
 	function wp_cache_delete( $key, $group = '' ) {
 		if ( wp_using_ext_object_cache() ) {
-			unset( $GLOBALS['sidrena_test_cache'][ $group ][ $key ] );
+			unset( $GLOBALS['twbce_test_cache'][ $group ][ $key ] );
 		}
 
 		return true;
@@ -1640,7 +1653,7 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return int
 	 */
 	function get_current_user_id() {
-		return isset( $GLOBALS['sidrena_test_current_user_id'] ) ? (int) $GLOBALS['sidrena_test_current_user_id'] : 0;
+		return isset( $GLOBALS['twbce_test_current_user_id'] ) ? (int) $GLOBALS['twbce_test_current_user_id'] : 0;
 	}
 
 	if ( ! function_exists( 'get_userdata' ) ) {
@@ -1653,8 +1666,8 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 		function get_userdata( $user_id ) {
 			$id = (int) $user_id;
 
-			if ( isset( $GLOBALS['sidrena_test_users'][ $id ] ) ) {
-				return (object) $GLOBALS['sidrena_test_users'][ $id ];
+			if ( isset( $GLOBALS['twbce_test_users'][ $id ] ) ) {
+				return (object) $GLOBALS['twbce_test_users'][ $id ];
 			}
 
 			if ( $id > 0 ) {
@@ -1675,7 +1688,7 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return bool
 	 */
 	function wp_doing_ajax() {
-		return ! empty( $GLOBALS['sidrena_test_doing_ajax'] );
+		return ! empty( $GLOBALS['twbce_test_doing_ajax'] );
 	}
 
 	/**
@@ -1684,7 +1697,7 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return bool
 	 */
 	function wp_doing_cron() {
-		return ! empty( $GLOBALS['sidrena_test_doing_cron'] );
+		return ! empty( $GLOBALS['twbce_test_doing_cron'] );
 	}
 
 	/**
@@ -1693,7 +1706,7 @@ if ( ! function_exists( 'wp_cache_get' ) ) {
 	 * @return bool
 	 */
 	function is_network_admin() {
-		return ! empty( $GLOBALS['sidrena_test_is_network_admin'] );
+		return ! empty( $GLOBALS['twbce_test_is_network_admin'] );
 	}
 
 	/**
@@ -1836,20 +1849,20 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 	class WP_CLI_Command {}
 }
 
-if ( ! defined( 'SIDRENA_CIJENA_FILE' ) ) {
-	define( 'SIDRENA_CIJENA_FILE', dirname( __DIR__, 2 ) . '/titanworks-bazna-cijena.php' );
+if ( ! defined( 'TWBCE_CIJENA_FILE' ) ) {
+	define( 'TWBCE_CIJENA_FILE', dirname( __DIR__, 2 ) . '/titanworks-bazna-cijena.php' );
 }
 
-if ( ! defined( 'SIDRENA_CIJENA_BASENAME' ) ) {
-	define( 'SIDRENA_CIJENA_BASENAME', 'titanworks-bazna-cijena/titanworks-bazna-cijena.php' );
+if ( ! defined( 'TWBCE_CIJENA_BASENAME' ) ) {
+	define( 'TWBCE_CIJENA_BASENAME', 'titanworks-bazna-cijena/titanworks-bazna-cijena.php' );
 }
 
-if ( ! defined( 'SIDRENA_CIJENA_DIR' ) ) {
-	define( 'SIDRENA_CIJENA_DIR', dirname( __DIR__, 2 ) . '/' );
+if ( ! defined( 'TWBCE_CIJENA_DIR' ) ) {
+	define( 'TWBCE_CIJENA_DIR', dirname( __DIR__, 2 ) . '/' );
 }
 
-if ( ! defined( 'SIDRENA_CIJENA_URL' ) ) {
-	define( 'SIDRENA_CIJENA_URL', 'http://example.org/wp-content/plugins/titanworks-bazna-cijena/' );
+if ( ! defined( 'TWBCE_CIJENA_URL' ) ) {
+	define( 'TWBCE_CIJENA_URL', 'http://example.org/wp-content/plugins/titanworks-bazna-cijena/' );
 }
 
 if ( ! defined( 'ARRAY_A' ) ) {
@@ -1864,9 +1877,9 @@ if ( ! defined( 'OBJECT' ) ) {
 	define( 'OBJECT', 'OBJECT' );
 }
 
-$GLOBALS['sidrena_test_rewrite_rules'] = array();
-$GLOBALS['sidrena_test_query_vars']    = array();
-$GLOBALS['sidrena_test_shortcodes']    = array();
+$GLOBALS['twbce_test_rewrite_rules'] = array();
+$GLOBALS['twbce_test_query_vars']    = array();
+$GLOBALS['twbce_test_shortcodes']    = array();
 
 if ( ! function_exists( 'add_rewrite_rule' ) ) {
 	/**
@@ -1878,7 +1891,7 @@ if ( ! function_exists( 'add_rewrite_rule' ) ) {
 	 * @return void
 	 */
 	function add_rewrite_rule( $regex, $query, $after = 'top' ) {
-		$GLOBALS['sidrena_test_rewrite_rules'][] = array(
+		$GLOBALS['twbce_test_rewrite_rules'][] = array(
 			'regex' => $regex,
 			'query' => $query,
 			'after' => $after,
@@ -1895,10 +1908,10 @@ if ( ! function_exists( 'flush_rewrite_rules' ) ) {
 	 */
 	function flush_rewrite_rules( $hard = true ) {
 		unset( $hard );
-		if ( ! isset( $GLOBALS['sidrena_test_flushed_rules'] ) ) {
-			$GLOBALS['sidrena_test_flushed_rules'] = 0;
+		if ( ! isset( $GLOBALS['twbce_test_flushed_rules'] ) ) {
+			$GLOBALS['twbce_test_flushed_rules'] = 0;
 		}
-		++$GLOBALS['sidrena_test_flushed_rules'];
+		++$GLOBALS['twbce_test_flushed_rules'];
 	}
 }
 
@@ -1911,7 +1924,7 @@ if ( ! function_exists( 'get_query_var' ) ) {
 	 * @return mixed
 	 */
 	function get_query_var( $var, $default = '' ) {
-		return isset( $GLOBALS['sidrena_test_query_vars'][ $var ] ) ? $GLOBALS['sidrena_test_query_vars'][ $var ] : $default;
+		return isset( $GLOBALS['twbce_test_query_vars'][ $var ] ) ? $GLOBALS['twbce_test_query_vars'][ $var ] : $default;
 	}
 }
 
@@ -1978,7 +1991,7 @@ if ( ! function_exists( 'wp_safe_redirect' ) ) {
 	 * @return bool
 	 */
 	function wp_safe_redirect( $location, $status = 302 ) {
-		$GLOBALS['sidrena_test_last_redirect'] = array(
+		$GLOBALS['twbce_test_last_redirect'] = array(
 			'location' => $location,
 			'status'   => $status,
 		);
@@ -2080,14 +2093,14 @@ if ( ! function_exists( 'check_admin_referer' ) ) {
 	}
 }
 
-if ( ! function_exists( 'sidrena_test_build_query' ) ) {
+if ( ! function_exists( 'twbce_test_build_query' ) ) {
 	/**
 	 * Build a query string without encoding values, matching WordPress' `build_query()`.
 	 *
 	 * @param array<string,mixed> $data Query data.
 	 * @return string
 	 */
-	function sidrena_test_build_query( array $data ) {
+	function twbce_test_build_query( array $data ) {
 		$parts = array();
 
 		foreach ( $data as $key => $value ) {
@@ -2117,16 +2130,16 @@ if ( ! function_exists( 'add_query_arg' ) ) {
 	 */
 	function add_query_arg( ...$args ) {
 		if ( 1 === count( $args ) && is_array( $args[0] ) ) {
-			$qs  = sidrena_test_build_query( $args[0] );
+			$qs  = twbce_test_build_query( $args[0] );
 			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		} elseif ( 2 === count( $args ) && is_array( $args[0] ) ) {
-			$qs  = sidrena_test_build_query( $args[0] );
+			$qs  = twbce_test_build_query( $args[0] );
 			$url = (string) $args[1];
 		} elseif ( 2 === count( $args ) && ! is_array( $args[0] ) ) {
-			$qs  = sidrena_test_build_query( array( (string) $args[0] => $args[1] ) );
+			$qs  = twbce_test_build_query( array( (string) $args[0] => $args[1] ) );
 			$url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 		} elseif ( 3 === count( $args ) ) {
-			$qs  = sidrena_test_build_query( array( (string) $args[0] => $args[1] ) );
+			$qs  = twbce_test_build_query( array( (string) $args[0] => $args[1] ) );
 			$url = (string) $args[2];
 		} else {
 			return '';
@@ -2211,7 +2224,7 @@ if ( ! function_exists( 'wp_schedule_single_event' ) ) {
 	 * @return bool
 	 */
 	function wp_schedule_single_event( $timestamp, $hook, $args = array() ) {
-		$GLOBALS['sidrena_test_scheduled'][] = array(
+		$GLOBALS['twbce_test_scheduled'][] = array(
 			'timestamp' => (int) $timestamp,
 			'hook'      => (string) $hook,
 			'args'      => $args,
@@ -2232,8 +2245,8 @@ if ( ! function_exists( 'wp_schedule_event' ) ) {
 	 * @return bool
 	 */
 	function wp_schedule_event( $timestamp, $recurrence, $hook, $args = array() ) {
-		$GLOBALS['sidrena_test_recurring'][ (string) $hook ] = (int) $timestamp;
-		$GLOBALS['sidrena_test_scheduled'][]                = array(
+		$GLOBALS['twbce_test_recurring'][ (string) $hook ] = (int) $timestamp;
+		$GLOBALS['twbce_test_scheduled'][]                = array(
 			'timestamp' => (int) $timestamp,
 			'hook'      => (string) $hook,
 			'args'      => $args,
@@ -2252,12 +2265,12 @@ if ( ! function_exists( 'wp_next_scheduled' ) ) {
 	 * @return int|false
 	 */
 	function wp_next_scheduled( $hook, $args = array() ) {
-		if ( isset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] ) ) {
-			return (int) $GLOBALS['sidrena_test_recurring'][ (string) $hook ];
+		if ( isset( $GLOBALS['twbce_test_recurring'][ (string) $hook ] ) ) {
+			return (int) $GLOBALS['twbce_test_recurring'][ (string) $hook ];
 		}
 
-		if ( isset( $GLOBALS['sidrena_test_scheduled'] ) && is_array( $GLOBALS['sidrena_test_scheduled'] ) ) {
-			foreach ( array_reverse( $GLOBALS['sidrena_test_scheduled'] ) as $item ) {
+		if ( isset( $GLOBALS['twbce_test_scheduled'] ) && is_array( $GLOBALS['twbce_test_scheduled'] ) ) {
+			foreach ( array_reverse( $GLOBALS['twbce_test_scheduled'] ) as $item ) {
 				if ( is_array( $item ) && isset( $item['hook'] ) && $item['hook'] === $hook ) {
 					return (int) $item['timestamp'];
 				}
@@ -2279,15 +2292,15 @@ if ( ! function_exists( 'wp_clear_scheduled_hook' ) ) {
 	function wp_clear_scheduled_hook( $hook, $args = array() ) {
 		$cleared = 0;
 
-		if ( isset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] ) ) {
-			unset( $GLOBALS['sidrena_test_recurring'][ (string) $hook ] );
+		if ( isset( $GLOBALS['twbce_test_recurring'][ (string) $hook ] ) ) {
+			unset( $GLOBALS['twbce_test_recurring'][ (string) $hook ] );
 			++$cleared;
 		}
 
-		if ( isset( $GLOBALS['sidrena_test_scheduled'] ) && is_array( $GLOBALS['sidrena_test_scheduled'] ) ) {
-			foreach ( $GLOBALS['sidrena_test_scheduled'] as $k => $item ) {
+		if ( isset( $GLOBALS['twbce_test_scheduled'] ) && is_array( $GLOBALS['twbce_test_scheduled'] ) ) {
+			foreach ( $GLOBALS['twbce_test_scheduled'] as $k => $item ) {
 				if ( is_array( $item ) && isset( $item['hook'] ) && $item['hook'] === $hook ) {
-					unset( $GLOBALS['sidrena_test_scheduled'][ $k ] );
+					unset( $GLOBALS['twbce_test_scheduled'][ $k ] );
 					++$cleared;
 				}
 			}
@@ -2306,7 +2319,7 @@ if ( ! function_exists( 'add_shortcode' ) ) {
 	 * @return void
 	 */
 	function add_shortcode( $tag, $callback ) {
-		$GLOBALS['sidrena_test_shortcodes'][ (string) $tag ] = $callback;
+		$GLOBALS['twbce_test_shortcodes'][ (string) $tag ] = $callback;
 	}
 }
 
@@ -2409,7 +2422,7 @@ if ( ! function_exists( 'post_type_exists' ) ) {
 	 * @return bool
 	 */
 	function post_type_exists( $post_type ) {
-		$registered = isset( $GLOBALS['sidrena_test_post_types'] ) && is_array( $GLOBALS['sidrena_test_post_types'] ) ? $GLOBALS['sidrena_test_post_types'] : array();
+		$registered = isset( $GLOBALS['twbce_test_post_types'] ) && is_array( $GLOBALS['twbce_test_post_types'] ) ? $GLOBALS['twbce_test_post_types'] : array();
 
 		return in_array( (string) $post_type, $registered, true );
 	}
@@ -2426,11 +2439,11 @@ if ( ! function_exists( 'register_post_type' ) ) {
 	function register_post_type( $post_type, $args = array() ) {
 		unset( $args );
 
-		if ( ! isset( $GLOBALS['sidrena_test_post_types'] ) ) {
-			$GLOBALS['sidrena_test_post_types'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_post_types'] ) ) {
+			$GLOBALS['twbce_test_post_types'] = array();
 		}
 
-		$GLOBALS['sidrena_test_post_types'][] = (string) $post_type;
+		$GLOBALS['twbce_test_post_types'][] = (string) $post_type;
 
 		return true;
 	}
@@ -2448,11 +2461,11 @@ if ( ! function_exists( 'register_taxonomy' ) ) {
 	function register_taxonomy( $taxonomy, $object_type, $args = array() ) {
 		unset( $object_type, $args );
 
-		if ( ! isset( $GLOBALS['sidrena_test_taxonomies'] ) ) {
-			$GLOBALS['sidrena_test_taxonomies'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_taxonomies'] ) ) {
+			$GLOBALS['twbce_test_taxonomies'] = array();
 		}
 
-		$GLOBALS['sidrena_test_taxonomies'][] = (string) $taxonomy;
+		$GLOBALS['twbce_test_taxonomies'][] = (string) $taxonomy;
 
 		return true;
 	}
@@ -2485,7 +2498,7 @@ if ( ! function_exists( 'term_exists' ) ) {
 	function term_exists( $term, $taxonomy = '', $parent = null ) {
 		unset( $parent );
 
-		return ! empty( $GLOBALS['sidrena_test_terms'][ $taxonomy ][ $term ] );
+		return ! empty( $GLOBALS['twbce_test_terms'][ $taxonomy ][ $term ] );
 	}
 }
 
@@ -2501,12 +2514,12 @@ if ( ! function_exists( 'wp_insert_term' ) ) {
 	function wp_insert_term( $term, $taxonomy, $args = array() ) {
 		unset( $args );
 
-		if ( ! isset( $GLOBALS['sidrena_test_terms'] ) ) {
-			$GLOBALS['sidrena_test_terms'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_terms'] ) ) {
+			$GLOBALS['twbce_test_terms'] = array();
 		}
 
-		if ( ! isset( $GLOBALS['sidrena_test_terms'][ $taxonomy ] ) ) {
-			$GLOBALS['sidrena_test_terms'][ $taxonomy ] = array();
+		if ( ! isset( $GLOBALS['twbce_test_terms'][ $taxonomy ] ) ) {
+			$GLOBALS['twbce_test_terms'][ $taxonomy ] = array();
 		}
 
 		$data = array(
@@ -2514,7 +2527,7 @@ if ( ! function_exists( 'wp_insert_term' ) ) {
 			'term_taxonomy_id' => rand( 1, 999 ),
 		);
 
-		$GLOBALS['sidrena_test_terms'][ $taxonomy ][ $term ] = $data;
+		$GLOBALS['twbce_test_terms'][ $taxonomy ][ $term ] = $data;
 
 		return $data;
 	}
@@ -2548,11 +2561,11 @@ if ( ! function_exists( 'add_meta_box' ) ) {
 	 * @return void
 	 */
 	function add_meta_box( $id, $title, $callback, $screen = null, $context = 'side', $priority = 'default', $args = array() ) {
-		if ( ! isset( $GLOBALS['sidrena_test_meta_boxes'] ) || ! is_array( $GLOBALS['sidrena_test_meta_boxes'] ) ) {
-			$GLOBALS['sidrena_test_meta_boxes'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_meta_boxes'] ) || ! is_array( $GLOBALS['twbce_test_meta_boxes'] ) ) {
+			$GLOBALS['twbce_test_meta_boxes'] = array();
 		}
 
-		$GLOBALS['sidrena_test_meta_boxes'][] = array(
+		$GLOBALS['twbce_test_meta_boxes'][] = array(
 			'id'      => (string) $id,
 			'title'   => (string) $title,
 			'callback'=> $callback,
@@ -2584,11 +2597,11 @@ if ( ! function_exists( 'register_setting' ) ) {
 	 * @return void
 	 */
 	function register_setting( $option_group, $option_name, $args = array() ) {
-		if ( ! isset( $GLOBALS['sidrena_test_registered_settings'] ) ) {
-			$GLOBALS['sidrena_test_registered_settings'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_registered_settings'] ) ) {
+			$GLOBALS['twbce_test_registered_settings'] = array();
 		}
 
-		$GLOBALS['sidrena_test_registered_settings'][ $option_group ][ $option_name ] = $args;
+		$GLOBALS['twbce_test_registered_settings'][ $option_group ][ $option_name ] = $args;
 	}
 }
 
@@ -2603,11 +2616,11 @@ if ( ! function_exists( 'add_settings_section' ) ) {
 	 * @return void
 	 */
 	function add_settings_section( $id, $title, $callback, $page ) {
-		if ( ! isset( $GLOBALS['sidrena_test_settings_sections'] ) ) {
-			$GLOBALS['sidrena_test_settings_sections'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_settings_sections'] ) ) {
+			$GLOBALS['twbce_test_settings_sections'] = array();
 		}
 
-		$GLOBALS['sidrena_test_settings_sections'][ $page ][ $id ] = array(
+		$GLOBALS['twbce_test_settings_sections'][ $page ][ $id ] = array(
 			'id'       => $id,
 			'title'    => $title,
 			'callback' => $callback,
@@ -2628,11 +2641,11 @@ if ( ! function_exists( 'add_settings_field' ) ) {
 	 * @return void
 	 */
 	function add_settings_field( $id, $title, $callback, $page, $section = 'default', $args = array() ) {
-		if ( ! isset( $GLOBALS['sidrena_test_settings_fields'] ) ) {
-			$GLOBALS['sidrena_test_settings_fields'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_settings_fields'] ) ) {
+			$GLOBALS['twbce_test_settings_fields'] = array();
 		}
 
-		$GLOBALS['sidrena_test_settings_fields'][ $page ][] = array(
+		$GLOBALS['twbce_test_settings_fields'][ $page ][] = array(
 			'id'       => $id,
 			'title'    => $title,
 			'callback' => $callback,
@@ -2692,11 +2705,11 @@ if ( ! function_exists( 'wp_enqueue_style' ) ) {
 	 * @return void
 	 */
 	function wp_enqueue_style( $handle, $src = '', $deps = array(), $ver = false, $media = 'all' ) {
-		if ( ! isset( $GLOBALS['sidrena_test_enqueued_styles'] ) ) {
-			$GLOBALS['sidrena_test_enqueued_styles'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_enqueued_styles'] ) ) {
+			$GLOBALS['twbce_test_enqueued_styles'] = array();
 		}
 
-		$GLOBALS['sidrena_test_enqueued_styles'][ $handle ] = array(
+		$GLOBALS['twbce_test_enqueued_styles'][ $handle ] = array(
 			'src'   => $src,
 			'deps'  => $deps,
 			'ver'   => $ver,
@@ -2717,11 +2730,11 @@ if ( ! function_exists( 'wp_enqueue_script' ) ) {
 	 * @return void
 	 */
 	function wp_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
-		if ( ! isset( $GLOBALS['sidrena_test_enqueued_scripts'] ) ) {
-			$GLOBALS['sidrena_test_enqueued_scripts'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_enqueued_scripts'] ) ) {
+			$GLOBALS['twbce_test_enqueued_scripts'] = array();
 		}
 
-		$GLOBALS['sidrena_test_enqueued_scripts'][ $handle ] = array(
+		$GLOBALS['twbce_test_enqueued_scripts'][ $handle ] = array(
 			'src'       => $src,
 			'deps'      => $deps,
 			'ver'       => $ver,
@@ -2740,11 +2753,11 @@ if ( ! function_exists( 'wp_localize_script' ) ) {
 	 * @return bool
 	 */
 	function wp_localize_script( $handle, $object_name, $l10n ) {
-		if ( ! isset( $GLOBALS['sidrena_test_localized_scripts'] ) ) {
-			$GLOBALS['sidrena_test_localized_scripts'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_localized_scripts'] ) ) {
+			$GLOBALS['twbce_test_localized_scripts'] = array();
 		}
 
-		$GLOBALS['sidrena_test_localized_scripts'][ $handle ][ $object_name ] = $l10n;
+		$GLOBALS['twbce_test_localized_scripts'][ $handle ][ $object_name ] = $l10n;
 
 		return true;
 	}
@@ -2759,11 +2772,11 @@ if ( ! function_exists( 'wp_script_is' ) ) {
 	 * @return bool
 	 */
 	function wp_script_is( $handle, $list = 'enqueued' ) {
-		if ( 'registered' === $list && isset( $GLOBALS['sidrena_test_registered_scripts'][ $handle ] ) ) {
+		if ( 'registered' === $list && isset( $GLOBALS['twbce_test_registered_scripts'][ $handle ] ) ) {
 			return true;
 		}
 
-		return ! empty( $GLOBALS['sidrena_test_enqueued_scripts'][ $handle ] );
+		return ! empty( $GLOBALS['twbce_test_enqueued_scripts'][ $handle ] );
 	}
 }
 
@@ -2776,10 +2789,10 @@ if ( ! function_exists( 'wp_using_ext_object_cache' ) ) {
 	 */
 	function wp_using_ext_object_cache( $using = null ) {
 		if ( null !== $using ) {
-			$GLOBALS['sidrena_test_ext_object_cache'] = (bool) $using;
+			$GLOBALS['twbce_test_ext_object_cache'] = (bool) $using;
 		}
 
-		return ! empty( $GLOBALS['sidrena_test_ext_object_cache'] );
+		return ! empty( $GLOBALS['twbce_test_ext_object_cache'] );
 	}
 }
 
@@ -2868,12 +2881,12 @@ if ( ! function_exists( 'add_menu_page' ) ) {
 	 * @return string Hook suffix.
 	 */
 	function add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $callback = '', $icon_url = '', $position = null ) {
-		if ( ! isset( $GLOBALS['sidrena_test_menu_pages'] ) ) {
-			$GLOBALS['sidrena_test_menu_pages'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_menu_pages'] ) ) {
+			$GLOBALS['twbce_test_menu_pages'] = array();
 		}
 
 		$hook = 'toplevel_page_' . $menu_slug;
-		$GLOBALS['sidrena_test_menu_pages'][ $menu_slug ] = array(
+		$GLOBALS['twbce_test_menu_pages'][ $menu_slug ] = array(
 			'page_title' => $page_title,
 			'menu_title' => $menu_title,
 			'capability' => $capability,
@@ -2902,12 +2915,12 @@ if ( ! function_exists( 'add_submenu_page' ) ) {
 	 * @return string Hook suffix.
 	 */
 	function add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $callback = '', $position = null ) {
-		if ( ! isset( $GLOBALS['sidrena_test_submenu_pages'] ) ) {
-			$GLOBALS['sidrena_test_submenu_pages'] = array();
+		if ( ! isset( $GLOBALS['twbce_test_submenu_pages'] ) ) {
+			$GLOBALS['twbce_test_submenu_pages'] = array();
 		}
 
 		$hook = $parent_slug . '_page_' . $menu_slug;
-		$GLOBALS['sidrena_test_submenu_pages'][] = array(
+		$GLOBALS['twbce_test_submenu_pages'][] = array(
 			'parent_slug' => $parent_slug,
 			'page_title'  => $page_title,
 			'menu_title'  => $menu_title,

@@ -2,16 +2,16 @@
 /**
  * Cli helper unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\Cli;
 
 /**
- * @covers \SidrenaCijena\Cli\Cli
+ * @covers \Titanworks\SidrenaCijena\Cli\Cli
  */
 class CliTest extends TestCase {
 

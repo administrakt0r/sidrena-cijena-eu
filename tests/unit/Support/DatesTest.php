@@ -2,16 +2,16 @@
 /**
  * Date helper tests.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 /**
- * @covers \SidrenaCijena\Support\Dates
+ * @covers \Titanworks\SidrenaCijena\Support\Dates
  */
 class DatesTest extends TestCase {
 
@@ -54,7 +54,7 @@ class DatesTest extends TestCase {
 	 * @return void
 	 */
 	public function test_format_datetime_display() {
-		$GLOBALS['sidrena_test_timezone'] = new \DateTimeZone( 'Europe/Zagreb' );
+		$GLOBALS['twbce_test_timezone'] = new \DateTimeZone( 'Europe/Zagreb' );
 
 		// UTC 10:30 on 10 Sept (CEST = UTC+2) becomes 12:30 in Zagreb.
 		$this->assertSame( '10.09.2026. 12:30', Dates::format_datetime_display( '2026-09-10 10:30:00' ) );
@@ -72,7 +72,7 @@ class DatesTest extends TestCase {
 		$this->assertSame( '', Dates::format_datetime_display( null ) );
 		$this->assertSame( '', Dates::format_datetime_display( 'not-a-datetime' ) );
 
-		unset( $GLOBALS['sidrena_test_timezone'] );
+		unset( $GLOBALS['twbce_test_timezone'] );
 	}
 
 	/**

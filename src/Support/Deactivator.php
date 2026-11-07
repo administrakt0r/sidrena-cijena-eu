@@ -4,12 +4,12 @@
  *
  * Deactivation preserves every piece of data (FR-077).
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
-use SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -33,6 +33,6 @@ final class Deactivator {
 		/**
 		 * Fires after the plugin has been deactivated.
 		 */
-		do_action( 'sidrena_cijena_deactivated' );
+		do_action( 'twbce_cijena_deactivated' );
 	}
 }

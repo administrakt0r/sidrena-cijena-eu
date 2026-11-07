@@ -2,13 +2,13 @@
 /**
  * `wp sidrena-cijena validate` command.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 

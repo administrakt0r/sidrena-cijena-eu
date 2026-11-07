@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Git post-merge hook: runs automatically after git merge or git pull on main.
-# Automatically builds the release zip package under versions/<version>/titanworks-bazna-cijena.zip.
+# Automatically builds the release zip package under versions/<version>/sidrena-cijena-eu.zip.
 #
 set -e
 

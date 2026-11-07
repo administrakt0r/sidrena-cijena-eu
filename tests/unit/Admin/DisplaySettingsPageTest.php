@@ -2,16 +2,16 @@
 /**
  * Display settings page tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\DisplaySettingsPage;
+use Titanworks\SidrenaCijena\Admin\DisplaySettingsPage;
 
 /**
- * @covers \SidrenaCijena\Admin\DisplaySettingsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\DisplaySettingsPage
  */
 class DisplaySettingsPageTest extends TestCase {
 
@@ -23,8 +23,8 @@ class DisplaySettingsPageTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_settings_sections'] = array();
-		$GLOBALS['sidrena_test_settings_fields']   = array();
+		$GLOBALS['twbce_test_settings_sections'] = array();
+		$GLOBALS['twbce_test_settings_fields']   = array();
 	}
 
 	/**
@@ -35,14 +35,14 @@ class DisplaySettingsPageTest extends TestCase {
 	public function test_register_settings_registers_expected_fields_with_label_for() {
 		DisplaySettingsPage::register_settings();
 
-		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['sidrena_test_settings_sections'] );
-		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['sidrena_test_settings_fields'] );
+		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['twbce_test_settings_sections'] );
+		$this->assertArrayHasKey( DisplaySettingsPage::PAGE, $GLOBALS['twbce_test_settings_fields'] );
 
-		$fields             = $GLOBALS['sidrena_test_settings_fields'][ DisplaySettingsPage::PAGE ];
+		$fields             = $GLOBALS['twbce_test_settings_fields'][ DisplaySettingsPage::PAGE ];
 		$anchor_label_field = null;
 
 		foreach ( $fields as $field ) {
-			if ( 'sidrena_cijena_anchor_label' === $field['id'] ) {
+			if ( 'twbce_cijena_anchor_label' === $field['id'] ) {
 				$anchor_label_field = $field;
 				break;
 			}

@@ -2,14 +2,14 @@
 /**
  * Price-history capture for WooCommerce products.
  *
- * @package SidrenaCijena\WooCommerce
+ * @package Titanworks\SidrenaCijena\WooCommerce
  */
 
-namespace SidrenaCijena\WooCommerce;
+namespace Titanworks\SidrenaCijena\WooCommerce;
 
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -252,10 +252,10 @@ class PriceHistoryRecorder {
 	 * exists. The ledger stays append-only, and the calculator uses the marker
 	 * as the next same-type observation that closes the prior interval.
 	 *
-	 * @param \SidrenaCijena\Catalog\CatalogItem $item       Catalog item.
-	 * @param string                             $price_type Price type (`regular`|`sale`).
-	 * @param string|null                        $price      Raw WooCommerce price, or null when no price is applied.
-	 * @param string|null                        $valid_from Effective site-local boundary.
+	 * @param \Titanworks\SidrenaCijena\Catalog\CatalogItem $item       Catalog item.
+	 * @param string                                        $price_type Price type (`regular`|`sale`).
+	 * @param string|null                                   $price      Raw WooCommerce price, or null when no price is applied.
+	 * @param string|null                                   $valid_from Effective site-local boundary.
 	 * @return void
 	 */
 	protected function capture_price( $item, $price_type, $price, $valid_from = null ) {
@@ -306,6 +306,6 @@ class PriceHistoryRecorder {
 		 * @param float|null  $current      New stored price, or null when its interval closed.
 		 * @param string      $source       Price source.
 		 */
-		do_action( 'sidrena_cijena_price_changed', (int) $item->id, (int) $item->variation_id, $previous, null === $amount ? null : (float) $amount, 'woocommerce' );
+		do_action( 'twbce_cijena_price_changed', (int) $item->id, (int) $item->variation_id, $previous, null === $amount ? null : (float) $amount, 'woocommerce' );
 	}
 }

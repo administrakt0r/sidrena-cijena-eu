@@ -2,23 +2,23 @@
 /**
  * StatusCommand unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Cli\StatusCommand;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\Schema;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\StatusCommand;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\Schema;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Cli\StatusCommand
+ * @covers \Titanworks\SidrenaCijena\Cli\StatusCommand
  */
 class StatusCommandTest extends TestCase {
 
@@ -30,7 +30,7 @@ class StatusCommandTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		Cli::reset_buffer();
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**

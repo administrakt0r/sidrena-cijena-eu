@@ -2,22 +2,22 @@
 /**
  * GenerateCommand unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Cli\GenerateCommand;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Export\GenerationService;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\GenerateCommand;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Export\GenerationService;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Cli\GenerateCommand
+ * @covers \Titanworks\SidrenaCijena\Cli\GenerateCommand
  */
 class GenerateCommandTest extends TestCase {
 

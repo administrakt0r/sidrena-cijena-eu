@@ -2,21 +2,21 @@
 /**
  * CleanupCommand unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\CleanupCommand;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cli\CleanupCommand;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Cli\CleanupCommand
+ * @covers \Titanworks\SidrenaCijena\Cli\CleanupCommand
  */
 class CleanupCommandTest extends TestCase {
 
@@ -28,7 +28,7 @@ class CleanupCommandTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		Cli::reset_buffer();
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**

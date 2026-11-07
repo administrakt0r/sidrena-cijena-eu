@@ -2,17 +2,17 @@
 /**
  * Audit trail screen unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AuditPage;
-use SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Admin\AuditPage;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
 
 /**
- * @covers \SidrenaCijena\Admin\AuditPage
+ * @covers \Titanworks\SidrenaCijena\Admin\AuditPage
  */
 class AuditPageTest extends TestCase {
 
@@ -23,13 +23,13 @@ class AuditPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_GET                                    = array();
-		$GLOBALS['sidrena_test_options']         = array();
-		$GLOBALS['sidrena_test_transients']      = array();
-		$GLOBALS['sidrena_test_db_results']      = array();
-		$GLOBALS['sidrena_test_db_var']          = 0;
-		$GLOBALS['sidrena_test_users']           = array();
-		$GLOBALS['sidrena_test_current_user_id'] = 1;
+		$_GET                                  = array();
+		$GLOBALS['twbce_test_options']         = array();
+		$GLOBALS['twbce_test_transients']      = array();
+		$GLOBALS['twbce_test_db_results']      = array();
+		$GLOBALS['twbce_test_db_var']          = 0;
+		$GLOBALS['twbce_test_users']           = array();
+		$GLOBALS['twbce_test_current_user_id'] = 1;
 	}
 
 	/**
@@ -39,10 +39,10 @@ class AuditPageTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_db_results'],
-			$GLOBALS['sidrena_test_db_var'],
-			$GLOBALS['sidrena_test_users'],
-			$GLOBALS['sidrena_test_current_user_id']
+			$GLOBALS['twbce_test_db_results'],
+			$GLOBALS['twbce_test_db_var'],
+			$GLOBALS['twbce_test_users'],
+			$GLOBALS['twbce_test_current_user_id']
 		);
 		parent::tearDown();
 	}
@@ -68,7 +68,7 @@ class AuditPageTest extends TestCase {
 	 * @return void
 	 */
 	public function test_render_rule_changes(): void {
-		$GLOBALS['sidrena_test_users'][2] = array(
+		$GLOBALS['twbce_test_users'][2] = array(
 			'ID'           => 2,
 			'user_login'   => 'marko_compliance',
 			'display_name' => 'Marko Compliance',
@@ -113,14 +113,14 @@ class AuditPageTest extends TestCase {
 	 * @return void
 	 */
 	public function test_render_logs_with_user_and_context(): void {
-		$GLOBALS['sidrena_test_users'][5] = array(
+		$GLOBALS['twbce_test_users'][5] = array(
 			'ID'           => 5,
 			'user_login'   => 'iva_admin',
 			'display_name' => 'Iva Horvat',
 		);
 
-		$GLOBALS['sidrena_test_db_var']     = 2;
-		$GLOBALS['sidrena_test_db_results'] = array(
+		$GLOBALS['twbce_test_db_var']     = 2;
+		$GLOBALS['twbce_test_db_results'] = array(
 			array(
 				'id'         => 1,
 				'level'      => 'info',

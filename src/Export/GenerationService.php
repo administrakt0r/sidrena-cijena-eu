@@ -2,21 +2,21 @@
 /**
  * Price-list generation service.
  *
- * @package SidrenaCijena\Export
+ * @package Titanworks\SidrenaCijena\Export
  */
 
-namespace SidrenaCijena\Export;
+namespace Titanworks\SidrenaCijena\Export;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\RemediationProposer;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\RemediationProposer;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -108,7 +108,7 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ) );
 		}
 
 		if ( ! isset( $args['items'] ) ) {
@@ -144,13 +144,13 @@ class GenerationService {
 		$location = $this->locations->get( $location_id );
 
 		if ( ! $location ) {
-			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ) );
 		}
 
 		$format = strtolower( (string) $format );
 
 		if ( ! in_array( $format, array( 'csv', 'xml' ), true ) ) {
-			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'invalid_format', __( 'The requested format is not supported.', 'sidrena-cijena-eu' ) );
 		}
 
 		$source            = isset( $args['source'] ) ? (string) $args['source'] : 'manual';
@@ -165,7 +165,7 @@ class GenerationService {
 			$findings[] = array(
 				'code'           => 'missing_store_identifier',
 				'severity'       => 'ERROR',
-				'message'        => __( 'The sales location has no facility identifier.', 'titanworks-bazna-cijena' ),
+				'message'        => __( 'The sales location has no facility identifier.', 'sidrena-cijena-eu' ),
 				'proposal'       => RemediationProposer::propose( 'missing_store_identifier', array( 'name' => $location['name'] ) ),
 				'entity_type'    => 'location',
 				'entity_id'      => (int) $location_id,
@@ -185,11 +185,11 @@ class GenerationService {
 		// Ensure address and city are populated for filename generation.
 		if ( empty( $location['address'] ) ) {
 			$wc_addr             = (string) get_option( 'woocommerce_store_address', '' );
-			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'titanworks-bazna-cijena' );
+			$location['address'] = '' !== $wc_addr ? $wc_addr : __( 'Online', 'sidrena-cijena-eu' );
 		}
 		if ( empty( $location['city'] ) ) {
 			$wc_city          = (string) get_option( 'woocommerce_store_city', '' );
-			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'titanworks-bazna-cijena' );
+			$location['city'] = '' !== $wc_city ? $wc_city : __( 'Hrvatska', 'sidrena-cijena-eu' );
 		}
 
 		if ( ! isset( $args['items'] ) ) {
@@ -205,7 +205,7 @@ class GenerationService {
 		if ( ! empty( $all_blockers ) && ! $allow_with_errors ) {
 			$this->record_failure( $location_id, $format, $all_blockers );
 
-			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'titanworks-bazna-cijena' ), array( 'findings' => $all_blockers ) );
+			return new \WP_Error( 'validation_failed', __( 'The price list failed compliance validation and was not published.', 'sidrena-cijena-eu' ), array( 'findings' => $all_blockers ) );
 		}
 
 		$proposals = array();
@@ -275,7 +275,7 @@ class GenerationService {
 			 * @param string       $format      Format.
 			 * @param array<mixed> $findings    Failure findings.
 			 */
-			do_action( 'sidrena_cijena_publication_failed', $location_id, $format, array() );
+			do_action( 'twbce_cijena_publication_failed', $location_id, $format, array() );
 
 			return $result;
 		}
@@ -451,7 +451,7 @@ class GenerationService {
 				'location_id'        => (int) $location_id,
 				'format'             => (string) $format,
 				'status'             => 'failed',
-				'rule_version'       => (string) \SidrenaCijena\Compliance\RuleConfig::get( 'rule_version', '' ),
+				'rule_version'       => (string) \Titanworks\SidrenaCijena\Compliance\RuleConfig::get( 'rule_version', '' ),
 				'validation_summary' => $findings,
 			)
 		);
@@ -473,7 +473,7 @@ class GenerationService {
 		 * @param string       $format      Format.
 		 * @param array<mixed> $findings    Failure findings.
 		 */
-		do_action( 'sidrena_cijena_publication_failed', $location_id, $format, $findings );
+		do_action( 'twbce_cijena_publication_failed', $location_id, $format, $findings );
 	}
 
 	/**

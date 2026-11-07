@@ -2,20 +2,20 @@
 /**
  * Scheduler and DailyGeneration unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cron
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cron
  */
 
-namespace SidrenaCijena\Tests\Unit\Cron;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cron;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cron\DailyGeneration;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Cron\DailyGeneration;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Support\Dates;
 use WP_Error;
 
 /**
- * @covers \SidrenaCijena\Cron\Scheduler
- * @covers \SidrenaCijena\Cron\DailyGeneration
+ * @covers \Titanworks\SidrenaCijena\Cron\Scheduler
+ * @covers \Titanworks\SidrenaCijena\Cron\DailyGeneration
  */
 class SchedulerTest extends TestCase {
 
@@ -27,10 +27,10 @@ class SchedulerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
-		$GLOBALS['sidrena_test_is_admin']   = true;
-		$_GET['page']                       = 'sidrena-cijena-publications';
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
+		$GLOBALS['twbce_test_is_admin']   = true;
+		$_GET['page']                     = 'sidrena-cijena-publications';
 	}
 
 	/**
@@ -108,7 +108,7 @@ class SchedulerTest extends TestCase {
 	 * @return void
 	 */
 	public function test_catchup_skips_ordinary_frontend_requests() {
-		$GLOBALS['sidrena_test_is_admin'] = false;
+		$GLOBALS['twbce_test_is_admin'] = false;
 
 		Scheduler::maybe_catchup();
 
@@ -176,7 +176,7 @@ class SchedulerTest extends TestCase {
 			$this->markTestSkipped( 'The buffer window crosses midnight on this run.' );
 		}
 
-		update_option( 'sidrena_cijena_settings', array( 'deadline' => $now->modify( '+10 minutes' )->format( 'H:i' ) ), false );
+		update_option( 'twbce_cijena_settings', array( 'deadline' => $now->modify( '+10 minutes' )->format( 'H:i' ) ), false );
 
 		wp_clear_scheduled_hook( Scheduler::HOOK_DAILY );
 

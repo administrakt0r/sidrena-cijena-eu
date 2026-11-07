@@ -5,10 +5,10 @@
  * All business rules (reference dates, sale windows, deadlines) are evaluated
  * in the site time zone; stored timestamps are UTC.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 

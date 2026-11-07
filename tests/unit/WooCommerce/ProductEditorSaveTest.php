@@ -11,28 +11,28 @@
  *   no plugin action overrides of the normal Update action, and no HTML5 required
  *   attributes that block unrelated product saves.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AnchorMetaBox;
-use SidrenaCijena\Admin\SpecialSaleMetaBox;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\Tests\Support\PluginSwap;
-use SidrenaCijena\WooCommerce\Display\CardVisibility;
+use Titanworks\SidrenaCijena\Admin\AnchorMetaBox;
+use Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\WooCommerce\Display\CardVisibility
- * @covers \SidrenaCijena\Admin\AnchorMetaBox
- * @covers \SidrenaCijena\Admin\SpecialSaleMetaBox
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility
+ * @covers \Titanworks\SidrenaCijena\Admin\AnchorMetaBox
+ * @covers \Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox
  */
 class ProductEditorSaveTest extends TestCase {
 
@@ -46,16 +46,16 @@ class ProductEditorSaveTest extends TestCase {
 
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_can']                 = true;
-		$GLOBALS['sidrena_test_wc_products']         = array();
-		$GLOBALS['sidrena_test_post_meta']           = array();
-		$GLOBALS['sidrena_test_posts']               = array();
-		$GLOBALS['sidrena_test_last_redirect']       = null;
-		$GLOBALS['sidrena_test_price_history_table'] = array();
-		$GLOBALS['sidrena_test_special_sales_table'] = array();
-		$_POST                                       = array();
-		$_GET                                        = array();
-		$_REQUEST                                    = array();
+		$GLOBALS['twbce_test_can']                 = true;
+		$GLOBALS['twbce_test_wc_products']         = array();
+		$GLOBALS['twbce_test_post_meta']           = array();
+		$GLOBALS['twbce_test_posts']               = array();
+		$GLOBALS['twbce_test_last_redirect']       = null;
+		$GLOBALS['twbce_test_price_history_table'] = array();
+		$GLOBALS['twbce_test_special_sales_table'] = array();
+		$_POST                                     = array();
+		$_GET                                      = array();
+		$_REQUEST                                  = array();
 	}
 
 	/**
@@ -71,7 +71,7 @@ class ProductEditorSaveTest extends TestCase {
 		$_POST    = array();
 		$_GET     = array();
 		$_REQUEST = array();
-		unset( $GLOBALS['sidrena_test_can'], $GLOBALS['sidrena_test_wc_products'], $GLOBALS['sidrena_test_last_redirect'] );
+		unset( $GLOBALS['twbce_test_can'], $GLOBALS['twbce_test_wc_products'], $GLOBALS['twbce_test_last_redirect'] );
 
 		parent::tearDown();
 	}
@@ -86,7 +86,7 @@ class ProductEditorSaveTest extends TestCase {
 		CardVisibility::render_control( 100 );
 		$html = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'name="sidrena_cijena_show_in_cards"', $html );
+		$this->assertStringContainsString( 'name="twbce_cijena_show_in_cards"', $html );
 		$this->assertStringContainsString( 'id="sidrena-cijena-show-in-cards"', $html );
 		$this->assertStringContainsString( 'name="' . CardVisibility::NONCE . '"', $html );
 		$this->assertStringNotContainsString( 'name="_wpnonce"', $html );
@@ -132,8 +132,8 @@ class ProductEditorSaveTest extends TestCase {
 	 * @return void
 	 */
 	public function test_card_visibility_save_ignores_unauthorized_user() {
-		$GLOBALS['sidrena_test_can'] = false;
-		$product                     = new \WC_Product( array( 'id' => 100 ) );
+		$GLOBALS['twbce_test_can'] = false;
+		$product                   = new \WC_Product( array( 'id' => 100 ) );
 
 		$_POST[ CardVisibility::NONCE ] = 'test-nonce';
 		$_POST[ CardVisibility::FIELD ] = '1';
@@ -168,7 +168,7 @@ class ProductEditorSaveTest extends TestCase {
 			'ID'        => 200,
 			'post_type' => 'product',
 		);
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_item' )->willReturn(
 			new CatalogItem(
 				array(
@@ -193,7 +193,7 @@ class ProductEditorSaveTest extends TestCase {
 		$this->assertStringNotContainsString( 'name="_wpnonce"', $html );
 		$this->assertDoesNotMatchRegularExpression( '/<input[^>]+required/i', $html );
 		$this->assertDoesNotMatchRegularExpression( '/<select[^>]+required/i', $html );
-		$this->assertStringContainsString( 'name="sidrena_cijena_anchor_nonce"', $html );
+		$this->assertStringContainsString( 'name="twbce_cijena_anchor_nonce"', $html );
 		$this->assertStringContainsString( 'action=' . AnchorMetaBox::ACTION, $html );
 		$this->assertStringContainsString( 'formaction=', $html );
 		$this->assertStringContainsString( '<caption class="screen-reader-text">', $html );
@@ -209,7 +209,7 @@ class ProductEditorSaveTest extends TestCase {
 			'ID'        => 200,
 			'post_type' => 'product',
 		);
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_item' )->willReturn(
 			new CatalogItem(
 				array(
@@ -233,7 +233,7 @@ class ProductEditorSaveTest extends TestCase {
 		$this->assertStringNotContainsString( 'name="_wpnonce"', $html );
 		$this->assertDoesNotMatchRegularExpression( '/<input[^>]+required/i', $html );
 		$this->assertDoesNotMatchRegularExpression( '/<select[^>]+required/i', $html );
-		$this->assertStringContainsString( 'name="sidrena_cijena_sale_nonce"', $html );
+		$this->assertStringContainsString( 'name="twbce_cijena_sale_nonce"', $html );
 		$this->assertStringContainsString( 'action=' . SpecialSaleMetaBox::ACTION, $html );
 		$this->assertStringContainsString( 'placeholder="e.g. Spring Sale"', $html );
 	}
@@ -247,7 +247,7 @@ class ProductEditorSaveTest extends TestCase {
 		global $wpdb;
 		$initial_insert_id = $wpdb->insert_id;
 
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$item     = new CatalogItem(
 			array(
 				'id'            => 300,
@@ -261,10 +261,10 @@ class ProductEditorSaveTest extends TestCase {
 		$provider->method( 'get_item' )->with( 300 )->willReturn( $item );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_anchor_nonce'] = 'test-nonce';
-		$_POST['product_id']                  = '300';
-		$_POST['anchor_price']                = '15.50';
-		$_POST['reference_date']              = '2026-09-10';
+		$_POST['twbce_cijena_anchor_nonce'] = 'test-nonce';
+		$_POST['product_id']                = '300';
+		$_POST['anchor_price']              = '15.50';
+		$_POST['reference_date']            = '2026-09-10';
 
 		try {
 			AnchorMetaBox::handle_record();
@@ -272,7 +272,7 @@ class ProductEditorSaveTest extends TestCase {
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
 			$this->assertStringContainsString( 'post=300', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=success', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=success', $e->getMessage() );
 		}
 
 		$this->assertGreaterThan( $initial_insert_id, $wpdb->insert_id );
@@ -284,19 +284,19 @@ class ProductEditorSaveTest extends TestCase {
 	 * @return void
 	 */
 	public function test_anchor_record_handler_missing_item_redirects_safely() {
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_item' )->willReturn( null );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_anchor_nonce'] = 'test-nonce';
-		$_POST['product_id']                  = '999';
+		$_POST['twbce_cijena_anchor_nonce'] = 'test-nonce';
+		$_POST['product_id']                = '999';
 
 		try {
 			AnchorMetaBox::handle_record();
 			$this->fail( 'Expected redirect exception was not thrown.' );
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=error', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=error', $e->getMessage() );
 		}
 	}
 
@@ -311,7 +311,7 @@ class ProductEditorSaveTest extends TestCase {
 
 		Settings::update( array( 'sale_types' => array( 'seasonal' ) ) );
 
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$item     = new CatalogItem(
 			array(
 				'id'            => 400,
@@ -325,12 +325,12 @@ class ProductEditorSaveTest extends TestCase {
 		$provider->method( 'get_item' )->with( 400 )->willReturn( $item );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_sale_nonce'] = 'test-nonce';
-		$_POST['product_id']                = '400';
-		$_POST['sale_type']                 = 'seasonal';
-		$_POST['sale_name']                 = 'Autumn Sale';
-		$_POST['start_date']                = '2026-10-01';
-		$_POST['promo_price']               = '39.99';
+		$_POST['twbce_cijena_sale_nonce'] = 'test-nonce';
+		$_POST['product_id']              = '400';
+		$_POST['sale_type']               = 'seasonal';
+		$_POST['sale_name']               = 'Autumn Sale';
+		$_POST['start_date']              = '2026-10-01';
+		$_POST['promo_price']             = '39.99';
 
 		try {
 			SpecialSaleMetaBox::handle_save();
@@ -338,7 +338,7 @@ class ProductEditorSaveTest extends TestCase {
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
 			$this->assertStringContainsString( 'post=400', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=success', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=success', $e->getMessage() );
 		}
 
 		$this->assertGreaterThan( $initial_insert_id, $wpdb->insert_id );
@@ -350,12 +350,12 @@ class ProductEditorSaveTest extends TestCase {
 	 * @return void
 	 */
 	public function test_special_sale_save_missing_item_redirects_cleanly() {
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_item' )->willReturn( null );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_sale_nonce'] = 'test-nonce';
-		$_POST['product_id']                = '0';
+		$_POST['twbce_cijena_sale_nonce'] = 'test-nonce';
+		$_POST['product_id']              = '0';
 
 		try {
 			SpecialSaleMetaBox::handle_save();
@@ -363,7 +363,7 @@ class ProductEditorSaveTest extends TestCase {
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
 			$this->assertStringNotContainsString( 'post=0', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=error', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=error', $e->getMessage() );
 		}
 	}
 
@@ -373,25 +373,25 @@ class ProductEditorSaveTest extends TestCase {
 	 * @return void
 	 */
 	public function test_variable_product_panel_render() {
-		$GLOBALS['post']                          = new \WP_Post(
+		$GLOBALS['post']                        = new \WP_Post(
 			array(
 				'ID'        => 500,
 				'post_type' => 'product',
 			)
 		);
-		$GLOBALS['sidrena_test_posts'][501]       = new \WP_Post(
+		$GLOBALS['twbce_test_posts'][501]       = new \WP_Post(
 			array(
 				'ID'        => 501,
 				'post_type' => 'product_variation',
 			)
 		);
-		$GLOBALS['sidrena_test_wc_products'][500] = array(
+		$GLOBALS['twbce_test_wc_products'][500] = array(
 			'id'       => 500,
 			'type'     => 'variable',
 			'children' => array( 501 ),
 		);
 
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_items' )->willReturn(
 			array(
 				new CatalogItem(
@@ -443,7 +443,7 @@ class ProductEditorSaveTest extends TestCase {
 		global $wpdb;
 		$initial_insert_id = $wpdb->insert_id;
 
-		$provider  = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider  = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$variation = new CatalogItem(
 			array(
 				'id'            => 500,
@@ -458,11 +458,11 @@ class ProductEditorSaveTest extends TestCase {
 		$provider->method( 'get_variation' )->with( 500, 501 )->willReturn( $variation );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_anchor_nonce'] = 'test-nonce';
-		$_POST['product_id']                  = '500';
-		$_REQUEST['variation_id']             = '501';
-		$_POST['anchor_price']                = array( 501 => '18.00' );
-		$_POST['reference_date']              = array( 501 => '2026-09-10' );
+		$_POST['twbce_cijena_anchor_nonce'] = 'test-nonce';
+		$_POST['product_id']                = '500';
+		$_REQUEST['variation_id']           = '501';
+		$_POST['anchor_price']              = array( 501 => '18.00' );
+		$_POST['reference_date']            = array( 501 => '2026-09-10' );
 
 		try {
 			AnchorMetaBox::handle_record();
@@ -470,7 +470,7 @@ class ProductEditorSaveTest extends TestCase {
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
 			$this->assertStringContainsString( 'post=500', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=success', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=success', $e->getMessage() );
 		}
 
 		$this->assertGreaterThan( $initial_insert_id, $wpdb->insert_id );
@@ -482,19 +482,19 @@ class ProductEditorSaveTest extends TestCase {
 	 * @return void
 	 */
 	public function test_anchor_record_redirects_safely_when_item_not_found() {
-		$provider = $this->createMock( \SidrenaCijena\Catalog\CatalogProvider::class );
+		$provider = $this->createMock( \Titanworks\SidrenaCijena\Catalog\CatalogProvider::class );
 		$provider->method( 'get_item' )->willReturn( null );
 		PluginSwap::swap( 'catalog', $provider );
 
-		$_POST['sidrena_cijena_anchor_nonce'] = 'test-nonce';
-		$_POST['product_id']                  = '999999';
+		$_POST['twbce_cijena_anchor_nonce'] = 'test-nonce';
+		$_POST['product_id']                = '999999';
 
 		try {
 			AnchorMetaBox::handle_record();
 			$this->fail( 'Expected redirect exception was not thrown.' );
 		} catch ( \RuntimeException $e ) {
 			$this->assertStringStartsWith( 'REDIRECT:', $e->getMessage() );
-			$this->assertStringContainsString( 'sidrena_cijena_notice=error', $e->getMessage() );
+			$this->assertStringContainsString( 'twbce_cijena_notice=error', $e->getMessage() );
 			$this->assertStringContainsString( admin_url(), $e->getMessage() );
 		}
 	}

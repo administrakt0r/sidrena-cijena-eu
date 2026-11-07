@@ -2,19 +2,19 @@
 /**
  * Canonical price-list row builder.
  *
- * @package SidrenaCijena\Export
+ * @package Titanworks\SidrenaCijena\Export
  */
 
-namespace SidrenaCijena\Export;
+namespace Titanworks\SidrenaCijena\Export;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Currency;
 
 defined( 'ABSPATH' ) || exit;
 

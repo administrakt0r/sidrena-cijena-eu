@@ -2,19 +2,19 @@
 /**
  * Variable product storefront display regressions.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Tests\Support\PluginSwap;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
-use SidrenaCijena\WooCommerce\Display\VariationDisplay;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\WooCommerce\Display\VariationDisplay;
 
 require_once dirname( __DIR__, 2 ) . '/wc-stubs.php';
 require_once dirname( __DIR__, 2 ) . '/PluginSwap.php';
@@ -47,8 +47,8 @@ class DisplayPriceForTest extends PriceDisplay {
 }
 
 /**
- * @covers \SidrenaCijena\WooCommerce\Display\VariationDisplay
- * @covers \SidrenaCijena\WooCommerce\Display\PriceDisplay
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\VariationDisplay
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay
  */
 class VariationDisplayTest extends TestCase {
 
@@ -60,11 +60,11 @@ class VariationDisplayTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_is_admin']          = false;
-		$GLOBALS['sidrena_test_is_product']        = false;
-		$GLOBALS['sidrena_test_queried_object_id'] = 0;
-		$GLOBALS['sidrena_test_options']           = array(
-			'sidrena_cijena_settings' => array(
+		$GLOBALS['twbce_test_is_admin']          = false;
+		$GLOBALS['twbce_test_is_product']        = false;
+		$GLOBALS['twbce_test_queried_object_id'] = 0;
+		$GLOBALS['twbce_test_options']           = array(
+			'twbce_cijena_settings' => array(
 				'display_enabled'       => true,
 				'display_archives'      => true,
 				'display_product_pages' => true,
@@ -72,7 +72,7 @@ class VariationDisplayTest extends TestCase {
 				'card_display_default'  => true,
 			),
 		);
-		\SidrenaCijena\Support\Settings::reset_cache();
+		\Titanworks\SidrenaCijena\Support\Settings::reset_cache();
 		PriceDisplay::reset_rendered_cache();
 	}
 
@@ -136,9 +136,9 @@ class VariationDisplayTest extends TestCase {
 			$this->assertStringContainsString( '12,00', $data['price_html'] );
 			$this->assertStringContainsString( 'data-variation-id="11"', $data['price_html'] );
 			$this->assertStringContainsString( '10.09.2026.', $data['price_html'] );
-			$this->assertSame( '9,00 €', $data['sidrena_cijena_anchor'] );
-			$this->assertSame( '10.09.2026.', $data['sidrena_cijena_reference_date_display'] );
-			$this->assertSame( '2026-09-10', $data['sidrena_cijena_reference_date'] );
+			$this->assertSame( '9,00 €', $data['twbce_cijena_anchor'] );
+			$this->assertSame( '10.09.2026.', $data['twbce_cijena_reference_date_display'] );
+			$this->assertSame( '2026-09-10', $data['twbce_cijena_reference_date'] );
 		} finally {
 			PluginSwap::swap( 'catalog', null );
 		}
@@ -173,8 +173,8 @@ class VariationDisplayTest extends TestCase {
 
 		try {
 			$data = ( new VariationDisplay( $anchors ) )->filter_available_variation( array( 'price_html' => '' ), null, $variation );
-			$this->assertNull( $data['sidrena_cijena_anchor'] );
-			$this->assertNull( $data['sidrena_cijena_anchor_raw'] );
+			$this->assertNull( $data['twbce_cijena_anchor'] );
+			$this->assertNull( $data['twbce_cijena_anchor_raw'] );
 		} finally {
 			PluginSwap::swap( 'catalog', null );
 		}
@@ -924,9 +924,9 @@ class VariationDisplayTest extends TestCase {
 
 			// Case B: in summary mode, archive action renders while price filter remains quiet.
 			update_option(
-				'sidrena_cijena_settings',
+				'twbce_cijena_settings',
 				array_merge(
-					\SidrenaCijena\Support\Settings::defaults(),
+					\Titanworks\SidrenaCijena\Support\Settings::defaults(),
 					array(
 						'display_enabled'  => true,
 						'display_archives' => true,
@@ -945,7 +945,7 @@ class VariationDisplayTest extends TestCase {
 		} finally {
 			$product = null;
 			PluginSwap::swap( 'catalog', null );
-			update_option( 'sidrena_cijena_settings', \SidrenaCijena\Support\Settings::defaults() );
+			update_option( 'twbce_cijena_settings', \Titanworks\SidrenaCijena\Support\Settings::defaults() );
 		}
 	}
 
@@ -955,7 +955,7 @@ class VariationDisplayTest extends TestCase {
 	 * @return void
 	 */
 	public function test_variable_product_returns_empty_in_admin() {
-		$GLOBALS['sidrena_test_is_admin'] = true;
+		$GLOBALS['twbce_test_is_admin'] = true;
 
 		$anchors = $this->createMock( AnchorPriceService::class );
 		$anchors->expects( $this->never() )->method( 'get_anchor' );
@@ -973,7 +973,7 @@ class VariationDisplayTest extends TestCase {
 			$html = $display->render( $product, 'archive' );
 			$this->assertSame( '', $html );
 		} finally {
-			$GLOBALS['sidrena_test_is_admin'] = false;
+			$GLOBALS['twbce_test_is_admin'] = false;
 		}
 	}
 
@@ -1034,13 +1034,13 @@ class VariationDisplayTest extends TestCase {
 		PluginSwap::swap( 'special_sales', $sales );
 
 		// Register WC products for variation tax lookups.
-		$GLOBALS['sidrena_test_wc_products'][11] = array(
+		$GLOBALS['twbce_test_wc_products'][11] = array(
 			'id'     => 11,
 			'type'   => 'variation',
 			'status' => 'publish',
 			'price'  => 12.0,
 		);
-		$GLOBALS['sidrena_test_wc_products'][12] = array(
+		$GLOBALS['twbce_test_wc_products'][12] = array(
 			'id'     => 12,
 			'type'   => 'variation',
 			'status' => 'publish',
@@ -1048,7 +1048,7 @@ class VariationDisplayTest extends TestCase {
 		);
 
 		// 25% VAT: 10 * 1.25 = 12.50, 20 * 1.25 = 25.00
-		$GLOBALS['sidrena_test_tax_multiplier'] = 1.25;
+		$GLOBALS['twbce_test_tax_multiplier'] = 1.25;
 
 		$display = new PriceDisplay( $anchors );
 		$product = new \WC_Product(
@@ -1064,7 +1064,7 @@ class VariationDisplayTest extends TestCase {
 			$this->assertStringContainsString( 'sidrena-cijena--30-day', $html );
 			$this->assertStringContainsString( '12,50 € – 25,00 €', $html );
 		} finally {
-			unset( $GLOBALS['sidrena_test_wc_products'][11], $GLOBALS['sidrena_test_wc_products'][12], $GLOBALS['sidrena_test_tax_multiplier'] );
+			unset( $GLOBALS['twbce_test_wc_products'][11], $GLOBALS['twbce_test_wc_products'][12], $GLOBALS['twbce_test_tax_multiplier'] );
 			PluginSwap::swap( 'catalog', null );
 			PluginSwap::swap( 'special_sales', null );
 		}

@@ -2,16 +2,16 @@
 /**
  * Settings tests.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 /**
- * @covers \SidrenaCijena\Support\Settings
+ * @covers \Titanworks\SidrenaCijena\Support\Settings
  */
 class SettingsTest extends TestCase {
 
@@ -23,8 +23,8 @@ class SettingsTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 		Settings::reset_cache();
 		Settings::register();
 	}
@@ -211,7 +211,7 @@ class SettingsTest extends TestCase {
 		$this->assertSame( $first, $second );
 
 		// Invalidation via action clears the memoized cache.
-		do_action( 'sidrena_cijena_settings_changed', array(), array() );
+		do_action( 'twbce_cijena_settings_changed', array(), array() );
 		$third = Settings::all();
 		$this->assertSame( 'Sidrena cijena', $third['anchor_label'] );
 

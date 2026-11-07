@@ -2,16 +2,16 @@
 /**
  * REST/page cache behavior tests.
  *
- * @package SidrenaCijena\Tests\Unit\Api
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Api
  */
 
-namespace SidrenaCijena\Tests\Unit\Api;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\RestCache;
+use Titanworks\SidrenaCijena\Api\RestCache;
 
 /**
- * @covers \SidrenaCijena\Api\RestCache
+ * @covers \Titanworks\SidrenaCijena\Api\RestCache
  */
 class RestCacheTest extends TestCase {
 
@@ -23,8 +23,8 @@ class RestCacheTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**

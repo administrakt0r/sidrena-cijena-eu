@@ -2,16 +2,16 @@
 /**
  * Documentation page tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\DocumentationPage;
+use Titanworks\SidrenaCijena\Admin\DocumentationPage;
 
 /**
- * @covers \SidrenaCijena\Admin\DocumentationPage
+ * @covers \Titanworks\SidrenaCijena\Admin\DocumentationPage
  */
 class DocumentationTest extends TestCase {
 
@@ -25,7 +25,7 @@ class DocumentationTest extends TestCase {
 
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**
@@ -56,6 +56,6 @@ class DocumentationTest extends TestCase {
 		$this->assertStringContainsString( '6. WP-CLI', $html );
 		$this->assertStringContainsString( '7. Kuke za programere', $html );
 		$this->assertStringContainsString( 'wp sidrena-cijena generate', $html );
-		$this->assertStringContainsString( 'sidrena_cijena_daily_event', $html );
+		$this->assertStringContainsString( 'twbce_cijena_daily_event', $html );
 	}
 }

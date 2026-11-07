@@ -2,12 +2,12 @@
 /**
  * Structured log data access.
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -84,7 +84,7 @@ class LogRepository {
 			array( '%s', '%s', '%s', '%s', '%d', '%s' )
 		);
 
-		delete_transient( 'sidrena_log_cnt_all' );
+		delete_transient( 'twbce_log_cnt_all' );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -102,43 +102,41 @@ class LogRepository {
 		$per_page = isset( $args['per_page'] ) ? max( 1, min( 200, (int) $args['per_page'] ) ) : 50;
 		$offset   = ( $page - 1 ) * $per_page;
 
-		$conditions = array();
-		$params     = array();
-
-		if ( ! empty( $args['level'] ) && in_array( $args['level'], self::LEVELS, true ) ) {
-			$conditions[] = 'level = %s';
-			$params[]     = $args['level'];
+		$level  = ! empty( $args['level'] ) && in_array( $args['level'], self::LEVELS, true ) ? $args['level'] : '';
+		$params = array( $this->table, $level, $level );
+		foreach ( array( 'event', 'date_from', 'date_to' ) as $key ) {
+			$value    = ! empty( $args[ $key ] ) ? (string) $args[ $key ] : '';
+			$params[] = $value;
+			$params[] = $value;
 		}
+		$list_params = array_merge( $params, array( $per_page, $offset ) );
 
-		if ( ! empty( $args['event'] ) ) {
-			$conditions[] = 'event = %s';
-			$params[]     = (string) $args['event'];
-		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+		$rows = $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE (%s = '' OR level = %s) AND (%s = '' OR event = %s)
+				AND (%s = '' OR created_at >= NULLIF(%s, '')) AND (%s = '' OR created_at <= NULLIF(%s, ''))
+				ORDER BY id DESC LIMIT %d OFFSET %d",
+				$list_params
+			),
+			ARRAY_A
+		);
 
-		if ( ! empty( $args['date_from'] ) ) {
-			$conditions[] = 'created_at >= %s';
-			$params[]     = (string) $args['date_from'];
-		}
-
-		if ( ! empty( $args['date_to'] ) ) {
-			$conditions[] = 'created_at <= %s';
-			$params[]     = (string) $args['date_to'];
-		}
-
-		$where = empty( $conditions ) ? '' : 'WHERE ' . implode( ' AND ', $conditions );
-
-		$query_params = array_merge( array( $this->table ), $params );
-		$list_params  = array_merge( $query_params, array( $per_page, $offset ) );
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-		$rows       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$where} ORDER BY id DESC LIMIT %d OFFSET %d", $list_params ), ARRAY_A );
 		$rows_array = is_array( $rows ) ? $rows : array();
 
 		if ( 1 === $page && count( $rows_array ) < $per_page ) {
 			$total = count( $rows_array );
 		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where only contains hardcoded condition templates and values are bound via $wpdb->prepare().
-			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i {$where}", $query_params ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+			$total = (int) $wpdb->get_var(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM %i WHERE (%s = '' OR level = %s) AND (%s = '' OR event = %s)
+					AND (%s = '' OR created_at >= NULLIF(%s, '')) AND (%s = '' OR created_at <= NULLIF(%s, ''))",
+					$params
+				)
+			);
 		}
 
 		$items = array();
@@ -167,7 +165,7 @@ class LogRepository {
 
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( max( 1, (int) $days ) * DAY_IN_SECONDS ) );
 
-		delete_transient( 'sidrena_log_cnt_all' );
+		delete_transient( 'twbce_log_cnt_all' );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->query(
@@ -181,7 +179,7 @@ class LogRepository {
 	 * @return int
 	 */
 	public function count_all() {
-		$cached = get_transient( 'sidrena_log_cnt_all' );
+		$cached = get_transient( 'twbce_log_cnt_all' );
 		if ( false !== $cached && is_numeric( $cached ) ) {
 			return (int) $cached;
 		}
@@ -190,7 +188,7 @@ class LogRepository {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $this->table ) );
-		set_transient( 'sidrena_log_cnt_all', $total, 30 );
+		set_transient( 'twbce_log_cnt_all', $total, 30 );
 
 		return $total;
 	}

@@ -2,18 +2,18 @@
 /**
  * Special sale integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Pricing\SpecialSaleService;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleService;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 /**
  * Covers sale classification, window persistence and append-only recomputation.
@@ -74,8 +74,8 @@ class Test_Special_Sales extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		$item = Plugin::instance()->catalog()->get_item( $post_id );
 
@@ -422,7 +422,7 @@ class Test_Special_Sales extends WP_UnitTestCase {
 		$this->assertNull( $this->service->active( $item->id ) );
 
 		// 2. Verify that the 30-day lowest price display cleanly disappears:
-		$display  = new \SidrenaCijena\WooCommerce\Display\PriceDisplay( Plugin::instance()->anchors() );
+		$display  = new \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay( Plugin::instance()->anchors() );
 		$rendered = $display->render_item( $item, 'single' );
 		$this->assertStringNotContainsString( 'sidrena-cijena--30-day', $rendered );
 

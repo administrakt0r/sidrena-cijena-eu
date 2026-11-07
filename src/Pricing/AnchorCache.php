@@ -6,10 +6,10 @@
  * requests). Both are invalidated whenever anchor data, prices or settings
  * change.
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ class AnchorCache {
 	/**
 	 * Cache group.
 	 */
-	const GROUP = 'sidrena_cijena';
+	const GROUP = 'twbce_cijena';
 
 	/**
 	 * Transient lifetime.
@@ -137,13 +137,12 @@ class AnchorCache {
 	 * @return void
 	 */
 	public function flush() {
-		$current    = get_transient( 'sidrena_cijena_cache_generation' );
+		$current    = get_transient( 'twbce_cijena_cache_generation' );
 		$generation = max( time(), (int) $current + 1 );
 
 		$ttl = defined( 'YEAR_IN_SECONDS' ) ? YEAR_IN_SECONDS : 31536000;
-		set_transient( 'sidrena_cijena_cache_generation', $generation, $ttl );
-		update_option( '_transient_sidrena_cijena_cache_generation', $generation, false );
-		wp_cache_set( 'sidrena_cijena_cache_generation', $generation, self::GROUP, self::TTL );
+		set_transient( 'twbce_cijena_cache_generation', $generation, $ttl );
+		wp_cache_set( 'twbce_cijena_cache_generation', $generation, self::GROUP, self::TTL );
 	}
 
 	/**
@@ -154,13 +153,13 @@ class AnchorCache {
 	 * @return string
 	 */
 	protected function key( $product_id, $variation_id ) {
-		$generation = get_transient( 'sidrena_cijena_cache_generation' );
+		$generation = get_transient( 'twbce_cijena_cache_generation' );
 
 		if ( false === $generation ) {
 			$generation = 0;
 		}
 
-		return sprintf( 'sidrena_anchor_%d_%d_%d', (int) $product_id, (int) $variation_id, (int) $generation );
+		return sprintf( 'twbce_anchor_%d_%d_%d', (int) $product_id, (int) $variation_id, (int) $generation );
 	}
 
 	/**

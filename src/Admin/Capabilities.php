@@ -5,10 +5,10 @@
  * One capability tier covers every compliance operation (clarification Q2):
  * administrators hold it by default and it can be granted to other roles.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ final class Capabilities {
 	/**
 	 * Base capability name.
 	 */
-	const CAPABILITY = 'manage_sidrena_cijena';
+	const CAPABILITY = 'twbce_manage_prices';
 
 	/**
 	 * Effective capability, filterable by site owners.
@@ -33,7 +33,7 @@ final class Capabilities {
 		 *
 		 * @param string $capability Capability name.
 		 */
-		return (string) apply_filters( 'sidrena_cijena_capability', self::CAPABILITY );
+		return (string) apply_filters( 'twbce_cijena_capability', self::CAPABILITY );
 	}
 
 	/**

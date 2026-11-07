@@ -8,7 +8,7 @@ test.describe('30-day lowest price display', () => {
   let wooCartPageId = 0;
 
   test.beforeAll(async () => {
-    wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
+    wpCli(['plugin', 'activate', 'sidrena-cijena-eu']);
 
     const id = wpEval(`
       $product = new WC_Product_Simple();
@@ -19,10 +19,10 @@ test.describe('30-day lowest price display', () => {
       $product->set_status('publish');
       $product->save();
 
-      $plugin = \\SidrenaCijena\\Plugin::instance();
+      $plugin = \\Titanworks\\SidrenaCijena\\Plugin::instance();
       $plugin->anchors()->record($plugin->catalog()->get_item($product->get_id()), 25.00, array('source' => 'manual'));
 
-      $today = \\SidrenaCijena\\Support\\Dates::today();
+      $today = \\Titanworks\\SidrenaCijena\\Support\\Dates::today();
       $plugin->history()->insert(array(
         'product_id' => $product->get_id(),
         'item_type' => 'product',
@@ -41,7 +41,7 @@ test.describe('30-day lowest price display', () => {
         'promo_price' => 7.00,
       ));
 
-      update_option('sidrena_cijena_settings', array_merge(\\SidrenaCijena\\Support\\Settings::all(), array(
+      update_option('twbce_cijena_settings', array_merge(\\Titanworks\\SidrenaCijena\\Support\\Settings::all(), array(
         'display_enabled' => true,
         'display_location' => 'price_html',
       )), false);
@@ -118,7 +118,7 @@ test.describe('30-day lowest price display', () => {
       'create',
       '--post_type=page',
       '--post_title=E2E 30-day shortcode',
-      `--post_content=[sidrena_cijena product_id=${productId} show_30_day=yes show_current=yes]`,
+      `--post_content=[twbce_cijena product_id=${productId} show_30_day=yes show_current=yes]`,
       '--post_status=publish',
       '--porcelain',
     ]).trim();
@@ -159,7 +159,7 @@ test.describe('30-day lowest price display', () => {
       const body = await response.json();
       return body.items.find((item) => item.id === expectedProductId);
     }, productId);
-    const extension = cartItem.extensions['titanworks-bazna-cijena'] || cartItem.extensions['titanworks-sidrena-bazna-cijena'] || cartItem.extensions['sidrena-cijena-eu'];
+    const extension = cartItem.extensions['sidrena-cijena-eu'] || cartItem.extensions['titanworks-sidrena-bazna-cijena'] || cartItem.extensions['sidrena-cijena-eu'];
     const reference = extension.cartPriceSuffix;
 
     expect(reference).toMatch(/Referentne cijene po komadu|Reference prices per item/);
@@ -205,9 +205,9 @@ test.describe('30-day lowest price display', () => {
 
     // Test configurable label persistence and rendering
     wpEval(`
-      $settings = \\SidrenaCijena\\Support\\Settings::all();
+      $settings = \\Titanworks\\SidrenaCijena\\Support\\Settings::all();
       $settings['thirty_day_label'] = 'Najniža cijena (zadnjih 30 dana)';
-      update_option('sidrena_cijena_settings', $settings);
+      update_option('twbce_cijena_settings', $settings);
     `);
 
     await page.goto(`/?p=${productId}`);
@@ -215,25 +215,25 @@ test.describe('30-day lowest price display', () => {
 
     // Restore default label
     wpEval(`
-      $settings = \\SidrenaCijena\\Support\\Settings::all();
+      $settings = \\Titanworks\\SidrenaCijena\\Support\\Settings::all();
       unset($settings['thirty_day_label']);
-      update_option('sidrena_cijena_settings', $settings);
+      update_option('twbce_cijena_settings', $settings);
     `);
   });
 
   test('English fallback behavior renders English labels when Croatian default is disabled', async ({ page }) => {
     wpEval(`
-      $settings = \\SidrenaCijena\\Support\\Settings::all();
+      $settings = \\Titanworks\\SidrenaCijena\\Support\\Settings::all();
       unset($settings['thirty_day_label']);
-      update_option('sidrena_cijena_settings', $settings);
+      update_option('twbce_cijena_settings', $settings);
       if (!is_dir(WPMU_PLUGIN_DIR)) {
         wp_mkdir_p(WPMU_PLUGIN_DIR);
       }
       file_put_contents(
         WPMU_PLUGIN_DIR . '/test-fallback.php',
         '<?php
-        add_filter("sidrena_cijena_load_croatian_catalog", "__return_false");
-        add_filter("sidrena_cijena_thirty_day_label", function() {
+        add_filter("twbce_cijena_load_croatian_catalog", "__return_false");
+        add_filter("twbce_cijena_thirty_day_label", function() {
           return "Lowest price in the last 30 days";
         });'
       );

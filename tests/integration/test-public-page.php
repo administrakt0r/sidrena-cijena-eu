@@ -2,15 +2,15 @@
 /**
  * Public HTML price list and archive integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Api\PublicArchiveSitemapProvider;
-use SidrenaCijena\Api\PublicPage;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Api\PublicArchiveSitemapProvider;
+use Titanworks\SidrenaCijena\Api\PublicPage;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Covers `/sidrena-cjenik` and `/arhiva-sidrene-cijene` and their shortcodes.
@@ -222,7 +222,7 @@ class Test_Public_Page extends WP_UnitTestCase {
 		$html = $this->page->render_archive();
 
 		$this->assertStringContainsString( $generated['filename'], $html );
-		$this->assertStringContainsString( __( 'Download', 'titanworks-bazna-cijena' ), $html );
+		$this->assertStringContainsString( __( 'Download', 'sidrena-cijena-eu' ), $html );
 	}
 
 	/**
@@ -233,7 +233,7 @@ class Test_Public_Page extends WP_UnitTestCase {
 	public function test_empty_archive_is_stated() {
 		$html = $this->page->render_archive();
 
-		$this->assertStringContainsString( __( 'No price lists have been published yet.', 'titanworks-bazna-cijena' ), $html );
+		$this->assertStringContainsString( __( 'No price lists have been published yet.', 'sidrena-cijena-eu' ), $html );
 	}
 
 	/**
@@ -254,8 +254,8 @@ class Test_Public_Page extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 		wp_set_object_terms( $post_id, $type, StandalonePostType::TAX_TYPE );
 
 		Plugin::instance()->anchors()->record(

@@ -2,10 +2,10 @@
 /**
  * CSV parser for anchor price imports.
  *
- * @package SidrenaCijena\Import
+ * @package Titanworks\SidrenaCijena\Import
  */
 
-namespace SidrenaCijena\Import;
+namespace Titanworks\SidrenaCijena\Import;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -56,19 +56,19 @@ class CsvParser {
 		$path = (string) $path;
 
 		if ( ! $this->is_allowed_path( $path ) ) {
-			return new \WP_Error( 'import_file_not_allowed', __( 'The selected file cannot be read by the plugin.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_file_not_allowed', __( 'The selected file cannot be read by the plugin.', 'sidrena-cijena-eu' ) );
 		}
 
 		$size = filesize( $path );
 
 		if ( false === $size || $size > self::MAX_BYTES ) {
-			return new \WP_Error( 'import_file_too_large', __( 'The import file is too large.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_file_too_large', __( 'The import file is too large.', 'sidrena-cijena-eu' ) );
 		}
 
 		$contents = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a validated, plugin-owned import file.
 
 		if ( false === $contents ) {
-			return new \WP_Error( 'import_file_unreadable', __( 'The import file could not be read.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_file_unreadable', __( 'The import file could not be read.', 'sidrena-cijena-eu' ) );
 		}
 
 		return $this->parse_string( self::to_utf8( $contents ) );
@@ -171,11 +171,11 @@ class CsvParser {
 		}
 
 		if ( ! $header ) {
-			return new \WP_Error( 'import_missing_header', __( 'The import file has no header row.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_missing_header', __( 'The import file has no header row.', 'sidrena-cijena-eu' ) );
 		}
 
 		if ( ! in_array( 'sku', $header, true ) && ! in_array( 'product_id', $header, true ) ) {
-			return new \WP_Error( 'import_missing_identifier_column', __( 'The import file must contain an sku or product_id column.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_missing_identifier_column', __( 'The import file must contain an sku or product_id column.', 'sidrena-cijena-eu' ) );
 		}
 
 		$rows   = array();
@@ -192,7 +192,7 @@ class CsvParser {
 			if ( $count > self::MAX_ROWS ) {
 				$errors[] = array(
 					'code'    => 'too_many_rows',
-					'message' => __( 'The file contains more rows than the import limit.', 'titanworks-bazna-cijena' ),
+					'message' => __( 'The file contains more rows than the import limit.', 'sidrena-cijena-eu' ),
 				);
 				break;
 			}

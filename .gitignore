@@ -38,3 +38,6 @@ Thumbs.db
 /.taskless/.cache/
 /.taskless/.run/
 PROMPT.md
+
+# CircleCI generated dependency fingerprints
+/.circleci/cache-keys/

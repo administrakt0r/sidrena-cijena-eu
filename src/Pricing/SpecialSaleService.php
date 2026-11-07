@@ -2,16 +2,16 @@
 /**
  * Special sale service.
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -78,7 +78,7 @@ class SpecialSaleService {
 		if ( ! $sale_id ) {
 			return new WP_Error(
 				'special_sale_not_stored',
-				__( 'The special sale could not be stored.', 'titanworks-bazna-cijena' ),
+				__( 'The special sale could not be stored.', 'sidrena-cijena-eu' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -92,7 +92,7 @@ class SpecialSaleService {
 		 * @param int $product_id   Product ID.
 		 * @param int $variation_id Variation ID.
 		 */
-		do_action( 'sidrena_cijena_special_sale_changed', $sale_id, (int) $item->id, (int) $item->variation_id );
+		do_action( 'twbce_cijena_special_sale_changed', $sale_id, (int) $item->id, (int) $item->variation_id );
 
 		return $sale_id;
 	}
@@ -111,7 +111,7 @@ class SpecialSaleService {
 		if ( ! $existing ) {
 			return new WP_Error(
 				'special_sale_not_found',
-				__( 'The special sale could not be found.', 'titanworks-bazna-cijena' ),
+				__( 'The special sale could not be found.', 'sidrena-cijena-eu' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -129,7 +129,7 @@ class SpecialSaleService {
 		if ( ! $this->sales->update( $sale_id, $prepared['sale'] ) ) {
 			return new WP_Error(
 				'special_sale_not_updated',
-				__( 'The special sale could not be updated.', 'titanworks-bazna-cijena' ),
+				__( 'The special sale could not be updated.', 'sidrena-cijena-eu' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -138,7 +138,7 @@ class SpecialSaleService {
 			$this->append_history( $item, $sale_id, $prepared );
 		}
 
-		do_action( 'sidrena_cijena_special_sale_changed', (int) $sale_id, (int) $item->id, (int) $item->variation_id );
+		do_action( 'twbce_cijena_special_sale_changed', (int) $sale_id, (int) $item->id, (int) $item->variation_id );
 
 		return true;
 	}
@@ -156,7 +156,7 @@ class SpecialSaleService {
 		if ( ! $existing ) {
 			return new WP_Error(
 				'special_sale_not_found',
-				__( 'The special sale could not be found.', 'titanworks-bazna-cijena' ),
+				__( 'The special sale could not be found.', 'sidrena-cijena-eu' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -182,7 +182,7 @@ class SpecialSaleService {
 		if ( $this->lowest_changed( $existing, $prepared ) ) {
 			$this->append_history( $item, $sale_id, $prepared );
 
-			do_action( 'sidrena_cijena_special_sale_changed', (int) $sale_id, (int) $item->id, (int) $item->variation_id );
+			do_action( 'twbce_cijena_special_sale_changed', (int) $sale_id, (int) $item->id, (int) $item->variation_id );
 		}
 
 		return $prepared['lowest'];
@@ -198,7 +198,7 @@ class SpecialSaleService {
 		$cancelled = $this->sales->set_status( (int) $sale_id, 'cancelled' );
 
 		if ( $cancelled ) {
-			do_action( 'sidrena_cijena_special_sale_changed', (int) $sale_id, 0, 0 );
+			do_action( 'twbce_cijena_special_sale_changed', (int) $sale_id, 0, 0 );
 		}
 
 		return $cancelled;
@@ -229,7 +229,7 @@ class SpecialSaleService {
 		if ( '' === $sale_type ) {
 			return new WP_Error(
 				'missing_sale_type',
-				__( 'A special form of sale must be classified with a sale type (FR-023).', 'titanworks-bazna-cijena' ),
+				__( 'A special form of sale must be classified with a sale type (FR-023).', 'sidrena-cijena-eu' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -239,7 +239,7 @@ class SpecialSaleService {
 		if ( ! Dates::is_valid_date( $start ) ) {
 			return new WP_Error(
 				'invalid_sale_start_date',
-				__( 'The special sale needs a valid start date.', 'titanworks-bazna-cijena' ),
+				__( 'The special sale needs a valid start date.', 'sidrena-cijena-eu' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -249,7 +249,7 @@ class SpecialSaleService {
 		if ( null !== $end && ( ! Dates::is_valid_date( $end ) || $end < $start ) ) {
 			return new WP_Error(
 				'invalid_sale_end_date',
-				__( 'The end date must be a valid date on or after the start date.', 'titanworks-bazna-cijena' ),
+				__( 'The end date must be a valid date on or after the start date.', 'sidrena-cijena-eu' ),
 				array( 'status' => 400 )
 			);
 		}

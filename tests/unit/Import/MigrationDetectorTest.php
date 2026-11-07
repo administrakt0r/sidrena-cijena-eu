@@ -2,13 +2,13 @@
 /**
  * Migration detector unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Import
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Import
  */
 
-namespace SidrenaCijena\Tests\Unit\Import;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Import;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Import\MigrationDetector;
+use Titanworks\SidrenaCijena\Import\MigrationDetector;
 
 /**
  * Test wpdb double for migration detection.
@@ -79,7 +79,7 @@ class MigrationDetectorTestWpdb extends \wpdb {
 }
 
 /**
- * @covers \SidrenaCijena\Import\MigrationDetector
+ * @covers \Titanworks\SidrenaCijena\Import\MigrationDetector
  */
 class MigrationDetectorTest extends TestCase {
 
@@ -98,9 +98,9 @@ class MigrationDetectorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->original_wpdb                = isset( $GLOBALS['wpdb'] ) ? $GLOBALS['wpdb'] : null;
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$this->original_wpdb              = isset( $GLOBALS['wpdb'] ) ? $GLOBALS['wpdb'] : null;
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**
@@ -113,7 +113,7 @@ class MigrationDetectorTest extends TestCase {
 			$GLOBALS['wpdb'] = $this->original_wpdb;
 		}
 
-		unset( $GLOBALS['sidrena_test_options'], $GLOBALS['sidrena_test_transients'] );
+		unset( $GLOBALS['twbce_test_options'], $GLOBALS['twbce_test_transients'] );
 
 		parent::tearDown();
 	}

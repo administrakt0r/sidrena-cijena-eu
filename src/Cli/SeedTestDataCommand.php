@@ -2,17 +2,17 @@
 /**
  * `wp sidrena-cijena seed-test-data` command.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -136,7 +136,7 @@ final class SeedTestDataCommand {
 			array(
 				'post_type'   => StandalonePostType::POST_TYPE,
 				'post_status' => 'any',
-				'meta_key'    => '_sidrena_sku', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One-off seeding lookup.
+				'meta_key'    => '_twbce_sku', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One-off seeding lookup.
 				'meta_value'  => $sku, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- One-off seeding lookup.
 				'numberposts' => 1,
 				'fields'      => 'ids',
@@ -152,7 +152,7 @@ final class SeedTestDataCommand {
 	 * @param string       $scenario Scenario key (used for the SKU).
 	 * @param string       $name     Product name.
 	 * @param array<mixed> $meta     Meta values (price, sku, barcode, unit, ...).
-	 * @return \SidrenaCijena\Catalog\CatalogItem|null
+	 * @return \Titanworks\SidrenaCijena\Catalog\CatalogItem|null
 	 */
 	protected static function create_item( $scenario, $name, array $meta = array() ) {
 		$sku = 'SEED-' . strtoupper( str_replace( '-', '_', $scenario ) );
@@ -176,27 +176,27 @@ final class SeedTestDataCommand {
 
 		$post_id = (int) $post_id;
 
-		update_post_meta( $post_id, '_sidrena_sku', isset( $meta['sku'] ) ? $meta['sku'] : $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', isset( $meta['price'] ) ? (string) $meta['price'] : '9.99' );
+		update_post_meta( $post_id, '_twbce_sku', isset( $meta['sku'] ) ? $meta['sku'] : $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', isset( $meta['price'] ) ? (string) $meta['price'] : '9.99' );
 
 		if ( isset( $meta['sale'] ) ) {
-			update_post_meta( $post_id, '_sidrena_sale_price', (string) $meta['sale'] );
+			update_post_meta( $post_id, '_twbce_sale_price', (string) $meta['sale'] );
 		}
 
 		if ( isset( $meta['barcode'] ) ) {
-			update_post_meta( $post_id, '_sidrena_barcode', $meta['barcode'] );
+			update_post_meta( $post_id, '_twbce_barcode', $meta['barcode'] );
 		}
 
 		if ( isset( $meta['availability'] ) ) {
-			update_post_meta( $post_id, '_sidrena_availability', $meta['availability'] );
+			update_post_meta( $post_id, '_twbce_availability', $meta['availability'] );
 		}
 
 		if ( isset( $meta['unit'] ) ) {
-			update_post_meta( $post_id, '_sidrena_unit', $meta['unit'] );
-			update_post_meta( $post_id, '_sidrena_unit_price', isset( $meta['unit_price'] ) ? (string) $meta['unit_price'] : '' );
+			update_post_meta( $post_id, '_twbce_unit', $meta['unit'] );
+			update_post_meta( $post_id, '_twbce_unit_price', isset( $meta['unit_price'] ) ? (string) $meta['unit_price'] : '' );
 		}
 
-		update_post_meta( $post_id, '_sidrena_first_seen', isset( $meta['first_seen'] ) ? $meta['first_seen'] : '2025-01-15' );
+		update_post_meta( $post_id, '_twbce_first_seen', isset( $meta['first_seen'] ) ? $meta['first_seen'] : '2025-01-15' );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 
 		if ( isset( $meta['category'] ) ) {
@@ -209,9 +209,9 @@ final class SeedTestDataCommand {
 	/**
 	 * Record an anchor for a seed item.
 	 *
-	 * @param \SidrenaCijena\Catalog\CatalogItem|null $item  Item.
-	 * @param float                                   $price Anchor price.
-	 * @param string                                  $date  Reference date ('' for the applicable default).
+	 * @param \Titanworks\SidrenaCijena\Catalog\CatalogItem|null $item  Item.
+	 * @param float                                              $price Anchor price.
+	 * @param string                                             $date  Reference date ('' for the applicable default).
 	 * @return void
 	 */
 	protected static function anchor( $item, $price, $date = '' ) {
@@ -231,11 +231,11 @@ final class SeedTestDataCommand {
 	/**
 	 * Record a classified sale for a seed item.
 	 *
-	 * @param \SidrenaCijena\Catalog\CatalogItem|null $item  Item.
-	 * @param string                                  $type  Sale type.
-	 * @param string                                  $start Start date.
-	 * @param string                                  $end   End date.
-	 * @param float                                   $promo Promotional price.
+	 * @param \Titanworks\SidrenaCijena\Catalog\CatalogItem|null $item  Item.
+	 * @param string                                             $type  Sale type.
+	 * @param string                                             $start Start date.
+	 * @param string                                             $end   End date.
+	 * @param float                                              $promo Promotional price.
 	 * @return void
 	 */
 	protected static function sale( $item, $type, $start, $end, $promo ) {
@@ -297,7 +297,7 @@ final class SeedTestDataCommand {
 		$item = self::exists( $sku ) ? null : self::create_item( 'no-sku', 'Seed product without SKU', array( 'price' => '9.99' ) );
 
 		if ( $item ) {
-			delete_post_meta( $item->id, '_sidrena_sku' );
+			delete_post_meta( $item->id, '_twbce_sku' );
 			self::anchor( ( new StandaloneCatalogProvider() )->get_item( $item->id ), 9.99 );
 
 			return true;
@@ -362,7 +362,7 @@ final class SeedTestDataCommand {
 		$parent->save();
 		$parent_id = $parent->get_id();
 
-		$provider = new \SidrenaCijena\WooCommerce\WooCommerceCatalogProvider();
+		$provider = new \Titanworks\SidrenaCijena\WooCommerce\WooCommerceCatalogProvider();
 		$prices   = array( 29.99, 34.99 );
 
 		foreach ( $prices as $price ) {

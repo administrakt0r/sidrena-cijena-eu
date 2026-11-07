@@ -2,19 +2,19 @@
 /**
  * Unit tests for the compliance report and finding value objects.
  *
- * @package SidrenaCijena\Tests\Unit\Compliance
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Compliance
  */
 
-namespace SidrenaCijena\Tests\Unit\Compliance;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Compliance;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Compliance\ComplianceReport;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Compliance\ComplianceReport;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
 
 /**
- * @covers \SidrenaCijena\Compliance\ComplianceReport
- * @covers \SidrenaCijena\Compliance\Finding
+ * @covers \Titanworks\SidrenaCijena\Compliance\ComplianceReport
+ * @covers \Titanworks\SidrenaCijena\Compliance\Finding
  */
 class ComplianceReportTest extends TestCase {
 

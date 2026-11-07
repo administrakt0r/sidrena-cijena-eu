@@ -2,16 +2,16 @@
 /**
  * Anchor display presets tests.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\DisplayStyles;
+use Titanworks\SidrenaCijena\Support\DisplayStyles;
 
 /**
- * @covers \SidrenaCijena\Support\DisplayStyles
+ * @covers \Titanworks\SidrenaCijena\Support\DisplayStyles
  */
 class DisplayStylesTest extends TestCase {
 

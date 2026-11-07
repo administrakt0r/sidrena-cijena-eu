@@ -2,16 +2,16 @@
 /**
  * Publications screen tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\PublicationsPage;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Admin\PublicationsPage;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -42,7 +42,7 @@ class PublicationsPageTestRepository extends PublicationRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Admin\PublicationsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\PublicationsPage
  */
 class PublicationsPageTest extends TestCase {
 
@@ -60,9 +60,9 @@ class PublicationsPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$_GET                               = array();
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$_GET                             = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 
 		$this->repo = new PublicationsPageTestRepository();
 		PluginSwap::swap( 'publications', $this->repo );

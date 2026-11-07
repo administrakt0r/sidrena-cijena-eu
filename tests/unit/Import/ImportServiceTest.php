@@ -2,20 +2,20 @@
 /**
  * ImportService unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Import
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Import
  */
 
-namespace SidrenaCijena\Tests\Unit\Import;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Import;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Import\CsvParser;
-use SidrenaCijena\Import\ImportService;
-use SidrenaCijena\Import\RowValidator;
-use SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Import\CsvParser;
+use Titanworks\SidrenaCijena\Import\ImportService;
+use Titanworks\SidrenaCijena\Import\RowValidator;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
 
 /**
- * @covers \SidrenaCijena\Import\ImportService
+ * @covers \Titanworks\SidrenaCijena\Import\ImportService
  */
 class ImportServiceTest extends TestCase {
 

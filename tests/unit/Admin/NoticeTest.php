@@ -2,16 +2,16 @@
 /**
  * Shared notice helper tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\Notice;
+use Titanworks\SidrenaCijena\Admin\Notice;
 
 /**
- * @covers \SidrenaCijena\Admin\Notice
+ * @covers \Titanworks\SidrenaCijena\Admin\Notice
  */
 class NoticeTest extends TestCase {
 
@@ -91,8 +91,8 @@ class NoticeTest extends TestCase {
 
 		foreach ( $cases as $type => $class ) {
 			$_GET = array(
-				'sidrena_cijena_notice'      => $type,
-				'sidrena_cijena_notice_text' => 'Notice text.',
+				'twbce_cijena_notice'      => $type,
+				'twbce_cijena_notice_text' => 'Notice text.',
 			);
 
 			ob_start();

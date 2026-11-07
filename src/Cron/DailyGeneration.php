@@ -2,14 +2,14 @@
 /**
  * Daily price-list generation.
  *
- * @package SidrenaCijena\Cron
+ * @package Titanworks\SidrenaCijena\Cron
  */
 
-namespace SidrenaCijena\Cron;
+namespace Titanworks\SidrenaCijena\Cron;
 
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,17 +21,17 @@ class DailyGeneration {
 	/**
 	 * Last generation result option.
 	 */
-	const RESULT_OPTION = 'sidrena_cijena_last_generation';
+	const RESULT_OPTION = 'twbce_cijena_last_generation';
 
 	/**
 	 * Last generation failure option.
 	 */
-	const FAILURE_OPTION = 'sidrena_cijena_last_generation_failure';
+	const FAILURE_OPTION = 'twbce_cijena_last_generation_failure';
 
 	/**
 	 * Dismiss failure option.
 	 */
-	const DISMISS_OPTION = 'sidrena_cijena_dismiss_gen_failure';
+	const DISMISS_OPTION = 'twbce_cijena_dismiss_gen_failure';
 
 	/**
 	 * Generate all due price lists.

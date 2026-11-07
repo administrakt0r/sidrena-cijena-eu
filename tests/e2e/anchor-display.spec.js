@@ -12,7 +12,7 @@ test.describe( 'Anchor price display', () => {
 	let upsellId;
 
 	test.beforeAll( () => {
-		wpCli( [ 'plugin', 'activate', 'titanworks-bazna-cijena' ] );
+		wpCli( [ 'plugin', 'activate', 'sidrena-cijena-eu' ] );
 
 		const created = wpEval(
 			'$p = new WC_Product_Simple();' +
@@ -27,10 +27,10 @@ test.describe( 'Anchor price display', () => {
 		productId = parseInt( created.trim(), 10 );
 
 		wpEval(
-			"$item = \\SidrenaCijena\\Plugin::instance()->catalog()->get_item(" +
+			"$item = \\Titanworks\\SidrenaCijena\\Plugin::instance()->catalog()->get_item(" +
 				productId +
 				');' +
-				"\\SidrenaCijena\\Plugin::instance()->anchors()->record($item, '" +
+				"\\Titanworks\\SidrenaCijena\\Plugin::instance()->anchors()->record($item, '" +
 				ANCHOR_PRICE +
 				"', array('source' => 'manual'));"
 		);
@@ -41,11 +41,11 @@ test.describe( 'Anchor price display', () => {
 		upsellId = parseInt( upsell.trim(), 10 );
 
 		wpEval(
-			"$plugin = \\SidrenaCijena\\Plugin::instance(); $item = $plugin->catalog()->get_item(" +
+			"$plugin = \\Titanworks\\SidrenaCijena\\Plugin::instance(); $item = $plugin->catalog()->get_item(" +
 				upsellId +
 				"); $plugin->anchors()->record($item, '35.00', array('source' => 'manual')); update_post_meta(" +
 				upsellId +
-				", '_sidrena_cijena_show_in_cards', '1'); $parent = wc_get_product(" +
+				", '_twbce_cijena_show_in_cards', '1'); $parent = wc_get_product(" +
 				productId +
 				"); $parent->set_upsell_ids(array(" +
 				upsellId +
@@ -53,7 +53,7 @@ test.describe( 'Anchor price display', () => {
 		);
 
 		wpEval(
-			"update_option('sidrena_cijena_settings', array_merge(SidrenaCijena\\Support\\Settings::defaults(), array('display_enabled' => true, 'display_archives' => true, 'display_location' => 'price_html')));"
+			"update_option('twbce_cijena_settings', array_merge(Titanworks\\SidrenaCijena\\Support\\Settings::defaults(), array('display_enabled' => true, 'display_archives' => true, 'display_location' => 'price_html')));"
 		);
 	} );
 
@@ -100,12 +100,12 @@ test.describe( 'Anchor price display', () => {
 	test( 'product editor can hide its anchor on cards without changing the product page', async ( { page } ) => {
 		await login( page );
 		await page.goto( '/wp-admin/post.php?post=' + productId + '&action=edit' );
-		await page.locator( '#woocommerce-product-data .sidrena_cijena_options a' ).click();
+		await page.locator( '#woocommerce-product-data .twbce_cijena_options a' ).click();
 		const choice = page.locator( '#sidrena-cijena-show-in-cards' );
 		await expect( choice ).toBeChecked();
 		await choice.uncheck();
 		await page.locator( '#publish' ).click();
-		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '0' );
+		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_twbce_cijena_show_in_cards', true);" ).trim() ).toBe( '0' );
 
 		await page.goto( '/?post_type=product' );
 		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toHaveCount( 0 );
@@ -113,15 +113,15 @@ test.describe( 'Anchor price display', () => {
 		await expect( page.locator( '.sidrena-cijena[data-product-id="' + productId + '"]' ) ).toBeVisible();
 
 		await page.goto( '/wp-admin/post.php?post=' + productId + '&action=edit' );
-		await page.locator( '#woocommerce-product-data .sidrena_cijena_options a' ).click();
+		await page.locator( '#woocommerce-product-data .twbce_cijena_options a' ).click();
 		await choice.check();
 		await page.locator( '#publish' ).click();
-		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_sidrena_cijena_show_in_cards', true);" ).trim() ).toBe( '1' );
+		await expect.poll( () => wpEval( "echo get_post_meta(" + productId + ", '_twbce_cijena_show_in_cards', true);" ).trim() ).toBe( '1' );
 	} );
 
 	test( 'hides the anchor price when display is disabled', async ( { page } ) => {
 		wpEval(
-			"$s = SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = false; update_option('sidrena_cijena_settings', $s);"
+			"$s = Titanworks\\SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = false; update_option('twbce_cijena_settings', $s);"
 		);
 
 		await page.goto( '/?p=' + productId );
@@ -129,7 +129,7 @@ test.describe( 'Anchor price display', () => {
 		await expect( page.locator( '.sidrena-cijena' ) ).toHaveCount( 0 );
 
 		wpEval(
-			"$s = SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = true; update_option('sidrena_cijena_settings', $s);"
+			"$s = Titanworks\\SidrenaCijena\\Support\\Settings::all(); $s['display_enabled'] = true; update_option('twbce_cijena_settings', $s);"
 		);
 	} );
 
@@ -141,7 +141,7 @@ test.describe( 'Anchor price display', () => {
 				'--post_type=page',
 				'--post_status=publish',
 				'--post_title=E2E sidrena shortcode',
-				'--post_content=[sidrena_cijena product_id=' + productId + ']',
+				'--post_content=[twbce_cijena product_id=' + productId + ']',
 				'--porcelain',
 			] ).trim(),
 			10

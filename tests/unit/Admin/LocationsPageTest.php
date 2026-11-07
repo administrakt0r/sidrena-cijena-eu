@@ -2,14 +2,14 @@
 /**
  * Sales-location form markup tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\FormState;
-use SidrenaCijena\Admin\LocationsPage;
+use Titanworks\SidrenaCijena\Admin\FormState;
+use Titanworks\SidrenaCijena\Admin\LocationsPage;
 
 /**
  * Probe exposing the protected location form renderer.
@@ -33,7 +33,7 @@ class LocationsPageProbe extends LocationsPage {
 /**
  * Covers label associations and markup correctness of the location form.
  *
- * @covers \SidrenaCijena\Admin\LocationsPage::render_form
+ * @covers \Titanworks\SidrenaCijena\Admin\LocationsPage::render_form
  */
 class LocationsPageTest extends TestCase {
 
@@ -45,7 +45,7 @@ class LocationsPageTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**
@@ -138,7 +138,7 @@ class LocationsPageTest extends TestCase {
 		$this->assertStringContainsString( 'value="Ilica 1"', $html );
 		$this->assertStringContainsString( 'value="ZAG-1"', $html );
 		$this->assertStringContainsString( 'value="kava"', $html );
-		$this->assertStringContainsString( 'sidrena_cijena_save_location', $html );
+		$this->assertStringContainsString( 'twbce_cijena_save_location', $html );
 		$this->assertStringContainsString( 'Save location', $html );
 	}
 

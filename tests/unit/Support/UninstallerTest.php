@@ -2,17 +2,17 @@
 /**
  * Uninstaller tests.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\Support\Uninstaller;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Support\Uninstaller;
 
 /**
- * @covers \SidrenaCijena\Support\Uninstaller
+ * @covers \Titanworks\SidrenaCijena\Support\Uninstaller
  */
 class UninstallerTest extends TestCase {
 
@@ -24,8 +24,8 @@ class UninstallerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**
@@ -77,20 +77,20 @@ class UninstallerTest extends TestCase {
 	public function test_options_list_covers_plugin_options() {
 		$options = Uninstaller::options();
 
-		$this->assertContains( 'sidrena_cijena_settings', $options );
-		$this->assertContains( 'sidrena_cijena_rule_config', $options );
-		$this->assertContains( 'sidrena_cijena_rule_config_history', $options );
-		$this->assertContains( 'sidrena_cijena_db_version', $options );
-		$this->assertContains( 'sidrena_cijena_last_generation', $options );
-		$this->assertContains( 'sidrena_cijena_last_generation_failure', $options );
-		$this->assertContains( 'sidrena_cijena_dismiss_gen_failure', $options );
-		$this->assertContains( 'sidrena_cijena_rest_generation', $options );
-		$this->assertContains( 'sidrena_cijena_public_feed_last_queue', $options );
-		$this->assertContains( 'sidrena_cijena_terms_seeded', $options );
-		$this->assertContains( 'sidrena_cijena_activation_redirect', $options );
-		$this->assertContains( 'sidrena_cijena_welcome_dismissed', $options );
-		$this->assertContains( 'sidrena_cijena_setup_complete', $options );
-		$this->assertContains( 'sidrena_cijena_delete_data_on_uninstall', $options );
+		$this->assertContains( 'twbce_cijena_settings', $options );
+		$this->assertContains( 'twbce_cijena_rule_config', $options );
+		$this->assertContains( 'twbce_cijena_rule_config_history', $options );
+		$this->assertContains( 'twbce_cijena_db_version', $options );
+		$this->assertContains( 'twbce_cijena_last_generation', $options );
+		$this->assertContains( 'twbce_cijena_last_generation_failure', $options );
+		$this->assertContains( 'twbce_cijena_dismiss_gen_failure', $options );
+		$this->assertContains( 'twbce_cijena_rest_generation', $options );
+		$this->assertContains( 'twbce_cijena_public_feed_last_queue', $options );
+		$this->assertContains( 'twbce_cijena_terms_seeded', $options );
+		$this->assertContains( 'twbce_cijena_activation_redirect', $options );
+		$this->assertContains( 'twbce_cijena_welcome_dismissed', $options );
+		$this->assertContains( 'twbce_cijena_setup_complete', $options );
+		$this->assertContains( 'twbce_cijena_delete_data_on_uninstall', $options );
 	}
 
 	/**
@@ -112,8 +112,12 @@ class UninstallerTest extends TestCase {
 	public function test_run_when_enabled_prunes_history_and_preserves_evidence_tables() {
 		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => true ) ) );
 
+		update_option( 'sidrena_cijena_settings', array( 'merchant_name' => 'Legacy backup' ) );
+		update_option( \Titanworks\SidrenaCijena\Support\IdentifierMigration::OPTION, 1 );
 		$summary = Uninstaller::run();
 
+		$this->assertFalse( get_option( 'sidrena_cijena_settings' ) );
+		$this->assertFalse( get_option( \Titanworks\SidrenaCijena\Support\IdentifierMigration::OPTION ) );
 		$this->assertTrue( $summary['deleted'] );
 		$this->assertArrayHasKey( 'pruned', $summary );
 		$this->assertArrayHasKey( 'transients', $summary );

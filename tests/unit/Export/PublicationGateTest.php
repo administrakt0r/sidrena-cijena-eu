@@ -2,16 +2,16 @@
 /**
  * Publication gate regressions.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Export\GenerationService;
+use Titanworks\SidrenaCijena\Export\GenerationService;
 
 /**
- * @covers \SidrenaCijena\Export\GenerationService::publication_blockers
+ * @covers \Titanworks\SidrenaCijena\Export\GenerationService::publication_blockers
  */
 class PublicationGateTest extends TestCase {
 	/**

@@ -2,16 +2,16 @@
 /**
  * CSV writer tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Export\CsvWriter;
+use Titanworks\SidrenaCijena\Export\CsvWriter;
 
 /**
- * @covers \SidrenaCijena\Export\CsvWriter
+ * @covers \Titanworks\SidrenaCijena\Export\CsvWriter
  */
 class CsvWriterTest extends TestCase {
 

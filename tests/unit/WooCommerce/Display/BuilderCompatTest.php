@@ -2,14 +2,14 @@
 /**
  * Unit tests for page-builder price element compatibility.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\WooCommerce\Display\BuilderCompat;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\WooCommerce\Display\BuilderCompat;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 require_once dirname( __DIR__, 2 ) . '/wc-stubs.php';
 
@@ -41,7 +41,7 @@ class FakeDisplay extends PriceDisplay {
 /**
  * Covers the builder hook routing and single-product append rules.
  *
- * @covers \SidrenaCijena\WooCommerce\Display\BuilderCompat
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\BuilderCompat
  */
 class BuilderCompatTest extends TestCase {
 
@@ -65,10 +65,10 @@ class BuilderCompatTest extends TestCase {
 	 * @return void
 	 */
 	private function reset_state() {
-		$GLOBALS['sidrena_test_options']           = array();
-		$GLOBALS['sidrena_test_is_product']        = true;
-		$GLOBALS['sidrena_test_queried_object_id'] = 5;
-		$GLOBALS['sidrena_test_wc_products']       = array(
+		$GLOBALS['twbce_test_options']           = array();
+		$GLOBALS['twbce_test_is_product']        = true;
+		$GLOBALS['twbce_test_queried_object_id'] = 5;
+		$GLOBALS['twbce_test_wc_products']       = array(
 			5 => array( 'id' => 5 ),
 		);
 
@@ -175,7 +175,7 @@ class BuilderCompatTest extends TestCase {
 	public function test_append_respects_display_location_setting() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_options']['sidrena_cijena_settings'] = array( 'display_location' => 'summary' );
+		$GLOBALS['twbce_test_options']['twbce_cijena_settings'] = array( 'display_location' => 'summary' );
 
 		$this->assertSame( self::PRICE, $this->compat()->filter_content( self::PRICE ) );
 	}
@@ -199,7 +199,7 @@ class BuilderCompatTest extends TestCase {
 	public function test_append_requires_single_product_context() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_is_product'] = false;
+		$GLOBALS['twbce_test_is_product'] = false;
 
 		$this->assertSame( self::PRICE, $this->compat()->filter_content( self::PRICE ) );
 	}
@@ -223,8 +223,8 @@ class BuilderCompatTest extends TestCase {
 	public function test_append_falls_back_to_global_product() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_queried_object_id'] = 0;
-		$GLOBALS['product']                        = new \WC_Product( array( 'id' => 9 ) );
+		$GLOBALS['twbce_test_queried_object_id'] = 0;
+		$GLOBALS['product']                      = new \WC_Product( array( 'id' => 9 ) );
 
 		$this->assertSame( self::PRICE . self::MARKER, $this->compat()->filter_content( self::PRICE ) );
 	}
@@ -237,7 +237,7 @@ class BuilderCompatTest extends TestCase {
 	public function test_append_without_product_returns_content() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_queried_object_id'] = 0;
+		$GLOBALS['twbce_test_queried_object_id'] = 0;
 
 		$this->assertSame( self::PRICE, $this->compat()->filter_content( self::PRICE ) );
 	}

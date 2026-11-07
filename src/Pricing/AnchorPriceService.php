@@ -6,16 +6,16 @@
  * an item that already has one requires a correction reason and creates a new
  * record that references the original (FR-003 to FR-010).
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\ReferenceDateResolver;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\ReferenceDateResolver;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -104,7 +104,7 @@ class AnchorPriceService {
 		if ( null === $price || $price < 0 ) {
 			return new WP_Error(
 				'invalid_anchor_price',
-				__( 'The anchor price must be a non-negative number.', 'titanworks-bazna-cijena' )
+				__( 'The anchor price must be a non-negative number.', 'sidrena-cijena-eu' )
 			);
 		}
 
@@ -117,7 +117,7 @@ class AnchorPriceService {
 		if ( ! Dates::is_valid_date( $reference_date ) ) {
 			return new WP_Error(
 				'invalid_reference_date',
-				__( 'The reference date is not a valid date (YYYY-MM-DD).', 'titanworks-bazna-cijena' )
+				__( 'The reference date is not a valid date (YYYY-MM-DD).', 'sidrena-cijena-eu' )
 			);
 		}
 
@@ -134,7 +134,7 @@ class AnchorPriceService {
 		if ( $correction_of && '' === $reason ) {
 			return new WP_Error(
 				'correction_reason_required',
-				__( 'Changing an existing anchor price requires a correction reason.', 'titanworks-bazna-cijena' )
+				__( 'Changing an existing anchor price requires a correction reason.', 'sidrena-cijena-eu' )
 			);
 		}
 
@@ -166,7 +166,7 @@ class AnchorPriceService {
 		if ( ! $id ) {
 			return new WP_Error(
 				'anchor_record_failed',
-				__( 'The anchor price could not be recorded.', 'titanworks-bazna-cijena' )
+				__( 'The anchor price could not be recorded.', 'sidrena-cijena-eu' )
 			);
 		}
 
@@ -182,7 +182,7 @@ class AnchorPriceService {
 		 * @param int    $variation_id   Variation ID.
 		 * @param string $reference_date Reference date.
 		 */
-		do_action( 'sidrena_cijena_anchor_recorded', $id, $item->id, $item->variation_id, $reference_date );
+		do_action( 'twbce_cijena_anchor_recorded', $id, $item->id, $item->variation_id, $reference_date );
 
 		return $id;
 	}

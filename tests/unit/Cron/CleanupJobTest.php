@@ -2,15 +2,15 @@
 /**
  * CleanupJob test.
  *
- * @package SidrenaCijena\Tests\Unit\Cron
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cron
  */
 
-namespace SidrenaCijena\Tests\Unit\Cron;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cron;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cron\CleanupJob;
-use SidrenaCijena\Database\LogRepository;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cron\CleanupJob;
+use Titanworks\SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 /**
  * Fake publications for cleanup.
@@ -57,8 +57,8 @@ class CleanupJobFakePublication {
 }
 
 /**
- * @covers \SidrenaCijena\Cron\CleanupJob
- * @covers \SidrenaCijena\Database\LogRepository::prune
+ * @covers \Titanworks\SidrenaCijena\Cron\CleanupJob
+ * @covers \Titanworks\SidrenaCijena\Database\LogRepository::prune
  */
 class CleanupJobTest extends TestCase {
 
@@ -69,9 +69,9 @@ class CleanupJobTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_db_queries']      = array();
-		$GLOBALS['sidrena_test_db_query_result'] = 0;
-		$GLOBALS['sidrena_test_options']         = array();
+		$GLOBALS['twbce_test_db_queries']      = array();
+		$GLOBALS['twbce_test_db_query_result'] = 0;
+		$GLOBALS['twbce_test_options']         = array();
 	}
 
 	/**
@@ -81,9 +81,9 @@ class CleanupJobTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		PluginSwap::swap( 'publications', null );
-		unset( $GLOBALS['sidrena_test_db_queries'] );
-		unset( $GLOBALS['sidrena_test_db_query_result'] );
-		unset( $GLOBALS['sidrena_test_options'] );
+		unset( $GLOBALS['twbce_test_db_queries'] );
+		unset( $GLOBALS['twbce_test_db_query_result'] );
+		unset( $GLOBALS['twbce_test_options'] );
 		parent::tearDown();
 	}
 
@@ -96,7 +96,7 @@ class CleanupJobTest extends TestCase {
 		$pub = new CleanupJobFakePublication();
 		PluginSwap::swap( 'publications', $pub );
 
-		$temp_dir = sys_get_temp_dir() . '/sidrena_test_' . uniqid();
+		$temp_dir = sys_get_temp_dir() . '/twbce_test_' . uniqid();
 		mkdir( $temp_dir );
 		$file1 = $temp_dir . '/file1.csv';
 		$file2 = $temp_dir . '/file2.csv';
@@ -115,7 +115,7 @@ class CleanupJobTest extends TestCase {
 		);
 
 		// wp_delete_file uses unlink, so the file should be deleted.
-		$GLOBALS['sidrena_test_db_query_result'] = 5; // Return 5 rows pruned.
+		$GLOBALS['twbce_test_db_query_result'] = 5; // Return 5 rows pruned.
 
 		CleanupJob::run();
 
@@ -123,7 +123,7 @@ class CleanupJobTest extends TestCase {
 		$this->assertSame( array( 10, 20 ), $pub->marked );
 
 		// Check prune query.
-		$queries = $GLOBALS['sidrena_test_db_queries'];
+		$queries = $GLOBALS['twbce_test_db_queries'];
 		$this->assertCount( 1, $queries );
 		$this->assertStringContainsString( 'DELETE FROM `wp_sidrena_logs` WHERE created_at <', $queries[0] );
 
@@ -138,12 +138,12 @@ class CleanupJobTest extends TestCase {
 	public function test_prune_query() {
 		$repo = new LogRepository();
 
-		$GLOBALS['sidrena_test_db_query_result'] = 10;
+		$GLOBALS['twbce_test_db_query_result'] = 10;
 
 		$deleted = $repo->prune( 30 );
 
 		$this->assertSame( 10, $deleted );
-		$queries = $GLOBALS['sidrena_test_db_queries'];
+		$queries = $GLOBALS['twbce_test_db_queries'];
 		$this->assertCount( 1, $queries );
 
 		// The query should use 30 days cutoff.
@@ -157,13 +157,13 @@ class CleanupJobTest extends TestCase {
 	 * @return void
 	 */
 	public function test_mark_expired_batch_query() {
-		$repo                               = new \SidrenaCijena\Database\PublicationRepository();
-		$GLOBALS['sidrena_test_db_queries'] = array();
+		$repo                             = new \Titanworks\SidrenaCijena\Database\PublicationRepository();
+		$GLOBALS['twbce_test_db_queries'] = array();
 
 		$result = $repo->mark_expired( array( 101, 102, 103 ) );
 
 		$this->assertTrue( $result );
-		$queries = $GLOBALS['sidrena_test_db_queries'];
+		$queries = $GLOBALS['twbce_test_db_queries'];
 		$this->assertCount( 1, $queries );
 		$this->assertStringContainsString( "UPDATE `wp_sidrena_publications` SET status = 'expired'", $queries[0] );
 		$this->assertStringContainsString( 'WHERE id IN (101,102,103)', $queries[0] );

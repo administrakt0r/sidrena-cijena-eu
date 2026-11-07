@@ -1,16 +1,15 @@
 <?php
 /**
  * Plugin Name:       Titanworks Bazna Cijena
- * Plugin URI:        https://github.com/administrakt0r/titanworks-bazna-cijena
  * Description:       Records, displays, validates and publishes the Croatian anchor price ("sidrena cijena"), base price, daily machine-readable price list and the 30-day lowest price for special forms of sale. A technical compliance aid, not legal advice.
- * Version:           2.0.23
+ * Version:           2.0.24
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            titanworks
  * Author URI:        https://github.com/administrakt0r
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       titanworks-bazna-cijena
+ * Text Domain:       sidrena-cijena-eu
  * Domain Path:       /languages
  *
  * @package TitanworksBaznaCijena
@@ -18,19 +17,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'SIDRENA_CIJENA_VERSION' ) || define( 'SIDRENA_CIJENA_VERSION', '2.0.23' );
-defined( 'SIDRENA_CIJENA_FILE' ) || define( 'SIDRENA_CIJENA_FILE', __FILE__ );
-defined( 'SIDRENA_CIJENA_DIR' ) || define( 'SIDRENA_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
-defined( 'SIDRENA_CIJENA_URL' ) || define( 'SIDRENA_CIJENA_URL', plugin_dir_url( __FILE__ ) );
-defined( 'SIDRENA_CIJENA_BASENAME' ) || define( 'SIDRENA_CIJENA_BASENAME', plugin_basename( __FILE__ ) );
+defined( 'TWBCE_CIJENA_VERSION' ) || define( 'TWBCE_CIJENA_VERSION', '2.0.24' );
+defined( 'TWBCE_CIJENA_FILE' ) || define( 'TWBCE_CIJENA_FILE', __FILE__ );
+defined( 'TWBCE_CIJENA_DIR' ) || define( 'TWBCE_CIJENA_DIR', plugin_dir_path( __FILE__ ) );
+defined( 'TWBCE_CIJENA_URL' ) || define( 'TWBCE_CIJENA_URL', plugin_dir_url( __FILE__ ) );
+defined( 'TWBCE_CIJENA_BASENAME' ) || define( 'TWBCE_CIJENA_BASENAME', plugin_basename( __FILE__ ) );
 
-require_once SIDRENA_CIJENA_DIR . 'src/Support/Autoloader.php';
-require_once SIDRENA_CIJENA_DIR . 'src/Api/functions.php';
-require_once SIDRENA_CIJENA_DIR . 'src/Api/global-functions.php';
-\SidrenaCijena\Support\Autoloader::register();
+require_once TWBCE_CIJENA_DIR . 'src/Support/Autoloader.php';
+require_once TWBCE_CIJENA_DIR . 'src/Api/functions.php';
+require_once TWBCE_CIJENA_DIR . 'src/Api/global-functions.php';
+\Titanworks\SidrenaCijena\Support\Autoloader::register();
 
-register_activation_hook( __FILE__, array( 'SidrenaCijena\Support\Install', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator', 'deactivate' ) );
+register_activation_hook( __FILE__, array( 'Titanworks\SidrenaCijena\Support\Install', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Titanworks\SidrenaCijena\Support\Deactivator', 'deactivate' ) );
 
 /**
  * Load the plugin translations.
@@ -42,7 +41,7 @@ register_deactivation_hook( __FILE__, array( 'SidrenaCijena\Support\Deactivator'
  * @return void
  */
 function titanworks_bazna_cijena_load_textdomain() {
-	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'titanworks-bazna-cijena' ) ) {
+	if ( function_exists( 'is_textdomain_loaded' ) && is_textdomain_loaded( 'sidrena-cijena-eu' ) ) {
 		return;
 	}
 
@@ -56,45 +55,23 @@ function titanworks_bazna_cijena_load_textdomain() {
 	 * @param bool   $load   Whether to load the Croatian catalog.
 	 * @param string $locale Active locale.
 	 */
-	$load_croatian = apply_filters( 'sidrena_cijena_load_croatian_catalog', 0 === strpos( (string) $locale, 'hr' ), $locale );
+	$load_croatian = apply_filters( 'twbce_cijena_load_croatian_catalog', 0 === strpos( (string) $locale, 'hr' ), $locale );
 
 	$candidates = array(
-		SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo',
-		SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo',
+		TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
+		TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
 	);
 
 	if ( $load_croatian || 0 === strpos( (string) $locale, 'hr' ) ) {
 		foreach ( $candidates as $bundled_mo ) {
 			if ( file_exists( $bundled_mo ) ) {
-				load_textdomain( 'titanworks-bazna-cijena', $bundled_mo );
+				load_textdomain( 'sidrena-cijena-eu', $bundled_mo );
 				break;
 			}
 		}
 	}
 }
 add_action( 'init', 'titanworks_bazna_cijena_load_textdomain', 1 );
-
-if ( ! function_exists( 'titanworks_sidrena_bazna_cijena_load_textdomain' ) ) {
-	/**
-	 * Backward compatibility alias for textdomain loading.
-	 *
-	 * @return void
-	 */
-	function titanworks_sidrena_bazna_cijena_load_textdomain() {
-		titanworks_bazna_cijena_load_textdomain();
-	}
-}
-
-if ( ! function_exists( 'sidrena_cijena_load_textdomain' ) ) {
-	/**
-	 * Backward compatibility wrapper for textdomain loading.
-	 *
-	 * @return void
-	 */
-	function sidrena_cijena_load_textdomain() {
-		titanworks_bazna_cijena_load_textdomain();
-	}
-}
 
 /**
  * Declare WooCommerce compatibility before WooCommerce loads its features.
@@ -110,31 +87,9 @@ function titanworks_bazna_cijena_declare_woocommerce_compatibility() {
 		return;
 	}
 
-	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', SIDRENA_CIJENA_FILE, true );
+	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', TWBCE_CIJENA_FILE, true );
 }
 
 add_action( 'before_woocommerce_init', 'titanworks_bazna_cijena_declare_woocommerce_compatibility' );
 
-if ( ! function_exists( 'titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility' ) ) {
-	/**
-	 * Backward compatibility alias for WooCommerce compatibility declaration.
-	 *
-	 * @return void
-	 */
-	function titanworks_sidrena_bazna_cijena_declare_woocommerce_compatibility() {
-		titanworks_bazna_cijena_declare_woocommerce_compatibility();
-	}
-}
-
-if ( ! function_exists( 'sidrena_cijena_declare_woocommerce_compatibility' ) ) {
-	/**
-	 * Backward compatibility wrapper for WooCommerce compatibility declaration.
-	 *
-	 * @return void
-	 */
-	function sidrena_cijena_declare_woocommerce_compatibility() {
-		titanworks_bazna_cijena_declare_woocommerce_compatibility();
-	}
-}
-
-add_action( 'plugins_loaded', array( 'SidrenaCijena\Plugin', 'boot' ), 20 );
+add_action( 'plugins_loaded', array( 'Titanworks\SidrenaCijena\Plugin', 'boot' ), 20 );

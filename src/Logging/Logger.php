@@ -5,12 +5,12 @@
  * Logs never contain passwords, payment data or customer personal data
  * (FR-074, FR-075). Logging failures never interrupt the calling operation.
  *
- * @package SidrenaCijena\Logging
+ * @package Titanworks\SidrenaCijena\Logging
  */
 
-namespace SidrenaCijena\Logging;
+namespace Titanworks\SidrenaCijena\Logging;
 
-use SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Database\LogRepository;
 
 defined( 'ABSPATH' ) || exit;
 

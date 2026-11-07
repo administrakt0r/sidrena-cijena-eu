@@ -2,13 +2,13 @@
 /**
  * PriceHistoryRepository unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Database
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Database
  */
 
-namespace SidrenaCijena\Tests\Unit\Database;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Database;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
 
 /**
  * Test wpdb stub for PriceHistoryRepository tests.
@@ -65,7 +65,7 @@ class PriceHistoryRepositoryTestWpdb extends \wpdb {
 }
 
 /**
- * @covers \SidrenaCijena\Database\PriceHistoryRepository
+ * @covers \Titanworks\SidrenaCijena\Database\PriceHistoryRepository
  */
 class PriceHistoryRepositoryTest extends TestCase {
 

@@ -9,7 +9,7 @@ const variationSku = `SIDRENA-VARIATION-${Date.now()}`;
 
 test.describe('WooCommerce product editor integration', () => {
 	test.beforeAll(async () => {
-		await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena', 'woocommerce']);
+		await wpCli(['plugin', 'activate', 'sidrena-cijena-eu', 'woocommerce']);
 		const output = await wpEval(`
 			$product = new WC_Product_Simple();
 			$product->set_name( 'Sidrena editor regression' );
@@ -78,11 +78,11 @@ test.describe('WooCommerce product editor integration', () => {
 		await page.goto(`wp-admin/post.php?post=${productId}&action=edit`);
 
 		await expect(page.locator('#woocommerce-product-data')).toBeVisible();
-		await expect(page.locator('#sidrena_cijena_product_data')).toBeAttached();
-		await page.locator('#woocommerce-product-data .sidrena_cijena_options a').click();
-		await expect(page.locator('#sidrena_cijena_product_data')).toBeVisible();
-		await expect(page.locator('#sidrena_cijena_product_data h2')).toContainText(/Anchor price and special-sale evidence|Podaci o sidrenoj cijeni i posebnoj prodaji/);
-		await expect(page.locator('#sidrena_cijena_product_data form')).toHaveCount(0);
+		await expect(page.locator('#twbce_cijena_product_data')).toBeAttached();
+		await page.locator('#woocommerce-product-data .twbce_cijena_options a').click();
+		await expect(page.locator('#twbce_cijena_product_data')).toBeVisible();
+		await expect(page.locator('#twbce_cijena_product_data h2')).toContainText(/Anchor price and special-sale evidence|Podaci o sidrenoj cijeni i posebnoj prodaji/);
+		await expect(page.locator('#twbce_cijena_product_data form')).toHaveCount(0);
 
 		await page.fill('#title', 'Sidrena editor save confirmed');
 		await page.locator('#publish').click();
@@ -93,10 +93,10 @@ test.describe('WooCommerce product editor integration', () => {
 	test('dedicated anchor evidence action submits independently', async ({ page }) => {
 		await login(page);
 		await page.goto(`wp-admin/post.php?post=${productId}&action=edit`);
-		await page.locator('#woocommerce-product-data .sidrena_cijena_options a').click();
+		await page.locator('#woocommerce-product-data .twbce_cijena_options a').click();
 		await page.locator('#sidrena-anchor-price').fill('1.23');
-		await page.locator('button[name="action"][value="sidrena_cijena_record_anchor"]').click();
-		await expect(page).toHaveURL(/sidrena_cijena_notice=success/);
+		await page.locator('button[name="action"][value="twbce_cijena_record_anchor"]').click();
+		await expect(page).toHaveURL(/twbce_cijena_notice=success/);
 		await expect(page.locator('.notice-success')).toBeVisible();
 	});
 
@@ -104,9 +104,9 @@ test.describe('WooCommerce product editor integration', () => {
 		const selectedVariationId = variationIds[0];
 		await login(page);
 		await page.goto(`wp-admin/post.php?post=${variationProductId}&action=edit`);
-		await page.locator('#woocommerce-product-data .sidrena_cijena_options a').click();
+		await page.locator('#woocommerce-product-data .twbce_cijena_options a').click();
 
-		const variationSections = page.locator('#sidrena_cijena_product_data .sidrena-cijena-variation-evidence');
+		const variationSections = page.locator('#twbce_cijena_product_data .sidrena-cijena-variation-evidence');
 		await expect(variationSections).toHaveCount(2);
 		await expect(page.locator(`input[name="anchor_price[${selectedVariationId}]"]`)).toBeVisible();
 		await expect(page.locator(`select[name="sale_type[${selectedVariationId}]"]`)).toBeVisible();
@@ -116,10 +116,10 @@ test.describe('WooCommerce product editor integration', () => {
 		const selectedSection = variationSections.nth(0);
 		await expect(selectedSection.locator('h3')).toContainText(`#${selectedVariationId}`);
 		await selectedSection.locator('button[name="action"]').first().click();
-		await expect(page).toHaveURL(/sidrena_cijena_notice=success/);
+		await expect(page).toHaveURL(/twbce_cijena_notice=success/);
 
 		const history = await wpEval(`
-			$repository = new \\SidrenaCijena\\Database\\PriceHistoryRepository();
+			$repository = new \\Titanworks\\SidrenaCijena\\Database\\PriceHistoryRepository();
 			$variation = $repository->latest( ${variationProductId}, ${selectedVariationId}, 'anchor' );
 			$parent = $repository->latest( ${variationProductId}, 0, 'anchor' );
 			echo 'VARIATION_ANCHOR=' . ( $variation ? $variation['price'] : 'none' );
@@ -133,9 +133,9 @@ test.describe('WooCommerce product editor integration', () => {
 		const selectedVariationId = variationIds[1];
 		await login(page);
 		await page.goto(`wp-admin/post.php?post=${variationProductId}&action=edit`);
-		await page.locator('#woocommerce-product-data .sidrena_cijena_options a').click();
+		await page.locator('#woocommerce-product-data .twbce_cijena_options a').click();
 
-		const variationSection = page.locator('#sidrena_cijena_product_data .sidrena-cijena-variation-evidence').nth(1);
+		const variationSection = page.locator('#twbce_cijena_product_data .sidrena-cijena-variation-evidence').nth(1);
 		await expect(variationSection.locator('h3')).toContainText(`#${selectedVariationId}`);
 		const saleType = variationSection.locator(`select[name="sale_type[${selectedVariationId}]"]`);
 		const saleTypeValue = await saleType.locator('option').evaluateAll((options) => options.map((option) => option.value).find((value) => value));
@@ -146,10 +146,10 @@ test.describe('WooCommerce product editor integration', () => {
 		await variationSection.locator(`input[name="sale_name[${selectedVariationId}]"]`).fill('Variation sale fixture');
 		await variationSection.locator(`input[name="promo_price[${selectedVariationId}]"]`).fill('8.88');
 		await variationSection.locator('button[name="action"]').last().click();
-		await expect(page).toHaveURL(/sidrena_cijena_notice=success/);
+		await expect(page).toHaveURL(/twbce_cijena_notice=success/);
 
 		const saleIdentity = await wpEval(`
-			$repository = new \\SidrenaCijena\\Database\\SpecialSaleRepository();
+			$repository = new \\Titanworks\\SidrenaCijena\\Database\\SpecialSaleRepository();
 			$variation = $repository->for_item( ${variationProductId}, ${selectedVariationId} );
 			$parent = $repository->for_item( ${variationProductId}, 0 );
 			echo 'VARIATION_SALES=' . count( $variation );

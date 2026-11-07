@@ -2,14 +2,14 @@
 /**
  * Anchor record integration tests.
  *
- * @package SidrenaCijena\Tests
+ * @package Titanworks\SidrenaCijena\Tests
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
 
 /**
  * Exercises anchor recording against the real database.
@@ -52,8 +52,8 @@ class Test_Anchor_Records extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', 'KAV-250' );
-		update_post_meta( $post_id, '_sidrena_regular_price', '6.99' );
+		update_post_meta( $post_id, '_twbce_sku', 'KAV-250' );
+		update_post_meta( $post_id, '_twbce_regular_price', '6.99' );
 
 		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );

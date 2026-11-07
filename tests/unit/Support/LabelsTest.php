@@ -2,23 +2,23 @@
 /**
  * Unit tests for shared display labels.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\LogRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 /**
- * @covers \SidrenaCijena\Support\Labels
+ * @covers \Titanworks\SidrenaCijena\Support\Labels
  */
 class LabelsTest extends TestCase {
 

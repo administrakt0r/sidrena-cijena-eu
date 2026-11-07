@@ -2,21 +2,21 @@
 /**
  * Install unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Admin\WelcomeBanner;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\Migrator;
-use SidrenaCijena\Support\Install;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Admin\WelcomeBanner;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\Migrator;
+use Titanworks\SidrenaCijena\Support\Install;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 /**
- * @covers \SidrenaCijena\Support\Install
+ * @covers \Titanworks\SidrenaCijena\Support\Install
  */
 class InstallTest extends TestCase {
 
@@ -27,13 +27,13 @@ class InstallTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_actions']    = array();
-		$GLOBALS['sidrena_test_post_types'] = array();
-		$GLOBALS['sidrena_test_taxonomies'] = array();
-		$GLOBALS['sidrena_test_terms']      = array();
-		$GLOBALS['sidrena_test_dbdelta']    = array();
-		unset( $GLOBALS['sidrena_test_roles'] );
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_actions']    = array();
+		$GLOBALS['twbce_test_post_types'] = array();
+		$GLOBALS['twbce_test_taxonomies'] = array();
+		$GLOBALS['twbce_test_terms']      = array();
+		$GLOBALS['twbce_test_dbdelta']    = array();
+		unset( $GLOBALS['twbce_test_roles'] );
 
 		$upgrade_file = ABSPATH . 'wp-admin/includes/upgrade.php';
 		if ( ! is_dir( dirname( $upgrade_file ) ) ) {
@@ -42,7 +42,7 @@ class InstallTest extends TestCase {
 		if ( ! file_exists( $upgrade_file ) ) {
 			file_put_contents(
 				$upgrade_file,
-				"<?php\nif ( ! function_exists( 'dbDelta' ) ) {\n\tfunction dbDelta( \$sql ) {\n\t\t\$GLOBALS['sidrena_test_dbdelta'][] = \$sql;\n\t\treturn array();\n\t}\n}\n"
+				"<?php\nif ( ! function_exists( 'dbDelta' ) ) {\n\tfunction dbDelta( \$sql ) {\n\t\t\$GLOBALS['twbce_test_dbdelta'][] = \$sql;\n\t\treturn array();\n\t}\n}\n"
 			);
 		}
 	}
@@ -54,12 +54,12 @@ class InstallTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_options'],
-			$GLOBALS['sidrena_test_actions'],
-			$GLOBALS['sidrena_test_post_types'],
-			$GLOBALS['sidrena_test_taxonomies'],
-			$GLOBALS['sidrena_test_terms'],
-			$GLOBALS['sidrena_test_roles']
+			$GLOBALS['twbce_test_options'],
+			$GLOBALS['twbce_test_actions'],
+			$GLOBALS['twbce_test_post_types'],
+			$GLOBALS['twbce_test_taxonomies'],
+			$GLOBALS['twbce_test_terms'],
+			$GLOBALS['twbce_test_roles']
 		);
 		parent::tearDown();
 	}
@@ -111,7 +111,7 @@ class InstallTest extends TestCase {
 	public function test_activate_executes_activation_routine(): void {
 		$activated_fired = false;
 		add_action(
-			'sidrena_cijena_activated',
+			'twbce_cijena_activated',
 			static function () use ( &$activated_fired ) {
 				$activated_fired = true;
 			}

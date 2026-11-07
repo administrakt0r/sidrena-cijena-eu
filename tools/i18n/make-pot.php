@@ -3,7 +3,7 @@
  * Translation catalogue builder.
  *
  * Extracts translatable strings from the plugin source and writes
- * `languages/titanworks-bazna-cijena.pot`. With `--locale=hr_HR` it also writes a
+ * `languages/sidrena-cijena-eu.pot`. With `--locale=hr_HR` it also writes a
  * `.po` catalogue using the translations in `tools/i18n/hr_HR.php`.
  *
  * Usage (host PHP):
@@ -12,7 +12,7 @@
  *
  * This is a development utility; it never runs at plugin runtime.
  *
- * @package SidrenaCijena\Tools
+ * @package Titanworks\SidrenaCijena\Tools
  */
 
 $root = dirname( __DIR__, 2 );
@@ -44,12 +44,12 @@ foreach ( $directories as $path ) {
 	if ( is_file( $path ) ) {
 		$files = array( $path );
 	} else {
-		$files = sidrena_collect_php_files( $path );
+		$files = twbce_collect_php_files( $path );
 	}
 
 	foreach ( $files as $file ) {
 		$contents = file_get_contents( $file );
-		sidrena_extract_strings( $contents, $strings );
+		twbce_extract_strings( $contents, $strings );
 	}
 }
 
@@ -60,22 +60,22 @@ $pot .= "# This file is distributed under the GPL-2.0-or-later license.\n";
 $pot .= "msgid \"\"\n";
 $pot .= "msgstr \"\"\n";
 $pot .= "\"Project-Id-Version: Titanworks Bazna Cijena " . $version . "\\n\"\n";
-$pot .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/titanworks-bazna-cijena/issues\\n\"\n";
+$pot .= "\"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sidrena-cijena-eu/\\n\"\n";
 $pot .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 $pot .= "\"MIME-Version: 1.0\\n\"\n";
 $pot .= "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
 $pot .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
 $pot .= "\"X-Generator: tools/i18n/make-pot.php\\n\"\n";
-$pot .= "\"X-Domain: titanworks-bazna-cijena\\n\"\n\n";
+$pot .= "\"X-Domain: sidrena-cijena-eu\\n\"\n\n";
 
 foreach ( $strings as $string => $unused ) {
-	$pot .= 'msgid "' . sidrena_po_escape( $string ) . "\"\n";
+	$pot .= 'msgid "' . twbce_po_escape( $string ) . "\"\n";
 	$pot .= "msgstr \"\"\n\n";
 }
 
-$pot_changed = sidrena_write_catalog( $root . '/languages/titanworks-bazna-cijena.pot', $pot );
+$pot_changed = twbce_write_catalog( $root . '/languages/sidrena-cijena-eu.pot', $pot );
 
-echo ( $pot_changed ? 'Wrote' : 'Unchanged' ) . ' languages/titanworks-bazna-cijena.pot with ' . count( $strings ) . " strings.\n";
+echo ( $pot_changed ? 'Wrote' : 'Unchanged' ) . ' languages/sidrena-cijena-eu.pot with ' . count( $strings ) . " strings.\n";
 
 if ( '' !== $locale ) {
 	$translations_file = $root . '/tools/i18n/' . $locale . '.php';
@@ -93,7 +93,7 @@ if ( '' !== $locale ) {
 	$po .= "msgid \"\"\n";
 	$po .= "msgstr \"\"\n";
 	$po .= "\"Project-Id-Version: Titanworks Bazna Cijena " . $version . "\\n\"\n";
-	$po .= "\"Report-Msgid-Bugs-To: https://github.com/administrakt0r/titanworks-bazna-cijena/issues\\n\"\n";
+	$po .= "\"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sidrena-cijena-eu/\\n\"\n";
 	$po .= "\"POT-Creation-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"PO-Revision-Date: " . gmdate( 'c' ) . "\\n\"\n";
 	$po .= "\"MIME-Version: 1.0\\n\"\n";
@@ -101,16 +101,16 @@ if ( '' !== $locale ) {
 	$po .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
 	$po .= "\"Language: " . $locale . "\\n\"\n";
 	$po .= "\"X-Generator: tools/i18n/make-pot.php\\n\"\n";
-	$po .= "\"X-Domain: titanworks-bazna-cijena\\n\"\n\n";
+	$po .= "\"X-Domain: sidrena-cijena-eu\\n\"\n\n";
 
 	$translated = 0;
 	$missing    = 0;
 
 	foreach ( $strings as $string => $unused ) {
-		$po .= 'msgid "' . sidrena_po_escape( $string ) . "\"\n";
+		$po .= 'msgid "' . twbce_po_escape( $string ) . "\"\n";
 
 		if ( isset( $translations[ $string ] ) && '' !== $translations[ $string ] ) {
-			$po .= 'msgstr "' . sidrena_po_escape( $translations[ $string ] ) . "\"\n\n";
+			$po .= 'msgstr "' . twbce_po_escape( $translations[ $string ] ) . "\"\n\n";
 			++$translated;
 		} else {
 			$po .= "msgstr \"\"\n\n";
@@ -119,16 +119,16 @@ if ( '' !== $locale ) {
 	}
 
 	$po_file    = $root . '/languages/' . $locale . '.po';
-	$po_changed = sidrena_write_catalog( $po_file, $po );
+	$po_changed = twbce_write_catalog( $po_file, $po );
 
 	echo ( $po_changed ? 'Wrote' : 'Unchanged' ) . ' languages/' . $locale . ".po ({$translated} translated, {$missing} untranslated).\n";
 
 	if ( 'hr_HR' === $locale ) {
-		$mo = sidrena_compile_mo( $translations );
-		file_put_contents( $root . '/languages/titanworks-bazna-cijena-hr.mo', $mo );
-		file_put_contents( $root . '/languages/titanworks-bazna-cijena-hr_HR.mo', $mo );
-		echo "Wrote languages/titanworks-bazna-cijena-hr.mo (" . strlen( $mo ) . " bytes).\n";
-		echo "Wrote languages/titanworks-bazna-cijena-hr_HR.mo (" . strlen( $mo ) . " bytes).\n";
+		$mo = twbce_compile_mo( $translations );
+		file_put_contents( $root . '/languages/sidrena-cijena-eu-hr.mo', $mo );
+		file_put_contents( $root . '/languages/sidrena-cijena-eu-hr_HR.mo', $mo );
+		echo "Wrote languages/sidrena-cijena-eu-hr.mo (" . strlen( $mo ) . " bytes).\n";
+		echo "Wrote languages/sidrena-cijena-eu-hr_HR.mo (" . strlen( $mo ) . " bytes).\n";
 	}
 }
 
@@ -138,7 +138,7 @@ if ( '' !== $locale ) {
  * @param string $directory Directory.
  * @return string[]
  */
-function sidrena_collect_php_files( $directory ) {
+function twbce_collect_php_files( $directory ) {
 	$files    = array();
 	$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $directory ) );
 
@@ -160,7 +160,7 @@ function sidrena_collect_php_files( $directory ) {
  * @param string $contents New catalog contents.
  * @return bool Whether the file changed.
  */
-function sidrena_write_catalog( $path, $contents ) {
+function twbce_write_catalog( $path, $contents ) {
 	if ( is_file( $path ) ) {
 		$existing = file_get_contents( $path );
 
@@ -195,7 +195,7 @@ function sidrena_write_catalog( $path, $contents ) {
  * @param string[] $strings  Collected strings (by reference).
  * @return void
  */
-function sidrena_extract_strings( $contents, &$strings ) {
+function twbce_extract_strings( $contents, &$strings ) {
 	$pattern = '/(?:__|_e|esc_html__|esc_attr__|esc_html_e|esc_attr_e)\s*\(\s*([\'"])((?:\\\\.|(?!\1).)*)\1\s*,\s*[\'"](?:titanworks-bazna-cijena|titanworks-sidrena-bazna-cijena|sidrena-cijena-eu)[\'"]/s';
 
 	if ( preg_match_all( $pattern, $contents, $matches, PREG_SET_ORDER ) ) {
@@ -220,7 +220,7 @@ function sidrena_extract_strings( $contents, &$strings ) {
  * @param string $value Value.
  * @return string
  */
-function sidrena_po_escape( $value ) {
+function twbce_po_escape( $value ) {
 	return str_replace(
 		array( '\\', '"', "\n", "\t" ),
 		array( '\\\\', '\\"', '\\n', '\\t' ),
@@ -237,7 +237,7 @@ function sidrena_po_escape( $value ) {
  * @param array $translations msgid => msgstr map.
  * @return string Binary MO contents.
  */
-function sidrena_compile_mo( $translations ) {
+function twbce_compile_mo( $translations ) {
 	$entries = array();
 
 	foreach ( $translations as $original => $translation ) {

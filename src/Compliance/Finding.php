@@ -2,10 +2,10 @@
 /**
  * Validation finding value object.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance;
+namespace Titanworks\SidrenaCijena\Compliance;
 
 defined( 'ABSPATH' ) || exit;
 

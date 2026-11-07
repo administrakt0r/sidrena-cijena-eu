@@ -15,7 +15,7 @@ test.describe('Anchor import', () => {
   let filePath;
 
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'sidrena-cijena-eu']);
     await wpEval(`
       if ( ! function_exists( 'wc_get_product' ) || ! wc_get_product_id_by_sku( 'E2E-IMPORT-1' ) ) {
         $product = new WC_Product_Simple();
@@ -51,7 +51,7 @@ test.describe('Anchor import', () => {
     await expect(page.locator('h1')).toContainText(/Import|Uvoz/i);
     await expect(page.getByText(/Before you import|Prije uvoza/i)).toBeVisible();
 
-    await page.setInputFiles('input[name="sidrena_import_file"]', filePath);
+    await page.setInputFiles('input[name="twbce_import_file"]', filePath);
     await page.locator('input[type="submit"], button[type="submit"]').first().click();
 
     await expect(page.locator('.sidrena-cijena-notice')).toBeVisible();
@@ -64,7 +64,7 @@ test.describe('Anchor import', () => {
     await login(page);
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-import');
 
-    await page.setInputFiles('input[name="sidrena_import_file"]', filePath);
+    await page.setInputFiles('input[name="twbce_import_file"]', filePath);
     await page.locator('input[type="submit"], button[type="submit"]').first().click();
 
     await page.locator('input[name="dry_run"]').last().check();
@@ -77,12 +77,12 @@ test.describe('Anchor import', () => {
     await login(page);
     await page.goto('wp-admin/admin.php?page=sidrena-cijena-import');
 
-    await page.setInputFiles('input[name="sidrena_import_file"]', filePath);
+    await page.setInputFiles('input[name="twbce_import_file"]', filePath);
     await page.locator('input[type="submit"], button[type="submit"]').first().click();
     await page.locator('form input[type="submit"], form button[type="submit"]').last().click();
 
     await expect(page.locator('.sidrena-cijena-notice')).toBeVisible();
 
-    await expect(page.locator('a[href*="sidrena_cijena_import_report"]').first()).toBeVisible();
+    await expect(page.locator('a[href*="twbce_cijena_import_report"]').first()).toBeVisible();
   });
 });

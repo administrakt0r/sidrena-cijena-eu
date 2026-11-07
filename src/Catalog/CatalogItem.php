@@ -2,10 +2,10 @@
 /**
  * Catalog item value object shared by all catalog providers.
  *
- * @package SidrenaCijena\Catalog
+ * @package Titanworks\SidrenaCijena\Catalog
  */
 
-namespace SidrenaCijena\Catalog;
+namespace Titanworks\SidrenaCijena\Catalog;
 
 defined( 'ABSPATH' ) || exit;
 

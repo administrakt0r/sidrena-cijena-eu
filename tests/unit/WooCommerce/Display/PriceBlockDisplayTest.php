@@ -2,13 +2,13 @@
 /**
  * WooCommerce product price block display regressions.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce\Display;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 require_once dirname( __DIR__, 2 ) . '/wc-stubs.php';
 
@@ -49,7 +49,7 @@ class PriceBlockDisplay extends PriceDisplay {
 /**
  * Covers exact product identification for WooCommerce price blocks.
  *
- * @covers \SidrenaCijena\WooCommerce\Display\PriceDisplay::filter_price_block
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay::filter_price_block
  */
 class PriceBlockDisplayTest extends TestCase {
 	/**
@@ -58,12 +58,12 @@ class PriceBlockDisplayTest extends TestCase {
 	 * @return void
 	 */
 	private function reset_state() {
-		$GLOBALS['sidrena_test_options']           = array(
-			'sidrena_cijena_settings' => array( 'display_location' => 'price_html' ),
+		$GLOBALS['twbce_test_options']           = array(
+			'twbce_cijena_settings' => array( 'display_location' => 'price_html' ),
 		);
-		$GLOBALS['sidrena_test_is_product']        = true;
-		$GLOBALS['sidrena_test_queried_object_id'] = 5;
-		$GLOBALS['sidrena_test_wc_products']       = array(
+		$GLOBALS['twbce_test_is_product']        = true;
+		$GLOBALS['twbce_test_queried_object_id'] = 5;
+		$GLOBALS['twbce_test_wc_products']       = array(
 			5 => array( 'id' => 5 ),
 			6 => array( 'id' => 6 ),
 		);
@@ -199,7 +199,7 @@ class PriceBlockDisplayTest extends TestCase {
 	 * @return void
 	 */
 	public function test_settings_anchor_label_presets() {
-		$presets = \SidrenaCijena\Support\Settings::anchor_label_presets();
+		$presets = \Titanworks\SidrenaCijena\Support\Settings::anchor_label_presets();
 
 		$this->assertArrayHasKey( 'sidrena', $presets );
 		$this->assertArrayHasKey( 'bazna', $presets );

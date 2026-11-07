@@ -56,7 +56,7 @@ Indexes cover `product_id`, `variation_id`, `sku`, `price_type`,
   `settings_change`, `cleanup`) with severity levels; contexts are
   stripped of secrets and personal data before storage.
 * Deactivation preserves all history; uninstall deletes it only with
-  explicit opt-in (`sidrena_cijena_delete_data_on_uninstall`). Even then the
+  explicit opt-in (`twbce_cijena_delete_data_on_uninstall`). Even then the
   anchor prices and the 30-day lowest prices stay: they are the legal evidence
   of the reference-date price and of what the shop displayed before a
   promotion, so only `regular`, `sale` and `historical` rows are pruned.

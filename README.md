@@ -7,7 +7,7 @@
 An open-source WordPress plugin for `sidrena cijena`, Croatian price transparency,
 and WooCommerce price history.
 
-[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/) · [Download latest for WordPress](https://github.com/administrakt0r/titanworks-bazna-cijena/releases/latest/download/titanworks-bazna-cijena.zip)
+[Main site](https://sidrenacijena.eu/) · [Live demo shop](https://wordpress.sidrenacijena.eu/)
 
 ![Version 2.0.20](https://img.shields.io/badge/version-2.0.20-1d6b55?style=flat-square)
 ![WordPress 6.8+](https://img.shields.io/badge/WordPress-6.8%2B-3858e9?style=flat-square&logo=wordpress&logoColor=white)
@@ -52,7 +52,8 @@ what to publish and remain responsible for checking their catalog and locations.
 
 ## Download and install
 
-1. Download the [latest WordPress upload ZIP](https://github.com/administrakt0r/titanworks-bazna-cijena/releases/latest/download/titanworks-bazna-cijena.zip).
+1. Obtain the reviewed `sidrena-cijena-eu.zip` release package. Maintainers can
+   build it after review with `tools/build-zip.sh <version> --no-upload`.
 2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**, choose the
    ZIP, and install it.
 3. Activate **Titanworks Bazna Cijena** and follow the setup guide to configure

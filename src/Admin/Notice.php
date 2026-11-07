@@ -2,10 +2,10 @@
 /**
  * Shared dismissible admin notices.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,14 +49,14 @@ class Notice {
 	 */
 	public static function from_request() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice flags.
-		$type = isset( $_GET['sidrena_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) : '';
+		$type = isset( $_GET['twbce_cijena_notice'] ) ? sanitize_key( wp_unslash( $_GET['twbce_cijena_notice'] ) ) : '';
 
 		if ( '' === $type ) {
 			return;
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only notice text.
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) : '';
+		$text = isset( $_GET['twbce_cijena_notice_text'] ) ? sanitize_text_field( wp_unslash( $_GET['twbce_cijena_notice_text'] ) ) : '';
 
 		$style = in_array( $type, array( 'error', 'info', 'warning' ), true ) ? $type : 'success';
 

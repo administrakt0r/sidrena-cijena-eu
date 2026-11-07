@@ -2,16 +2,16 @@
 /**
  * Price-list generation, publication and retention integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Admin\AnchorMetaBox;
-use SidrenaCijena\Admin\SpecialSaleMetaBox;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Admin\AnchorMetaBox;
+use Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 /**
  * US2 integration coverage.
@@ -80,9 +80,9 @@ class Test_Publication extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
-		update_post_meta( $post_id, '_sidrena_availability', 'available' );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_availability', 'available' );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 
 		// FR-007: publication is blocked until the anchor price is recorded.
@@ -114,14 +114,14 @@ class Test_Publication extends WP_UnitTestCase {
 			$this->assertStringContainsString( 'formaction="' . esc_url( admin_url( 'admin-post.php' ) ), $html );
 			$this->assertStringNotContainsString( 'type="hidden" name="action"', $html, 'Normal Update must retain the editor action.' );
 		}
-		$this->assertStringContainsString( 'name="sidrena_cijena_anchor_nonce"', $anchor_html );
+		$this->assertStringContainsString( 'name="twbce_cijena_anchor_nonce"', $anchor_html );
 		$this->assertStringNotContainsString( 'name="_wpnonce"', $anchor_html, 'The meta-box nonce must not overwrite the product editor nonce.' );
 
 		if ( WooCommerceDetector::is_active() ) {
 			wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 			$tabs = AnchorMetaBox::product_data_tab( array() );
-			$this->assertArrayHasKey( 'sidrena_cijena', $tabs );
-			$this->assertSame( 'sidrena_cijena_product_data', $tabs['sidrena_cijena']['target'] );
+			$this->assertArrayHasKey( 'twbce_cijena', $tabs );
+			$this->assertSame( 'twbce_cijena_product_data', $tabs['twbce_cijena']['target'] );
 		}
 	}
 
@@ -210,7 +210,7 @@ class Test_Publication extends WP_UnitTestCase {
 
 		$first = Plugin::instance()->generation()->generate( $this->location_id, 'csv', array( 'force' => true ) );
 
-		update_post_meta( $item, '_sidrena_regular_price', 1.49 );
+		update_post_meta( $item, '_twbce_regular_price', 1.49 );
 
 		$second = Plugin::instance()->generation()->generate( $this->location_id, 'csv', array( 'force' => true ) );
 
@@ -272,7 +272,7 @@ class Test_Publication extends WP_UnitTestCase {
 			)
 		);
 
-		\SidrenaCijena\Cron\CleanupJob::run();
+		\Titanworks\SidrenaCijena\Cron\CleanupJob::run();
 
 		$this->assertFileDoesNotExist( (string) $row['path'] );
 

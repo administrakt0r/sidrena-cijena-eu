@@ -5,12 +5,12 @@
  * General reference date applies to every item unless the item belongs to an
  * explicitly mapped legacy category and legacy treatment is enabled.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance;
+namespace Titanworks\SidrenaCijena\Compliance;
 
-use SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -89,7 +89,7 @@ final class ReferenceDateResolver {
 		 * @param CatalogItem $item   Catalog item.
 		 * @param array       $config Rule configuration.
 		 */
-		return (bool) apply_filters( 'sidrena_cijena_is_legacy_item', $legacy, $item, $config );
+		return (bool) apply_filters( 'twbce_cijena_is_legacy_item', $legacy, $item, $config );
 	}
 
 	/**

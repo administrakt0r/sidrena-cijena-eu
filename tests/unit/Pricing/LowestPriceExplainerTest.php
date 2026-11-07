@@ -2,22 +2,22 @@
 /**
  * Unit tests for LowestPriceExplainer.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Pricing\LowestPriceExplainer;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer;
 
 /**
  * Verifies that the administrator explanation agrees with calculation results
  * across all required audit scenarios.
  *
- * @covers \SidrenaCijena\Pricing\LowestPriceExplainer
- * @covers \SidrenaCijena\Pricing\LowestPrice30DayCalculator::audit_window
+ * @covers \Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer
+ * @covers \Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator::audit_window
  */
 class LowestPriceExplainerTest extends TestCase {
 

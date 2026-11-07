@@ -2,19 +2,19 @@
 /**
  * Admin entity links tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AdminLinks;
-use SidrenaCijena\Admin\LocationsPage;
-use SidrenaCijena\Admin\PublicationsPage;
-use SidrenaCijena\Admin\SettingsPage;
+use Titanworks\SidrenaCijena\Admin\AdminLinks;
+use Titanworks\SidrenaCijena\Admin\LocationsPage;
+use Titanworks\SidrenaCijena\Admin\PublicationsPage;
+use Titanworks\SidrenaCijena\Admin\SettingsPage;
 
 /**
- * @covers \SidrenaCijena\Admin\AdminLinks
+ * @covers \Titanworks\SidrenaCijena\Admin\AdminLinks
  */
 class AdminLinksTest extends TestCase {
 

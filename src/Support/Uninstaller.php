@@ -2,10 +2,10 @@
 /**
  * Opt-in uninstall cleanup.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ final class Uninstaller {
 	/**
 	 * Option that gates data deletion on uninstall.
 	 */
-	const DELETE_OPTION = 'sidrena_cijena_delete_data_on_uninstall';
+	const DELETE_OPTION = 'twbce_cijena_delete_data_on_uninstall';
 
 	/**
 	 * Price-history types that are legal evidence and survive the deletion.
@@ -37,21 +37,21 @@ final class Uninstaller {
 	 * @var string[]
 	 */
 	private static $options = array(
-		'sidrena_cijena_settings',
-		'sidrena_cijena_rule_config',
-		'sidrena_cijena_rule_config_history',
-		'sidrena_cijena_db_version',
-		'sidrena_cijena_last_generation',
-		'sidrena_cijena_last_generation_failure',
-		'sidrena_cijena_dismiss_gen_failure',
-		'sidrena_cijena_cache_version',
-		'sidrena_cijena_rest_generation',
-		'sidrena_cijena_public_feed_last_queue',
-		'sidrena_cijena_terms_seeded',
-		'sidrena_cijena_activation_redirect',
-		'sidrena_cijena_welcome_dismissed',
-		'sidrena_cijena_setup_complete',
-		'sidrena_cijena_delete_data_on_uninstall',
+		'twbce_cijena_settings',
+		'twbce_cijena_rule_config',
+		'twbce_cijena_rule_config_history',
+		'twbce_cijena_db_version',
+		'twbce_cijena_last_generation',
+		'twbce_cijena_last_generation_failure',
+		'twbce_cijena_dismiss_gen_failure',
+		'twbce_cijena_cache_version',
+		'twbce_cijena_rest_generation',
+		'twbce_cijena_public_feed_last_queue',
+		'twbce_cijena_terms_seeded',
+		'twbce_cijena_activation_redirect',
+		'twbce_cijena_welcome_dismissed',
+		'twbce_cijena_setup_complete',
+		'twbce_cijena_delete_data_on_uninstall',
 	);
 
 	/**
@@ -167,7 +167,9 @@ final class Uninstaller {
 	private static function delete_options() {
 		foreach ( self::$options as $option ) {
 			delete_option( $option );
+			delete_option( preg_replace( '/^twbce_/', 'sidrena_', $option ) );
 		}
+		delete_option( IdentifierMigration::OPTION );
 
 		return self::$options;
 	}
@@ -184,7 +186,7 @@ final class Uninstaller {
 
 		// Table name is built from the trusted options table property or WordPress prefix.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return (int) $wpdb->query( "DELETE FROM `{$table}` WHERE option_name LIKE '_transient_sidrena_%' OR option_name LIKE '_transient_timeout_sidrena_%'" );
+		return (int) $wpdb->query( "DELETE FROM `{$table}` WHERE option_name LIKE '_transient_twbce_%' OR option_name LIKE '_transient_timeout_twbce_%'" );
 	}
 
 	/**
@@ -197,7 +199,7 @@ final class Uninstaller {
 
 		$posts = get_posts(
 			array(
-				'post_type'   => 'sidrena_item',
+				'post_type'   => 'twbce_item',
 				'post_status' => 'any',
 				'numberposts' => -1,
 				'fields'      => 'ids',
@@ -210,7 +212,7 @@ final class Uninstaller {
 			}
 		}
 
-		foreach ( array( 'sidrena_brand', 'sidrena_item_type' ) as $taxonomy ) {
+		foreach ( array( 'twbce_brand', 'twbce_item_type' ) as $taxonomy ) {
 			$terms = get_terms(
 				array(
 					'taxonomy'   => $taxonomy,

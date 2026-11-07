@@ -2,14 +2,14 @@
 /**
  * `wp sidrena-cijena cleanup` command.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
-use SidrenaCijena\Cron\CleanupJob;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Cron\CleanupJob;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 

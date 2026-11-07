@@ -2,29 +2,29 @@
 /**
  * GenerationService unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Export\GenerationService;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Export\GenerationService;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Export\GenerationService
+ * @covers \Titanworks\SidrenaCijena\Export\GenerationService
  */
 class GenerationServiceTest extends TestCase {
 
@@ -35,7 +35,7 @@ class GenerationServiceTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 		Settings::reset_cache();
 		self::clean_uploads();
 	}

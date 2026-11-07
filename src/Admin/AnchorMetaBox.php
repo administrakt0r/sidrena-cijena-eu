@@ -2,18 +2,18 @@
 /**
  * Admin meta box for anchor prices.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Labels;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
-use SidrenaCijena\WooCommerce\Display\CardVisibility;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceDetector;
+use Titanworks\SidrenaCijena\WooCommerce\Display\CardVisibility;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -30,7 +30,7 @@ final class AnchorMetaBox {
 	/**
 	 * Form action name.
 	 */
-	const ACTION = 'sidrena_cijena_record_anchor';
+	const ACTION = 'twbce_cijena_record_anchor';
 
 	/**
 	 * Register the meta box on every supported screen.
@@ -51,7 +51,7 @@ final class AnchorMetaBox {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				self::ID,
-				__( 'Sidrena cijena - anchor price', 'titanworks-bazna-cijena' ),
+				__( 'Sidrena cijena - anchor price', 'sidrena-cijena-eu' ),
 				array( __CLASS__, 'render' ),
 				$screen,
 				'side',
@@ -71,9 +71,9 @@ final class AnchorMetaBox {
 			return $tabs;
 		}
 
-		$tabs['sidrena_cijena'] = array(
-			'label'    => __( 'Sidrena cijena', 'titanworks-bazna-cijena' ),
-			'target'   => 'sidrena_cijena_product_data',
+		$tabs['twbce_cijena'] = array(
+			'label'    => __( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			'target'   => 'twbce_cijena_product_data',
 			'class'    => array( 'show_if_simple', 'show_if_variable', 'show_if_grouped', 'show_if_external' ),
 			'priority' => 80,
 		);
@@ -93,14 +93,14 @@ final class AnchorMetaBox {
 			return;
 		}
 
-		echo '<div id="sidrena_cijena_product_data" class="panel woocommerce_options_panel">';
+		echo '<div id="twbce_cijena_product_data" class="panel woocommerce_options_panel">';
 		echo '<div class="sidrena-cijena-product-panel">';
-		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'titanworks-bazna-cijena' ) . '</h2>';
-		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'titanworks-bazna-cijena' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Anchor price and special-sale evidence', 'sidrena-cijena-eu' ) . '</h2>';
+		echo '<p class="description">' . esc_html__( 'Use the product Update button to save WooCommerce product details. Use the separate evidence buttons below to record an anchor price or a special sale in the append-only compliance history.', 'sidrena-cijena-eu' ) . '</p>';
 		CardVisibility::render_control( $post->ID );
 
 		$product             = wc_get_product( $post->ID );
-		$barcode             = (string) get_post_meta( $post->ID, '_sidrena_barcode', true );
+		$barcode             = (string) get_post_meta( $post->ID, '_twbce_barcode', true );
 		$barcode_placeholder = '';
 		if ( '' === $barcode && $product instanceof \WC_Product ) {
 			$detected_meta = $product->get_meta( '_barcode' );
@@ -115,9 +115,9 @@ final class AnchorMetaBox {
 			}
 		}
 
-		echo '<p class="form-field"><label for="_sidrena_barcode">' . esc_html__( 'Barcode / EAN', 'titanworks-bazna-cijena' ) . '</label>';
-		echo '<input type="text" id="_sidrena_barcode" name="_sidrena_barcode" value="' . esc_attr( $barcode ) . '" class="short" placeholder="' . esc_attr( $barcode_placeholder ? $barcode_placeholder : __( 'e.g. 3850123456789 or SKU', 'titanworks-bazna-cijena' ) ) . '" /> ';
-		echo '<span class="description">' . esc_html__( 'EAN, GTIN, or barcode for statutory price lists. If empty, values from EAN plugins or SKU are automatically detected.', 'titanworks-bazna-cijena' ) . '</span></p>';
+		echo '<p class="form-field"><label for="_twbce_barcode">' . esc_html__( 'Barcode / EAN', 'sidrena-cijena-eu' ) . '</label>';
+		echo '<input type="text" id="_twbce_barcode" name="_twbce_barcode" value="' . esc_attr( $barcode ) . '" class="short" placeholder="' . esc_attr( $barcode_placeholder ? $barcode_placeholder : __( 'e.g. 3850123456789 or SKU', 'sidrena-cijena-eu' ) ) . '" /> ';
+		echo '<span class="description">' . esc_html__( 'EAN, GTIN, or barcode for statutory price lists. If empty, values from EAN plugins or SKU are automatically detected.', 'sidrena-cijena-eu' ) . '</span></p>';
 
 		if ( $product && $product->is_type( 'variable' ) ) {
 			$items = Plugin::instance()->catalog()->get_items(
@@ -141,16 +141,16 @@ final class AnchorMetaBox {
 
 				echo '<section class="sidrena-cijena-variation-evidence">';
 				printf( '<h3>%1$s (#%2$d)</h3>', esc_html( $item->name ), (int) $item->variation_id );
-				echo '<h4>' . esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ) . '</h4>';
+				echo '<h4>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h4>';
 				self::render( $variation_post );
-				echo '<hr /><h4>' . esc_html__( 'Special sale', 'titanworks-bazna-cijena' ) . '</h4>';
+				echo '<hr /><h4>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h4>';
 				SpecialSaleMetaBox::render( $variation_post );
 				echo '</section>';
 			}
 		} else {
-			echo '<h3>' . esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ) . '</h3>';
+			echo '<h3>' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</h3>';
 			self::render( $post );
-			echo '<hr /><h3>' . esc_html__( 'Special sale', 'titanworks-bazna-cijena' ) . '</h3>';
+			echo '<hr /><h3>' . esc_html__( 'Special sale', 'sidrena-cijena-eu' ) . '</h3>';
 			SpecialSaleMetaBox::render( $post );
 		}
 
@@ -167,7 +167,7 @@ final class AnchorMetaBox {
 		$item = Plugin::instance()->catalog()->get_item( $post->ID );
 
 		if ( ! $item ) {
-			echo '<p>' . esc_html__( 'The catalog item could not be loaded.', 'titanworks-bazna-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'The catalog item could not be loaded.', 'sidrena-cijena-eu' ) . '</p>';
 
 			return;
 		}
@@ -188,15 +188,15 @@ final class AnchorMetaBox {
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<tbody>';
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Anchor price', 'sidrena-cijena-eu' ),
 			$status['anchor'] && null !== $status['anchor']['price']
 				? esc_html( Currency::format( (float) $status['anchor']['price'], $item->currency ) )
-				: '<em>' . esc_html__( 'Not recorded', 'titanworks-bazna-cijena' ) . '</em>'
+				: '<em>' . esc_html__( 'Not recorded', 'sidrena-cijena-eu' ) . '</em>'
 		);
 
 		$ref_date = Dates::format_date_display( (string) $status['reference_date'] );
@@ -204,8 +204,8 @@ final class AnchorMetaBox {
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Applicable reference date', 'titanworks-bazna-cijena' ),
-			esc_html( $ref_date . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'titanworks-bazna-cijena' ) . ')' : '' ) )
+			esc_html__( 'Applicable reference date', 'sidrena-cijena-eu' ),
+			esc_html( $ref_date . ( 'legacy' === $status['rule'] ? ' (' . __( 'legacy', 'sidrena-cijena-eu' ) . ')' : '' ) )
 		);
 
 		if ( $status['anchor'] ) {
@@ -214,51 +214,51 @@ final class AnchorMetaBox {
 
 			printf(
 				'<tr><td>%1$s</td><td>%2$s</td></tr>',
-				esc_html__( 'Recorded for', 'titanworks-bazna-cijena' ),
+				esc_html__( 'Recorded for', 'sidrena-cijena-eu' ),
 				esc_html( $anchor_ref . ' / ' . Labels::source( (string) $status['anchor']['source'] ) )
 			);
 		}
 
 		printf(
 			'<tr><td>%1$s</td><td>%2$s</td></tr>',
-			esc_html__( 'Status', 'titanworks-bazna-cijena' ),
+			esc_html__( 'Status', 'sidrena-cijena-eu' ),
 			esc_html( self::state_label( $status ) )
 		);
 
 		echo '</tbody></table>';
 
 		if ( 'missing' === $status['state'] && $status['introduced_after'] ) {
-			echo '<p class="description">' . esc_html__( 'For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records.', 'titanworks-bazna-cijena' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'For an item first offered after the reference date, record the price applied when it first entered sale and that date. Verify the date and price against your sales records.', 'sidrena-cijena-eu' ) . '</p>';
 		}
 
 		?>
 		<div class="sidrena-cijena-anchor-form">
-			<?php wp_nonce_field( self::ACTION, 'sidrena_cijena_anchor_nonce', false ); ?>
+			<?php wp_nonce_field( self::ACTION, 'twbce_cijena_anchor_nonce', false ); ?>
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( (string) $product_id ); ?>" />
 
 			<p>
-				<label for="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ); ?></label>
-				<input type="text" class="regular-text" id="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>" name="anchor_price<?php echo esc_attr( $field_suffix ); ?>" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 19.99', 'titanworks-bazna-cijena' ); ?>"
+				<label for="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Anchor price', 'sidrena-cijena-eu' ); ?></label>
+				<input type="text" class="regular-text" id="sidrena-anchor-price<?php echo esc_attr( $id_suffix ); ?>" name="anchor_price<?php echo esc_attr( $field_suffix ); ?>" inputmode="decimal" placeholder="<?php echo esc_attr__( 'e.g. 19.99', 'sidrena-cijena-eu' ); ?>"
 					value="<?php echo $status['anchor'] && null !== $status['anchor']['price'] ? esc_attr( (string) $status['anchor']['price'] ) : ''; ?>" />
-				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'titanworks-bazna-cijena' ); ?></span>
+				<span class="description"><?php echo esc_html__( 'Enter the verified price applicable on the reference date. Use your sales records; this becomes part of the permanent price history.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<p>
-				<label for="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Reference date', 'titanworks-bazna-cijena' ); ?></label>
+				<label for="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Reference date', 'sidrena-cijena-eu' ); ?></label>
 				<input type="text" class="regular-text sidrena-datepicker" id="sidrena-anchor-date<?php echo esc_attr( $id_suffix ); ?>" name="reference_date<?php echo esc_attr( $field_suffix ); ?>" value="<?php echo esc_attr( Dates::format_date_display( $anchor_date_value ) ); ?>" placeholder="d.m.Y." autocomplete="off" inputmode="numeric" />
-				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'titanworks-bazna-cijena' ); ?></span>
+				<span class="description"><?php echo esc_html__( 'Choose the date required for this product under the applicable rule. Do not use today’s date unless it is the correct reference date.', 'sidrena-cijena-eu' ); ?></span>
 			</p>
 
 			<?php if ( $status['anchor'] ) : ?>
 				<p>
-						<label for="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Correction reason (required)', 'titanworks-bazna-cijena' ); ?></label>
-						<input type="text" class="regular-text" id="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>" name="correction_reason<?php echo esc_attr( $field_suffix ); ?>" value="" placeholder="<?php echo esc_attr__( 'e.g. Typo in original reference price', 'titanworks-bazna-cijena' ); ?>" />
-						<span class="description"><?php echo esc_html__( 'Required when updating an existing anchor price. State the documented reason from your business records for amending this legal price record.', 'titanworks-bazna-cijena' ); ?></span>
+						<label for="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>"><?php echo esc_html__( 'Correction reason (required)', 'sidrena-cijena-eu' ); ?></label>
+						<input type="text" class="regular-text" id="sidrena-anchor-reason<?php echo esc_attr( $id_suffix ); ?>" name="correction_reason<?php echo esc_attr( $field_suffix ); ?>" value="" placeholder="<?php echo esc_attr__( 'e.g. Typo in original reference price', 'sidrena-cijena-eu' ); ?>" />
+						<span class="description"><?php echo esc_html__( 'Required when updating an existing anchor price. State the documented reason from your business records for amending this legal price record.', 'sidrena-cijena-eu' ); ?></span>
 				</p>
 			<?php endif; ?>
 
 			<button type="submit" class="button button-secondary" name="action" value="<?php echo esc_attr( self::ACTION ); ?>" formaction="<?php echo esc_url( $action_url ); ?>" formmethod="post">
-				<?php echo esc_html__( 'Record anchor price', 'titanworks-bazna-cijena' ); ?>
+				<?php echo esc_html__( 'Record anchor price', 'sidrena-cijena-eu' ); ?>
 			</button>
 		</div>
 		<?php
@@ -274,7 +274,7 @@ final class AnchorMetaBox {
 					)
 				)
 			),
-			esc_html__( 'View the full price history', 'titanworks-bazna-cijena' )
+			esc_html__( 'View the full price history', 'sidrena-cijena-eu' )
 		);
 	}
 
@@ -285,10 +285,10 @@ final class AnchorMetaBox {
 	 */
 	public static function handle_record() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You are not allowed to record anchor prices.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You are not allowed to record anchor prices.', 'sidrena-cijena-eu' ) );
 		}
 
-		check_admin_referer( self::ACTION, 'sidrena_cijena_anchor_nonce' );
+		check_admin_referer( self::ACTION, 'twbce_cijena_anchor_nonce' );
 
 		$product_id   = isset( $_POST['product_id'] ) ? absint( wp_unslash( $_POST['product_id'] ) ) : 0;
 		$variation_id = isset( $_REQUEST['variation_id'] ) ? absint( wp_unslash( $_REQUEST['variation_id'] ) ) : 0;
@@ -297,7 +297,7 @@ final class AnchorMetaBox {
 			: ( $product_id ? Plugin::instance()->catalog()->get_item( $product_id ) : null );
 
 		if ( ! $item ) {
-			self::redirect_back( 0, __( 'The catalog item could not be loaded.', 'titanworks-bazna-cijena' ) );
+			self::redirect_back( 0, __( 'The catalog item could not be loaded.', 'sidrena-cijena-eu' ) );
 
 			return;
 		}
@@ -318,7 +318,7 @@ final class AnchorMetaBox {
 			return;
 		}
 
-		self::redirect_back( $product_id, __( 'The anchor price has been recorded.', 'titanworks-bazna-cijena' ), 'success' );
+		self::redirect_back( $product_id, __( 'The anchor price has been recorded.', 'sidrena-cijena-eu' ), 'success' );
 	}
 
 	/**
@@ -361,8 +361,8 @@ final class AnchorMetaBox {
 
 		$url = add_query_arg(
 			array(
-				'sidrena_cijena_notice'      => $type,
-				'sidrena_cijena_notice_text' => rawurlencode( $message ),
+				'twbce_cijena_notice'      => $type,
+				'twbce_cijena_notice_text' => rawurlencode( $message ),
 			),
 			$url
 		);
@@ -378,7 +378,7 @@ final class AnchorMetaBox {
 	 */
 	public static function maybe_notice() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( empty( $_GET['sidrena_cijena_notice'] ) ) {
+		if ( empty( $_GET['twbce_cijena_notice'] ) ) {
 			return;
 		}
 
@@ -396,9 +396,9 @@ final class AnchorMetaBox {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$type = 'success' === sanitize_key( wp_unslash( $_GET['sidrena_cijena_notice'] ) ) ? 'success' : 'error';
+		$type = 'success' === sanitize_key( wp_unslash( $_GET['twbce_cijena_notice'] ) ) ? 'success' : 'error';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$text = isset( $_GET['sidrena_cijena_notice_text'] ) ? rawurldecode( sanitize_text_field( wp_unslash( $_GET['sidrena_cijena_notice_text'] ) ) ) : '';
+		$text = isset( $_GET['twbce_cijena_notice_text'] ) ? rawurldecode( sanitize_text_field( wp_unslash( $_GET['twbce_cijena_notice_text'] ) ) ) : '';
 
 		printf(
 			'<div class="notice notice-%1$s sidrena-cijena-notice is-dismissible"><p>%2$s</p></div>',
@@ -415,13 +415,13 @@ final class AnchorMetaBox {
 	 */
 	private static function state_label( array $status ) {
 		if ( 'valid' === $status['state'] ) {
-			return __( 'Valid', 'titanworks-bazna-cijena' );
+			return __( 'Valid', 'sidrena-cijena-eu' );
 		}
 
 		if ( 'needs_verification' === $status['state'] ) {
-			return __( 'Needs verification', 'titanworks-bazna-cijena' );
+			return __( 'Needs verification', 'sidrena-cijena-eu' );
 		}
 
-		return __( 'Missing', 'titanworks-bazna-cijena' );
+		return __( 'Missing', 'sidrena-cijena-eu' );
 	}
 }

@@ -2,13 +2,13 @@
 /**
  * Special sale data access.
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -153,26 +153,28 @@ class SpecialSaleRepository {
 	public function for_item( $product_id, $variation_id = 0, array $statuses = array() ) {
 		global $wpdb;
 
-		$variation_sql    = (int) $variation_id > 0 ? 'variation_id = %d' : 'variation_id IS NULL';
-		$variation_params = (int) $variation_id > 0 ? array( (int) $variation_id ) : array();
-		$params           = array_merge( array( $this->table, (int) $product_id ), $variation_params );
-		$status_sql       = '';
-
-		if ( ! empty( $statuses ) ) {
-			$statuses = array_values( array_intersect( $statuses, self::STATUSES ) );
-
-			if ( empty( $statuses ) ) {
-				return array();
-			}
-
-			$placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
-			$status_sql   = " AND status IN ({$placeholders})";
-
-			$params = array_merge( $params, $statuses );
+		$filter_status = ! empty( $statuses );
+		$statuses      = array_values( array_unique( array_intersect( $statuses, self::STATUSES ) ) );
+		if ( $filter_status && empty( $statuses ) ) {
+			return array();
 		}
+		$variation_id = (int) $variation_id;
+		$params       = array_merge(
+			array( $this->table, (int) $product_id, $variation_id, $variation_id, $variation_id, $filter_status ? 1 : 0 ),
+			array_pad( $statuses, 4, '' )
+		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query clauses use safe placeholders and parameters.
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i WHERE product_id = %d AND {$variation_sql}{$status_sql} ORDER BY start_date DESC", $params ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Repository needs current records after writes in the same request.
+		$rows = $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- wpdb accepts the complete, ordered argument array.
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE product_id = %d
+				AND ((%d > 0 AND variation_id = %d) OR (%d <= 0 AND variation_id IS NULL))
+				AND (%d = 0 OR status IN (%s, %s, %s, %s)) ORDER BY start_date DESC',
+				$params
+			),
+			ARRAY_A
+		);
 
 		return array_map( array( $this, 'hydrate' ), is_array( $rows ) ? $rows : array() );
 	}
@@ -292,7 +294,7 @@ class SpecialSaleRepository {
 		$total = (int) $activated + (int) $ended;
 
 		if ( $total > 0 ) {
-			do_action( 'sidrena_cijena_special_sale_changed', 0, 0, 0 );
+			do_action( 'twbce_cijena_special_sale_changed', 0, 0, 0 );
 		}
 
 		return $total;

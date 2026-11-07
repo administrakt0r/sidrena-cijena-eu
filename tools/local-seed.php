@@ -17,7 +17,7 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 	exit( 1 );
 }
 
-$plugin = \SidrenaCijena\Plugin::instance();
+$plugin = \Titanworks\SidrenaCijena\Plugin::instance();
 // These explicit historical demo fixtures are imported, not new live offers.
 if ( ! defined( 'WP_IMPORTING' ) ) {
 	define( 'WP_IMPORTING', true );
@@ -26,23 +26,23 @@ if ( ! defined( 'WP_IMPORTING' ) ) {
 // Activation creates a default location without an address. The legal
 // filename cannot be built without a street and a city, so the demo shop
 // fills them in here; otherwise `wp sidrena-cijena generate` aborts.
-$sidrena_demo_address = 'Vlaška 68';
-$sidrena_demo_city    = 'Zagreb';
+$twbce_demo_address = 'Vlaška 68';
+$twbce_demo_city    = 'Zagreb';
 
-foreach ( $plugin->locations()->all() as $sidrena_demo_location ) {
-	if ( '' !== (string) $sidrena_demo_location['address'] && '' !== (string) $sidrena_demo_location['city'] ) {
+foreach ( $plugin->locations()->all() as $twbce_demo_location ) {
+	if ( '' !== (string) $twbce_demo_location['address'] && '' !== (string) $twbce_demo_location['city'] ) {
 		continue;
 	}
 
 	$plugin->locations()->update(
-		(int) $sidrena_demo_location['id'],
+		(int) $twbce_demo_location['id'],
 		array(
-			'address' => $sidrena_demo_address,
-			'city'    => $sidrena_demo_city,
+			'address' => $twbce_demo_address,
+			'city'    => $twbce_demo_city,
 		)
 	);
-	$sidrena_demo_filled = true;
-	echo "Location address set: {$sidrena_demo_address}, {$sidrena_demo_city}\n";
+	$twbce_demo_filled = true;
+	echo "Location address set: {$twbce_demo_address}, {$twbce_demo_city}\n";
 }
 
 if ( ! $plugin->locations()->all() ) {
@@ -51,12 +51,12 @@ if ( ! $plugin->locations()->all() ) {
 			'name'       => 'Webshop',
 			'type'       => 'webshop',
 			'identifier' => 'P1',
-			'address'    => $sidrena_demo_address,
-			'city'       => $sidrena_demo_city,
+			'address'    => $twbce_demo_address,
+			'city'       => $twbce_demo_city,
 			'active'     => true,
 		)
 	);
-	echo "Location created: {$sidrena_demo_address}, {$sidrena_demo_city}\n";
+	echo "Location created: {$twbce_demo_address}, {$twbce_demo_city}\n";
 }
 
 /**
@@ -66,19 +66,19 @@ if ( ! $plugin->locations()->all() ) {
  * @param string $slug Slug.
  * @return void
  */
-function sidrena_demo_term( $name, $slug ) {
+function twbce_demo_term( $name, $slug ) {
 	if ( ! term_exists( $slug, 'product_cat' ) ) {
 		wp_insert_term( $name, 'product_cat', array( 'slug' => $slug ) );
 		echo "Category created: {$name}\n";
 	}
 }
 
-sidrena_demo_term( 'Hrana', 'hrana' );
-sidrena_demo_term( 'Čišćenje', 'ciscenje' );
-sidrena_demo_term( 'Odjeća', 'odjeca' );
+twbce_demo_term( 'Hrana', 'hrana' );
+twbce_demo_term( 'Čišćenje', 'ciscenje' );
+twbce_demo_term( 'Odjeća', 'odjeca' );
 
 // Legacy (2025) categories for the demo shop.
-\SidrenaCijena\Compliance\RuleConfig::update(
+\Titanworks\SidrenaCijena\Compliance\RuleConfig::update(
 	array( 'legacy_category_slugs' => array( 'hrana', 'ciscenje' ) ),
 	null,
 	'local demo seed'
@@ -90,7 +90,7 @@ sidrena_demo_term( 'Odjeća', 'odjeca' );
  * @param array $args Keys: name, sku, regular, sale, cats, stock.
  * @return int Product ID.
  */
-function sidrena_demo_product( $args ) {
+function twbce_demo_product( $args ) {
 	$existing = wc_get_product_id_by_sku( $args['sku'] );
 
 	if ( $existing ) {
@@ -127,8 +127,8 @@ function sidrena_demo_product( $args ) {
  * @param float $price Anchor price.
  * @return void
  */
-function sidrena_demo_anchor( $product_id, $variation_id, $price ) {
-	$plugin = \SidrenaCijena\Plugin::instance();
+function twbce_demo_anchor( $product_id, $variation_id, $price ) {
+	$plugin = \Titanworks\SidrenaCijena\Plugin::instance();
 
 	if ( $variation_id ) {
 		$item = $plugin->catalog()->get_variation( $product_id, $variation_id );
@@ -168,8 +168,8 @@ function sidrena_demo_anchor( $product_id, $variation_id, $price ) {
  * @param float $price        Regular price charged before the demo promotion.
  * @return void
  */
-function sidrena_demo_history( $product_id, $variation_id, $price ) {
-	$plugin  = \SidrenaCijena\Plugin::instance();
+function twbce_demo_history( $product_id, $variation_id, $price ) {
+	$plugin  = \Titanworks\SidrenaCijena\Plugin::instance();
 	$history = $plugin->history();
 	$today   = wp_date( 'Y-m-d' );
 	$last    = $history->latest( (int) $product_id, (int) $variation_id, 'regular' );
@@ -210,7 +210,7 @@ $hrana    = get_term_by( 'slug', 'hrana', 'product_cat' );
 $ciscenje = get_term_by( 'slug', 'ciscenje', 'product_cat' );
 $odjeca   = get_term_by( 'slug', 'odjeca', 'product_cat' );
 
-$kava = sidrena_demo_product(
+$kava = twbce_demo_product(
 	array(
 		'name'    => 'Kava mljevena 250 g',
 		'sku'     => 'DEMO-KAVA',
@@ -218,9 +218,9 @@ $kava = sidrena_demo_product(
 		'cats'    => $hrana ? array( $hrana->term_id ) : array(),
 	)
 );
-sidrena_demo_anchor( $kava, 0, 6.99 );
+twbce_demo_anchor( $kava, 0, 6.99 );
 
-$ulje = sidrena_demo_product(
+$ulje = twbce_demo_product(
 	array(
 		'name'    => 'Maslinovo ulje 1 L',
 		'sku'     => 'DEMO-ULJE',
@@ -229,9 +229,9 @@ $ulje = sidrena_demo_product(
 		'cats'    => $hrana ? array( $hrana->term_id ) : array(),
 	)
 );
-sidrena_demo_anchor( $ulje, 0, 12.49 );
+twbce_demo_anchor( $ulje, 0, 12.49 );
 
-$deterdzent = sidrena_demo_product(
+$deterdzent = twbce_demo_product(
 	array(
 		'name'    => 'Deterdžent za rublje 3 kg',
 		'sku'     => 'DEMO-DET',
@@ -239,11 +239,11 @@ $deterdzent = sidrena_demo_product(
 		'cats'    => $ciscenje ? array( $ciscenje->term_id ) : array(),
 	)
 );
-sidrena_demo_anchor( $deterdzent, 0, 9.99 );
+twbce_demo_anchor( $deterdzent, 0, 9.99 );
 
 // Every demo product records an anchor: without one the price list cannot be
 // published (FR-007), so the demo shop has to be fully evidenced.
-$majica = sidrena_demo_product(
+$majica = twbce_demo_product(
 	array(
 		'name'    => 'Majica pamučna',
 		'sku'     => 'DEMO-MAJICA',
@@ -251,7 +251,7 @@ $majica = sidrena_demo_product(
 		'cats'    => $odjeca ? array( $odjeca->term_id ) : array(),
 	)
 );
-sidrena_demo_anchor( $majica, 0, 17.99 );
+twbce_demo_anchor( $majica, 0, 17.99 );
 
 // Variable product with per-variation anchors.
 $zrno_id = wc_get_product_id_by_sku( 'DEMO-ZRNO' );
@@ -284,7 +284,7 @@ if ( ! $zrno_id ) {
 		$variation->set_stock_status( 'instock' );
 		$variation_id = $variation->save();
 		echo "Variation created: {$pack['option']} (#{$variation_id})\n";
-		sidrena_demo_anchor( (int) $zrno_id, (int) $variation_id, $pack['anchor'] );
+		twbce_demo_anchor( (int) $zrno_id, (int) $variation_id, $pack['anchor'] );
 	}
 } else {
 	echo "Variable product exists, skipping: DEMO-ZRNO\n";
@@ -292,10 +292,10 @@ if ( ! $zrno_id ) {
 
 // The 30-day engine sees only prices valid before the promotion (FR-019), so
 // give the demo shop the history a real shop would already have.
-sidrena_demo_history( (int) $kava, 0, 7.49 );
-sidrena_demo_history( (int) $ulje, 0, 12.99 );
-sidrena_demo_history( (int) $deterdzent, 0, 9.99 );
-sidrena_demo_history( (int) $majica, 0, 19.99 );
+twbce_demo_history( (int) $kava, 0, 7.49 );
+twbce_demo_history( (int) $ulje, 0, 12.99 );
+twbce_demo_history( (int) $deterdzent, 0, 9.99 );
+twbce_demo_history( (int) $majica, 0, 19.99 );
 
 $zrno = wc_get_product( (int) $zrno_id );
 
@@ -304,7 +304,7 @@ if ( $zrno ) {
 		$child = wc_get_product( $child_id );
 
 		if ( $child ) {
-			sidrena_demo_history( (int) $zrno_id, (int) $child_id, (float) $child->get_regular_price() );
+			twbce_demo_history( (int) $zrno_id, (int) $child_id, (float) $child->get_regular_price() );
 		}
 	}
 }

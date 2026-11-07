@@ -2,12 +2,12 @@
 /**
  * Test seam for replacing Plugin services without changing production code.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Support;
+namespace Titanworks\SidrenaCijena\Tests\Support;
 
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -2,12 +2,12 @@
 /**
  * `wp sidrena-cijena import` command.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Plugin;
 
 defined( 'ABSPATH' ) || exit;
 

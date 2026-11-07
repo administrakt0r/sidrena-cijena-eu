@@ -8,14 +8,14 @@
  * provider-neutral. Each definition is guarded: WordPress and WooCommerce may
  * already be loaded (PHPStan bootstrap, custom runners).
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$GLOBALS['sidrena_test_wc_products']       = array();
-$GLOBALS['sidrena_test_is_product']        = true;
-$GLOBALS['sidrena_test_queried_object_id'] = 0;
+$GLOBALS['twbce_test_wc_products']       = array();
+$GLOBALS['twbce_test_is_product']        = true;
+$GLOBALS['twbce_test_queried_object_id'] = 0;
 
 if ( ! class_exists( 'WooCommerce' ) ) {
 
@@ -260,10 +260,10 @@ if ( ! class_exists( 'WC_Product' ) ) {
 
 			if ( ! empty( $this->data['id'] ) ) {
 				$id = (int) $this->data['id'];
-				if ( ! isset( $GLOBALS['sidrena_test_wc_products'][ $id ]['meta'] ) ) {
-					$GLOBALS['sidrena_test_wc_products'][ $id ]['meta'] = array();
+				if ( ! isset( $GLOBALS['twbce_test_wc_products'][ $id ]['meta'] ) ) {
+					$GLOBALS['twbce_test_wc_products'][ $id ]['meta'] = array();
 				}
-				$GLOBALS['sidrena_test_wc_products'][ $id ]['meta'][ $key ] = $value;
+				$GLOBALS['twbce_test_wc_products'][ $id ]['meta'][ $key ] = $value;
 			}
 		}
 	}
@@ -288,11 +288,11 @@ if ( ! function_exists( 'wc_get_product' ) ) {
 	function wc_get_product( $product_id ) {
 		$product_id = (int) $product_id;
 
-		if ( ! isset( $GLOBALS['sidrena_test_wc_products'][ $product_id ] ) ) {
+		if ( ! isset( $GLOBALS['twbce_test_wc_products'][ $product_id ] ) ) {
 			return false;
 		}
 
-		$data = $GLOBALS['sidrena_test_wc_products'][ $product_id ];
+		$data = $GLOBALS['twbce_test_wc_products'][ $product_id ];
 
 		return isset( $data['type'] ) && 'variation' === $data['type']
 			? new WC_Product_Variation( $data )
@@ -308,7 +308,7 @@ if ( ! function_exists( 'is_product' ) ) {
 	 * @return bool
 	 */
 	function is_product() {
-		return ! empty( $GLOBALS['sidrena_test_is_product'] );
+		return ! empty( $GLOBALS['twbce_test_is_product'] );
 	}
 }
 
@@ -320,7 +320,7 @@ if ( ! function_exists( 'get_queried_object_id' ) ) {
 	 * @return int
 	 */
 	function get_queried_object_id() {
-		return isset( $GLOBALS['sidrena_test_queried_object_id'] ) ? (int) $GLOBALS['sidrena_test_queried_object_id'] : 0;
+		return isset( $GLOBALS['twbce_test_queried_object_id'] ) ? (int) $GLOBALS['twbce_test_queried_object_id'] : 0;
 	}
 }
 
@@ -333,7 +333,7 @@ if ( ! function_exists( 'wc_get_products' ) ) {
 	 * @return array<int,int|WC_Product>|object
 	 */
 	function wc_get_products( $args = array() ) {
-		$items = isset( $GLOBALS['sidrena_test_wc_products'] ) ? (array) $GLOBALS['sidrena_test_wc_products'] : array();
+		$items = isset( $GLOBALS['twbce_test_wc_products'] ) ? (array) $GLOBALS['twbce_test_wc_products'] : array();
 		$ids   = array_keys( $items );
 
 		if ( isset( $args['include'] ) ) {
@@ -443,7 +443,7 @@ if ( ! function_exists( 'update_object_term_cache' ) ) {
 
 if ( ! function_exists( 'get_post_meta' ) ) {
 	function get_post_meta( $post_id, $key = '', $single = false ) {
-		$products = isset( $GLOBALS['sidrena_test_wc_products'] ) ? (array) $GLOBALS['sidrena_test_wc_products'] : array();
+		$products = isset( $GLOBALS['twbce_test_wc_products'] ) ? (array) $GLOBALS['twbce_test_wc_products'] : array();
 		$value    = isset( $products[ (int) $post_id ]['meta'][ $key ] ) ? $products[ (int) $post_id ]['meta'][ $key ] : '';
 		return $single ? $value : array( $value );
 	}
@@ -492,7 +492,7 @@ if ( ! function_exists( 'wc_get_price_to_display' ) ) {
 	 */
 	function wc_get_price_to_display( $product, $args = array() ) {
 		$price      = isset( $args['price'] ) ? (float) $args['price'] : (float) $product->get_price();
-		$multiplier = isset( $GLOBALS['sidrena_test_tax_multiplier'] ) ? (float) $GLOBALS['sidrena_test_tax_multiplier'] : 1.0;
+		$multiplier = isset( $GLOBALS['twbce_test_tax_multiplier'] ) ? (float) $GLOBALS['twbce_test_tax_multiplier'] : 1.0;
 		return (float) ( $price * $multiplier );
 	}
 }

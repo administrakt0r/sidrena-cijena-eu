@@ -5,42 +5,42 @@
  * Verifies that every admin-post handler strictly enforces capabilities
  * and terminates unauthorized calls via wp_die.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AnchorMetaBox;
-use SidrenaCijena\Admin\BulkAnchorEntryPage;
-use SidrenaCijena\Admin\CompliancePage;
-use SidrenaCijena\Admin\ImportPage;
-use SidrenaCijena\Admin\LocationsPage;
-use SidrenaCijena\Admin\PriceHistoryPage;
-use SidrenaCijena\Admin\PublicationsPage;
-use SidrenaCijena\Admin\SetupGuidePage;
-use SidrenaCijena\Admin\SpecialSaleMetaBox;
-use SidrenaCijena\Admin\WelcomeBanner;
-use SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Admin\AnchorMetaBox;
+use Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage;
+use Titanworks\SidrenaCijena\Admin\CompliancePage;
+use Titanworks\SidrenaCijena\Admin\ImportPage;
+use Titanworks\SidrenaCijena\Admin\LocationsPage;
+use Titanworks\SidrenaCijena\Admin\PriceHistoryPage;
+use Titanworks\SidrenaCijena\Admin\PublicationsPage;
+use Titanworks\SidrenaCijena\Admin\SetupGuidePage;
+use Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox;
+use Titanworks\SidrenaCijena\Admin\WelcomeBanner;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
 
 /**
- * @covers \SidrenaCijena\Admin\AnchorMetaBox::handle_record
- * @covers \SidrenaCijena\Admin\SpecialSaleMetaBox::handle_save
- * @covers \SidrenaCijena\Admin\PriceHistoryPage::handle_correct
- * @covers \SidrenaCijena\Admin\LocationsPage::handle_save
- * @covers \SidrenaCijena\Admin\LocationsPage::handle_delete
- * @covers \SidrenaCijena\Admin\PublicationsPage::handle_generate
- * @covers \SidrenaCijena\Admin\BulkAnchorEntryPage::handle_save
- * @covers \SidrenaCijena\Admin\BulkAnchorEntryPage::handle_set_all_current
- * @covers \SidrenaCijena\Admin\SetupGuidePage::handle_complete
- * @covers \SidrenaCijena\Admin\SetupGuidePage::handle_reopen
- * @covers \SidrenaCijena\Admin\ImportPage::handle_preview
- * @covers \SidrenaCijena\Admin\ImportPage::handle_commit
- * @covers \SidrenaCijena\Admin\ImportPage::handle_report
- * @covers \SidrenaCijena\Admin\CompliancePage::handle_run
- * @covers \SidrenaCijena\Admin\CompliancePage::handle_export
- * @covers \SidrenaCijena\Admin\WelcomeBanner::handle_dismiss
- * @covers \SidrenaCijena\Cron\Scheduler::handle_dismiss_failure
+ * @covers \Titanworks\SidrenaCijena\Admin\AnchorMetaBox::handle_record
+ * @covers \Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox::handle_save
+ * @covers \Titanworks\SidrenaCijena\Admin\PriceHistoryPage::handle_correct
+ * @covers \Titanworks\SidrenaCijena\Admin\LocationsPage::handle_save
+ * @covers \Titanworks\SidrenaCijena\Admin\LocationsPage::handle_delete
+ * @covers \Titanworks\SidrenaCijena\Admin\PublicationsPage::handle_generate
+ * @covers \Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage::handle_save
+ * @covers \Titanworks\SidrenaCijena\Admin\BulkAnchorEntryPage::handle_set_all_current
+ * @covers \Titanworks\SidrenaCijena\Admin\SetupGuidePage::handle_complete
+ * @covers \Titanworks\SidrenaCijena\Admin\SetupGuidePage::handle_reopen
+ * @covers \Titanworks\SidrenaCijena\Admin\ImportPage::handle_preview
+ * @covers \Titanworks\SidrenaCijena\Admin\ImportPage::handle_commit
+ * @covers \Titanworks\SidrenaCijena\Admin\ImportPage::handle_report
+ * @covers \Titanworks\SidrenaCijena\Admin\CompliancePage::handle_run
+ * @covers \Titanworks\SidrenaCijena\Admin\CompliancePage::handle_export
+ * @covers \Titanworks\SidrenaCijena\Admin\WelcomeBanner::handle_dismiss
+ * @covers \Titanworks\SidrenaCijena\Cron\Scheduler::handle_dismiss_failure
  */
 class AdminPostCapabilityTest extends TestCase {
 
@@ -52,7 +52,7 @@ class AdminPostCapabilityTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_can'] = false;
+		$GLOBALS['twbce_test_can'] = false;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class AdminPostCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		unset( $GLOBALS['sidrena_test_can'] );
+		unset( $GLOBALS['twbce_test_can'] );
 
 		parent::tearDown();
 	}

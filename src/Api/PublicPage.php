@@ -2,16 +2,16 @@
 /**
  * Public HTML price list and archive pages.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
-use SidrenaCijena\Export\PriceListBuilder;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Export\PriceListBuilder;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,7 +31,7 @@ class PublicPage {
 	 *
 	 * @var string
 	 */
-	const QUERY_VAR = 'sidrena_cijena_page';
+	const QUERY_VAR = 'twbce_cijena_page';
 
 	/**
 	 * Value of the price-list page.
@@ -99,9 +99,9 @@ class PublicPage {
 		add_action( 'wp_sitemaps_init', array( $this, 'register_sitemap_provider' ) );
 
 		add_shortcode( 'sidrena-cjenik', array( $this, 'shortcode_list' ) );
-		add_shortcode( 'sidrena_cjenik', array( $this, 'shortcode_list' ) );
+		add_shortcode( 'twbce_cjenik', array( $this, 'shortcode_list' ) );
 		add_shortcode( 'sidrena-arhiva', array( $this, 'shortcode_archive' ) );
-		add_shortcode( 'sidrena_arhiva', array( $this, 'shortcode_archive' ) );
+		add_shortcode( 'twbce_arhiva', array( $this, 'shortcode_archive' ) );
 	}
 
 	/**
@@ -160,11 +160,11 @@ class PublicPage {
 
 		if ( self::STEM_ARCHIVE === $request ) {
 			$wp->query_vars[ self::QUERY_VAR ] = self::PAGE_ARCHIVE;
-			$wp->matched_rule                  = 'sidrena_cijena_archive';
+			$wp->matched_rule                  = 'twbce_cijena_archive';
 			unset( $wp->query_vars['error'] );
 		} elseif ( self::STEM_LIST === $request ) {
 			$wp->query_vars[ self::QUERY_VAR ] = self::PAGE_LIST;
-			$wp->matched_rule                  = 'sidrena_cijena_cjenik';
+			$wp->matched_rule                  = 'twbce_cijena_cjenik';
 			unset( $wp->query_vars['error'] );
 		}
 	}
@@ -222,6 +222,7 @@ class PublicPage {
 
 		status_header( 200 );
 		nocache_headers();
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed's documented integration hook.
 		do_action( 'litespeed_control_set_nocache', 'sidrena-cijena-public' );
 
 		self::ensure_croatian_catalog();
@@ -229,11 +230,52 @@ class PublicPage {
 		get_header();
 
 		// The templates escape every value they print.
-		echo $this->render( $page, $this->request_args() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_kses( $this->render( $page, $this->request_args() ), self::allowed_html() );
 
 		get_footer();
 
 		exit;
+	}
+
+	/**
+	 * HTML permitted in the public catalog, including its GET filter controls.
+	 *
+	 * @return array<string,array<string,bool>>
+	 */
+	public static function allowed_html() {
+		$allowed = wp_kses_allowed_html( 'post' );
+
+		$allowed['form']   = array(
+			'method' => true,
+			'class'  => true,
+		);
+		$allowed['label']  = array(
+			'for'   => true,
+			'class' => true,
+		);
+		$allowed['input']  = array(
+			'type'         => true,
+			'id'           => true,
+			'name'         => true,
+			'value'        => true,
+			'placeholder'  => true,
+			'autocomplete' => true,
+			'class'        => true,
+		);
+		$allowed['select'] = array(
+			'name'  => true,
+			'id'    => true,
+			'class' => true,
+		);
+		$allowed['option'] = array(
+			'value'    => true,
+			'selected' => true,
+		);
+		$allowed['button'] = array(
+			'type'  => true,
+			'class' => true,
+		);
+		return $allowed;
 	}
 
 	/**
@@ -248,12 +290,12 @@ class PublicPage {
 
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
-			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+			TWBCE_CIJENA_URL . 'assets/css/frontend.css',
 			array(),
-			SIDRENA_CIJENA_VERSION
+			TWBCE_CIJENA_VERSION
 		);
 
-		$text = (string) apply_filters( 'sidrena_cijena_footer_link_text', __( 'Cjenici', 'titanworks-bazna-cijena' ) );
+		$text = (string) apply_filters( 'twbce_cijena_footer_link_text', __( 'Cjenici', 'sidrena-cijena-eu' ) );
 
 		printf(
 			'<p class="sidrena-cijena-archive-link"><a href="%1$s">%2$s</a></p>',
@@ -297,9 +339,9 @@ class PublicPage {
 
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
-			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+			TWBCE_CIJENA_URL . 'assets/css/frontend.css',
 			array(),
-			SIDRENA_CIJENA_VERSION
+			TWBCE_CIJENA_VERSION
 		);
 	}
 
@@ -363,7 +405,7 @@ class PublicPage {
 				array(
 					'build'    => 'public_list',
 					'location' => (int) $location['id'],
-					'v'        => SIDRENA_CIJENA_VERSION,
+					'v'        => TWBCE_CIJENA_VERSION,
 				)
 			);
 			$cached    = $cache->get( $build_key );
@@ -449,7 +491,7 @@ class PublicPage {
 				'page'     => 'public_archive',
 				'location' => $location ? (int) $location['id'] : 0,
 				'paged'    => $paged,
-				'v'        => SIDRENA_CIJENA_VERSION,
+				'v'        => TWBCE_CIJENA_VERSION,
 			)
 		);
 
@@ -618,9 +660,9 @@ class PublicPage {
 		$row['lowest_30_day_display'] = null === $lowest_30_day_price ? '' : Currency::format( (float) $lowest_30_day_price );
 		$row['anchor_display']        = null === $row['sidrena_cijena'] ? '' : Currency::format( (float) $row['sidrena_cijena'] );
 		$row['reference_display']     = Dates::format_date_display( isset( $row['anchor_reference_date'] ) ? $row['anchor_reference_date'] : '' );
-		$row['type_display']          = 'usluga' === $row['vrsta'] ? __( 'Service', 'titanworks-bazna-cijena' ) : __( 'Product', 'titanworks-bazna-cijena' );
+		$row['type_display']          = 'usluga' === $row['vrsta'] ? __( 'Service', 'sidrena-cijena-eu' ) : __( 'Product', 'sidrena-cijena-eu' );
 		$row['sale_display']          = empty( $row['poseban_oblik_prodaje'] ) ? '' : (string) $row['naziv_posebnog_oblika_prodaje'];
-		$row['availability_display']  = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'titanworks-bazna-cijena' ) : __( 'Unavailable', 'titanworks-bazna-cijena' );
+		$row['availability_display']  = 'dostupno' === $row['dostupnost'] ? __( 'Available', 'sidrena-cijena-eu' ) : __( 'Unavailable', 'sidrena-cijena-eu' );
 
 		return $row;
 	}
@@ -652,7 +694,7 @@ class PublicPage {
 	 */
 	protected function partial( $name, array $args ) {
 		$template = locate_template( array( 'sidrena-cijena/' . $name ) );
-		$path     = $template ? $template : SIDRENA_CIJENA_DIR . 'templates/' . $name;
+		$path     = $template ? $template : TWBCE_CIJENA_DIR . 'templates/' . $name;
 
 		if ( ! is_readable( $path ) ) {
 			return '';
@@ -686,9 +728,9 @@ class PublicPage {
 		if ( function_exists( 'wp_enqueue_style' ) ) {
 			wp_enqueue_style(
 				'sidrena-cijena-frontend',
-				SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+				TWBCE_CIJENA_URL . 'assets/css/frontend.css',
 				array(),
-				SIDRENA_CIJENA_VERSION
+				TWBCE_CIJENA_VERSION
 			);
 		}
 
@@ -702,13 +744,13 @@ class PublicPage {
 	 */
 	public static function ensure_croatian_catalog() {
 		$candidates = array(
-			SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo',
-			SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo',
+			TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo',
+			TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo',
 		);
 
 		foreach ( $candidates as $mo_file ) {
 			if ( file_exists( $mo_file ) ) {
-				load_textdomain( 'titanworks-bazna-cijena', $mo_file );
+				load_textdomain( 'sidrena-cijena-eu', $mo_file );
 				break;
 			}
 		}

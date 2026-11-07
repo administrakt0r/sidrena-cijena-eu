@@ -2,17 +2,17 @@
 /**
  * Legal settings page tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\LegalSettingsPage;
-use SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Admin\LegalSettingsPage;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
 
 /**
- * @covers \SidrenaCijena\Admin\LegalSettingsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\LegalSettingsPage
  */
 class LegalSettingsPageTest extends TestCase {
 
@@ -23,9 +23,9 @@ class LegalSettingsPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_settings_sections'] = array();
-		$GLOBALS['sidrena_test_settings_fields']   = array();
-		$GLOBALS['sidrena_test_options']           = array();
+		$GLOBALS['twbce_test_settings_sections'] = array();
+		$GLOBALS['twbce_test_settings_fields']   = array();
+		$GLOBALS['twbce_test_options']           = array();
 	}
 
 	/**
@@ -35,9 +35,9 @@ class LegalSettingsPageTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_settings_sections'],
-			$GLOBALS['sidrena_test_settings_fields'],
-			$GLOBALS['sidrena_test_options']
+			$GLOBALS['twbce_test_settings_sections'],
+			$GLOBALS['twbce_test_settings_fields'],
+			$GLOBALS['twbce_test_options']
 		);
 		parent::tearDown();
 	}
@@ -65,18 +65,18 @@ class LegalSettingsPageTest extends TestCase {
 		LegalSettingsPage::register_settings();
 
 		$page = LegalSettingsPage::PAGE;
-		$this->assertArrayHasKey( $page, $GLOBALS['sidrena_test_settings_sections'] );
-		$this->assertArrayHasKey( 'sidrena_cijena_legal', $GLOBALS['sidrena_test_settings_sections'][ $page ] );
+		$this->assertArrayHasKey( $page, $GLOBALS['twbce_test_settings_sections'] );
+		$this->assertArrayHasKey( 'twbce_cijena_legal', $GLOBALS['twbce_test_settings_sections'][ $page ] );
 
-		$this->assertArrayHasKey( $page, $GLOBALS['sidrena_test_settings_fields'] );
-		$fields = $GLOBALS['sidrena_test_settings_fields'][ $page ];
+		$this->assertArrayHasKey( $page, $GLOBALS['twbce_test_settings_fields'] );
+		$fields = $GLOBALS['twbce_test_settings_fields'][ $page ];
 		$ids    = array_column( $fields, 'id' );
 
-		$this->assertContains( 'sidrena_cijena_general_reference_date', $ids );
-		$this->assertContains( 'sidrena_cijena_legacy_reference_date', $ids );
-		$this->assertContains( 'sidrena_cijena_legacy_enabled', $ids );
-		$this->assertContains( 'sidrena_cijena_legacy_category_slugs', $ids );
-		$this->assertContains( 'sidrena_cijena_rule_version', $ids );
+		$this->assertContains( 'twbce_cijena_general_reference_date', $ids );
+		$this->assertContains( 'twbce_cijena_legacy_reference_date', $ids );
+		$this->assertContains( 'twbce_cijena_legacy_enabled', $ids );
+		$this->assertContains( 'twbce_cijena_legacy_category_slugs', $ids );
+		$this->assertContains( 'twbce_cijena_rule_version', $ids );
 
 		foreach ( $fields as $field ) {
 			$this->assertArrayHasKey( 'description', $field['args'] );

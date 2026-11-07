@@ -2,17 +2,17 @@
 /**
  * Unit tests for the special sale service validation paths.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Pricing\SpecialSaleService;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleService;
 
 /**
  * Covers the sale-type gate (FR-023), date validation and not-found paths.
@@ -20,7 +20,7 @@ use SidrenaCijena\Pricing\SpecialSaleService;
  * Repositories run against the wpdb test double, so inserts succeed while
  * reads return nothing; history-dependent calculations see an empty timeline.
  *
- * @covers \SidrenaCijena\Pricing\SpecialSaleService
+ * @covers \Titanworks\SidrenaCijena\Pricing\SpecialSaleService
  */
 class SpecialSaleServiceTest extends TestCase {
 

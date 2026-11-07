@@ -5,21 +5,21 @@
  * The anchor and special-sale meta boxes are the only admin screens that can
  * expose compliance evidence (anchor price, reference date, 30-day lowest
  * price) and offer a form that posts to `admin-post.php`. Every other screen
- * in the plugin is registered behind `manage_sidrena_cijena`, so these two
+ * in the plugin is registered behind `twbce_manage_prices`, so these two
  * must be gated at registration time as well.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AnchorMetaBox;
-use SidrenaCijena\Admin\SpecialSaleMetaBox;
+use Titanworks\SidrenaCijena\Admin\AnchorMetaBox;
+use Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox;
 
 /**
- * @covers \SidrenaCijena\Admin\AnchorMetaBox
- * @covers \SidrenaCijena\Admin\SpecialSaleMetaBox
+ * @covers \Titanworks\SidrenaCijena\Admin\AnchorMetaBox
+ * @covers \Titanworks\SidrenaCijena\Admin\SpecialSaleMetaBox
  */
 class MetaBoxCapabilityTest extends TestCase {
 
@@ -29,9 +29,9 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$GLOBALS['sidrena_test_can']        = true;
-		$GLOBALS['sidrena_test_meta_boxes'] = array();
-		$GLOBALS['sidrena_test_post_types'] = array( 'sidrena_item' );
+		$GLOBALS['twbce_test_can']        = true;
+		$GLOBALS['twbce_test_meta_boxes'] = array();
+		$GLOBALS['twbce_test_post_types'] = array( 'twbce_item' );
 	}
 
 	/**
@@ -40,9 +40,9 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		$GLOBALS['sidrena_test_meta_boxes'] = array();
-		$GLOBALS['sidrena_test_post_types'] = array();
-		unset( $GLOBALS['sidrena_test_can'] );
+		$GLOBALS['twbce_test_meta_boxes'] = array();
+		$GLOBALS['twbce_test_post_types'] = array();
+		unset( $GLOBALS['twbce_test_can'] );
 	}
 
 	/**
@@ -52,8 +52,8 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return array<int,array<string,mixed>>
 	 */
 	private static function registered( $id ) {
-		$boxes = isset( $GLOBALS['sidrena_test_meta_boxes'] ) && is_array( $GLOBALS['sidrena_test_meta_boxes'] )
-			? $GLOBALS['sidrena_test_meta_boxes']
+		$boxes = isset( $GLOBALS['twbce_test_meta_boxes'] ) && is_array( $GLOBALS['twbce_test_meta_boxes'] )
+			? $GLOBALS['twbce_test_meta_boxes']
 			: array();
 
 		return array_values(
@@ -72,7 +72,7 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	public function test_anchor_meta_box_is_not_registered_without_the_capability() {
-		$GLOBALS['sidrena_test_can'] = false;
+		$GLOBALS['twbce_test_can'] = false;
 
 		AnchorMetaBox::register();
 
@@ -96,7 +96,7 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	public function test_special_sale_meta_box_is_not_registered_without_the_capability() {
-		$GLOBALS['sidrena_test_can'] = false;
+		$GLOBALS['twbce_test_can'] = false;
 
 		SpecialSaleMetaBox::register();
 
@@ -120,6 +120,6 @@ class MetaBoxCapabilityTest extends TestCase {
 	 * @return void
 	 */
 	public function test_the_gate_reads_the_plugin_capability() {
-		$this->assertSame( 'manage_sidrena_cijena', \SidrenaCijena\Admin\Capabilities::capability() );
+		$this->assertSame( 'twbce_manage_prices', \Titanworks\SidrenaCijena\Admin\Capabilities::capability() );
 	}
 }

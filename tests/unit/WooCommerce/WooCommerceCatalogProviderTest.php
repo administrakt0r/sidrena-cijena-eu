@@ -5,7 +5,7 @@
  * @package SidrenaCijenaEU
  */
 
-use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 
 /**
  * WooCommerce catalog provider tests.
@@ -20,7 +20,7 @@ class WooCommerceCatalogProviderTest extends PHPUnit\Framework\TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		require_once __DIR__ . '/../wc-stubs.php';
-		$GLOBALS['sidrena_test_wc_products'] = array();
+		$GLOBALS['twbce_test_wc_products'] = array();
 	}
 
 	/**
@@ -225,18 +225,18 @@ class WooCommerceCatalogProviderTest extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
-	 * Barcode resolves from _sidrena_barcode meta.
+	 * Barcode resolves from _twbce_barcode meta.
 	 *
 	 * @return void
 	 */
-	public function test_barcode_resolves_from_sidrena_barcode_meta() {
+	public function test_barcode_resolves_from_twbce_barcode_meta() {
 		$this->register_product(
 			502,
 			array(
 				'name'  => 'Product with Sidrena barcode',
 				'price' => '25.00',
 				'meta'  => array(
-					'_sidrena_barcode' => '3859876543210',
+					'_twbce_barcode' => '3859876543210',
 				),
 			)
 		);
@@ -309,12 +309,12 @@ class WooCommerceCatalogProviderTest extends PHPUnit\Framework\TestCase {
 			)
 		);
 
-		add_filter( 'sidrena_cijena_barcode_fallback_to_sku', '__return_false' );
+		add_filter( 'twbce_cijena_barcode_fallback_to_sku', '__return_false' );
 
 		$provider = new WooCommerceCatalogProvider();
 		$item     = $provider->get_item( 505 );
 
-		remove_filter( 'sidrena_cijena_barcode_fallback_to_sku', '__return_false' );
+		remove_filter( 'twbce_cijena_barcode_fallback_to_sku', '__return_false' );
 
 		$this->assertNotNull( $item );
 		$this->assertSame( '', $item->barcode );
@@ -328,7 +328,7 @@ class WooCommerceCatalogProviderTest extends PHPUnit\Framework\TestCase {
 	 * @return void
 	 */
 	private function register_product( $id, array $data ) {
-		$GLOBALS['sidrena_test_wc_products'][ (int) $id ] = array_merge(
+		$GLOBALS['twbce_test_wc_products'][ (int) $id ] = array_merge(
 			$data,
 			array( 'id' => (int) $id )
 		);

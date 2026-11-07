@@ -2,16 +2,16 @@
 /**
  * Price-history correction form tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\FormState;
-use SidrenaCijena\Admin\PriceHistoryPage;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Admin\FormState;
+use Titanworks\SidrenaCijena\Admin\PriceHistoryPage;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 /**
  * Probe exposing the protected correction form renderer.
@@ -33,7 +33,7 @@ class PriceHistoryPageProbe extends PriceHistoryPage {
 }
 
 /**
- * @covers \SidrenaCijena\Admin\PriceHistoryPage
+ * @covers \Titanworks\SidrenaCijena\Admin\PriceHistoryPage
  */
 class PriceHistoryPageTest extends TestCase {
 
@@ -43,7 +43,7 @@ class PriceHistoryPageTest extends TestCase {
 	 * @return void
 	 */
 	protected function setUp(): void {
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**

@@ -42,9 +42,9 @@
 		}
 
 		var nodes = root.querySelectorAll( '[data-sidrena-cijena-anchor]' );
-		var display = data && data.sidrena_cijena_anchor ? data.sidrena_cijena_anchor : '';
-		var date = data && data.sidrena_cijena_reference_date_display ? data.sidrena_cijena_reference_date_display : '';
-		var isoDate = data && data.sidrena_cijena_reference_date ? data.sidrena_cijena_reference_date : '';
+		var display = data && data.twbce_cijena_anchor ? data.twbce_cijena_anchor : '';
+		var date = data && data.twbce_cijena_reference_date_display ? data.twbce_cijena_reference_date_display : '';
+		var isoDate = data && data.twbce_cijena_reference_date ? data.twbce_cijena_reference_date : '';
 
 		for ( var i = 0; i < nodes.length; i++ ) {
 			if ( ! isElementForProduct( nodes[ i ], root, productId ) ) {
@@ -113,7 +113,7 @@
 		}
 
 		var thirtyDayNodes = root.querySelectorAll( '[data-sidrena-cijena-30-day]' );
-		var display30 = data && data.sidrena_cijena_30_day ? data.sidrena_cijena_30_day : '';
+		var display30 = data && data.twbce_cijena_30_day ? data.twbce_cijena_30_day : '';
 		for ( var t = 0; t < thirtyDayNodes.length; t++ ) {
 			if ( ! isElementForProduct( thirtyDayNodes[ t ], root, productId ) ) {
 				continue;

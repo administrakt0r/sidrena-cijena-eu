@@ -2,21 +2,21 @@
 /**
  * Public price-list REST API.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Export\CsvWriter;
-use SidrenaCijena\Export\FilenameGenerator;
-use SidrenaCijena\Export\PriceListBuilder;
-use SidrenaCijena\Export\XmlWriter;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Export\CsvWriter;
+use Titanworks\SidrenaCijena\Export\FilenameGenerator;
+use Titanworks\SidrenaCijena\Export\PriceListBuilder;
+use Titanworks\SidrenaCijena\Export\XmlWriter;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -299,7 +299,7 @@ class PriceListController {
 		}
 
 		$payload = array(
-			'schema_version' => \SidrenaCijena\Database\Schema::DB_VERSION,
+			'schema_version' => \Titanworks\SidrenaCijena\Database\Schema::DB_VERSION,
 			'rule'           => RuleConfig::all(),
 			'locations'      => $locations,
 			'cron'           => array(
@@ -331,17 +331,20 @@ class PriceListController {
 
 		$data = $result->get_data();
 
-		if ( ! is_array( $data ) || empty( $data['sidrena_download'] ) || ! is_array( $data['sidrena_download'] ) ) {
+		if ( ! is_array( $data ) || empty( $data['twbce_download'] ) || ! is_array( $data['twbce_download'] ) ) {
 			return $served;
 		}
 
-		$download = $data['sidrena_download'];
+		$download = $data['twbce_download'];
 
-		header( 'Content-Type: ' . (string) $download['content_type'] );
-		header( 'Content-Disposition: attachment; filename="' . (string) $download['filename'] . '"' );
+		if ( ! in_array( $download['content_type'], array( 'text/csv; charset=utf-8', 'application/xml; charset=utf-8' ), true ) ) {
+			return $served;
+		}
+		header( 'X-Content-Type-Options: nosniff' );
+		header( 'Content-Type: ' . $download['content_type'] );
+		header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( (string) $download['filename'] ) . '"' );
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Deterministic CSV/XML content escaped per the format contracts.
-		echo (string) $download['content'];
+		\Titanworks\SidrenaCijena\Support\Download::write( (string) $download['content'] );
 
 		return true;
 	}
@@ -387,7 +390,7 @@ class PriceListController {
 		if ( is_string( $cached_content ) && '' !== $cached_content ) {
 			return new \WP_REST_Response(
 				array(
-					'sidrena_download' => array(
+					'twbce_download' => array(
 						'content'      => $cached_content,
 						'content_type' => $content_type,
 						'filename'     => $filename,
@@ -414,7 +417,7 @@ class PriceListController {
 
 		return new \WP_REST_Response(
 			array(
-				'sidrena_download' => array(
+				'twbce_download' => array(
 					'content'      => $content,
 					'content_type' => $content_type,
 					'filename'     => $filename,
@@ -475,7 +478,7 @@ class PriceListController {
 			$location = Plugin::instance()->locations()->get( (int) $args['location'] );
 
 			if ( ! $location ) {
-				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
+				return new \WP_Error( 'twbce_cijena_location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ), array( 'status' => 404 ) );
 			}
 		}
 
@@ -600,7 +603,7 @@ class PriceListController {
 			$location = $locations->get( $requested );
 
 			if ( ! $location ) {
-				return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'The sales location could not be found.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
+				return new \WP_Error( 'twbce_cijena_location_not_found', __( 'The sales location could not be found.', 'sidrena-cijena-eu' ), array( 'status' => 404 ) );
 			}
 
 			return $location;
@@ -613,10 +616,10 @@ class PriceListController {
 		}
 
 		if ( count( $active ) > 1 ) {
-			return new \WP_Error( 'sidrena_cijena_location_required', __( 'A location parameter is required when several sales locations are active.', 'titanworks-bazna-cijena' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'twbce_cijena_location_required', __( 'A location parameter is required when several sales locations are active.', 'sidrena-cijena-eu' ), array( 'status' => 400 ) );
 		}
 
-		return new \WP_Error( 'sidrena_cijena_location_not_found', __( 'No active sales location exists.', 'titanworks-bazna-cijena' ), array( 'status' => 404 ) );
+		return new \WP_Error( 'twbce_cijena_location_not_found', __( 'No active sales location exists.', 'sidrena-cijena-eu' ), array( 'status' => 404 ) );
 	}
 
 	/**
@@ -693,16 +696,16 @@ class PriceListController {
 			return true;
 		}
 
-		$key = 'sidrena_cijena_throttle_' . md5( $ip );
+		$key = 'twbce_cijena_throttle_' . md5( $ip );
 
 		if ( function_exists( 'wp_using_ext_object_cache' ) && wp_using_ext_object_cache() ) {
-			$cached = wp_cache_get( $key, 'sidrena_cijena_throttle' );
+			$cached = wp_cache_get( $key, 'twbce_cijena_throttle' );
 			$count  = false !== $cached ? (int) $cached : 0;
 
 			if ( $count >= self::THROTTLE_LIMIT ) {
 				return new \WP_Error(
-					'sidrena_cijena_throttled',
-					__( 'Too many requests. Please retry shortly.', 'titanworks-bazna-cijena' ),
+					'twbce_cijena_throttled',
+					__( 'Too many requests. Please retry shortly.', 'sidrena-cijena-eu' ),
 					array(
 						'status'  => 429,
 						'headers' => array( 'Retry-After' => 60 ),
@@ -710,7 +713,7 @@ class PriceListController {
 				);
 			}
 
-			wp_cache_set( $key, $count + 1, 'sidrena_cijena_throttle', MINUTE_IN_SECONDS );
+			wp_cache_set( $key, $count + 1, 'twbce_cijena_throttle', MINUTE_IN_SECONDS );
 
 			return true;
 		}
@@ -719,8 +722,8 @@ class PriceListController {
 
 		if ( $count >= self::THROTTLE_LIMIT ) {
 			return new \WP_Error(
-				'sidrena_cijena_throttled',
-				__( 'Too many requests. Please retry shortly.', 'titanworks-bazna-cijena' ),
+				'twbce_cijena_throttled',
+				__( 'Too many requests. Please retry shortly.', 'sidrena-cijena-eu' ),
 				array(
 					'status'  => 429,
 					'headers' => array( 'Retry-After' => 60 ),

@@ -69,7 +69,7 @@ sale; that display value is not added to the CSV/XML price-list contract.
 | 7 | `maloprodajna_cijena` | **Effective** retail price paid today (promotional price during a sale) |
 | 8 | `poseban_oblik_prodaje` | `DA`/`NE` — special sale active |
 | 9 | `naziv_posebnog_oblika_prodaje` | Sale type/name (required when 8 = `DA`) |
-| 10 | `sidrena_cijena` | Anchor price (required for publication) |
+| 10 | `twbce_cijena` | Anchor price (required for publication) |
 | 11 | `datum_sidrene_cijene` | Date the anchor applies to; for a new item this is the verified first-offer date |
 | 12 | `barkod` | Barcode (empty when unknown) |
 | 13 | `dostupnost` | `dostupno` / `nedostupno` |

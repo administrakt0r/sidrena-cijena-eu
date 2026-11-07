@@ -2,10 +2,10 @@
 /**
  * Admin menu and asset registration.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,8 +29,8 @@ final class AdminMenu {
 	public static function register() {
 		$capability = Capabilities::capability();
 		add_menu_page(
-			__( 'Sidrena cijena', 'titanworks-bazna-cijena' ),
-			__( 'Sidrena cijena', 'titanworks-bazna-cijena' ),
+			__( 'Sidrena cijena', 'sidrena-cijena-eu' ),
+			__( 'Sidrena cijena', 'sidrena-cijena-eu' ),
 			$capability,
 			self::PARENT,
 			array( DashboardPage::class, 'render' ),
@@ -44,7 +44,7 @@ final class AdminMenu {
 			add_submenu_page(
 				self::PARENT,
 				/* translators: %s: screen title. */
-				sprintf( __( '%s - Sidrena cijena', 'titanworks-bazna-cijena' ), $page[1] ),
+				sprintf( __( '%s - Sidrena cijena', 'sidrena-cijena-eu' ), $page[1] ),
 				$page[1],
 				$capability,
 				$slug,
@@ -60,18 +60,18 @@ final class AdminMenu {
 	 */
 	public static function pages() {
 		return array(
-			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'titanworks-bazna-cijena' ) ),
-			SetupGuidePage::SLUG          => array( SetupGuidePage::class, __( 'Setup Guide', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-locations'    => array( LocationsPage::class, __( 'Sales locations', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-history'      => array( PriceHistoryPage::class, __( 'Price history', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-compliance'   => array( CompliancePage::class, __( 'Compliance check', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'titanworks-bazna-cijena' ) ),
-			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'titanworks-bazna-cijena' ) ),
-			DocumentationPage::SLUG       => array( DocumentationPage::class, __( 'Documentation', 'titanworks-bazna-cijena' ) ),
+			self::PARENT                  => array( DashboardPage::class, __( 'Dashboard', 'sidrena-cijena-eu' ) ),
+			SetupGuidePage::SLUG          => array( SetupGuidePage::class, __( 'Setup Guide', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-publications' => array( PublicationsPage::class, __( 'Price lists', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-anchors'      => array( BulkAnchorEntryPage::class, __( 'Anchor prices', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-import'       => array( ImportPage::class, __( 'Import', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-locations'    => array( LocationsPage::class, __( 'Sales locations', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-history'      => array( PriceHistoryPage::class, __( 'Price history', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-compliance'   => array( CompliancePage::class, __( 'Compliance check', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-settings'     => array( SettingsPage::class, __( 'Settings', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-logs'         => array( LogsPage::class, __( 'Logs', 'sidrena-cijena-eu' ) ),
+			'sidrena-cijena-audit'        => array( AuditPage::class, __( 'Audit', 'sidrena-cijena-eu' ) ),
+			DocumentationPage::SLUG       => array( DocumentationPage::class, __( 'Documentation', 'sidrena-cijena-eu' ) ),
 		);
 	}
 
@@ -105,7 +105,7 @@ final class AdminMenu {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
-		if ( '' !== $page && ( 0 === strpos( $page, 'sidrena-cijena' ) || 0 === strpos( $page, 'sidrena_item' ) ) ) {
+		if ( '' !== $page && ( 0 === strpos( $page, 'sidrena-cijena' ) || 0 === strpos( $page, 'twbce_item' ) ) ) {
 			return true;
 		}
 
@@ -113,11 +113,11 @@ final class AdminMenu {
 			$screen = get_current_screen();
 
 			if ( $screen ) {
-				if ( false !== strpos( (string) $screen->id, 'sidrena-cijena' ) || false !== strpos( (string) $screen->id, 'sidrena_item' ) ) {
+				if ( false !== strpos( (string) $screen->id, 'sidrena-cijena' ) || false !== strpos( (string) $screen->id, 'twbce_item' ) ) {
 					return true;
 				}
 
-				if ( $include_product && in_array( $screen->base, array( 'post', 'post-new' ), true ) && in_array( $screen->post_type, array( 'product', 'sidrena_item' ), true ) ) {
+				if ( $include_product && in_array( $screen->base, array( 'post', 'post-new' ), true ) && in_array( $screen->post_type, array( 'product', 'twbce_item' ), true ) ) {
 					return true;
 				}
 			}
@@ -136,12 +136,12 @@ final class AdminMenu {
 		$is_product_screen = false;
 		if ( in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
 			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-			if ( $screen && ( 'product' === $screen->post_type || 'sidrena_item' === $screen->post_type ) ) {
+			if ( $screen && ( 'product' === $screen->post_type || 'twbce_item' === $screen->post_type ) ) {
 				$is_product_screen = true;
 			}
 		}
 
-		$is_plugin_screen = false !== strpos( (string) $hook_suffix, 'sidrena-cijena' ) || false !== strpos( (string) $hook_suffix, 'sidrena_item' );
+		$is_plugin_screen = false !== strpos( (string) $hook_suffix, 'sidrena-cijena' ) || false !== strpos( (string) $hook_suffix, 'twbce_item' );
 
 		if ( ! $is_product_screen && ! $is_plugin_screen ) {
 			return;
@@ -149,20 +149,20 @@ final class AdminMenu {
 
 		wp_enqueue_style(
 			'sidrena-cijena-admin',
-			SIDRENA_CIJENA_URL . 'assets/css/admin.css',
+			TWBCE_CIJENA_URL . 'assets/css/admin.css',
 			array(),
-			SIDRENA_CIJENA_VERSION
+			TWBCE_CIJENA_VERSION
 		);
 
 		if ( isset( $_GET['tab'] ) && 'styling' === sanitize_key( wp_unslash( $_GET['tab'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only asset selection.
-			wp_enqueue_style( 'sidrena-cijena-frontend', SIDRENA_CIJENA_URL . 'assets/css/frontend.css', array(), SIDRENA_CIJENA_VERSION );
+			wp_enqueue_style( 'sidrena-cijena-frontend', TWBCE_CIJENA_URL . 'assets/css/frontend.css', array(), TWBCE_CIJENA_VERSION );
 		}
 
 		wp_enqueue_script(
 			'sidrena-cijena-admin',
-			SIDRENA_CIJENA_URL . 'assets/js/admin.js',
+			TWBCE_CIJENA_URL . 'assets/js/admin.js',
 			array( 'jquery', 'jquery-ui-datepicker' ),
-			SIDRENA_CIJENA_VERSION,
+			TWBCE_CIJENA_VERSION,
 			true
 		);
 
@@ -170,64 +170,64 @@ final class AdminMenu {
 			'sidrena-cijena-admin',
 			'sidrenaDatepickerI18n',
 			array(
-				'closeText'       => __( 'Done', 'titanworks-bazna-cijena' ),
-				'prevText'        => __( 'Prev', 'titanworks-bazna-cijena' ),
-				'nextText'        => __( 'Next', 'titanworks-bazna-cijena' ),
-				'currentText'     => __( 'Today', 'titanworks-bazna-cijena' ),
+				'closeText'       => __( 'Done', 'sidrena-cijena-eu' ),
+				'prevText'        => __( 'Prev', 'sidrena-cijena-eu' ),
+				'nextText'        => __( 'Next', 'sidrena-cijena-eu' ),
+				'currentText'     => __( 'Today', 'sidrena-cijena-eu' ),
 				'monthNames'      => array(
-					__( 'January', 'titanworks-bazna-cijena' ),
-					__( 'February', 'titanworks-bazna-cijena' ),
-					__( 'March', 'titanworks-bazna-cijena' ),
-					__( 'April', 'titanworks-bazna-cijena' ),
-					__( 'May', 'titanworks-bazna-cijena' ),
-					__( 'June', 'titanworks-bazna-cijena' ),
-					__( 'July', 'titanworks-bazna-cijena' ),
-					__( 'August', 'titanworks-bazna-cijena' ),
-					__( 'September', 'titanworks-bazna-cijena' ),
-					__( 'October', 'titanworks-bazna-cijena' ),
-					__( 'November', 'titanworks-bazna-cijena' ),
-					__( 'December', 'titanworks-bazna-cijena' ),
+					__( 'January', 'sidrena-cijena-eu' ),
+					__( 'February', 'sidrena-cijena-eu' ),
+					__( 'March', 'sidrena-cijena-eu' ),
+					__( 'April', 'sidrena-cijena-eu' ),
+					__( 'May', 'sidrena-cijena-eu' ),
+					__( 'June', 'sidrena-cijena-eu' ),
+					__( 'July', 'sidrena-cijena-eu' ),
+					__( 'August', 'sidrena-cijena-eu' ),
+					__( 'September', 'sidrena-cijena-eu' ),
+					__( 'October', 'sidrena-cijena-eu' ),
+					__( 'November', 'sidrena-cijena-eu' ),
+					__( 'December', 'sidrena-cijena-eu' ),
 				),
 				'monthNamesShort' => array(
-					__( 'Jan', 'titanworks-bazna-cijena' ),
-					__( 'Feb', 'titanworks-bazna-cijena' ),
-					__( 'Mar', 'titanworks-bazna-cijena' ),
-					__( 'Apr', 'titanworks-bazna-cijena' ),
-					__( 'May', 'titanworks-bazna-cijena' ),
-					__( 'Jun', 'titanworks-bazna-cijena' ),
-					__( 'Jul', 'titanworks-bazna-cijena' ),
-					__( 'Aug', 'titanworks-bazna-cijena' ),
-					__( 'Sep', 'titanworks-bazna-cijena' ),
-					__( 'Oct', 'titanworks-bazna-cijena' ),
-					__( 'Nov', 'titanworks-bazna-cijena' ),
-					__( 'Dec', 'titanworks-bazna-cijena' ),
+					__( 'Jan', 'sidrena-cijena-eu' ),
+					__( 'Feb', 'sidrena-cijena-eu' ),
+					__( 'Mar', 'sidrena-cijena-eu' ),
+					__( 'Apr', 'sidrena-cijena-eu' ),
+					__( 'May', 'sidrena-cijena-eu' ),
+					__( 'Jun', 'sidrena-cijena-eu' ),
+					__( 'Jul', 'sidrena-cijena-eu' ),
+					__( 'Aug', 'sidrena-cijena-eu' ),
+					__( 'Sep', 'sidrena-cijena-eu' ),
+					__( 'Oct', 'sidrena-cijena-eu' ),
+					__( 'Nov', 'sidrena-cijena-eu' ),
+					__( 'Dec', 'sidrena-cijena-eu' ),
 				),
 				'dayNames'        => array(
-					__( 'Sunday', 'titanworks-bazna-cijena' ),
-					__( 'Monday', 'titanworks-bazna-cijena' ),
-					__( 'Tuesday', 'titanworks-bazna-cijena' ),
-					__( 'Wednesday', 'titanworks-bazna-cijena' ),
-					__( 'Thursday', 'titanworks-bazna-cijena' ),
-					__( 'Friday', 'titanworks-bazna-cijena' ),
-					__( 'Saturday', 'titanworks-bazna-cijena' ),
+					__( 'Sunday', 'sidrena-cijena-eu' ),
+					__( 'Monday', 'sidrena-cijena-eu' ),
+					__( 'Tuesday', 'sidrena-cijena-eu' ),
+					__( 'Wednesday', 'sidrena-cijena-eu' ),
+					__( 'Thursday', 'sidrena-cijena-eu' ),
+					__( 'Friday', 'sidrena-cijena-eu' ),
+					__( 'Saturday', 'sidrena-cijena-eu' ),
 				),
 				'dayNamesShort'   => array(
-					__( 'Sun', 'titanworks-bazna-cijena' ),
-					__( 'Mon', 'titanworks-bazna-cijena' ),
-					__( 'Tue', 'titanworks-bazna-cijena' ),
-					__( 'Wed', 'titanworks-bazna-cijena' ),
-					__( 'Thu', 'titanworks-bazna-cijena' ),
-					__( 'Fri', 'titanworks-bazna-cijena' ),
-					__( 'Sat', 'titanworks-bazna-cijena' ),
+					__( 'Sun', 'sidrena-cijena-eu' ),
+					__( 'Mon', 'sidrena-cijena-eu' ),
+					__( 'Tue', 'sidrena-cijena-eu' ),
+					__( 'Wed', 'sidrena-cijena-eu' ),
+					__( 'Thu', 'sidrena-cijena-eu' ),
+					__( 'Fri', 'sidrena-cijena-eu' ),
+					__( 'Sat', 'sidrena-cijena-eu' ),
 				),
 				'dayNamesMin'     => array(
-					__( 'Su', 'titanworks-bazna-cijena' ),
-					__( 'Mo', 'titanworks-bazna-cijena' ),
-					__( 'Tu', 'titanworks-bazna-cijena' ),
-					__( 'We', 'titanworks-bazna-cijena' ),
-					__( 'Th', 'titanworks-bazna-cijena' ),
-					__( 'Fr', 'titanworks-bazna-cijena' ),
-					__( 'Sa', 'titanworks-bazna-cijena' ),
+					__( 'Su', 'sidrena-cijena-eu' ),
+					__( 'Mo', 'sidrena-cijena-eu' ),
+					__( 'Tu', 'sidrena-cijena-eu' ),
+					__( 'We', 'sidrena-cijena-eu' ),
+					__( 'Th', 'sidrena-cijena-eu' ),
+					__( 'Fr', 'sidrena-cijena-eu' ),
+					__( 'Sa', 'sidrena-cijena-eu' ),
 				),
 				'dateFormat'      => 'dd.mm.yy.',
 				'firstDay'        => 1,

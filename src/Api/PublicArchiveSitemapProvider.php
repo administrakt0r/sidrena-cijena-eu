@@ -2,10 +2,10 @@
 /**
  * Adds the public price-list archive to the WordPress sitemap.
  *
- * @package SidrenaCijena\Api
+ * @package Titanworks\SidrenaCijena\Api
  */
 
-namespace SidrenaCijena\Api;
+namespace Titanworks\SidrenaCijena\Api;
 
 defined( 'ABSPATH' ) || exit;
 

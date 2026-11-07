@@ -74,7 +74,7 @@ Consequently, under Croatian cross-compliance rules, **three distinct prices** m
   services, column `vrsta` distinguishes them).
 * Products: column order `vrsta, naziv, sifra, marka, jedinica_mjere,
   cijena_za_jedinicu_mjere, maloprodajna_cijena,
-  poseban_oblik_prodaje, naziv_posebnog_oblika_prodaje, sidrena_cijena,
+  poseban_oblik_prodaje, naziv_posebnog_oblika_prodaje, twbce_cijena,
   datum_sidrene_cijene, barkod, dostupnost`. The published *maloprodajna cijena* is the
   **effective** price the consumer pays today (promotional price during a
   sale), shown together with the sale indicator/name and the anchor.

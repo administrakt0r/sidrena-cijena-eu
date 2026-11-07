@@ -2,16 +2,16 @@
 /**
  * XML writer tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Export\XmlWriter;
+use Titanworks\SidrenaCijena\Export\XmlWriter;
 
 /**
- * @covers \SidrenaCijena\Export\XmlWriter
+ * @covers \Titanworks\SidrenaCijena\Export\XmlWriter
  */
 class XmlWriterTest extends TestCase {
 

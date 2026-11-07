@@ -2,17 +2,17 @@
 /**
  * Unit tests for WooCommerce price-history capture.
  *
- * @package SidrenaCijena\Tests\Unit\WooCommerce
+ * @package Titanworks\SidrenaCijena\Tests\Unit\WooCommerce
  */
 
-namespace SidrenaCijena\Tests\Unit\WooCommerce;
+namespace Titanworks\SidrenaCijena\Tests\Unit\WooCommerce;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Tests\Support\PluginSwap;
-use SidrenaCijena\WooCommerce\PriceHistoryRecorder;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\WooCommerce\PriceHistoryRecorder;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 require_once dirname( __DIR__ ) . '/wc-stubs.php';
@@ -202,7 +202,7 @@ class RecorderHistoryFake extends PriceHistoryRepository {
 /**
  * Covers capture identity, deduplication and empty-price handling.
  *
- * @covers \SidrenaCijena\WooCommerce\PriceHistoryRecorder
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\PriceHistoryRecorder
  */
 class PriceHistoryRecorderTest extends TestCase {
 
@@ -215,8 +215,8 @@ class PriceHistoryRecorderTest extends TestCase {
 		PluginSwap::swap( 'catalog', null );
 		PluginSwap::swap( 'history', null );
 
-		$GLOBALS['sidrena_test_options']     = array();
-		$GLOBALS['sidrena_test_wc_products'] = array();
+		$GLOBALS['twbce_test_options']     = array();
+		$GLOBALS['twbce_test_wc_products'] = array();
 	}
 
 	/**
@@ -227,7 +227,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_records_new_regular_price() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -275,7 +275,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_skips_unchanged_price() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -306,7 +306,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_empty_sale_price_does_not_create_an_orphan_closure() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -338,7 +338,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_records_sale_price_change() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -377,7 +377,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_sale_removal_appends_one_closure_event() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -396,9 +396,9 @@ class PriceHistoryRecorderTest extends TestCase {
 		$recorder = new PriceHistoryRecorder();
 		$recorder->capture( 10 );
 
-		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '';
-		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '42.00';
-		$GLOBALS['sidrena_test_wc_products'][10]['on_sale']    = false;
+		$GLOBALS['twbce_test_wc_products'][10]['sale_price'] = '';
+		$GLOBALS['twbce_test_wc_products'][10]['price']      = '42.00';
+		$GLOBALS['twbce_test_wc_products'][10]['on_sale']    = false;
 		$recorder->capture( 10 );
 		$recorder->capture( 10 );
 
@@ -425,7 +425,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_scheduled_sale_boundaries_use_site_timezone() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'                => 10,
 			'type'              => 'simple',
 			'regular_price'     => '42.00',
@@ -450,9 +450,9 @@ class PriceHistoryRecorderTest extends TestCase {
 		$sale_row = $history->latest( 10, 0, 'sale' );
 		$this->assertSame( '2026-03-29 03:00:00', $sale_row['valid_from'] );
 
-		$GLOBALS['sidrena_test_wc_products'][10]['on_sale']         = false;
-		$GLOBALS['sidrena_test_wc_products'][10]['price']           = '42.00';
-		$GLOBALS['sidrena_test_wc_products'][10]['date_on_sale_to'] = new \DateTimeImmutable( '2026-03-29 21:59:59', new \DateTimeZone( 'UTC' ) );
+		$GLOBALS['twbce_test_wc_products'][10]['on_sale']         = false;
+		$GLOBALS['twbce_test_wc_products'][10]['price']           = '42.00';
+		$GLOBALS['twbce_test_wc_products'][10]['date_on_sale_to'] = new \DateTimeImmutable( '2026-03-29 21:59:59', new \DateTimeZone( 'UTC' ) );
 		$recorder->begin_scheduled_sale_end( 10 );
 		$recorder->capture( 10 );
 
@@ -469,7 +469,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_scheduled_start_waits_for_applied_active_price() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'                => 10,
 			'type'              => 'simple',
 			'regular_price'     => '42.00',
@@ -489,7 +489,7 @@ class PriceHistoryRecorderTest extends TestCase {
 		$recorder = new PriceHistoryRecorder();
 		$recorder->capture( 10 );
 
-		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '30.00';
+		$GLOBALS['twbce_test_wc_products'][10]['sale_price'] = '30.00';
 		$recorder->begin_scheduled_sale_start( 10 );
 		$recorder->capture( 10 );
 
@@ -503,7 +503,7 @@ class PriceHistoryRecorderTest extends TestCase {
 		);
 		$this->assertCount( 1, $sale_rows );
 
-		$GLOBALS['sidrena_test_wc_products'][10]['price'] = '30.00';
+		$GLOBALS['twbce_test_wc_products'][10]['price'] = '30.00';
 		$recorder->capture( 10 );
 		$recorder->end_scheduled_sale_transition( 10 );
 
@@ -528,7 +528,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_records_successive_same_day_sale_reductions() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][10] = array(
+		$GLOBALS['twbce_test_wc_products'][10] = array(
 			'id'            => 10,
 			'type'          => 'simple',
 			'regular_price' => '42.00',
@@ -546,11 +546,11 @@ class PriceHistoryRecorderTest extends TestCase {
 
 		$recorder = new PriceHistoryRecorder();
 		$recorder->capture( 10 );
-		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '30.00';
-		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '30.00';
+		$GLOBALS['twbce_test_wc_products'][10]['sale_price'] = '30.00';
+		$GLOBALS['twbce_test_wc_products'][10]['price']      = '30.00';
 		$recorder->capture( 10 );
-		$GLOBALS['sidrena_test_wc_products'][10]['sale_price'] = '25.00';
-		$GLOBALS['sidrena_test_wc_products'][10]['price']      = '25.00';
+		$GLOBALS['twbce_test_wc_products'][10]['sale_price'] = '25.00';
+		$GLOBALS['twbce_test_wc_products'][10]['price']      = '25.00';
 		$recorder->capture( 10 );
 
 		$sale_rows = array_values(
@@ -574,7 +574,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_records_variation_identity() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][12] = array(
+		$GLOBALS['twbce_test_wc_products'][12] = array(
 			'id'            => 12,
 			'parent_id'     => 10,
 			'type'          => 'variation',
@@ -612,7 +612,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_records_service_item_type() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][30] = array(
+		$GLOBALS['twbce_test_wc_products'][30] = array(
 			'id'            => 30,
 			'type'          => 'simple',
 			'regular_price' => '25.00',
@@ -666,7 +666,7 @@ class PriceHistoryRecorderTest extends TestCase {
 	public function test_ignores_items_missing_from_catalog() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_wc_products'][20] = array(
+		$GLOBALS['twbce_test_wc_products'][20] = array(
 			'id'            => 20,
 			'type'          => 'simple',
 			'regular_price' => '10.00',

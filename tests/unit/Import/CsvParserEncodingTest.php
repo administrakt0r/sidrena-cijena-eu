@@ -2,16 +2,16 @@
 /**
  * CSV parser encoding tests.
  *
- * @package SidrenaCijena\Tests\Unit\Import
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Import
  */
 
-namespace SidrenaCijena\Tests\Unit\Import;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Import;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Import\CsvParser;
+use Titanworks\SidrenaCijena\Import\CsvParser;
 
 /**
- * @covers \SidrenaCijena\Import\CsvParser
+ * @covers \Titanworks\SidrenaCijena\Import\CsvParser
  */
 class CsvParserEncodingTest extends TestCase {
 
@@ -152,7 +152,7 @@ class CsvParserEncodingTest extends TestCase {
 	 */
 	public function test_parse_file_rejects_nonexistent_file() {
 		$parser = new CsvParser();
-		$result = $parser->parse_file( sys_get_temp_dir() . '/sidrena_nonexistent_xyz123.csv' );
+		$result = $parser->parse_file( sys_get_temp_dir() . '/twbce_nonexistent_xyz123.csv' );
 
 		$this->assertInstanceOf( \WP_Error::class, $result );
 		$this->assertSame( 'import_file_not_allowed', $result->get_error_code() );
@@ -191,7 +191,7 @@ class CsvParserEncodingTest extends TestCase {
 	 * @return void
 	 */
 	public function test_parse_file_accepts_file_in_allowed_root() {
-		$tmp = tempnam( sys_get_temp_dir(), 'sidrena_test_' );
+		$tmp = tempnam( sys_get_temp_dir(), 'twbce_test_' );
 		$this->assertNotFalse( $tmp );
 
 		file_put_contents( $tmp, "sku;naziv;anchor_price\nKAV;Kava;7,49\n" );

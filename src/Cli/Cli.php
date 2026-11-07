@@ -2,10 +2,10 @@
 /**
  * WP-CLI command registration and output helpers.
  *
- * @package SidrenaCijena\Cli
+ * @package Titanworks\SidrenaCijena\Cli
  */
 
-namespace SidrenaCijena\Cli;
+namespace Titanworks\SidrenaCijena\Cli;
 
 defined( 'ABSPATH' ) || exit;
 

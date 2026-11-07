@@ -2,16 +2,16 @@
 /**
  * Anchor price service tests.
  *
- * @package SidrenaCijena\Tests
+ * @package Titanworks\SidrenaCijena\Tests
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
 
 /**
  * In-memory history repository for unit tests.
@@ -92,7 +92,7 @@ class FakeHistory extends PriceHistoryRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Pricing\AnchorPriceService
+ * @covers \Titanworks\SidrenaCijena\Pricing\AnchorPriceService
  */
 class AnchorPriceServiceTest extends TestCase {
 
@@ -118,7 +118,7 @@ class AnchorPriceServiceTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 		update_option( RuleConfig::OPTION, RuleConfig::defaults(), false );
 
 		$this->history = new FakeHistory();

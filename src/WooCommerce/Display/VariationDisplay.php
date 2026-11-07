@@ -2,16 +2,16 @@
 /**
  * Variation anchor-price support for variable products.
  *
- * @package SidrenaCijena\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\WooCommerce\Display
  */
 
-namespace SidrenaCijena\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\WooCommerce\Display;
 
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -87,29 +87,29 @@ class VariationDisplay {
 
 		$sale = $price_display->active_sale_for_item( $item );
 		if ( $sale && null !== $sale['lowest_30_day_price'] ) {
-			$lowest_30                         = PriceDisplay::display_price( (float) $sale['lowest_30_day_price'], $item );
-			$data['sidrena_cijena_30_day']     = Currency::format( $lowest_30, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
-			$data['sidrena_cijena_30_day_raw'] = $lowest_30;
+			$lowest_30                       = PriceDisplay::display_price( (float) $sale['lowest_30_day_price'], $item );
+			$data['twbce_cijena_30_day']     = Currency::format( $lowest_30, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
+			$data['twbce_cijena_30_day_raw'] = $lowest_30;
 		} else {
-			$data['sidrena_cijena_30_day']     = null;
-			$data['sidrena_cijena_30_day_raw'] = null;
+			$data['twbce_cijena_30_day']     = null;
+			$data['twbce_cijena_30_day_raw'] = null;
 		}
 
 		$anchor = $this->anchors->get_anchor( $item );
 
 		if ( ! $anchor || null === $anchor['price'] ) {
-			$data['sidrena_cijena_anchor']     = null;
-			$data['sidrena_cijena_anchor_raw'] = null;
+			$data['twbce_cijena_anchor']     = null;
+			$data['twbce_cijena_anchor_raw'] = null;
 
 			return $data;
 		}
 
 		$price = PriceDisplay::display_price( (float) $anchor['price'], $item );
 
-		$data['sidrena_cijena_anchor']                 = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
-		$data['sidrena_cijena_anchor_raw']             = $price;
-		$data['sidrena_cijena_reference_date']         = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
-		$data['sidrena_cijena_reference_date_display'] = Dates::format_date_display( $data['sidrena_cijena_reference_date'] );
+		$data['twbce_cijena_anchor']                 = Currency::format( $price, $item->currency, array( 'display' => (string) Settings::get( 'currency_display', 'symbol' ) ) );
+		$data['twbce_cijena_anchor_raw']             = $price;
+		$data['twbce_cijena_reference_date']         = isset( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '';
+		$data['twbce_cijena_reference_date_display'] = Dates::format_date_display( $data['twbce_cijena_reference_date'] );
 
 		return $data;
 	}

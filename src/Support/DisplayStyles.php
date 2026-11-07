@@ -2,10 +2,10 @@
 /**
  * Anchor display presets.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,20 +20,20 @@ final class DisplayStyles {
 	 */
 	public static function presets() {
 		return array(
-			'tooltip'   => __( 'Tooltip / Info icon', 'titanworks-bazna-cijena' ),
-			'plain'     => __( 'Plain', 'titanworks-bazna-cijena' ),
-			'badge'     => __( 'Badge', 'titanworks-bazna-cijena' ),
-			'card'      => __( 'Card', 'titanworks-bazna-cijena' ),
-			'underline' => __( 'Underline', 'titanworks-bazna-cijena' ),
-			'outline'   => __( 'Outline', 'titanworks-bazna-cijena' ),
-			'stripe'    => __( 'Side stripe', 'titanworks-bazna-cijena' ),
-			'soft'      => __( 'Soft background', 'titanworks-bazna-cijena' ),
-			'mono'      => __( 'Monochrome', 'titanworks-bazna-cijena' ),
-			'pill'      => __( 'Pill', 'titanworks-bazna-cijena' ),
-			'minimal'   => __( 'Minimal', 'titanworks-bazna-cijena' ),
-			'tag'       => __( 'Tag', 'titanworks-bazna-cijena' ),
-			'accent'    => __( 'Accent stripe', 'titanworks-bazna-cijena' ),
-			'subtle'    => __( 'Subtle', 'titanworks-bazna-cijena' ),
+			'tooltip'   => __( 'Tooltip / Info icon', 'sidrena-cijena-eu' ),
+			'plain'     => __( 'Plain', 'sidrena-cijena-eu' ),
+			'badge'     => __( 'Badge', 'sidrena-cijena-eu' ),
+			'card'      => __( 'Card', 'sidrena-cijena-eu' ),
+			'underline' => __( 'Underline', 'sidrena-cijena-eu' ),
+			'outline'   => __( 'Outline', 'sidrena-cijena-eu' ),
+			'stripe'    => __( 'Side stripe', 'sidrena-cijena-eu' ),
+			'soft'      => __( 'Soft background', 'sidrena-cijena-eu' ),
+			'mono'      => __( 'Monochrome', 'sidrena-cijena-eu' ),
+			'pill'      => __( 'Pill', 'sidrena-cijena-eu' ),
+			'minimal'   => __( 'Minimal', 'sidrena-cijena-eu' ),
+			'tag'       => __( 'Tag', 'sidrena-cijena-eu' ),
+			'accent'    => __( 'Accent stripe', 'sidrena-cijena-eu' ),
+			'subtle'    => __( 'Subtle', 'sidrena-cijena-eu' ),
 		);
 	}
 
@@ -45,7 +45,7 @@ final class DisplayStyles {
 	public static function card_presets() {
 		return array_merge(
 			array(
-				'same_as_product' => __( 'Same as product page', 'titanworks-bazna-cijena' ),
+				'same_as_product' => __( 'Same as product page', 'sidrena-cijena-eu' ),
 			),
 			self::presets()
 		);

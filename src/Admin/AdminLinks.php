@@ -2,12 +2,12 @@
 /**
  * Shared admin entity edit links.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 

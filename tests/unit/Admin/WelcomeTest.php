@@ -2,18 +2,18 @@
 /**
  * Welcome banner and setup guide tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\SetupGuidePage;
-use SidrenaCijena\Admin\WelcomeBanner;
+use Titanworks\SidrenaCijena\Admin\SetupGuidePage;
+use Titanworks\SidrenaCijena\Admin\WelcomeBanner;
 
 /**
- * @covers \SidrenaCijena\Admin\WelcomeBanner
- * @covers \SidrenaCijena\Admin\SetupGuidePage
+ * @covers \Titanworks\SidrenaCijena\Admin\WelcomeBanner
+ * @covers \Titanworks\SidrenaCijena\Admin\SetupGuidePage
  */
 class WelcomeTest extends TestCase {
 
@@ -27,8 +27,8 @@ class WelcomeTest extends TestCase {
 
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_options'] = array();
-		$_GET['page']                    = 'sidrena-cijena-guide';
+		$GLOBALS['twbce_test_options'] = array();
+		$_GET['page']                  = 'sidrena-cijena-guide';
 	}
 
 	/**
@@ -89,10 +89,10 @@ class WelcomeTest extends TestCase {
 		parent::tearDown();
 
 		unset(
-			$GLOBALS['sidrena_test_can'],
-			$GLOBALS['sidrena_test_doing_ajax'],
-			$GLOBALS['sidrena_test_doing_cron'],
-			$GLOBALS['sidrena_test_is_network_admin']
+			$GLOBALS['twbce_test_can'],
+			$GLOBALS['twbce_test_doing_ajax'],
+			$GLOBALS['twbce_test_doing_cron'],
+			$GLOBALS['twbce_test_is_network_admin']
 		);
 		unset( $_GET['activate-multi'], $_GET['page'] );
 	}
@@ -118,7 +118,7 @@ class WelcomeTest extends TestCase {
 	 */
 	public function test_maybe_redirect_guards_against_missing_capability() {
 		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
-		$GLOBALS['sidrena_test_can'] = false;
+		$GLOBALS['twbce_test_can'] = false;
 
 		WelcomeBanner::maybe_redirect();
 
@@ -132,7 +132,7 @@ class WelcomeTest extends TestCase {
 	 */
 	public function test_maybe_redirect_guards_against_cron() {
 		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
-		$GLOBALS['sidrena_test_doing_cron'] = true;
+		$GLOBALS['twbce_test_doing_cron'] = true;
 
 		WelcomeBanner::maybe_redirect();
 
@@ -146,7 +146,7 @@ class WelcomeTest extends TestCase {
 	 */
 	public function test_maybe_redirect_guards_against_ajax() {
 		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
-		$GLOBALS['sidrena_test_doing_ajax'] = true;
+		$GLOBALS['twbce_test_doing_ajax'] = true;
 
 		WelcomeBanner::maybe_redirect();
 
@@ -160,7 +160,7 @@ class WelcomeTest extends TestCase {
 	 */
 	public function test_maybe_redirect_guards_against_network_admin() {
 		update_option( WelcomeBanner::REDIRECT_OPTION, 1, false );
-		$GLOBALS['sidrena_test_is_network_admin'] = true;
+		$GLOBALS['twbce_test_is_network_admin'] = true;
 
 		WelcomeBanner::maybe_redirect();
 

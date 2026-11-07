@@ -2,21 +2,21 @@
 /**
  * Activation routine.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
-use SidrenaCijena\Admin\WelcomeBanner;
+use Titanworks\SidrenaCijena\Admin\WelcomeBanner;
 
-use SidrenaCijena\Admin\Capabilities;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\Migrator;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\WooCommerce\WooCommerceDetector;
+use Titanworks\SidrenaCijena\Admin\Capabilities;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\Migrator;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceDetector;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,6 +31,7 @@ final class Install {
 	 * @return void
 	 */
 	public static function activate() {
+		IdentifierMigration::run();
 		Capabilities::grant();
 
 		Migrator::migrate();
@@ -38,10 +39,10 @@ final class Install {
 		// Settings defaults are translatable strings, and `init` has not run
 		// yet during activation, so the textdomain has to be loaded explicitly
 		// or the seeded labels would be stored in English.
-		$mo_file = file_exists( SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo' )
-			? SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr.mo'
-			: SIDRENA_CIJENA_DIR . 'languages/titanworks-bazna-cijena-hr_HR.mo';
-		load_textdomain( 'titanworks-bazna-cijena', $mo_file );
+		$mo_file = file_exists( TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo' )
+			? TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr.mo'
+			: TWBCE_CIJENA_DIR . 'languages/sidrena-cijena-eu-hr_HR.mo';
+		load_textdomain( 'sidrena-cijena-eu', $mo_file );
 
 		self::seed_options();
 
@@ -62,16 +63,16 @@ final class Install {
 
 		Logger::info(
 			'migration',
-			__( 'Plugin activated.', 'titanworks-bazna-cijena' ),
+			__( 'Plugin activated.', 'sidrena-cijena-eu' ),
 			array(
-				'version' => defined( 'SIDRENA_CIJENA_VERSION' ) ? SIDRENA_CIJENA_VERSION : '',
+				'version' => defined( 'TWBCE_CIJENA_VERSION' ) ? TWBCE_CIJENA_VERSION : '',
 			)
 		);
 
 		/**
 		 * Fires after the plugin has been activated.
 		 */
-		do_action( 'sidrena_cijena_activated' );
+		do_action( 'twbce_cijena_activated' );
 	}
 
 	/**

@@ -2,18 +2,18 @@
 /**
  * Reference-date resolution tests.
  *
- * @package SidrenaCijena\Tests
+ * @package Titanworks\SidrenaCijena\Tests
  */
 
-namespace SidrenaCijena\Tests\Unit\Compliance;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Compliance;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\ReferenceDateResolver;
-use SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\ReferenceDateResolver;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
 
 /**
- * @covers \SidrenaCijena\Compliance\ReferenceDateResolver
+ * @covers \Titanworks\SidrenaCijena\Compliance\ReferenceDateResolver
  */
 class ReferenceDateResolverTest extends TestCase {
 
@@ -25,7 +25,7 @@ class ReferenceDateResolverTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 		update_option( RuleConfig::OPTION, RuleConfig::defaults(), false );
 	}
 
@@ -143,7 +143,7 @@ class ReferenceDateResolverTest extends TestCase {
 	 * @return void
 	 */
 	public function test_rule_sanitizer_does_not_recursively_save_the_option() {
-		$GLOBALS['sidrena_test_option_sanitizers'][ RuleConfig::OPTION ] = array( RuleConfig::class, 'sanitize' );
+		$GLOBALS['twbce_test_option_sanitizers'][ RuleConfig::OPTION ] = array( RuleConfig::class, 'sanitize' );
 
 		try {
 			$sanitized = RuleConfig::sanitize( array( 'general_reference_date' => '2027-01-01' ) );
@@ -154,7 +154,7 @@ class ReferenceDateResolverTest extends TestCase {
 			RuleConfig::update( array( 'legacy_enabled' => false ), 7, 'Test change' );
 			$this->assertFalse( RuleConfig::get( 'legacy_enabled' ) );
 		} finally {
-			unset( $GLOBALS['sidrena_test_option_sanitizers'][ RuleConfig::OPTION ] );
+			unset( $GLOBALS['twbce_test_option_sanitizers'][ RuleConfig::OPTION ] );
 		}
 	}
 

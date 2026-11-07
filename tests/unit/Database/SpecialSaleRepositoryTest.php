@@ -2,13 +2,13 @@
 /**
  * SpecialSaleRepository unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Database
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Database
  */
 
-namespace SidrenaCijena\Tests\Unit\Database;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Database;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
 
 /**
  * Test wpdb stub for SpecialSaleRepository tests.
@@ -44,7 +44,7 @@ class SpecialSaleRepositoryTestWpdb extends \wpdb {
 }
 
 /**
- * @covers \SidrenaCijena\Database\SpecialSaleRepository
+ * @covers \Titanworks\SidrenaCijena\Database\SpecialSaleRepository
  */
 class SpecialSaleRepositoryTest extends TestCase {
 

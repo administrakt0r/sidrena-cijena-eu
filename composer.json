@@ -18,7 +18,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"SidrenaCijena\\": "src/"
+			"Titanworks\\SidrenaCijena\\": "src/"
 		}
 	},
 	"scripts": {

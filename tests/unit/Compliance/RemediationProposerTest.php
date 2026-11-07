@@ -2,17 +2,17 @@
 /**
  * RemediationProposer unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Compliance
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Compliance
  */
 
-namespace SidrenaCijena\Tests\Unit\Compliance;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Compliance;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\RemediationProposer;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\RemediationProposer;
 
 /**
- * @covers \SidrenaCijena\Compliance\RemediationProposer
+ * @covers \Titanworks\SidrenaCijena\Compliance\RemediationProposer
  */
 class RemediationProposerTest extends TestCase {
 

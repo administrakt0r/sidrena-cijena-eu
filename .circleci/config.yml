@@ -1,93 +1,87 @@
 version: 2.1
 
 commands:
-  restore_tool_caches:
-    description: "Restore Composer and NPM package download caches"
+  dependency_keys:
+    steps:
+      - run:
+          name: Fingerprint dependencies (ignore release-only version changes)
+          command: node tools/ci/cache-keys.cjs
+
+  restore_node_cache:
+    parameters:
+      executor:
+        type: string
     steps:
       - restore_cache:
-          name: Restore Composer cache
+          name: Restore installed Node dependencies
           keys:
-            - v2-composer-{{ checksum "composer.lock" }}
-            - v2-composer-{{ checksum "composer.json" }}
-            - v2-composer-
-      - restore_cache:
-          name: Restore NPM cache
-          keys:
+            - v3-node-<< parameters.executor >>-{{ checksum ".circleci/cache-keys/runtime" }}-{{ checksum ".circleci/cache-keys/npm" }}
+            # A download-only fallback is safe across Node versions and executors.
             - v2-npm-{{ checksum "package-lock.json" }}
-            - v2-npm-{{ checksum "package.json" }}
             - v2-npm-
+      - run:
+          name: Install Node dependencies only on a cache miss
+          command: |
+            if [ ! -f node_modules/.package-lock.json ]; then
+              npm ci --no-audit --no-fund
+            fi
 
-  restore_analysis_caches:
-    description: "Restore Static Analysis and Test caches"
+  save_node_cache:
+    parameters:
+      executor:
+        type: string
+    steps:
+      - save_cache:
+          name: Cache installed Node dependencies
+          key: v3-node-<< parameters.executor >>-{{ checksum ".circleci/cache-keys/runtime" }}-{{ checksum ".circleci/cache-keys/npm" }}
+          paths:
+            - node_modules
+
+  restore_analysis_cache:
     steps:
       - restore_cache:
-          name: Restore Static Analysis and Test caches
+          name: Restore incremental analysis results
           keys:
-            - v2-analysis-{{ .Branch }}-{{ .Revision }}
+            - v3-analysis-{{ checksum "composer.lock" }}-{{ .Branch }}-{{ .Revision }}
+            - v3-analysis-{{ checksum "composer.lock" }}-{{ .Branch }}-
+            - v3-analysis-{{ checksum "composer.lock" }}-main-
             - v2-analysis-{{ .Branch }}-
-
-  save_tool_caches:
-    description: "Save Composer and NPM package download caches"
-    steps:
-      - save_cache:
-          name: Save Composer cache
-          key: v2-composer-{{ checksum "composer.lock" }}
-          paths:
-            - ~/.cache/composer
-      - save_cache:
-          name: Save NPM cache
-          key: v2-npm-{{ checksum "package-lock.json" }}
-          paths:
-            - ~/.npm
-
-  save_analysis_caches:
-    description: "Save Static Analysis and Test caches (PHPCS, PHPStan, ESLint, PHPUnit, Taskless)"
-    steps:
-      - save_cache:
-          name: Save Static Analysis and Test caches
-          key: v2-analysis-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - .phpcs.cache
-            - .phpstan.cache
-            - .eslintcache
-            - .phpunit.result.cache
-            - .taskless/.cache
-
-  restore_playwright_cache:
-    description: "Restore Playwright browser binaries cache"
-    steps:
-      - restore_cache:
-          name: Restore Playwright browser binaries cache
-          keys:
-            - v2-playwright-{{ checksum "package-lock.json" }}
-            - v2-playwright-
-
-  save_playwright_cache:
-    description: "Save Playwright browser binaries cache"
-    steps:
-      - save_cache:
-          name: Save Playwright browser binaries cache
-          key: v2-playwright-{{ checksum "package-lock.json" }}
-          paths:
-            - ~/.cache/ms-playwright
+            - v2-analysis-
 
 jobs:
   verify:
-    description: "Run static quality gates (unit tests, PHPCS, PHPStan, ESLint, translations completeness)"
+    description: "Cheap quality gate; the WordPress VM starts only after this succeeds"
     docker:
       - image: cimg/php:8.4-node
     resource_class: medium
+    retention:
+      caches: 7d
     steps:
       - checkout
-      - restore_tool_caches
-      - restore_analysis_caches
+      - dependency_keys
+      - restore_cache:
+          name: Restore installed Composer dependencies
+          keys:
+            - v3-php84-vendor-{{ checksum "composer.lock" }}
+            - v2-composer-{{ checksum "composer.lock" }}
+            - v2-composer-
       - run:
-          name: Install Composer Dependencies
-          command: composer install --prefer-dist --no-progress
+          name: Validate Composer dependencies and regenerate autoload paths
+          command: composer install --prefer-dist --no-progress --no-interaction
+      - save_cache:
+          name: Cache installed Composer dependencies
+          key: v3-php84-vendor-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+            - ~/.cache/composer
+      - restore_node_cache:
+          executor: verify
+      - save_node_cache:
+          executor: verify
+      - restore_analysis_cache
       - run:
-          name: Install NPM Dependencies
-          command: npm ci || npm install
-      - save_tool_caches
+          name: CI helper regression checks
+          command: node --test tools/ci/test-helpers.cjs
       - run:
           name: PHPUnit Unit Tests
           command: composer test:unit
@@ -96,7 +90,7 @@ jobs:
           command: composer lint
       - run:
           name: PHPStan Static Analysis (Level 6)
-          command: composer analyse
+          command: composer analyse -- --memory-limit=2048M
       - run:
           name: ESLint JavaScript Check
           command: npm run lint:js
@@ -109,58 +103,101 @@ jobs:
             OUT=$(php tools/i18n/make-pot.php --locale=hr_HR 2>&1)
             echo "$OUT"
             echo "$OUT" | grep -q "0 untranslated" || (echo "Untranslated strings found in catalog!" && exit 1)
-      - save_analysis_caches
+      - save_cache:
+          name: Save incremental analysis results
+          key: v3-analysis-{{ checksum "composer.lock" }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .phpcs.cache
+            - .phpstan.cache
+            - .eslintcache
+            - .phpunit.result.cache
+            - .taskless/.cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            # Pure PHP tooling is shared; native Node modules stay executor/ABI-specific.
+            - vendor
 
   integration_and_e2e:
-    description: "Run WordPress integration tests and Playwright E2E tests using wp-env"
+    description: "Full WordPress/Playwright/package coverage after verification succeeds"
     working_directory: ~/titanworks-bazna-cijena
     machine:
       image: ubuntu-2404:current
     resource_class: medium
+    retention:
+      caches: 7d
     steps:
       - checkout
       - run:
-          name: Setup PHP 8.4 and Node 20
+          name: Avoid the WordPress setup for documentation-only branches
           command: |
-            if ! command -v php >/dev/null || ! php -v | grep -q "8.4"; then
-              sudo add-apt-repository -y ppa:ondrej/php
-              sudo apt-get update
-              sudo apt-get install -y php8.4-cli php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip composer
-            fi
-            nvm install 20
-            nvm use 20
-            echo 'nvm use 20' >> "$BASH_ENV"
-      - restore_tool_caches
-      - restore_playwright_cache
-      - run:
-          name: Install Dependencies
-          command: |
-            composer install --prefer-dist --no-progress
-            npm ci || npm install
-            npx playwright install --with-deps chromium
-      - save_tool_caches
-      - save_playwright_cache
-      - run:
-          name: Start wp-env
-          command: |
-            for attempt in 1 2 3; do
-              echo "Starting wp-env (attempt $attempt)..."
-              if npx wp-env start; then
-                echo "wp-env started successfully!"
-                break
+            if bash tools/ci/integration-required.sh; then
+              exit 0
+            else
+              result=$?
+              if [ "$result" -eq 10 ]; then
+                circleci-agent step halt
+              else
+                exit "$result"
               fi
-              echo "wp-env start attempt $attempt failed; waiting 12s for database container to initialize..."
-              sleep 12
-            done
+            fi
+      - attach_workspace:
+          at: .
+      - run:
+          name: Use existing Node 20 (PHP tooling comes from the verified workspace)
+          command: |
+            nvm use 20 || { nvm install 20 && nvm use 20; }
+            NODE_BIN="$(dirname "$(command -v node)")"
+            printf 'export PATH=%q:$PATH\n' "$NODE_BIN" >> "$BASH_ENV"
+      - dependency_keys
+      - restore_node_cache:
+          executor: machine
+      - save_node_cache:
+          executor: machine
+      - restore_cache:
+          name: Restore Chromium headless shell
+          keys:
+            - v3-chromium-{{ arch }}-{{ checksum ".circleci/cache-keys/npm" }}
+            - v2-playwright-{{ checksum "package-lock.json" }}
+      - run:
+          name: Ensure headless Chromium and probe existing OS libraries
+          command: |
+            ./node_modules/.bin/playwright install chromium --only-shell
+            node tools/ci/ensure-browser.cjs
+      - save_cache:
+          name: Cache Chromium headless shell
+          key: v3-chromium-{{ arch }}-{{ checksum ".circleci/cache-keys/npm" }}
+          paths:
+            - ~/.cache/ms-playwright
+      - run:
+          name: Start wp-env and resolve the existing CLI container
+          command: bash tools/ci/start-wp-env.sh
       - run:
           name: Run PHPUnit Integration Tests in wp-env
           command: |
-            npx wp-env clean tests
-            npx wp-env run tests-cli -- bash -c 'PHPUNIT=$(find wp-content/plugins -name phpunit -type f | grep "vendor/bin/phpunit" | head -n 1); $PHPUNIT -c $(dirname $(dirname $(dirname "$PHPUNIT")))/phpunit.xml.dist --testsuite=integration'
+            ./node_modules/.bin/wp-env clean tests
+            ./node_modules/.bin/wp-env run tests-cli -- bash -c 'PHPUNIT=$(find wp-content/plugins -name phpunit -type f | grep "vendor/bin/phpunit" | head -n 1); $PHPUNIT -c $(dirname $(dirname $(dirname "$PHPUNIT")))/phpunit.xml.dist --testsuite=integration'
       - run:
-          name: Run Playwright E2E Tests on Port 8889
+          name: Run all Playwright E2E tests (one worker, one shared database)
+          command: npm run test:e2e
+      - run:
+          name: Check submission package and standalone/WooCommerce activation
           command: |
-            npm run test:e2e
+            git archive --format=zip --prefix=sidrena-cijena-eu/ -o directory-review.zip HEAD titanworks-bazna-cijena.php uninstall.php readme.txt LICENSE src assets templates languages
+            ./node_modules/.bin/wp-env run cli wp plugin deactivate titanworks-bazna-cijena
+            ./node_modules/.bin/wp-env run cli wp plugin install /var/www/html/wp-content/plugins/titanworks-bazna-cijena/directory-review.zip --activate
+            ./node_modules/.bin/wp-env run cli wp plugin install plugin-check --activate
+            ./node_modules/.bin/wp-env run cli wp plugin check sidrena-cijena-eu --slug=sidrena-cijena-eu --format=json > plugin-check.json
+            if grep -Eq '"type"[[:space:]]*:[[:space:]]*"ERROR"' plugin-check.json; then
+              cat plugin-check.json
+              exit 1
+            fi
+            ./node_modules/.bin/wp-env run cli wp eval 'if (!shortcode_exists("twbce_cijena")) { throw new Exception("Plugin did not boot with WooCommerce"); }'
+            ./node_modules/.bin/wp-env run cli wp plugin deactivate woocommerce
+            ./node_modules/.bin/wp-env run cli wp eval 'if (!post_type_exists("twbce_item") || !shortcode_exists("twbce_cijena")) { throw new Exception("Standalone plugin did not boot"); }'
+      - store_artifacts:
+          path: plugin-check.json
+          destination: plugin-check.json
       - store_artifacts:
           path: playwright-report
           destination: playwright-report
@@ -173,4 +210,6 @@ workflows:
   pipeline:
     jobs:
       - verify
-      - integration_and_e2e
+      - integration_and_e2e:
+          requires:
+            - verify

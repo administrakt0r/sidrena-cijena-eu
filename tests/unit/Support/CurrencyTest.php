@@ -2,16 +2,16 @@
 /**
  * Currency and monetary formatting tests.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Currency;
 
 /**
- * @covers \SidrenaCijena\Support\Currency
+ * @covers \Titanworks\SidrenaCijena\Support\Currency
  */
 class CurrencyTest extends TestCase {
 
@@ -23,7 +23,7 @@ class CurrencyTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**

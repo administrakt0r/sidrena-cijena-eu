@@ -2,18 +2,18 @@
 /**
  * Price history import screen.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Import\ImportService;
-use SidrenaCijena\Import\MigrationDetector;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Import\ImportService;
+use Titanworks\SidrenaCijena\Import\MigrationDetector;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,13 +24,13 @@ class ImportPage {
 
 	const SLUG = 'sidrena-cijena-import';
 
-	const ACTION_PREVIEW = 'sidrena_cijena_import_preview';
+	const ACTION_PREVIEW = 'twbce_cijena_import_preview';
 
-	const ACTION_COMMIT = 'sidrena_cijena_import_commit';
+	const ACTION_COMMIT = 'twbce_cijena_import_commit';
 
-	const ACTION_REPORT = 'sidrena_cijena_import_report';
+	const ACTION_REPORT = 'twbce_cijena_import_report';
 
-	const TRANSIENT_PREFIX = 'sidrena_cijena_import_';
+	const TRANSIENT_PREFIX = 'twbce_cijena_import_';
 
 	const TRANSIENT_TTL = 1800;
 
@@ -43,11 +43,11 @@ class ImportPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena: Import', 'titanworks-bazna-cijena' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena: Import', 'sidrena-cijena-eu' ) . '</h1>';
 
 		self::render_notice();
 		self::render_guidance();
@@ -70,10 +70,10 @@ class ImportPage {
 	 */
 	public static function handle_preview() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to import anchor data.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to import anchor data.', 'sidrena-cijena-eu' ) );
 		}
 
-		check_admin_referer( self::ACTION_PREVIEW, 'sidrena_cijena_import_nonce' );
+		check_admin_referer( self::ACTION_PREVIEW, 'twbce_cijena_import_nonce' );
 
 		$file = self::uploaded_file();
 
@@ -104,7 +104,7 @@ class ImportPage {
 			self::TRANSIENT_TTL
 		);
 
-		self::redirect( 'preview', __( 'Preview ready. Review the rows before committing.', 'titanworks-bazna-cijena' ), $preview['batch_id'] );
+		self::redirect( 'preview', __( 'Preview ready. Review the rows before committing.', 'sidrena-cijena-eu' ), $preview['batch_id'] );
 	}
 
 	/**
@@ -114,17 +114,17 @@ class ImportPage {
 	 */
 	public static function handle_commit() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to import anchor data.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to import anchor data.', 'sidrena-cijena-eu' ) );
 		}
 
-		check_admin_referer( self::ACTION_COMMIT, 'sidrena_cijena_import_nonce' );
+		check_admin_referer( self::ACTION_COMMIT, 'twbce_cijena_import_nonce' );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified above.
 		$batch_id = isset( $_POST['batch_id'] ) ? sanitize_text_field( wp_unslash( $_POST['batch_id'] ) ) : '';
 		$stored   = get_transient( self::transient_key( $batch_id ) );
 
 		if ( ! is_array( $stored ) || empty( $stored['path'] ) ) {
-			self::redirect( 'error', __( 'The import session expired. Upload the file again.', 'titanworks-bazna-cijena' ) );
+			self::redirect( 'error', __( 'The import session expired. Upload the file again.', 'sidrena-cijena-eu' ) );
 
 			return;
 		}
@@ -151,7 +151,7 @@ class ImportPage {
 				'dry-run',
 				sprintf(
 					/* translators: %d: number of rows. */
-					__( 'Dry run finished. %d row(s) would be imported; nothing was written.', 'titanworks-bazna-cijena' ),
+					__( 'Dry run finished. %d row(s) would be imported; nothing was written.', 'sidrena-cijena-eu' ),
 					(int) $report['inserted']
 				),
 				$batch_id
@@ -162,7 +162,7 @@ class ImportPage {
 			'success',
 			sprintf(
 				/* translators: 1: inserted rows, 2: overwritten rows, 3: skipped rows. */
-				__( 'Import finished: %1$d inserted, %2$d overwritten, %3$d skipped.', 'titanworks-bazna-cijena' ),
+				__( 'Import finished: %1$d inserted, %2$d overwritten, %3$d skipped.', 'sidrena-cijena-eu' ),
 				(int) $report['inserted'],
 				(int) $report['overwritten'],
 				(int) $report['skipped']
@@ -178,17 +178,17 @@ class ImportPage {
 	 */
 	public static function handle_report() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to download the report.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to download the report.', 'sidrena-cijena-eu' ) );
 		}
 
-		check_admin_referer( self::ACTION_REPORT, 'sidrena_cijena_import_nonce' );
+		check_admin_referer( self::ACTION_REPORT, 'twbce_cijena_import_nonce' );
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Verified above.
 		$batch_id = isset( $_GET['batch_id'] ) ? sanitize_text_field( wp_unslash( $_GET['batch_id'] ) ) : '';
 		$report   = get_transient( self::transient_key( $batch_id ) . 'report' );
 
 		if ( ! is_array( $report ) ) {
-			self::redirect( 'error', __( 'No report is available for this import.', 'titanworks-bazna-cijena' ) );
+			self::redirect( 'error', __( 'No report is available for this import.', 'sidrena-cijena-eu' ) );
 
 			return;
 		}
@@ -197,9 +197,10 @@ class ImportPage {
 
 		Logger::info( 'import', 'Import error report downloaded.', array( 'batch_id' => $batch_id ) );
 
+		header( 'X-Content-Type-Options: nosniff' );
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="sidrena-cijena-import-' . sanitize_file_name( $batch_id ) . '.csv"' );
-		echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV download.
+		\Titanworks\SidrenaCijena\Support\Download::write( $csv );
 		exit;
 	}
 
@@ -235,14 +236,14 @@ class ImportPage {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing -- Nonce checked by the caller; the upload is validated by wp_handle_upload.
 		$files = $_FILES;
 
-		if ( empty( $files['sidrena_import_file'] ) || ! isset( $files['sidrena_import_file']['tmp_name'] ) || '' === $files['sidrena_import_file']['tmp_name'] ) {
-			return new \WP_Error( 'import_file_missing', __( 'Choose a CSV file to import.', 'titanworks-bazna-cijena' ) );
+		if ( empty( $files['twbce_import_file'] ) || ! isset( $files['twbce_import_file']['tmp_name'] ) || '' === $files['twbce_import_file']['tmp_name'] ) {
+			return new \WP_Error( 'import_file_missing', __( 'Choose a CSV file to import.', 'sidrena-cijena-eu' ) );
 		}
 
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 
 		$upload = wp_handle_upload(
-			$files['sidrena_import_file'],
+			$files['twbce_import_file'],
 			array(
 				'test_form' => false,
 				'mimes'     => array(
@@ -311,9 +312,9 @@ class ImportPage {
 	 */
 	protected static function redirect( $type, $message, $batch_id = '' ) {
 		$args = array(
-			'page'                       => self::SLUG,
-			'sidrena_cijena_notice'      => sanitize_key( $type ),
-			'sidrena_cijena_notice_text' => rawurlencode( $message ),
+			'page'                     => self::SLUG,
+			'twbce_cijena_notice'      => sanitize_key( $type ),
+			'twbce_cijena_notice_text' => rawurlencode( $message ),
 		);
 
 		if ( '' !== $batch_id ) {
@@ -339,12 +340,12 @@ class ImportPage {
 	 * @return void
 	 */
 	protected static function render_guidance() {
-		echo '<div class="notice notice-info"><p><strong>' . esc_html__( 'Before you import', 'titanworks-bazna-cijena' ) . '</strong></p>';
+		echo '<div class="notice notice-info"><p><strong>' . esc_html__( 'Before you import', 'sidrena-cijena-eu' ) . '</strong></p>';
 		echo '<ul class="sidrena-guidance-list">';
-		echo '<li>' . esc_html__( 'Today\'s price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li>' . esc_html__( 'For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li>' . esc_html__( 'Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason.', 'titanworks-bazna-cijena' ) . '</li>';
-		echo '<li>' . esc_html__( 'Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted.', 'titanworks-bazna-cijena' ) . '</li>';
+		echo '<li>' . esc_html__( 'Today\'s price is not automatically the historical anchor price. Only import prices that were actually charged on the reference date.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li>' . esc_html__( 'For items first offered after the reference date, record the price applied when first offered and the date it was first applied; verify it against sales records.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li>' . esc_html__( 'Existing anchor records are never overwritten silently: rows that would replace them require explicit confirmation and are stored as corrections with a reason.', 'sidrena-cijena-eu' ) . '</li>';
+		echo '<li>' . esc_html__( 'Accepted columns: sku or product_id, variation_id, reference_date, anchor_price and optionally category and name. Dates are Y-m-d or d.m.Y; decimal commas are accepted.', 'sidrena-cijena-eu' ) . '</li>';
 		echo '</ul></div>';
 	}
 
@@ -356,13 +357,13 @@ class ImportPage {
 	protected static function render_migration_sources() {
 		$sources = MigrationDetector::detect();
 
-		echo '<h2>' . esc_html__( 'Existing price history sources', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Existing price history sources', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<table class="widefat striped sidrena-sources-table">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Existing price history sources', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Existing price history sources', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Source', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Description', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Records', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Source', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Description', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Records', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( $sources as $source ) {
@@ -375,7 +376,7 @@ class ImportPage {
 
 		echo '</tbody></table>';
 
-		echo '<h3>' . esc_html__( 'Migration path', 'titanworks-bazna-cijena' ) . '</h3><ol class="sidrena-migration-steps">';
+		echo '<h3>' . esc_html__( 'Migration path', 'sidrena-cijena-eu' ) . '</h3><ol class="sidrena-migration-steps">';
 
 		foreach ( MigrationDetector::guidance() as $step ) {
 			echo '<li>' . esc_html( $step ) . '</li>';
@@ -390,13 +391,13 @@ class ImportPage {
 	 * @return void
 	 */
 	protected static function render_upload_form() {
-		echo '<h2>' . esc_html__( 'Upload an import file', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Upload an import file', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" enctype="multipart/form-data" class="sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_PREVIEW ) . '" />';
-		wp_nonce_field( self::ACTION_PREVIEW, 'sidrena_cijena_import_nonce' );
-		echo '<p><label for="sidrena_import_file">' . esc_html__( 'Upload an import file', 'titanworks-bazna-cijena' ) . '</label> <input type="file" id="sidrena_import_file" name="sidrena_import_file" accept=".csv,.txt,text/csv" required /></p>';
-		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'titanworks-bazna-cijena' ) . '</label></p>';
-		submit_button( __( 'Upload and preview', 'titanworks-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
+		wp_nonce_field( self::ACTION_PREVIEW, 'twbce_cijena_import_nonce' );
+		echo '<p><label for="twbce_import_file">' . esc_html__( 'Upload an import file', 'sidrena-cijena-eu' ) . '</label> <input type="file" id="twbce_import_file" name="twbce_import_file" accept=".csv,.txt,text/csv" required /></p>';
+		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'sidrena-cijena-eu' ) . '</label></p>';
+		submit_button( __( 'Upload and preview', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 	}
 
@@ -413,12 +414,12 @@ class ImportPage {
 		$rows   = isset( $preview['rows'] ) ? (array) $preview['rows'] : array();
 		$offset = ( $page - 1 ) * self::PREVIEW_PER_PAGE;
 
-		echo '<h2>' . esc_html__( 'Preview', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Preview', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<p>';
 		echo esc_html(
 			sprintf(
 				/* translators: 1: total rows, 2: valid, 3: invalid, 4: duplicates, 5: overwrites, 6: unchanged. */
-				__( '%1$d rows: %2$d valid, %3$d invalid, %4$d duplicate, %5$d would overwrite, %6$d unchanged.', 'titanworks-bazna-cijena' ),
+				__( '%1$d rows: %2$d valid, %3$d invalid, %4$d duplicate, %5$d would overwrite, %6$d unchanged.', 'sidrena-cijena-eu' ),
 				(int) $summary['total'],
 				(int) $summary['valid'],
 				(int) $summary['invalid'],
@@ -430,19 +431,19 @@ class ImportPage {
 		echo '</p>';
 
 		if ( (int) $summary['overwrite'] > 0 ) {
-			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Some rows would replace existing anchor records. Tick the confirmation box below to allow that; replacements are stored as corrections with a reason.', 'titanworks-bazna-cijena' ) . '</p></div>';
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Some rows would replace existing anchor records. Tick the confirmation box below to allow that; replacements are stored as corrections with a reason.', 'sidrena-cijena-eu' ) . '</p></div>';
 		}
 
 		echo '<table class="widefat striped sidrena-cijena-import-preview">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Import preview', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Import preview', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Row', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Status', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Item', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'SKU', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Reference date', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Anchor price', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Notes', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Row', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Status', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'SKU', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Reference date', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Anchor price', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Notes', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		foreach ( array_slice( $rows, $offset, self::PREVIEW_PER_PAGE ) as $row ) {
@@ -450,7 +451,7 @@ class ImportPage {
 			$name = $item ? $item->name : '—';
 
 			if ( $item && $item->is_variation() ) {
-				$name .= ' (' . __( 'variation', 'titanworks-bazna-cijena' ) . ' #' . (int) $item->variation_id . ')';
+				$name .= ' (' . __( 'variation', 'sidrena-cijena-eu' ) . ' #' . (int) $item->variation_id . ')';
 			}
 
 			echo '<tr>';
@@ -476,10 +477,10 @@ class ImportPage {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="sidrena-import-commit-form sidrena-busy-form">';
 		echo '<input type="hidden" name="action" value="' . esc_attr( self::ACTION_COMMIT ) . '" />';
 		echo '<input type="hidden" name="batch_id" value="' . esc_attr( (string) $preview['batch_id'] ) . '" />';
-		wp_nonce_field( self::ACTION_COMMIT, 'sidrena_cijena_import_nonce' );
-		echo '<p><label><input type="checkbox" name="confirm_overwrite" value="1" /> ' . esc_html__( 'I confirm replacing existing anchor records listed above.', 'titanworks-bazna-cijena' ) . '</label></p>';
-		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'titanworks-bazna-cijena' ) . '</label></p>';
-		submit_button( __( 'Commit import', 'titanworks-bazna-cijena' ), 'primary sidrena-btn-busy', 'submit', false );
+		wp_nonce_field( self::ACTION_COMMIT, 'twbce_cijena_import_nonce' );
+		echo '<p><label><input type="checkbox" name="confirm_overwrite" value="1" /> ' . esc_html__( 'I confirm replacing existing anchor records listed above.', 'sidrena-cijena-eu' ) . '</label></p>';
+		echo '<p><label><input type="checkbox" name="dry_run" value="1" /> ' . esc_html__( 'Dry run (validate only, write nothing)', 'sidrena-cijena-eu' ) . '</label></p>';
+		submit_button( __( 'Commit import', 'sidrena-cijena-eu' ), 'primary sidrena-btn-busy', 'submit', false );
 		echo '</form>';
 
 		$report = get_transient( self::transient_key( (string) $preview['batch_id'] ) . 'report' );
@@ -494,10 +495,10 @@ class ImportPage {
 					admin_url( 'admin-post.php' )
 				),
 				self::ACTION_REPORT,
-				'sidrena_cijena_import_nonce'
+				'twbce_cijena_import_nonce'
 			);
 
-			echo '<p><a class="button" href="' . esc_url( $url ) . '">' . esc_html__( 'Download error report (CSV)', 'titanworks-bazna-cijena' ) . '</a></p>';
+			echo '<p><a class="button" href="' . esc_url( $url ) . '">' . esc_html__( 'Download error report (CSV)', 'sidrena-cijena-eu' ) . '</a></p>';
 		}
 	}
 }

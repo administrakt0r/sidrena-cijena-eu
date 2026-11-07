@@ -2,21 +2,21 @@
 /**
  * Integration tests for the WP-CLI commands and their exit codes.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Cli\CleanupCommand;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Cli\GenerateCommand;
-use SidrenaCijena\Cli\HistoryCommand;
-use SidrenaCijena\Cli\ImportCommand;
-use SidrenaCijena\Cli\SeedTestDataCommand;
-use SidrenaCijena\Cli\StatusCommand;
-use SidrenaCijena\Cli\ValidateCommand;
-use SidrenaCijena\Database\Schema;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Cli\CleanupCommand;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\GenerateCommand;
+use Titanworks\SidrenaCijena\Cli\HistoryCommand;
+use Titanworks\SidrenaCijena\Cli\ImportCommand;
+use Titanworks\SidrenaCijena\Cli\SeedTestDataCommand;
+use Titanworks\SidrenaCijena\Cli\StatusCommand;
+use Titanworks\SidrenaCijena\Cli\ValidateCommand;
+use Titanworks\SidrenaCijena\Database\Schema;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Exercises every CLI command through its testable execute() method.
@@ -74,11 +74,11 @@ class Test_Cli extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		if ( '' !== $extra ) {
-			update_post_meta( $post_id, '_sidrena_barcode', $extra );
+			update_post_meta( $post_id, '_twbce_barcode', $extra );
 		}
 
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
@@ -297,7 +297,7 @@ class Test_Cli extends WP_UnitTestCase {
 		$posts = get_posts(
 			array(
 				'post_type'   => StandalonePostType::POST_TYPE,
-				'meta_key'    => '_sidrena_sku', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Test lookup.
+				'meta_key'    => '_twbce_sku', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Test lookup.
 				'meta_value'  => 'SEED-MISSING_ANCHOR', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Test lookup.
 				'numberposts' => 1,
 				'fields'      => 'ids',

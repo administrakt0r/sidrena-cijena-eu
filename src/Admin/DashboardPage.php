@@ -2,21 +2,21 @@
 /**
  * Compliance dashboard screen.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\ReferenceDateResolver;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Cron\DailyGeneration;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Labels;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\ReferenceDateResolver;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Cron\DailyGeneration;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Labels;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,14 +37,14 @@ class DashboardPage {
 	 */
 	public static function render() {
 		if ( ! Capabilities::current_user_can() ) {
-			wp_die( esc_html__( 'You do not have permission to access this page.', 'titanworks-bazna-cijena' ) );
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'sidrena-cijena-eu' ) );
 		}
 
 		$data = self::aggregate();
 
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Sidrena cijena', 'titanworks-bazna-cijena' ) . '</h1>';
-		echo '<p class="sidrena-dashboard-guide-action"><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'titanworks-bazna-cijena' ) . '</a></p>';
+		echo '<h1>' . esc_html__( 'Sidrena cijena', 'sidrena-cijena-eu' ) . '</h1>';
+		echo '<p class="sidrena-dashboard-guide-action"><a class="button button-secondary" href="' . esc_url( AdminMenu::url( DocumentationPage::SLUG ) ) . '"><span class="dashicons dashicons-book sidrena-icon-inline"></span>' . esc_html__( 'Open documentation & guide', 'sidrena-cijena-eu' ) . '</a></p>';
 
 		if ( $data['total'] > $data['scanned'] ) {
 			printf(
@@ -52,7 +52,7 @@ class DashboardPage {
 				esc_html(
 					sprintf(
 						/* translators: 1: scanned items, 2: total items. */
-						__( 'Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report.', 'titanworks-bazna-cijena' ),
+						__( 'Showing aggregates for the first %1$d of %2$d catalog items. Run the compliance check for a full report.', 'sidrena-cijena-eu' ),
 						$data['scanned'],
 						$data['total']
 					)
@@ -240,17 +240,17 @@ class DashboardPage {
 	 */
 	protected static function render_anchor_cards( array $data ) {
 		$cards = array(
-			__( 'Anchors valid', 'titanworks-bazna-cijena' )     => $data['anchor_states']['valid'],
-			__( 'Anchors missing', 'titanworks-bazna-cijena' )   => $data['anchor_states']['missing'],
-			__( 'Anchors needing verification', 'titanworks-bazna-cijena' ) => $data['anchor_states']['needs_verification'],
-			__( 'Items with no price history', 'titanworks-bazna-cijena' ) => $data['missing_history'],
-			__( 'Current price below anchor', 'titanworks-bazna-cijena' ) => $data['comparison']['below'],
-			__( 'Current price equal to anchor', 'titanworks-bazna-cijena' ) => $data['comparison']['equal'],
-			__( 'Current price above anchor', 'titanworks-bazna-cijena' ) => $data['comparison']['above'],
-			__( '30-day price warnings', 'titanworks-bazna-cijena' ) => $data['thirty_day_warnings'],
-			__( 'Unclassified promotions', 'titanworks-bazna-cijena' ) => $data['unclassified_promotions'],
-			__( 'Validation errors', 'titanworks-bazna-cijena' ) => $data['counts'][ Finding::ERROR ],
-			__( 'Validation warnings', 'titanworks-bazna-cijena' ) => $data['counts'][ Finding::WARNING ],
+			__( 'Anchors valid', 'sidrena-cijena-eu' )     => $data['anchor_states']['valid'],
+			__( 'Anchors missing', 'sidrena-cijena-eu' )   => $data['anchor_states']['missing'],
+			__( 'Anchors needing verification', 'sidrena-cijena-eu' ) => $data['anchor_states']['needs_verification'],
+			__( 'Items with no price history', 'sidrena-cijena-eu' ) => $data['missing_history'],
+			__( 'Current price below anchor', 'sidrena-cijena-eu' ) => $data['comparison']['below'],
+			__( 'Current price equal to anchor', 'sidrena-cijena-eu' ) => $data['comparison']['equal'],
+			__( 'Current price above anchor', 'sidrena-cijena-eu' ) => $data['comparison']['above'],
+			__( '30-day price warnings', 'sidrena-cijena-eu' ) => $data['thirty_day_warnings'],
+			__( 'Unclassified promotions', 'sidrena-cijena-eu' ) => $data['unclassified_promotions'],
+			__( 'Validation errors', 'sidrena-cijena-eu' ) => $data['counts'][ Finding::ERROR ],
+			__( 'Validation warnings', 'sidrena-cijena-eu' ) => $data['counts'][ Finding::WARNING ],
 		);
 
 		echo '<div class="sidrena-cijena-cards">';
@@ -272,45 +272,45 @@ class DashboardPage {
 	 * @return void
 	 */
 	protected static function render_export_section( array $data ) {
-		echo '<h2>' . esc_html__( 'Export status', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Export status', 'sidrena-cijena-eu' ) . '</h2>';
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Export status', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Export status', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<tbody>';
 
-		echo '<tr><td>' . esc_html__( 'Last successful publication', 'titanworks-bazna-cijena' ) . '</td><td>';
+		echo '<tr><td>' . esc_html__( 'Last successful publication', 'sidrena-cijena-eu' ) . '</td><td>';
 		if ( $data['last_successful'] ) {
 			$row = $data['last_successful'];
 			echo esc_html( (string) $row['filename'] ) . ' — ' . esc_html( self::site_time( isset( $row['published_at'] ) ? (string) $row['published_at'] : '' ) );
 		} else {
-			esc_html_e( 'No price list has been published yet.', 'titanworks-bazna-cijena' );
+			esc_html_e( 'No price list has been published yet.', 'sidrena-cijena-eu' );
 		}
 		echo '</td></tr>';
 
-		echo '<tr><td>' . esc_html__( 'Next scheduled generation', 'titanworks-bazna-cijena' ) . '</td><td>';
+		echo '<tr><td>' . esc_html__( 'Next scheduled generation', 'sidrena-cijena-eu' ) . '</td><td>';
 		if ( $data['next_run'] ) {
 			echo esc_html( self::timestamp_time( (int) $data['next_run'] ) );
 		} else {
-			esc_html_e( 'Not scheduled.', 'titanworks-bazna-cijena' );
+			esc_html_e( 'Not scheduled.', 'sidrena-cijena-eu' );
 		}
 		echo '</td></tr>';
 
-		echo '<tr><td>' . esc_html__( 'Failed publications', 'titanworks-bazna-cijena' ) . '</td><td>';
+		echo '<tr><td>' . esc_html__( 'Failed publications', 'sidrena-cijena-eu' ) . '</td><td>';
 		printf(
 			'%1$d <a href="%2$s">%3$s</a>',
 			(int) $data['failed_publications'],
 			esc_url( AdminMenu::url( 'sidrena-cijena-publications' ) ),
-			esc_html__( 'View price lists', 'titanworks-bazna-cijena' )
+			esc_html__( 'View price lists', 'sidrena-cijena-eu' )
 		);
 		echo '</td></tr>';
 
 		$last_gen = get_option( DailyGeneration::RESULT_OPTION, null );
 		if ( $last_gen && is_array( $last_gen ) ) {
-			echo '<tr><td>' . esc_html__( 'Last generation status', 'titanworks-bazna-cijena' ) . '</td><td>';
+			echo '<tr><td>' . esc_html__( 'Last generation status', 'sidrena-cijena-eu' ) . '</td><td>';
 			if ( ! empty( $last_gen['summary']['failed'] ) ) {
-				echo '<span class="sidrena-cijena-status sidrena-cijena-status--error">' . esc_html__( 'Failed', 'titanworks-bazna-cijena' ) . '</span> ';
+				echo '<span class="sidrena-cijena-status sidrena-cijena-status--error">' . esc_html__( 'Failed', 'sidrena-cijena-eu' ) . '</span> ';
 				echo esc_html( ! empty( $last_gen['errors'] ) ? implode( '; ', (array) $last_gen['errors'] ) : '' );
 			} else {
-				echo '<span class="sidrena-cijena-status sidrena-cijena-status--valid">' . esc_html__( 'Successful', 'titanworks-bazna-cijena' ) . '</span>';
+				echo '<span class="sidrena-cijena-status sidrena-cijena-status--valid">' . esc_html__( 'Successful', 'sidrena-cijena-eu' ) . '</span>';
 			}
 			echo '</td></tr>';
 		}
@@ -318,14 +318,14 @@ class DashboardPage {
 		echo '</tbody></table>';
 
 		if ( ! empty( $data['publications'] ) ) {
-			echo '<h3>' . esc_html__( 'Recent publications', 'titanworks-bazna-cijena' ) . '</h3>';
+			echo '<h3>' . esc_html__( 'Recent publications', 'sidrena-cijena-eu' ) . '</h3>';
 			echo '<table class="widefat striped">';
-			echo '<caption class="screen-reader-text">' . esc_html__( 'Recent publications', 'titanworks-bazna-cijena' ) . '</caption>';
+			echo '<caption class="screen-reader-text">' . esc_html__( 'Recent publications', 'sidrena-cijena-eu' ) . '</caption>';
 			echo '<thead><tr>';
-			echo '<th scope="col">' . esc_html__( 'File', 'titanworks-bazna-cijena' ) . '</th>';
-			echo '<th scope="col">' . esc_html__( 'Format', 'titanworks-bazna-cijena' ) . '</th>';
-			echo '<th scope="col">' . esc_html__( 'Published', 'titanworks-bazna-cijena' ) . '</th>';
-			echo '<th scope="col">' . esc_html__( 'Status', 'titanworks-bazna-cijena' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'File', 'sidrena-cijena-eu' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Format', 'sidrena-cijena-eu' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Published', 'sidrena-cijena-eu' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Status', 'sidrena-cijena-eu' ) . '</th>';
 			echo '</tr></thead><tbody>';
 
 			foreach ( $data['publications'] as $row ) {
@@ -348,27 +348,27 @@ class DashboardPage {
 	 * @return void
 	 */
 	protected static function render_findings( array $data ) {
-		echo '<h2>' . esc_html__( 'Validation findings', 'titanworks-bazna-cijena' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Validation findings', 'sidrena-cijena-eu' ) . '</h2>';
 
 		printf(
 			'<p><a class="button" href="%s">%s</a></p>',
 			esc_url( AdminMenu::url( 'sidrena-cijena-compliance' ) ),
-			esc_html__( 'Run compliance check', 'titanworks-bazna-cijena' )
+			esc_html__( 'Run compliance check', 'sidrena-cijena-eu' )
 		);
 
 		if ( empty( $data['findings'] ) ) {
-			echo '<p>' . esc_html__( 'No findings for the scanned items.', 'titanworks-bazna-cijena' ) . '</p>';
+			echo '<p>' . esc_html__( 'No findings for the scanned items.', 'sidrena-cijena-eu' ) . '</p>';
 
 			return;
 		}
 
 		echo '<table class="widefat striped">';
-		echo '<caption class="screen-reader-text">' . esc_html__( 'Validation findings', 'titanworks-bazna-cijena' ) . '</caption>';
+		echo '<caption class="screen-reader-text">' . esc_html__( 'Validation findings', 'sidrena-cijena-eu' ) . '</caption>';
 		echo '<thead><tr>';
-		echo '<th scope="col">' . esc_html__( 'Severity', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Code', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Item', 'titanworks-bazna-cijena' ) . '</th>';
-		echo '<th scope="col">' . esc_html__( 'Explanation', 'titanworks-bazna-cijena' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Severity', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Code', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Item', 'sidrena-cijena-eu' ) . '</th>';
+		echo '<th scope="col">' . esc_html__( 'Explanation', 'sidrena-cijena-eu' ) . '</th>';
 		echo '</tr></thead><tbody>';
 
 		$shown = 0;
@@ -396,7 +396,7 @@ class DashboardPage {
 				esc_html(
 					sprintf(
 						/* translators: %d: number of findings not shown. */
-						__( '%d further findings are not shown; run the compliance check for the full report.', 'titanworks-bazna-cijena' ),
+						__( '%d further findings are not shown; run the compliance check for the full report.', 'sidrena-cijena-eu' ),
 						count( $data['findings'] ) - $shown
 					)
 				)

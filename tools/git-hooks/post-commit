@@ -17,7 +17,7 @@ CHANGED="$(git diff-tree --no-commit-id --name-only -r HEAD | grep -E "package.j
 
 if [ -n "$CHANGED" ]; then
 	VERSION="$(grep '"version"' "$ROOT/package.json" 2>/dev/null | grep -o '[0-9.]*' | head -1)"
-	if [ -n "$VERSION" ] && [ ! -f "$ROOT/versions/$VERSION/titanworks-bazna-cijena.zip" ] && [ -f "$ROOT/tools/build-zip.sh" ]; then
+	if [ -n "$VERSION" ] && [ ! -f "$ROOT/versions/$VERSION/sidrena-cijena-eu.zip" ] && [ -f "$ROOT/tools/build-zip.sh" ]; then
 		echo "==> [hook] Version bump on main detected (v$VERSION). Generating release zip..."
 		"$ROOT/tools/build-zip.sh" "$VERSION" --no-upload --force || true
 	fi

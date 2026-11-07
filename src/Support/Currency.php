@@ -5,10 +5,10 @@
  * Storage uses six decimal places; display and CSV export use two decimals
  * with Croatian conventions; XML uses two decimals with a point.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$plugin = \SidrenaCijena\Plugin::instance();
+$plugin = \Titanworks\SidrenaCijena\Plugin::instance();
 
 /*
  * A price-list filename is built from the facility street and city (FR-040),

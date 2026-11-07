@@ -2,19 +2,19 @@
 /**
  * Tests for StandaloneCatalogProvider.
  *
- * @package SidrenaCijena\Tests\Unit\Catalog
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Catalog
  */
 
-namespace SidrenaCijena\Tests\Unit\Catalog;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Catalog;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
 use WP_Post;
 
 /**
- * @covers \SidrenaCijena\Catalog\StandaloneCatalogProvider
+ * @covers \Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider
  */
 class StandaloneCatalogProviderTest extends TestCase {
 
@@ -25,11 +25,11 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_posts']          = array();
-		$GLOBALS['sidrena_test_post_meta']      = array();
-		$GLOBALS['sidrena_test_post_terms']     = array();
-		$GLOBALS['sidrena_test_post_types']     = array( StandalonePostType::POST_TYPE );
-		$GLOBALS['sidrena_test_taxonomy_terms'] = array();
+		$GLOBALS['twbce_test_posts']          = array();
+		$GLOBALS['twbce_test_post_meta']      = array();
+		$GLOBALS['twbce_test_post_terms']     = array();
+		$GLOBALS['twbce_test_post_types']     = array( StandalonePostType::POST_TYPE );
+		$GLOBALS['twbce_test_taxonomy_terms'] = array();
 	}
 
 	/**
@@ -39,12 +39,12 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset(
-			$GLOBALS['sidrena_test_posts'],
-			$GLOBALS['sidrena_test_post_meta'],
-			$GLOBALS['sidrena_test_post_terms'],
-			$GLOBALS['sidrena_test_post_types'],
-			$GLOBALS['sidrena_test_taxonomy_terms'],
-			$GLOBALS['sidrena_test_wp_query_found_posts']
+			$GLOBALS['twbce_test_posts'],
+			$GLOBALS['twbce_test_post_meta'],
+			$GLOBALS['twbce_test_post_terms'],
+			$GLOBALS['twbce_test_post_types'],
+			$GLOBALS['twbce_test_taxonomy_terms'],
+			$GLOBALS['twbce_test_wp_query_found_posts']
 		);
 		parent::tearDown();
 	}
@@ -59,7 +59,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 		$this->assertSame( 'standalone', $provider->get_source() );
 		$this->assertTrue( $provider->is_available() );
 
-		$GLOBALS['sidrena_test_post_types'] = array();
+		$GLOBALS['twbce_test_post_types'] = array();
 		$this->assertFalse( $provider->is_available() );
 	}
 
@@ -72,7 +72,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 		$provider = new StandaloneCatalogProvider();
 		$this->assertNull( $provider->get_item( 999 ) );
 
-		$GLOBALS['sidrena_test_posts'][50] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][50] = new WP_Post(
 			array(
 				'ID'          => 50,
 				'post_type'   => 'page',
@@ -82,7 +82,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 		);
 		$this->assertNull( $provider->get_item( 50 ) );
 
-		$GLOBALS['sidrena_test_posts'][51] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][51] = new WP_Post(
 			array(
 				'ID'          => 51,
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -101,7 +101,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	public function test_get_item_hydrates_product(): void {
 		$id = 101;
 
-		$GLOBALS['sidrena_test_posts'][ $id ] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][ $id ] = new WP_Post(
 			array(
 				'ID'          => $id,
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -110,20 +110,20 @@ class StandaloneCatalogProviderTest extends TestCase {
 			)
 		);
 
-		$GLOBALS['sidrena_test_post_meta'][ $id ] = array(
-			'_sidrena_regular_price' => '10.50',
-			'_sidrena_sale_price'    => '8.50',
-			'_sidrena_sku'           => 'SIR-01',
-			'_sidrena_barcode'       => '3850123456789',
-			'_sidrena_unit'          => 'kg',
-			'_sidrena_unit_price'    => '8.50',
-			'_sidrena_availability'  => 'available',
-			'_sidrena_currency'      => 'EUR',
-			'_sidrena_first_seen'    => '2026-01-15',
-			'_sidrena_tax_inclusive' => 1,
+		$GLOBALS['twbce_test_post_meta'][ $id ] = array(
+			'_twbce_regular_price' => '10.50',
+			'_twbce_sale_price'    => '8.50',
+			'_twbce_sku'           => 'SIR-01',
+			'_twbce_barcode'       => '3850123456789',
+			'_twbce_unit'          => 'kg',
+			'_twbce_unit_price'    => '8.50',
+			'_twbce_availability'  => 'available',
+			'_twbce_currency'      => 'EUR',
+			'_twbce_first_seen'    => '2026-01-15',
+			'_twbce_tax_inclusive' => 1,
 		);
 
-		$GLOBALS['sidrena_test_post_terms'][ $id ] = array(
+		$GLOBALS['twbce_test_post_terms'][ $id ] = array(
 			StandalonePostType::TAX_TYPE  => array( 'product' ),
 			StandalonePostType::TAX_BRAND => array(
 				array(
@@ -173,7 +173,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	public function test_get_item_service_classification(): void {
 		$id = 102;
 
-		$GLOBALS['sidrena_test_posts'][ $id ] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][ $id ] = new WP_Post(
 			array(
 				'ID'          => $id,
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -182,12 +182,12 @@ class StandaloneCatalogProviderTest extends TestCase {
 			)
 		);
 
-		$GLOBALS['sidrena_test_post_meta'][ $id ] = array(
-			'_sidrena_regular_price' => '35.00',
-			'_sidrena_sku'           => 'SRV-01',
+		$GLOBALS['twbce_test_post_meta'][ $id ] = array(
+			'_twbce_regular_price' => '35.00',
+			'_twbce_sku'           => 'SRV-01',
 		);
 
-		$GLOBALS['sidrena_test_post_terms'][ $id ] = array(
+		$GLOBALS['twbce_test_post_terms'][ $id ] = array(
 			StandalonePostType::TAX_TYPE => array( 'service' ),
 		);
 
@@ -218,7 +218,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function test_get_items_include_and_exclude(): void {
-		$GLOBALS['sidrena_test_posts'][10] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][10] = new WP_Post(
 			array(
 				'ID'          => 10,
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -226,7 +226,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 				'post_title'  => 'Item A',
 			)
 		);
-		$GLOBALS['sidrena_test_posts'][20] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][20] = new WP_Post(
 			array(
 				'ID'          => 20,
 				'post_type'   => StandalonePostType::POST_TYPE,
@@ -255,7 +255,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function test_count_items(): void {
-		$GLOBALS['sidrena_test_wp_query_found_posts'] = 42;
+		$GLOBALS['twbce_test_wp_query_found_posts'] = 42;
 
 		$provider = new StandaloneCatalogProvider();
 		$this->assertSame( 42, $provider->count_items() );
@@ -267,7 +267,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function test_get_categories(): void {
-		$GLOBALS['sidrena_test_taxonomy_terms'] = array(
+		$GLOBALS['twbce_test_taxonomy_terms'] = array(
 			(object) array(
 				'term_id' => 3,
 				'slug'    => 'pekara',
@@ -290,7 +290,7 @@ class StandaloneCatalogProviderTest extends TestCase {
 	 * @return void
 	 */
 	public function test_iterate_yields_items(): void {
-		$GLOBALS['sidrena_test_posts'][1] = new WP_Post(
+		$GLOBALS['twbce_test_posts'][1] = new WP_Post(
 			array(
 				'ID'          => 1,
 				'post_type'   => StandalonePostType::POST_TYPE,

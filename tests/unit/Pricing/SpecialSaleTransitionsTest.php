@@ -2,30 +2,30 @@
 /**
  * Unit tests for time, daylight-saving transitions, cache invalidation, and sale-end suppression.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\RestCache;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Tests\Support\PluginSwap;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\Api\RestCache;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
 
 /**
  * Verifies time, cache and sale-end behavior (Task 8).
  *
- * @covers \SidrenaCijena\Pricing\LowestPrice30DayCalculator
- * @covers \SidrenaCijena\Support\Dates
- * @covers \SidrenaCijena\Database\SpecialSaleRepository
- * @covers \SidrenaCijena\Plugin
- * @covers \SidrenaCijena\WooCommerce\Display\PriceDisplay
+ * @covers \Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator
+ * @covers \Titanworks\SidrenaCijena\Support\Dates
+ * @covers \Titanworks\SidrenaCijena\Database\SpecialSaleRepository
+ * @covers \Titanworks\SidrenaCijena\Plugin
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay
  */
 class SpecialSaleTransitionsTest extends TestCase {
 
@@ -37,9 +37,9 @@ class SpecialSaleTransitionsTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['wpdb']                    = new \wpdb();
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['wpdb']                  = new \wpdb();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 	}
 
 	/**
@@ -144,14 +144,14 @@ class SpecialSaleTransitionsTest extends TestCase {
 	}
 
 	/**
-	 * Transitioning sale statuses fires sidrena_cijena_special_sale_changed.
+	 * Transitioning sale statuses fires twbce_cijena_special_sale_changed.
 	 *
 	 * @return void
 	 */
 	public function test_refresh_statuses_fires_change_action_when_sales_transition() {
 		$action_fired = false;
 		add_action(
-			'sidrena_cijena_special_sale_changed',
+			'twbce_cijena_special_sale_changed',
 			static function () use ( &$action_fired ) {
 				$action_fired = true;
 			}
@@ -173,7 +173,7 @@ class SpecialSaleTransitionsTest extends TestCase {
 		$updated = $repo->refresh_statuses( '2026-10-16 00:00:00' );
 
 		$this->assertSame( 2, $updated );
-		$this->assertTrue( $action_fired, 'sidrena_cijena_special_sale_changed must fire when statuses transition.' );
+		$this->assertTrue( $action_fired, 'twbce_cijena_special_sale_changed must fire when statuses transition.' );
 	}
 
 	/**

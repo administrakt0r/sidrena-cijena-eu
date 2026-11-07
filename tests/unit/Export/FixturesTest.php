@@ -2,13 +2,13 @@
 /**
  * Contract tests for the canonical example price-list fixtures.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Import\CsvParser;
+use Titanworks\SidrenaCijena\Import\CsvParser;
 
 /**
  * Verifies tests/fixtures/example-price-list.csv/.xml against the contracts.

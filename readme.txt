@@ -4,7 +4,7 @@ Tags: croatia, price, compliance, woocommerce, price list
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.23
+Stable tag: 2.0.24
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,8 +32,7 @@ Main features:
 
 == Installation ==
 
-1. Install **Titanworks Bazna Cijena** from **Plugins → Add New Plugin**, or upload
-   the ZIP from the [latest GitHub release](https://github.com/administrakt0r/titanworks-bazna-cijena/releases/latest).
+1. Install **Titanworks Bazna Cijena** from **Plugins → Add New Plugin**, or upload the plugin ZIP.
 2. Activate the plugin through the *Plugins* screen.
 3. Open *Sidrena cijena → Postavke* and review the reference dates and display settings.
 4. Record or import anchor prices for your catalog.
@@ -95,6 +94,10 @@ Review retained records with your data-protection and legal advisers.
 4. Plugin settings and legal rules configuration.
 
 == Changelog ==
+
+= 2.0.24 =
+* Address WordPress.org review feedback: directory text domain, unique identifiers, late escaping, and prepared history queries.
+* Preserve existing configuration and catalog data when upgrading development builds.
 
 = 2.0.23 =
 * European date format & 24-hour time: replaced native browser date inputs with WordPress jQuery UI Datepicker in Croatian locale (d.m.Y.) and 24-hour time format (H:i) across all admin screens.
@@ -176,7 +179,7 @@ Review retained records with your data-protection and legal advisers.
 * Regression test coverage: added comprehensive `ProductEditorSaveTest` verifying ordinary WooCommerce product updates, dedicated anchor and sale recording handlers, variable product panel rendering, and form markup safety (no nested forms, no duplicate `_wpnonce`, no HTML5 `required` blockers); 451 unit tests (1,606 assertions) passing, complete Croatian translations (768 translated / 0 untranslated).
 
 = 2.0.11 =
-* Security sweep & capability enforcement: explicitly bound `register_setting` for settings and legal rules to `manage_sidrena_cijena` capability via `Capabilities::capability()`.
+* Security sweep & capability enforcement: explicitly bound `register_setting` for settings and legal rules to `twbce_manage_prices` capability via `Capabilities::capability()`.
 * Quality gates & test suite: added `SettingsPageTest` covering capability verification and tab dispatch, stubbed `register_setting` in unit test stubs; 438 unit tests (1,557 assertions), PHPCS clean across 181 files, PHPStan level 6 (0 errors across 117 files), ESLint clean, and complete Croatian translation catalog (749 translated strings / 0 untranslated).
 
 = 2.0.10 =
@@ -187,7 +190,7 @@ Review retained records with your data-protection and legal advisers.
 
 = 2.0.9 =
 * Static audit & security hardening: escaped active navigation tab CSS class attribute in settings page.
-* Permission denial regression coverage: added unit regression tests verifying strict capability rejection (`manage_sidrena_cijena`) across all admin-post handlers (including import preview/commit/report, compliance run/export, welcome banner dismiss, and scheduler notice dismiss).
+* Permission denial regression coverage: added unit regression tests verifying strict capability rejection (`twbce_manage_prices`) across all admin-post handlers (including import preview/commit/report, compliance run/export, welcome banner dismiss, and scheduler notice dismiss).
 * Quality gates verified clean: 429 unit tests (1,525 assertions), PHPCS clean (179 files), PHPStan level 6 (0 errors across 117 files), ESLint clean, and complete Croatian translation catalog (749 translated strings / 0 untranslated).
 
 = 2.0.8 =
@@ -272,9 +275,9 @@ Review retained records with your data-protection and legal advisers.
 * Add indexes for price history, active sales and publication lookups.
 
 = 1.0.14 =
-* Security: the anchor-price and special-sale meta boxes are now registered only for users holding `manage_sidrena_cijena`. They were the only admin screens that displayed privileged compliance evidence (the recorded anchor price, the applicable reference date and the 30-day lowest price) and offered a submission form without the capability check every other screen applies; the admin-post handlers themselves already verified capability and nonce.
+* Security: the anchor-price and special-sale meta boxes are now registered only for users holding `twbce_manage_prices`. They were the only admin screens that displayed privileged compliance evidence (the recorded anchor price, the applicable reference date and the 30-day lowest price) and offered a submission form without the capability check every other screen applies; the admin-post handlers themselves already verified capability and nonce.
 * Audit: full static audit of the plugin. Every admin action pairs the capability check with a valid nonce, every echo is escaped, every query is parameterized, uploaded and imported paths are restricted to the uploads directory and the system temporary directory by `CsvParser::is_allowed_path()`, log contexts pass `Logger::sanitize_context()`, and the post-activation redirect keeps its bulk-activation, network-admin, cron, AJAX and REST guards.
-* Tests: new regression coverage for the meta box capability gate, plus the first unit tests pinning the `manage_sidrena_cijena` contract (306 tests, 1083 assertions).
+* Tests: new regression coverage for the meta box capability gate, plus the first unit tests pinning the `twbce_manage_prices` contract (306 tests, 1083 assertions).
 
 = 1.0.13 =
 * Usability: internal slugs are no longer printed in the admin screens; statuses, log levels, log events, finding severities, sale types and import row statuses show translated labels from one shared resolver (301 tests, 1078 assertions).

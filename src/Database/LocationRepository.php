@@ -2,12 +2,12 @@
 /**
  * Sales location data access.
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -217,11 +217,11 @@ class LocationRepository {
 
 		return $this->insert(
 			array(
-				'name'       => __( 'Webshop', 'titanworks-bazna-cijena' ),
+				'name'       => __( 'Webshop', 'sidrena-cijena-eu' ),
 				'type'       => 'webshop',
 				'identifier' => 'P1',
-				'address'    => '' !== $address ? $address : __( 'Online', 'titanworks-bazna-cijena' ),
-				'city'       => '' !== $city ? $city : __( 'Hrvatska', 'titanworks-bazna-cijena' ),
+				'address'    => '' !== $address ? $address : __( 'Online', 'sidrena-cijena-eu' ),
+				'city'       => '' !== $city ? $city : __( 'Hrvatska', 'sidrena-cijena-eu' ),
 				'active'     => true,
 			)
 		);

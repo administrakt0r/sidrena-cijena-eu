@@ -5,22 +5,22 @@
  * The plugin ships no runtime Composer dependencies, so this autoloader is the
  * only class-loading mechanism in production.
  *
- * @package SidrenaCijena\Support
+ * @package Titanworks\SidrenaCijena\Support
  */
 
-namespace SidrenaCijena\Support;
+namespace Titanworks\SidrenaCijena\Support;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Maps `SidrenaCijena\` to the plugin `src/` directory.
+ * Maps `Titanworks\SidrenaCijena\` to the plugin `src/` directory.
  */
 final class Autoloader {
 
 	/**
 	 * Namespace prefix handled by this autoloader.
 	 */
-	const PREFIX = 'SidrenaCijena\\';
+	const PREFIX = 'Titanworks\\SidrenaCijena\\';
 
 	/**
 	 * Directory (relative to the plugin root) that mirrors the namespace.
@@ -62,7 +62,7 @@ final class Autoloader {
 		$relative = substr( $class, strlen( self::PREFIX ) );
 		$relative = str_replace( '\\', '/', $relative );
 
-		$base = defined( 'SIDRENA_CIJENA_DIR' ) ? SIDRENA_CIJENA_DIR : dirname( __DIR__, 2 ) . '/';
+		$base = defined( 'TWBCE_CIJENA_DIR' ) ? TWBCE_CIJENA_DIR : dirname( __DIR__, 2 ) . '/';
 		$file = $base . self::BASE_DIR . $relative . '.php';
 
 		if ( is_readable( $file ) ) {

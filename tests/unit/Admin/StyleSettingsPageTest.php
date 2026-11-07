@@ -2,18 +2,18 @@
 /**
  * Style settings page tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\StyleSettingsPage;
-use SidrenaCijena\Support\DisplayStyles;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Admin\StyleSettingsPage;
+use Titanworks\SidrenaCijena\Support\DisplayStyles;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 /**
- * @covers \SidrenaCijena\Admin\StyleSettingsPage
+ * @covers \Titanworks\SidrenaCijena\Admin\StyleSettingsPage
  */
 class StyleSettingsPageTest extends TestCase {
 
@@ -24,7 +24,7 @@ class StyleSettingsPageTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**
@@ -33,7 +33,7 @@ class StyleSettingsPageTest extends TestCase {
 	 * @return void
 	 */
 	protected function tearDown(): void {
-		unset( $GLOBALS['sidrena_test_options'] );
+		unset( $GLOBALS['twbce_test_options'] );
 		parent::tearDown();
 	}
 

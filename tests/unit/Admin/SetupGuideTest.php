@@ -2,20 +2,20 @@
 /**
  * Setup Guide dynamic status tests.
  *
- * @package SidrenaCijena\Tests\Unit\Admin
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Admin
  */
 
-namespace SidrenaCijena\Tests\Unit\Admin;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\SetupGuidePage;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Admin\SetupGuidePage;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -190,7 +190,7 @@ class GuideFakePublications extends PublicationRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Admin\SetupGuidePage
+ * @covers \Titanworks\SidrenaCijena\Admin\SetupGuidePage
  */
 class SetupGuideTest extends TestCase {
 
@@ -232,8 +232,8 @@ class SetupGuideTest extends TestCase {
 
 		require_once dirname( __DIR__ ) . '/wc-stubs.php';
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 
 		$this->catalog      = new GuideFakeCatalog();
 		$this->history      = new GuideFakeHistory();
@@ -291,7 +291,7 @@ class SetupGuideTest extends TestCase {
 		);
 
 		set_transient(
-			'sidrena_cijena_report_' . get_current_user_id(),
+			'twbce_cijena_report_' . get_current_user_id(),
 			array(
 				'counts' => array(
 					'ERROR'   => 0,
@@ -343,7 +343,7 @@ class SetupGuideTest extends TestCase {
 	 */
 	public function test_stored_errors_mark_compliance_step_incomplete() {
 		set_transient(
-			'sidrena_cijena_report_' . get_current_user_id(),
+			'twbce_cijena_report_' . get_current_user_id(),
 			array( 'counts' => array( 'ERROR' => 3 ) )
 		);
 
@@ -366,7 +366,7 @@ class SetupGuideTest extends TestCase {
 		$this->publications->last    = array( 'id' => 9 );
 
 		set_transient(
-			'sidrena_cijena_report_' . get_current_user_id(),
+			'twbce_cijena_report_' . get_current_user_id(),
 			array( 'counts' => array( 'ERROR' => 0 ) )
 		);
 

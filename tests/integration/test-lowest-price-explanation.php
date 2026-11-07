@@ -2,19 +2,19 @@
 /**
  * Integration tests for LowestPriceExplainer.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\LowestPrice30DayCalculator;
-use SidrenaCijena\Pricing\LowestPriceExplainer;
-use SidrenaCijena\Pricing\SpecialSaleService;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\LowestPrice30DayCalculator;
+use Titanworks\SidrenaCijena\Pricing\LowestPriceExplainer;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleService;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 /**
  * Tests that administrator calculation explanations agree with persisted database results.
@@ -83,8 +83,8 @@ class Test_Lowest_Price_Explanation extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		$item = Plugin::instance()->catalog()->get_item( $post_id );
 		$this->assertInstanceOf( CatalogItem::class, $item );

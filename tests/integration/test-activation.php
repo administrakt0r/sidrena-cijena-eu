@@ -2,12 +2,12 @@
 /**
  * Activation, deactivation and re-activation integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Database\Schema;
-use SidrenaCijena\Support\Deactivator;
-use SidrenaCijena\Support\Install;
+use Titanworks\SidrenaCijena\Database\Schema;
+use Titanworks\SidrenaCijena\Support\Deactivator;
+use Titanworks\SidrenaCijena\Support\Install;
 
 /**
  * Activation lifecycle.
@@ -47,11 +47,11 @@ class ActivationTest extends WP_UnitTestCase {
 			$this->assertSame( $table, $found, "Table {$table} should exist." );
 		}
 
-		$this->assertNotFalse( get_option( 'sidrena_cijena_settings' ) );
-		$this->assertNotFalse( get_option( 'sidrena_cijena_rule_config' ) );
-		$this->assertSame( Schema::DB_VERSION, get_option( 'sidrena_cijena_db_version' ) );
+		$this->assertNotFalse( get_option( 'twbce_cijena_settings' ) );
+		$this->assertNotFalse( get_option( 'twbce_cijena_rule_config' ) );
+		$this->assertSame( Schema::DB_VERSION, get_option( 'twbce_cijena_db_version' ) );
 
-		$locations = new \SidrenaCijena\Database\LocationRepository();
+		$locations = new \Titanworks\SidrenaCijena\Database\LocationRepository();
 		$this->assertCount( 1, $locations->all() );
 		$this->assertSame( 'webshop', $locations->all()[0]['type'] );
 	}
@@ -65,7 +65,7 @@ class ActivationTest extends WP_UnitTestCase {
 		Install::activate();
 		Install::activate();
 
-		$locations = new \SidrenaCijena\Database\LocationRepository();
+		$locations = new \Titanworks\SidrenaCijena\Database\LocationRepository();
 		$this->assertCount( 1, $locations->all() );
 	}
 
@@ -77,7 +77,7 @@ class ActivationTest extends WP_UnitTestCase {
 	public function test_deactivation_preserves_data() {
 		Install::activate();
 
-		$history = new \SidrenaCijena\Database\PriceHistoryRepository();
+		$history = new \Titanworks\SidrenaCijena\Database\PriceHistoryRepository();
 		$id      = $history->insert(
 			array(
 				'product_id'     => 123,
@@ -90,7 +90,7 @@ class ActivationTest extends WP_UnitTestCase {
 
 		Deactivator::deactivate();
 
-		$this->assertNotFalse( get_option( 'sidrena_cijena_settings' ) );
+		$this->assertNotFalse( get_option( 'twbce_cijena_settings' ) );
 		$this->assertNotNull( $history->get( $id ) );
 		$this->assertSame( 1, $history->count( array( 'product_id' => 123 ) ) );
 	}

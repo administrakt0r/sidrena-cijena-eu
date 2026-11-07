@@ -2,14 +2,14 @@
 /**
  * Import orchestration.
  *
- * @package SidrenaCijena\Import
+ * @package Titanworks\SidrenaCijena\Import
  */
 
-namespace SidrenaCijena\Import;
+namespace Titanworks\SidrenaCijena\Import;
 
-use SidrenaCijena\Export\CsvWriter;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Export\CsvWriter;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -104,7 +104,7 @@ final class ImportService {
 				'overwrite_confirmation_required',
 				sprintf(
 					/* translators: %d: number of rows that would overwrite existing anchors. */
-					__( '%d row(s) would overwrite existing anchor records. Confirm overwriting to continue.', 'titanworks-bazna-cijena' ),
+					__( '%d row(s) would overwrite existing anchor records. Confirm overwriting to continue.', 'sidrena-cijena-eu' ),
 					$overwrite
 				)
 			);
@@ -166,7 +166,7 @@ final class ImportService {
 				if ( 'overwrite' === $status ) {
 					$record['correction_reason'] = sprintf(
 						/* translators: %s: import batch identifier. */
-						__( 'Imported overwrite (batch %s).', 'titanworks-bazna-cijena' ),
+						__( 'Imported overwrite (batch %s).', 'sidrena-cijena-eu' ),
 						$batch_id
 					);
 				}
@@ -190,7 +190,7 @@ final class ImportService {
 						'import_rolled_back',
 						sprintf(
 							/* translators: %s: error message. */
-							__( 'The import failed and was rolled back: %s', 'titanworks-bazna-cijena' ),
+							__( 'The import failed and was rolled back: %s', 'sidrena-cijena-eu' ),
 							$result->get_error_message()
 						),
 						array( 'report' => $report )
@@ -212,7 +212,7 @@ final class ImportService {
 
 			Logger::error( 'import', 'Import rolled back after an exception.', array( 'batch_id' => $batch_id ) );
 
-			return new \WP_Error( 'import_rolled_back', __( 'The import failed and was rolled back.', 'titanworks-bazna-cijena' ) );
+			return new \WP_Error( 'import_rolled_back', __( 'The import failed and was rolled back.', 'sidrena-cijena-eu' ) );
 		}
 
 		$report['failed'] = max( (int) $report['failed'], count( $report['errors'] ) );
@@ -228,7 +228,7 @@ final class ImportService {
 			)
 		);
 
-		do_action( 'sidrena_cijena_import_completed', $batch_id, $report['inserted'], $report['skipped'], $report['errors'] );
+		do_action( 'twbce_cijena_import_completed', $batch_id, $report['inserted'], $report['skipped'], $report['errors'] );
 
 		return $report;
 	}

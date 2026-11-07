@@ -5,10 +5,10 @@
  * The compliance core depends only on this interface, so WooCommerce is never
  * a hard requirement (FR-084, FR-091).
  *
- * @package SidrenaCijena\Catalog
+ * @package Titanworks\SidrenaCijena\Catalog
  */
 
-namespace SidrenaCijena\Catalog;
+namespace Titanworks\SidrenaCijena\Catalog;
 
 defined( 'ABSPATH' ) || exit;
 

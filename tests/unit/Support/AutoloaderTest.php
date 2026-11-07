@@ -2,16 +2,16 @@
 /**
  * Autoloader unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Support\Autoloader;
+use Titanworks\SidrenaCijena\Support\Autoloader;
 
 /**
- * @covers \SidrenaCijena\Support\Autoloader
+ * @covers \Titanworks\SidrenaCijena\Support\Autoloader
  */
 class AutoloaderTest extends TestCase {
 
@@ -29,7 +29,7 @@ class AutoloaderTest extends TestCase {
 
 		$found = false;
 		foreach ( $registered as $loader ) {
-			if ( is_array( $loader ) && 'SidrenaCijena\Support\Autoloader' === $loader[0] && 'autoload' === $loader[1] ) {
+			if ( is_array( $loader ) && 'Titanworks\SidrenaCijena\Support\Autoloader' === $loader[0] && 'autoload' === $loader[1] ) {
 				$found = true;
 				break;
 			}
@@ -54,8 +54,8 @@ class AutoloaderTest extends TestCase {
 	 * @return void
 	 */
 	public function test_autoload_handles_non_existent_class_gracefully() {
-		Autoloader::autoload( 'SidrenaCijena\NonExistentClassXYZ' );
-		$this->assertFalse( class_exists( 'SidrenaCijena\NonExistentClassXYZ', false ) );
+		Autoloader::autoload( 'Titanworks\SidrenaCijena\NonExistentClassXYZ' );
+		$this->assertFalse( class_exists( 'Titanworks\SidrenaCijena\NonExistentClassXYZ', false ) );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class AutoloaderTest extends TestCase {
 	 */
 	public function test_autoload_loads_existing_class() {
 		// Call autoload on an existing class file.
-		Autoloader::autoload( 'SidrenaCijena\Support\DisplayStyles' );
-		$this->assertTrue( class_exists( 'SidrenaCijena\Support\DisplayStyles', false ) );
+		Autoloader::autoload( 'Titanworks\SidrenaCijena\Support\DisplayStyles' );
+		$this->assertTrue( class_exists( 'Titanworks\SidrenaCijena\Support\DisplayStyles', false ) );
 	}
 }

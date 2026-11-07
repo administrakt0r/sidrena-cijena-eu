@@ -2,18 +2,18 @@
 /**
  * Security regression tests for log context sanitization.
  *
- * @package SidrenaCijena\Tests\Unit\Logging
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Logging
  */
 
-namespace SidrenaCijena\Tests\Unit\Logging;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Logging;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Logging\Logger;
 
 /**
  * Ensures secrets and personal data never reach stored log contexts.
  *
- * @covers \SidrenaCijena\Logging\Logger::sanitize_context
+ * @covers \Titanworks\SidrenaCijena\Logging\Logger::sanitize_context
  */
 class LoggerTest extends TestCase {
 

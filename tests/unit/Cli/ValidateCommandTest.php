@@ -2,22 +2,22 @@
 /**
  * ValidateCommand unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Cli
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Cli
  */
 
-namespace SidrenaCijena\Tests\Unit\Cli;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Cli;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cli\Cli;
-use SidrenaCijena\Cli\ValidateCommand;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Cli\Cli;
+use Titanworks\SidrenaCijena\Cli\ValidateCommand;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
 /**
- * @covers \SidrenaCijena\Cli\ValidateCommand
+ * @covers \Titanworks\SidrenaCijena\Cli\ValidateCommand
  */
 class ValidateCommandTest extends TestCase {
 

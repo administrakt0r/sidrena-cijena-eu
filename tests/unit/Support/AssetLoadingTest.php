@@ -2,26 +2,26 @@
 /**
  * Tests for restricted asset loading across admin and frontend.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Admin\AdminMenu;
-use SidrenaCijena\Api\PublicPage;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\WooCommerce\Display\PriceDisplay;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Pricing\AnchorCache;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Admin\AdminMenu;
+use Titanworks\SidrenaCijena\Api\PublicPage;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Pricing\AnchorCache;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
 
 /**
- * @covers \SidrenaCijena\Admin\AdminMenu::enqueue_assets
- * @covers \SidrenaCijena\WooCommerce\Display\PriceDisplay::enqueue_assets
- * @covers \SidrenaCijena\Api\PublicPage::enqueue_assets
+ * @covers \Titanworks\SidrenaCijena\Admin\AdminMenu::enqueue_assets
+ * @covers \Titanworks\SidrenaCijena\WooCommerce\Display\PriceDisplay::enqueue_assets
+ * @covers \Titanworks\SidrenaCijena\Api\PublicPage::enqueue_assets
  */
 class AssetLoadingTest extends TestCase {
 
@@ -33,13 +33,13 @@ class AssetLoadingTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']            = array();
-		$GLOBALS['sidrena_test_enqueued_styles']    = array();
-		$GLOBALS['sidrena_test_enqueued_scripts']   = array();
-		$GLOBALS['sidrena_test_registered_scripts'] = array();
-		$GLOBALS['sidrena_test_is_product']         = false;
-		$GLOBALS['sidrena_test_query_vars']         = array();
-		$_SERVER['REQUEST_URI']                     = '/';
+		$GLOBALS['twbce_test_options']            = array();
+		$GLOBALS['twbce_test_enqueued_styles']    = array();
+		$GLOBALS['twbce_test_enqueued_scripts']   = array();
+		$GLOBALS['twbce_test_registered_scripts'] = array();
+		$GLOBALS['twbce_test_is_product']         = false;
+		$GLOBALS['twbce_test_query_vars']         = array();
+		$_SERVER['REQUEST_URI']                   = '/';
 		Settings::reset_cache();
 	}
 
@@ -51,8 +51,8 @@ class AssetLoadingTest extends TestCase {
 	public function test_admin_menu_skips_unrelated_screens() {
 		AdminMenu::enqueue_assets( 'edit.php' );
 
-		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_styles'] );
-		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_scripts'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_styles'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_scripts'] );
 	}
 
 	/**
@@ -63,10 +63,10 @@ class AssetLoadingTest extends TestCase {
 	public function test_admin_menu_enqueues_on_plugin_screens_without_wp_i18n() {
 		AdminMenu::enqueue_assets( 'toplevel_page_sidrena-cijena' );
 
-		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_styles'] );
-		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['sidrena_test_enqueued_scripts'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-admin', $GLOBALS['twbce_test_enqueued_scripts'] );
 
-		$script = $GLOBALS['sidrena_test_enqueued_scripts']['sidrena-cijena-admin'];
+		$script = $GLOBALS['twbce_test_enqueued_scripts']['sidrena-cijena-admin'];
 		$this->assertNotContains( 'wp-i18n', $script['deps'] );
 	}
 
@@ -83,8 +83,8 @@ class AssetLoadingTest extends TestCase {
 
 		$display->enqueue_assets();
 
-		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
-		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_scripts'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_scripts'] );
 	}
 
 	/**
@@ -98,12 +98,12 @@ class AssetLoadingTest extends TestCase {
 		$anchors = new AnchorPriceService( $history, $cache );
 		$display = new PriceDisplay( $anchors );
 
-		add_filter( 'sidrena_cijena_enqueue_frontend_assets', '__return_true' );
+		add_filter( 'twbce_cijena_enqueue_frontend_assets', '__return_true' );
 		$display->enqueue_assets();
-		remove_filter( 'sidrena_cijena_enqueue_frontend_assets', '__return_true' );
+		remove_filter( 'twbce_cijena_enqueue_frontend_assets', '__return_true' );
 
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_scripts'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_scripts'] );
 	}
 
 	/**
@@ -119,7 +119,7 @@ class AssetLoadingTest extends TestCase {
 
 		$page->enqueue_assets();
 
-		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayNotHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 	}
 
 	/**
@@ -133,10 +133,10 @@ class AssetLoadingTest extends TestCase {
 		$sales   = new SpecialSaleRepository();
 		$page    = new PublicPage( $catalog, $history, $sales );
 
-		$GLOBALS['sidrena_test_query_vars'][ PublicPage::QUERY_VAR ] = PublicPage::PAGE_LIST;
+		$GLOBALS['twbce_test_query_vars'][ PublicPage::QUERY_VAR ] = PublicPage::PAGE_LIST;
 
 		$page->enqueue_assets();
 
-		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['sidrena_test_enqueued_styles'] );
+		$this->assertArrayHasKey( 'sidrena-cijena-frontend', $GLOBALS['twbce_test_enqueued_styles'] );
 	}
 }

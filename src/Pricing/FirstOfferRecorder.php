@@ -2,19 +2,19 @@
 /**
  * Contemporaneous first-offer evidence for newly created catalog entries.
  *
- * @package SidrenaCijena\Pricing
+ * @package Titanworks\SidrenaCijena\Pricing
  */
 
-namespace SidrenaCijena\Pricing;
+namespace Titanworks\SidrenaCijena\Pricing;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\ReferenceDateResolver;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\ReferenceDateResolver;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\WooCommerce\WooCommerceCatalogProvider;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,10 +24,10 @@ defined( 'ABSPATH' ) || exit;
 final class FirstOfferRecorder {
 
 	/** Eligibility is tied to the actual post ID, so copied metadata cannot qualify another item. */
-	const ELIGIBLE = '_sidrena_first_offer_eligible';
+	const ELIGIBLE = '_twbce_first_offer_eligible';
 
 	/** Immutable observation, retained even if writing the history row fails. */
-	const OBSERVATION = '_sidrena_first_offer_observation';
+	const OBSERVATION = '_twbce_first_offer_observation';
 
 	/**
 	 * Register after plugin activation, before catalog writes.
@@ -158,7 +158,7 @@ final class FirstOfferRecorder {
 		if ( $now->format( 'Y-m-d' ) < $baseline || Plugin::instance()->anchors()->get_anchor( $item ) ) {
 			return;
 		}
-		update_post_meta( $post_id, '_sidrena_first_seen', $now->format( 'Y-m-d' ) );
+		update_post_meta( $post_id, '_twbce_first_seen', $now->format( 'Y-m-d' ) );
 		$result = Plugin::instance()->anchors()->record(
 			$item,
 			$item->current_price,

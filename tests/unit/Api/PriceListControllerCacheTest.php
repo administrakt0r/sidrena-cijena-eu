@@ -2,22 +2,22 @@
 /**
  * Unit tests for the cached REST price-list builds.
  *
- * @package SidrenaCijena\Tests\Unit\Api
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Api
  */
 
-namespace SidrenaCijena\Tests\Unit\Api;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\PriceListController;
-use SidrenaCijena\Api\RestCache;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Catalog\CatalogProvider;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Database\PublicationRepository;
-use SidrenaCijena\Database\SpecialSaleRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Api\PriceListController;
+use Titanworks\SidrenaCijena\Api\RestCache;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Catalog\CatalogProvider;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Database\PublicationRepository;
+use Titanworks\SidrenaCijena\Database\SpecialSaleRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -338,7 +338,7 @@ class BuildCacheFakeLocations extends LocationRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Api\PriceListController::cached_build
+ * @covers \Titanworks\SidrenaCijena\Api\PriceListController::cached_build
  */
 class PriceListControllerCacheTest extends TestCase {
 
@@ -357,8 +357,8 @@ class PriceListControllerCacheTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 
 		$this->catalog             = new BuildCacheFakeCatalog();
 		$this->catalog->items[101] = new CatalogItem(

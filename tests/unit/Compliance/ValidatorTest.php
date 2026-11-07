@@ -2,20 +2,20 @@
 /**
  * Unit tests for the validator rules and the compliance report.
  *
- * @package SidrenaCijena\Tests\Unit\Compliance
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Compliance
  */
 
-namespace SidrenaCijena\Tests\Unit\Compliance;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Compliance;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\ComplianceReport;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\Rules\AnchorRules;
-use SidrenaCijena\Compliance\Rules\CatalogRules;
-use SidrenaCijena\Compliance\Rules\PublicationRules;
-use SidrenaCijena\Compliance\Rules\SaleRules;
-use SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\ComplianceReport;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\Rules\AnchorRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\CatalogRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\PublicationRules;
+use Titanworks\SidrenaCijena\Compliance\Rules\SaleRules;
+use Titanworks\SidrenaCijena\Compliance\Validator;
 
 /**
  * Covers every built-in rule with hand-built contexts.

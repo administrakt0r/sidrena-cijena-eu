@@ -5,7 +5,7 @@ test.describe('Price history and audit', () => {
   let productId = 0;
 
   test.beforeAll(async () => {
-    await wpCli(['plugin', 'activate', 'titanworks-bazna-cijena']);
+    await wpCli(['plugin', 'activate', 'sidrena-cijena-eu']);
 
     const id = await wpEval(`
       $product = new WC_Product_Simple();
@@ -20,9 +20,9 @@ test.describe('Price history and audit', () => {
     productId = parseInt(String(id).trim(), 10);
 
     await wpEval(`
-      $catalog = SidrenaCijena\\Plugin::instance()->catalog();
+      $catalog = Titanworks\\SidrenaCijena\\Plugin::instance()->catalog();
       $item = $catalog->get_item( ${productId} );
-      SidrenaCijena\\Plugin::instance()->anchors()->record( $item, 12.00, array( 'reference_date' => '2026-09-10' ) );
+      Titanworks\\SidrenaCijena\\Plugin::instance()->anchors()->record( $item, 12.00, array( 'reference_date' => '2026-09-10' ) );
       return 'ok';
     `);
   });

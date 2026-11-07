@@ -2,17 +2,17 @@
 /**
  * Unit tests for SpecialSaleOfferMatcher.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
 
 /**
- * @covers \SidrenaCijena\Pricing\SpecialSaleOfferMatcher
+ * @covers \Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher
  */
 class SpecialSaleOfferMatcherTest extends TestCase {
 

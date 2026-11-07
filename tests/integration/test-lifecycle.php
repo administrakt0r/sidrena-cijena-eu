@@ -2,18 +2,18 @@
 /**
  * Integration tests for deactivation and uninstall lifecycle behaviour.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Database\Migrator;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Deactivator;
-use SidrenaCijena\Support\Install;
-use SidrenaCijena\Support\Settings;
-use SidrenaCijena\Support\Uninstaller;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Database\Migrator;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Deactivator;
+use Titanworks\SidrenaCijena\Support\Install;
+use Titanworks\SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Support\Uninstaller;
 
 /**
  * Verifies data preservation on deactivation and opt-in deletion on uninstall.
@@ -78,8 +78,8 @@ class Test_Lifecycle extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', 'LIFE-1' );
-		update_post_meta( $post_id, '_sidrena_regular_price', '9.99' );
+		update_post_meta( $post_id, '_twbce_sku', 'LIFE-1' );
+		update_post_meta( $post_id, '_twbce_regular_price', '9.99' );
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 
 		$item = Plugin::instance()->catalog()->get_item( $post_id );
@@ -210,7 +210,7 @@ class Test_Lifecycle extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', 'LIFE-DOOMED' );
+		update_post_meta( $post_id, '_twbce_sku', 'LIFE-DOOMED' );
 
 		$foreign_post = wp_insert_post(
 			array(
@@ -220,7 +220,7 @@ class Test_Lifecycle extends WP_UnitTestCase {
 			)
 		);
 
-		update_option( 'sidrena_lifecycle_foreign_option', 'keep me', false );
+		update_option( 'twbce_lifecycle_foreign_option', 'keep me', false );
 		update_option( Settings::OPTION, array_merge( Settings::all(), array( 'delete_data_on_uninstall' => true ) ) );
 
 		$summary = Uninstaller::run();
@@ -251,12 +251,12 @@ class Test_Lifecycle extends WP_UnitTestCase {
 
 		// Foreign data must survive.
 		$this->assertNotNull( get_post( $foreign_post ) );
-		$this->assertSame( 'keep me', get_option( 'sidrena_lifecycle_foreign_option' ) );
+		$this->assertSame( 'keep me', get_option( 'twbce_lifecycle_foreign_option' ) );
 
 		// Leave a clean environment behind (DDL is not transactional on MySQL).
 		Migrator::migrate();
 		Install::activate();
-		delete_option( 'sidrena_lifecycle_foreign_option' );
+		delete_option( 'twbce_lifecycle_foreign_option' );
 		wp_delete_post( $foreign_post, true );
 
 		// Restore the test suite's DDL rewriting for the remaining test cases.

@@ -3,6 +3,9 @@ includes:
 
 parameters:
 	level: 6
+	# Limit worker count so a cache-cold analysis stays within the executor budget.
+	parallel:
+		maximumNumberOfProcesses: 1
 	tmpDir: .phpstan.cache
 	paths:
 		- src

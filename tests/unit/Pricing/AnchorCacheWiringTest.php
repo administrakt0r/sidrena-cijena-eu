@@ -2,17 +2,17 @@
 /**
  * Unit tests for the anchor cache wiring in the plugin container.
  *
- * @package SidrenaCijena\Tests\Unit\Pricing
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Pricing
  */
 
-namespace SidrenaCijena\Tests\Unit\Pricing;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Pricing;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Database\PriceHistoryRepository;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorCache;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Database\PriceHistoryRepository;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorCache;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -83,8 +83,8 @@ class WiringFakeHistory extends PriceHistoryRepository {
 }
 
 /**
- * @covers \SidrenaCijena\Plugin::anchors
- * @covers \SidrenaCijena\Plugin::invalidate_anchor_cache
+ * @covers \Titanworks\SidrenaCijena\Plugin::anchors
+ * @covers \Titanworks\SidrenaCijena\Plugin::invalidate_anchor_cache
  */
 class AnchorCacheWiringTest extends TestCase {
 
@@ -103,8 +103,8 @@ class AnchorCacheWiringTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options']    = array();
-		$GLOBALS['sidrena_test_transients'] = array();
+		$GLOBALS['twbce_test_options']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
 
 		$this->history         = new WiringFakeHistory();
 		$this->history->stored = array(

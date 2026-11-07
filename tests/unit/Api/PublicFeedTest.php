@@ -2,15 +2,15 @@
 /**
  * Unit tests for the public price-list feed.
  *
- * @package SidrenaCijena\Tests\Unit\Api
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Api
  */
 
-namespace SidrenaCijena\Tests\Unit\Api;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\PublicFeed;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Tests\Support\PluginSwap;
+use Titanworks\SidrenaCijena\Api\PublicFeed;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Tests\Support\PluginSwap;
 
 require_once dirname( __DIR__ ) . '/PluginSwap.php';
 
@@ -167,7 +167,7 @@ class PublicFeedProbe extends PublicFeed {
 /**
  * Covers the feed routing, published-file lookup and rebuild cooldown.
  *
- * @covers \SidrenaCijena\Api\PublicFeed
+ * @covers \Titanworks\SidrenaCijena\Api\PublicFeed
  */
 class PublicFeedTest extends TestCase {
 
@@ -188,10 +188,10 @@ class PublicFeedTest extends TestCase {
 		PluginSwap::swap( 'publications', null );
 		Logger::set_repository( null );
 
-		$GLOBALS['sidrena_test_options']       = array();
-		$GLOBALS['sidrena_test_query_vars']    = array();
-		$GLOBALS['sidrena_test_rewrite_rules'] = array();
-		$GLOBALS['sidrena_test_scheduled']     = array();
+		$GLOBALS['twbce_test_options']       = array();
+		$GLOBALS['twbce_test_query_vars']    = array();
+		$GLOBALS['twbce_test_rewrite_rules'] = array();
+		$GLOBALS['twbce_test_scheduled']     = array();
 	}
 
 	/**
@@ -215,10 +215,10 @@ class PublicFeedTest extends TestCase {
 
 		( new PublicFeed() )->add_rewrites();
 
-		$this->assertCount( 1, $GLOBALS['sidrena_test_rewrite_rules'] );
-		$this->assertSame( '^sidrena-cijena\.(xml|csv)$', $GLOBALS['sidrena_test_rewrite_rules'][0]['regex'] );
-		$this->assertSame( 'index.php?sidrena_cijena_feed=$matches[1]', $GLOBALS['sidrena_test_rewrite_rules'][0]['query'] );
-		$this->assertSame( 'top', $GLOBALS['sidrena_test_rewrite_rules'][0]['after'] );
+		$this->assertCount( 1, $GLOBALS['twbce_test_rewrite_rules'] );
+		$this->assertSame( '^sidrena-cijena\.(xml|csv)$', $GLOBALS['twbce_test_rewrite_rules'][0]['regex'] );
+		$this->assertSame( 'index.php?twbce_cijena_feed=$matches[1]', $GLOBALS['twbce_test_rewrite_rules'][0]['query'] );
+		$this->assertSame( 'top', $GLOBALS['twbce_test_rewrite_rules'][0]['after'] );
 	}
 
 	/**
@@ -290,7 +290,7 @@ class PublicFeedTest extends TestCase {
 	public function test_serve_ignores_non_feed_requests() {
 		$this->reset_state();
 
-		$GLOBALS['sidrena_test_query_vars'] = array();
+		$GLOBALS['twbce_test_query_vars'] = array();
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
@@ -318,7 +318,7 @@ class PublicFeedTest extends TestCase {
 		);
 		PluginSwap::swap( 'publications', $publications );
 
-		$GLOBALS['sidrena_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'xml' );
+		$GLOBALS['twbce_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'xml' );
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
@@ -340,7 +340,7 @@ class PublicFeedTest extends TestCase {
 
 		PluginSwap::swap( 'publications', new FeedPublicationFake() );
 
-		$GLOBALS['sidrena_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'csv' );
+		$GLOBALS['twbce_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'csv' );
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
@@ -365,7 +365,7 @@ class PublicFeedTest extends TestCase {
 		);
 		PluginSwap::swap( 'publications', $publications );
 
-		$GLOBALS['sidrena_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'xml' );
+		$GLOBALS['twbce_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'xml' );
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
@@ -447,7 +447,7 @@ class PublicFeedTest extends TestCase {
 		);
 		PluginSwap::swap( 'publications', $publications );
 
-		$GLOBALS['sidrena_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'csv' );
+		$GLOBALS['twbce_test_query_vars'] = array( PublicFeed::QUERY_VAR => 'csv' );
 
 		$probe = new PublicFeedProbe();
 		$probe->serve();
@@ -494,10 +494,10 @@ class PublicFeedTest extends TestCase {
 		$probe = new PublicFeedProbe();
 		$probe->queue_now();
 
-		$this->assertCount( 1, $GLOBALS['sidrena_test_scheduled'] );
-		$this->assertSame( 'sidrena_cijena_service_regeneration', $GLOBALS['sidrena_test_scheduled'][0]['hook'] );
-		$this->assertSame( array(), $GLOBALS['sidrena_test_scheduled'][0]['args'] );
-		$this->assertGreaterThanOrEqual( time() + 50, $GLOBALS['sidrena_test_scheduled'][0]['timestamp'] );
+		$this->assertCount( 1, $GLOBALS['twbce_test_scheduled'] );
+		$this->assertSame( 'twbce_cijena_service_regeneration', $GLOBALS['twbce_test_scheduled'][0]['hook'] );
+		$this->assertSame( array(), $GLOBALS['twbce_test_scheduled'][0]['args'] );
+		$this->assertGreaterThanOrEqual( time() + 50, $GLOBALS['twbce_test_scheduled'][0]['timestamp'] );
 		$this->assertGreaterThan( 0, (int) get_option( PublicFeed::OPTION_LAST_QUEUE, 0 ) );
 
 		$queued = array_filter(
@@ -509,11 +509,11 @@ class PublicFeedTest extends TestCase {
 		$this->assertCount( 1, $queued );
 
 		$probe->queue_now();
-		$this->assertCount( 1, $GLOBALS['sidrena_test_scheduled'] );
+		$this->assertCount( 1, $GLOBALS['twbce_test_scheduled'] );
 
 		update_option( PublicFeed::OPTION_LAST_QUEUE, time() - PublicFeed::REBUILD_COOLDOWN - 1, false );
 		$probe->queue_now();
-		$this->assertCount( 2, $GLOBALS['sidrena_test_scheduled'] );
+		$this->assertCount( 2, $GLOBALS['twbce_test_scheduled'] );
 	}
 
 	/**
@@ -562,13 +562,13 @@ class PublicFeedTest extends TestCase {
 		$this->reset_state();
 		$feed = new PublicFeed();
 
-		$GLOBALS['sidrena_test_options']['rewrite_rules'] = array(
+		$GLOBALS['twbce_test_options']['rewrite_rules'] = array(
 			'^some-other-slug/?$' => 'index.php?page=other',
 		);
-		$GLOBALS['sidrena_test_flushed_rules']            = 0;
+		$GLOBALS['twbce_test_flushed_rules']            = 0;
 
 		$feed->add_rewrites();
 
-		$this->assertGreaterThan( 0, $GLOBALS['sidrena_test_flushed_rules'] );
+		$this->assertGreaterThan( 0, $GLOBALS['twbce_test_flushed_rules'] );
 	}
 }

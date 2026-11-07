@@ -7,7 +7,7 @@ monitor publication logs and URLs. Three recurring events drive this:
 
 | Hook | Schedule | Job |
 | ---- | -------- | --- |
-| `sidrena_cijena_daily_generation` | Daily 15 minutes before the deadline | `DailyGeneration::run_scheduled()` |
+| `twbce_cijena_daily_generation` | Daily 15 minutes before the deadline | `DailyGeneration::run_scheduled()` |
 | `sidrena-cijena-service-regeneration` | Single events, queued on service price changes | `DailyGeneration::run_service_regeneration()` |
 | `sidrena-cijena-daily-cleanup` | Daily at 03:30 | `CleanupJob::run()` |
 
@@ -69,7 +69,7 @@ environment variable/constant is set. Valid scenario names: `normal`,
 * Log entries are pruned after `log_retention_days` (default 180).
 * Deactivation preserves everything and only unschedules cron events.
 * Uninstall deletes plugin data **only** when the
-  `sidrena_cijena_delete_data_on_uninstall` option is enabled: four custom
+  `twbce_cijena_delete_data_on_uninstall` option is enabled: four custom
   tables (sales, locations, publications, logs), the plugin options, standalone
   catalog items and the publication files. WooCommerce, WordPress and any other
   data is never touched.

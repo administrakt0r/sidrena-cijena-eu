@@ -2,17 +2,17 @@
 /**
  * Deactivator unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Support
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Support
  */
 
-namespace SidrenaCijena\Tests\Unit\Support;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Support;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Cron\Scheduler;
-use SidrenaCijena\Support\Deactivator;
+use Titanworks\SidrenaCijena\Cron\Scheduler;
+use Titanworks\SidrenaCijena\Support\Deactivator;
 
 /**
- * @covers \SidrenaCijena\Support\Deactivator
+ * @covers \Titanworks\SidrenaCijena\Support\Deactivator
  */
 class DeactivatorTest extends TestCase {
 
@@ -24,8 +24,8 @@ class DeactivatorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_transients'] = array();
-		$GLOBALS['sidrena_test_actions']    = array();
+		$GLOBALS['twbce_test_transients'] = array();
+		$GLOBALS['twbce_test_actions']    = array();
 	}
 
 	/**
@@ -39,7 +39,7 @@ class DeactivatorTest extends TestCase {
 
 		$action_fired = false;
 		add_action(
-			'sidrena_cijena_deactivated',
+			'twbce_cijena_deactivated',
 			function () use ( &$action_fired ) {
 				$action_fired = true;
 			}

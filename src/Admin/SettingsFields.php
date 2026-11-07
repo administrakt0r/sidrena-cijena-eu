@@ -2,10 +2,10 @@
 /**
  * Reusable Settings API field renderers.
  *
- * @package SidrenaCijena\Admin
+ * @package Titanworks\SidrenaCijena\Admin
  */
 
-namespace SidrenaCijena\Admin;
+namespace Titanworks\SidrenaCijena\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,30 +49,23 @@ final class SettingsFields {
 	 * @return void
 	 */
 	public function text( $key, $value, array $args = array() ) {
-		$attrs = '';
-		if ( isset( $args['pattern'] ) ) {
-			$attrs .= ' pattern="' . esc_attr( $args['pattern'] ) . '"';
-		}
-		if ( isset( $args['maxlength'] ) ) {
-			$attrs .= ' maxlength="' . esc_attr( (string) $args['maxlength'] ) . '"';
-		}
-		if ( isset( $args['inputmode'] ) ) {
-			$attrs .= ' inputmode="' . esc_attr( $args['inputmode'] ) . '"';
-		}
-		if ( isset( $args['autocomplete'] ) ) {
-			$attrs .= ' autocomplete="' . esc_attr( $args['autocomplete'] ) . '"';
-		}
 
 		printf(
-			'<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" value="%5$s" placeholder="%6$s"%7$s />',
+			'<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" value="%5$s" placeholder="%6$s"',
 			esc_attr( isset( $args['type'] ) ? $args['type'] : 'text' ),
 			esc_attr( isset( $args['class'] ) ? $args['class'] : 'regular-text' ),
 			esc_attr( $key ),
 			esc_attr( $this->name( $key ) ),
 			esc_attr( (string) $value ),
-			esc_attr( isset( $args['placeholder'] ) ? $args['placeholder'] : '' ),
-			$attrs // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_attr( isset( $args['placeholder'] ) ? $args['placeholder'] : '' )
 		);
+
+		foreach ( array( 'pattern', 'maxlength', 'inputmode', 'autocomplete' ) as $attribute ) {
+			if ( isset( $args[ $attribute ] ) ) {
+				echo ' ' . esc_attr( $attribute ) . '="' . esc_attr( (string) $args[ $attribute ] ) . '"';
+			}
+		}
+		echo ' />';
 
 		$this->description( $args );
 	}

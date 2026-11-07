@@ -2,15 +2,15 @@
 /**
  * Integration tests for sales locations.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandaloneCatalogProvider;
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Database\LocationRepository;
-use SidrenaCijena\Export\GenerationService;
-use SidrenaCijena\Export\PriceListBuilder;
-use SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Catalog\StandaloneCatalogProvider;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Database\LocationRepository;
+use Titanworks\SidrenaCijena\Export\GenerationService;
+use Titanworks\SidrenaCijena\Export\PriceListBuilder;
+use Titanworks\SidrenaCijena\Plugin;
 
 /**
  * Covers location CRUD, uniqueness, applicability and per-location generation.
@@ -62,8 +62,8 @@ class Test_Locations extends WP_UnitTestCase {
 			)
 		);
 
-		update_post_meta( $post_id, '_sidrena_sku', $sku );
-		update_post_meta( $post_id, '_sidrena_regular_price', $price );
+		update_post_meta( $post_id, '_twbce_sku', $sku );
+		update_post_meta( $post_id, '_twbce_regular_price', $price );
 
 		wp_set_object_terms( $post_id, 'product', StandalonePostType::TAX_TYPE );
 

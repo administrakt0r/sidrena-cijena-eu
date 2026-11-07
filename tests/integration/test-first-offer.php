@@ -2,14 +2,14 @@
 /**
  * First-offer evidence integration tests.
  *
- * @package SidrenaCijena\Tests\Integration
+ * @package Titanworks\SidrenaCijena\Tests\Integration
  */
 
-use SidrenaCijena\Catalog\StandalonePostType;
-use SidrenaCijena\Compliance\RuleConfig;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\FirstOfferRecorder;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\StandalonePostType;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\FirstOfferRecorder;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 /**
  * Exercises real lifecycle hooks and persistence, without guessing prior prices.
@@ -39,7 +39,7 @@ class Test_First_Offer extends WP_UnitTestCase {
 				'post_type'   => StandalonePostType::POST_TYPE,
 				'post_title'  => 'First offer test',
 				'post_status' => $status,
-				'meta_input'  => array( '_sidrena_regular_price' => '12.50' ),
+				'meta_input'  => array( '_twbce_regular_price' => '12.50' ),
 			)
 		);
 	}
@@ -63,7 +63,7 @@ class Test_First_Offer extends WP_UnitTestCase {
 		$this->assertSame( Dates::today(), $first['reference_date'] );
 		$this->assertSame( 'observed_first_offer', $first['source'] );
 		$this->assertSame( $id, json_decode( $first['metadata'], true )['product_id'] );
-		update_post_meta( $id, '_sidrena_regular_price', '30.00' );
+		update_post_meta( $id, '_twbce_regular_price', '30.00' );
 		wp_update_post(
 			array(
 				'ID'          => $id,
@@ -165,7 +165,7 @@ class Test_First_Offer extends WP_UnitTestCase {
 	public function test_service_with_zero_price() {
 		$id = $this->item();
 		wp_set_object_terms( $id, 'service', StandalonePostType::TAX_TYPE );
-		update_post_meta( $id, '_sidrena_regular_price', '0' );
+		update_post_meta( $id, '_twbce_regular_price', '0' );
 		wp_update_post(
 			array(
 				'ID'          => $id,

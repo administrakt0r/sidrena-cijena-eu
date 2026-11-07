@@ -2,10 +2,10 @@
 /**
  * Detection of existing price history data sources.
  *
- * @package SidrenaCijena\Import
+ * @package Titanworks\SidrenaCijena\Import
  */
 
-namespace SidrenaCijena\Import;
+namespace Titanworks\SidrenaCijena\Import;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,8 +53,8 @@ final class MigrationDetector {
 
 		$sources[] = array(
 			'id'          => 'sidrena_history',
-			'label'       => __( 'Sidrena cijena price history', 'titanworks-bazna-cijena' ),
-			'description' => __( 'Anchor and price records already stored by this plugin.', 'titanworks-bazna-cijena' ),
+			'label'       => __( 'Sidrena cijena price history', 'sidrena-cijena-eu' ),
+			'description' => __( 'Anchor and price records already stored by this plugin.', 'sidrena-cijena-eu' ),
 			'rows'        => (int) $own,
 			'migration'   => false,
 		);
@@ -77,7 +77,7 @@ final class MigrationDetector {
 			$sources[] = array(
 				'id'          => 'table:' . $table,
 				'label'       => $table,
-				'description' => __( 'A database table that appears to store price history.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'A database table that appears to store price history.', 'sidrena-cijena-eu' ),
 				'rows'        => $count,
 				'migration'   => true,
 			);
@@ -91,7 +91,7 @@ final class MigrationDetector {
 			$sources[] = array(
 				'id'          => 'option:' . $option,
 				'label'       => $label,
-				'description' => __( 'A plugin option indicates an existing price history source.', 'titanworks-bazna-cijena' ),
+				'description' => __( 'A plugin option indicates an existing price history source.', 'sidrena-cijena-eu' ),
 				'rows'        => 0,
 				'migration'   => true,
 			);
@@ -104,7 +104,7 @@ final class MigrationDetector {
 				$sources[] = array(
 					'id'          => 'meta:' . $meta_key,
 					'label'       => $label,
-					'description' => __( 'Product meta that may contain historical prices.', 'titanworks-bazna-cijena' ),
+					'description' => __( 'Product meta that may contain historical prices.', 'sidrena-cijena-eu' ),
 					'rows'        => $count,
 					'migration'   => true,
 				);
@@ -121,10 +121,10 @@ final class MigrationDetector {
 	 */
 	public static function guidance() {
 		return array(
-			__( 'Export the historical prices from the existing source (most plugins offer a CSV export).', 'titanworks-bazna-cijena' ),
-			__( 'Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id.', 'titanworks-bazna-cijena' ),
-			__( 'Upload the exported file here, review the preview and confirm the import.', 'titanworks-bazna-cijena' ),
-			__( 'Do not delete the original data source until the imported anchors have been verified.', 'titanworks-bazna-cijena' ),
+			__( 'Export the historical prices from the existing source (most plugins offer a CSV export).', 'sidrena-cijena-eu' ),
+			__( 'Map its columns to sku or product_id, reference_date, anchor_price and optionally variation_id.', 'sidrena-cijena-eu' ),
+			__( 'Upload the exported file here, review the preview and confirm the import.', 'sidrena-cijena-eu' ),
+			__( 'Do not delete the original data source until the imported anchors have been verified.', 'sidrena-cijena-eu' ),
 		);
 	}
 }

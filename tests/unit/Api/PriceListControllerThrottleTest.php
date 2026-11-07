@@ -2,13 +2,13 @@
 /**
  * REST controller throttle unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Api
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Api
  */
 
-namespace SidrenaCijena\Tests\Unit\Api;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Api;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Api\PriceListController;
+use Titanworks\SidrenaCijena\Api\PriceListController;
 use WP_Error;
 
 /**
@@ -27,7 +27,7 @@ class ThrottleProbe extends PriceListController {
 }
 
 /**
- * @covers \SidrenaCijena\Api\PriceListController::throttle
+ * @covers \Titanworks\SidrenaCijena\Api\PriceListController::throttle
  */
 class PriceListControllerThrottleTest extends TestCase {
 
@@ -39,10 +39,10 @@ class PriceListControllerThrottleTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_transients']       = array();
-		$GLOBALS['sidrena_test_cache']            = array();
-		$GLOBALS['sidrena_test_ext_object_cache'] = false;
-		$_SERVER['REMOTE_ADDR']                   = '192.168.1.100';
+		$GLOBALS['twbce_test_transients']       = array();
+		$GLOBALS['twbce_test_cache']            = array();
+		$GLOBALS['twbce_test_ext_object_cache'] = false;
+		$_SERVER['REMOTE_ADDR']                 = '192.168.1.100';
 	}
 
 	/**
@@ -52,7 +52,7 @@ class PriceListControllerThrottleTest extends TestCase {
 	 */
 	protected function tearDown(): void {
 		unset( $_SERVER['REMOTE_ADDR'] );
-		$GLOBALS['sidrena_test_ext_object_cache'] = false;
+		$GLOBALS['twbce_test_ext_object_cache'] = false;
 
 		parent::tearDown();
 	}
@@ -79,7 +79,7 @@ class PriceListControllerThrottleTest extends TestCase {
 		$result = ThrottleProbe::test_throttle();
 		$this->assertTrue( $result );
 
-		$key = 'sidrena_cijena_throttle_' . md5( '192.168.1.100' );
+		$key = 'twbce_cijena_throttle_' . md5( '192.168.1.100' );
 		$this->assertSame( 1, get_transient( $key ) );
 
 		// Simulate reaching the limit (60).
@@ -87,7 +87,7 @@ class PriceListControllerThrottleTest extends TestCase {
 
 		$blocked = ThrottleProbe::test_throttle();
 		$this->assertInstanceOf( WP_Error::class, $blocked );
-		$this->assertSame( 'sidrena_cijena_throttled', $blocked->get_error_code() );
+		$this->assertSame( 'twbce_cijena_throttled', $blocked->get_error_code() );
 		$this->assertSame( 429, $blocked->get_error_data()['status'] );
 	}
 
@@ -102,21 +102,21 @@ class PriceListControllerThrottleTest extends TestCase {
 		$result = ThrottleProbe::test_throttle();
 		$this->assertTrue( $result );
 
-		$key = 'sidrena_cijena_throttle_' . md5( '192.168.1.100' );
+		$key = 'twbce_cijena_throttle_' . md5( '192.168.1.100' );
 
 		// Transients should not be used.
 		$this->assertFalse( get_transient( $key ) );
 
 		// Object cache should have count 1.
-		$cached = wp_cache_get( $key, 'sidrena_cijena_throttle' );
+		$cached = wp_cache_get( $key, 'twbce_cijena_throttle' );
 		$this->assertSame( 1, $cached );
 
 		// Reach limit in object cache.
-		wp_cache_set( $key, 60, 'sidrena_cijena_throttle', 60 );
+		wp_cache_set( $key, 60, 'twbce_cijena_throttle', 60 );
 
 		$blocked = ThrottleProbe::test_throttle();
 		$this->assertInstanceOf( WP_Error::class, $blocked );
-		$this->assertSame( 'sidrena_cijena_throttled', $blocked->get_error_code() );
+		$this->assertSame( 'twbce_cijena_throttled', $blocked->get_error_code() );
 		$this->assertSame( 429, $blocked->get_error_data()['status'] );
 	}
 }

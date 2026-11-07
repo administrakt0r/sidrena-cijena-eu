@@ -2,18 +2,18 @@
 /**
  * WooCommerce frontend anchor-price display.
  *
- * @package SidrenaCijena\WooCommerce\Display
+ * @package Titanworks\SidrenaCijena\WooCommerce\Display
  */
 
-namespace SidrenaCijena\WooCommerce\Display;
+namespace Titanworks\SidrenaCijena\WooCommerce\Display;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Pricing\AnchorPriceService;
-use SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Pricing\AnchorPriceService;
+use Titanworks\SidrenaCijena\Pricing\SpecialSaleOfferMatcher;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -85,7 +85,7 @@ class PriceDisplay {
 			return;
 		}
 
-		foreach ( array( 'titanworks-bazna-cijena', 'titanworks-bazna-cijena' ) as $extension_namespace ) {
+		foreach ( array( 'sidrena-cijena-eu', 'sidrena-cijena-eu' ) as $extension_namespace ) {
 			woocommerce_store_api_register_endpoint_data(
 				array(
 					'endpoint'        => 'cart-item',
@@ -93,7 +93,7 @@ class PriceDisplay {
 					'schema_callback' => function () {
 						return array(
 							'cartPriceSuffix' => array(
-								'description' => __( 'Reference price text for this cart item.', 'titanworks-bazna-cijena' ),
+								'description' => __( 'Reference price text for this cart item.', 'sidrena-cijena-eu' ),
 								'type'        => 'string',
 								'context'     => array( 'view' ),
 								'readonly'    => true,
@@ -185,7 +185,7 @@ class PriceDisplay {
 			return '';
 		}
 
-		return '<div class="sidrena-cijena__cart-reference"><span class="sidrena-cijena__cart-unit-label">' . esc_html__( 'Reference prices per item:', 'titanworks-bazna-cijena' ) . '</span> ' . $html . '</div>';
+		return '<div class="sidrena-cijena__cart-reference"><span class="sidrena-cijena__cart-unit-label">' . esc_html__( 'Reference prices per item:', 'sidrena-cijena-eu' ) . '</span> ' . $html . '</div>';
 	}
 
 	/**
@@ -361,7 +361,8 @@ class PriceDisplay {
 			return;
 		}
 
-		echo $this->render( $product, 'single' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitize_markup() applies wp_kses() with the anchor allowlist.
+		echo self::sanitize_markup( $this->render( $product, 'single' ) );
 	}
 
 	/**
@@ -382,7 +383,63 @@ class PriceDisplay {
 			return;
 		}
 
-		echo $this->render( $product, 'archive' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitize_markup() applies wp_kses() with the anchor allowlist.
+		echo self::sanitize_markup( $this->render( $product, 'archive' ) );
+	}
+
+	/**
+	 * Sanitize rendered anchor markup while retaining its accessible tooltip controls.
+	 *
+	 * @param string $html Rendered anchor markup.
+	 * @return string
+	 */
+	public static function sanitize_markup( $html ) {
+		$allow_css_variable = static function ( $properties ) {
+			$properties[] = '--sidrena-size';
+			return $properties;
+		};
+		add_filter( 'safe_style_css', $allow_css_variable );
+		try {
+			return wp_kses( $html, self::allowed_anchor_html() );
+		} finally {
+			remove_filter( 'safe_style_css', $allow_css_variable );
+		}
+	}
+
+	/**
+	 * HTML permitted in the plugin-generated anchor price component.
+	 *
+	 * @return array<string,array<string,bool>>
+	 */
+	public static function allowed_anchor_html() {
+		return array(
+			'div'  => array(
+				'class'                              => true,
+				'style'                              => true,
+				'title'                              => true,
+				'data-product-id'                    => true,
+				'data-variation-id'                  => true,
+				'data-sidrena-cijena-date-template'  => true,
+				'data-sidrena-cijena-label-template' => true,
+				'data-sidrena-date-mode'             => true,
+			),
+			'span' => array(
+				'class'                               => true,
+				'role'                                => true,
+				'tabindex'                            => true,
+				'aria-label'                          => true,
+				'aria-expanded'                       => true,
+				'aria-hidden'                         => true,
+				'aria-live'                           => true,
+				'data-sidrena-cijena-label'           => true,
+				'data-sidrena-cijena-tooltip-trigger' => true,
+				'data-sidrena-cijena-tooltip-popup'   => true,
+				'data-sidrena-cijena-tooltip-date'    => true,
+				'data-sidrena-cijena-reference-date'  => true,
+				'data-sidrena-cijena-anchor'          => true,
+				'hidden'                              => true,
+			),
+		);
 	}
 
 	/**
@@ -422,7 +479,7 @@ class PriceDisplay {
 		 *
 		 * @param bool $should_enqueue Whether to enqueue assets.
 		 */
-		$should_enqueue = (bool) apply_filters( 'sidrena_cijena_enqueue_frontend_assets', $should_enqueue );
+		$should_enqueue = (bool) apply_filters( 'twbce_cijena_enqueue_frontend_assets', $should_enqueue );
 
 		if ( ! $should_enqueue ) {
 			return;
@@ -430,17 +487,17 @@ class PriceDisplay {
 
 		wp_enqueue_style(
 			'sidrena-cijena-frontend',
-			SIDRENA_CIJENA_URL . 'assets/css/frontend.css',
+			TWBCE_CIJENA_URL . 'assets/css/frontend.css',
 			array(),
-			SIDRENA_CIJENA_VERSION
+			TWBCE_CIJENA_VERSION
 		);
 
 		if ( Settings::get( 'display_product_pages' ) || Settings::get( 'display_archives' ) ) {
 			wp_enqueue_script(
 				'sidrena-cijena-frontend',
-				SIDRENA_CIJENA_URL . 'assets/js/frontend.js',
+				TWBCE_CIJENA_URL . 'assets/js/frontend.js',
 				array(),
-				SIDRENA_CIJENA_VERSION,
+				TWBCE_CIJENA_VERSION,
 				true
 			);
 		}
@@ -448,9 +505,9 @@ class PriceDisplay {
 		if ( wp_script_is( 'wc-blocks-checkout', 'registered' ) ) {
 			wp_enqueue_script(
 				'sidrena-cijena-cart-blocks',
-				SIDRENA_CIJENA_URL . 'assets/js/cart-blocks.js',
+				TWBCE_CIJENA_URL . 'assets/js/cart-blocks.js',
 				array( 'wc-blocks-checkout' ),
-				SIDRENA_CIJENA_VERSION,
+				TWBCE_CIJENA_VERSION,
 				true
 			);
 		}
@@ -662,12 +719,12 @@ class PriceDisplay {
 
 		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
 			? (string) $args['thirty_day_label']
-			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
 
-		$label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $label, $item, $context );
+		$label = (string) apply_filters( 'twbce_cijena_thirty_day_label', $label, $item, $context );
 
 		$card_style = (string) Settings::get( 'card_display_style', 'same_as_product' );
-		$style      = ( 'archive' === $context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \SidrenaCijena\Support\DisplayStyles::presets() ) )
+		$style      = ( 'archive' === $context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \Titanworks\SidrenaCijena\Support\DisplayStyles::presets() ) )
 			? $card_style
 			: (string) Settings::get( 'product_display_style', 'tooltip' );
 
@@ -691,7 +748,7 @@ class PriceDisplay {
 		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
 
 		if ( ! $template ) {
-			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+			$template = TWBCE_CIJENA_DIR . 'templates/thirty-day-price.php';
 		}
 
 		if ( ! is_readable( $template ) ) {
@@ -727,7 +784,7 @@ class PriceDisplay {
 		 * @param float|null  $anchor_price Anchor price.
 		 * @param CatalogItem $item         Catalog item.
 		 */
-		$anchor_price = apply_filters( 'sidrena_cijena_anchor_price', $anchor_price, $item );
+		$anchor_price = apply_filters( 'twbce_cijena_anchor_price', $anchor_price, $item );
 
 		$current_price = null !== $item->current_price ? (float) $item->current_price : null;
 
@@ -750,7 +807,7 @@ class PriceDisplay {
 
 		if ( null !== $anchor_price
 			&& ! ( $only_when_different && null !== $current_price && $current_price === $anchor_price ) ) {
-			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'titanworks-bazna-cijena' ) );
+			$raw_label = isset( $args['label'] ) && '' !== $args['label'] ? (string) $args['label'] : (string) Settings::get( 'anchor_label', __( 'Sidrena cijena', 'sidrena-cijena-eu' ) );
 
 			$reference_date         = isset( $args['reference_date'] ) ? (string) $args['reference_date'] : ( $anchor && ! empty( $anchor['reference_date'] ) ? (string) $anchor['reference_date'] : '' );
 			$reference_date_display = Dates::format_date_display( $reference_date );
@@ -763,14 +820,14 @@ class PriceDisplay {
 			 * @param string $label   Label.
 			 * @param string $context Rendering context.
 			 */
-			$label = (string) apply_filters( 'sidrena_cijena_display_label', $label, $context );
+			$label = (string) apply_filters( 'twbce_cijena_display_label', $label, $context );
 
 			$anchor_title = self::format_anchor_title( $label, $reference_date_display );
 
 			$is_card_context = 'archive' === $context;
 
 			$card_style = (string) Settings::get( 'card_display_style', 'same_as_product' );
-			if ( $is_card_context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \SidrenaCijena\Support\DisplayStyles::presets() ) ) {
+			if ( $is_card_context && 'same_as_product' !== $card_style && array_key_exists( $card_style, \Titanworks\SidrenaCijena\Support\DisplayStyles::presets() ) ) {
 				$style = $card_style;
 			} else {
 				$style = (string) Settings::get( 'product_display_style', 'tooltip' );
@@ -805,7 +862,7 @@ class PriceDisplay {
 				'disclaimer'             => (string) Settings::get( 'disclaimer', '' ),
 				'style'                  => $style,
 				'date_mode'              => $date_mode,
-				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'titanworks-bazna-cijena' ) ),
+				'tooltip_text'           => (string) Settings::get( 'anchor_tooltip_text', __( 'Sidrena (bazna) cijena je redovna maloprodajna cijena na propisani referentni datum prema mjerama izravne kontrole cijena.', 'sidrena-cijena-eu' ) ),
 				'font_weight'            => $font_weight,
 				'size'                   => $size,
 				'product_id'             => (int) $item->id,
@@ -824,7 +881,7 @@ class PriceDisplay {
 		 * @param CatalogItem $item    Catalog item.
 		 * @param string      $context Rendering context.
 		 */
-		return (string) apply_filters( 'sidrena_cijena_display_html', $html, $item, $context );
+		return (string) apply_filters( 'twbce_cijena_display_html', $html, $item, $context );
 	}
 
 	/**
@@ -901,7 +958,7 @@ class PriceDisplay {
 
 		$label = isset( $args['thirty_day_label'] ) && '' !== $args['thirty_day_label']
 			? (string) $args['thirty_day_label']
-			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'titanworks-bazna-cijena' ) );
+			: (string) Settings::get( 'thirty_day_label', __( 'Najniža cijena u zadnjih 30 dana', 'sidrena-cijena-eu' ) );
 
 		/**
 		 * Filters the 30-day lowest price display label.
@@ -910,7 +967,7 @@ class PriceDisplay {
 		 * @param CatalogItem $item    Catalog item.
 		 * @param string      $context Rendering context.
 		 */
-		$label = (string) apply_filters( 'sidrena_cijena_thirty_day_label', $label, $item, $context );
+		$label = (string) apply_filters( 'twbce_cijena_thirty_day_label', $label, $item, $context );
 
 		$template_args = array(
 			'item'    => $item,
@@ -923,7 +980,7 @@ class PriceDisplay {
 		$template = locate_template( array( 'sidrena-cijena/thirty-day-price.php' ) );
 
 		if ( ! $template ) {
-			$template = SIDRENA_CIJENA_DIR . 'templates/thirty-day-price.php';
+			$template = TWBCE_CIJENA_DIR . 'templates/thirty-day-price.php';
 		}
 
 		if ( ! is_readable( $template ) ) {
@@ -948,7 +1005,7 @@ class PriceDisplay {
 		$template = locate_template( array( 'sidrena-cijena/anchor-price.php' ) );
 
 		if ( ! $template ) {
-			$template = SIDRENA_CIJENA_DIR . 'templates/anchor-price.php';
+			$template = TWBCE_CIJENA_DIR . 'templates/anchor-price.php';
 		}
 
 		if ( ! is_readable( $template ) ) {

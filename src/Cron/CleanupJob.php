@@ -2,16 +2,16 @@
 /**
  * Retention cleanup.
  *
- * @package SidrenaCijena\Cron
+ * @package Titanworks\SidrenaCijena\Cron
  */
 
-namespace SidrenaCijena\Cron;
+namespace Titanworks\SidrenaCijena\Cron;
 
-use SidrenaCijena\Database\LogRepository;
-use SidrenaCijena\Logging\Logger;
-use SidrenaCijena\Plugin;
-use SidrenaCijena\Support\Dates;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Logging\Logger;
+use Titanworks\SidrenaCijena\Plugin;
+use Titanworks\SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
 

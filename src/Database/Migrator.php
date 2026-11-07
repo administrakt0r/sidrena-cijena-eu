@@ -2,10 +2,10 @@
 /**
  * Versioned schema migrations.
  *
- * @package SidrenaCijena\Database
+ * @package Titanworks\SidrenaCijena\Database
  */
 
-namespace SidrenaCijena\Database;
+namespace Titanworks\SidrenaCijena\Database;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ final class Migrator {
 	/**
 	 * Option holding the installed schema version.
 	 */
-	const OPTION = 'sidrena_cijena_db_version';
+	const OPTION = 'twbce_cijena_db_version';
 
 	/**
 	 * Run the upgrade check on admin requests.
@@ -65,7 +65,7 @@ final class Migrator {
 		 * @param string $from Previous version.
 		 * @param string $to   New version.
 		 */
-		do_action( 'sidrena_cijena_migrated', $from, $to );
+		do_action( 'twbce_cijena_migrated', $from, $to );
 
 		return $to;
 	}

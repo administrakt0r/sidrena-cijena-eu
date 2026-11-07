@@ -2,18 +2,18 @@
 /**
  * Migration runner tests.
  *
- * @package SidrenaCijena\Tests\Unit
+ * @package Titanworks\SidrenaCijena\Tests\Unit
  */
 
-namespace SidrenaCijena\Tests\Unit\Database;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Database;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Database\Migrator;
-use SidrenaCijena\Database\Schema;
+use Titanworks\SidrenaCijena\Database\Migrator;
+use Titanworks\SidrenaCijena\Database\Schema;
 
 /**
- * @covers \SidrenaCijena\Database\Migrator
- * @covers \SidrenaCijena\Database\Schema
+ * @covers \Titanworks\SidrenaCijena\Database\Migrator
+ * @covers \Titanworks\SidrenaCijena\Database\Schema
  */
 class MigratorTest extends TestCase {
 
@@ -32,8 +32,8 @@ class MigratorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
-		$GLOBALS['sidrena_test_dbdelta'] = array();
+		$GLOBALS['twbce_test_options'] = array();
+		$GLOBALS['twbce_test_dbdelta'] = array();
 
 		$this->upgrade_file = ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -43,7 +43,7 @@ class MigratorTest extends TestCase {
 
 		file_put_contents(
 			$this->upgrade_file,
-			"<?php\nif ( ! function_exists( 'dbDelta' ) ) { function dbDelta( \$sql ) { \$GLOBALS['sidrena_test_dbdelta'][] = \$sql; return array(); } }\n"
+			"<?php\nif ( ! function_exists( 'dbDelta' ) ) { function dbDelta( \$sql ) { \$GLOBALS['twbce_test_dbdelta'][] = \$sql; return array(); } }\n"
 		);
 	}
 
@@ -111,7 +111,7 @@ class MigratorTest extends TestCase {
 
 		$this->assertSame( Schema::DB_VERSION, $version );
 		$this->assertSame( Schema::DB_VERSION, get_option( Migrator::OPTION ) );
-		$this->assertCount( 5, $GLOBALS['sidrena_test_dbdelta'] );
+		$this->assertCount( 5, $GLOBALS['twbce_test_dbdelta'] );
 	}
 
 	/**
@@ -121,12 +121,12 @@ class MigratorTest extends TestCase {
 	 */
 	public function test_migrate_is_idempotent() {
 		Migrator::migrate();
-		$GLOBALS['sidrena_test_dbdelta'] = array();
+		$GLOBALS['twbce_test_dbdelta'] = array();
 
 		$version = Migrator::migrate();
 
 		$this->assertSame( Schema::DB_VERSION, $version );
-		$this->assertCount( 0, $GLOBALS['sidrena_test_dbdelta'] );
+		$this->assertCount( 0, $GLOBALS['twbce_test_dbdelta'] );
 	}
 
 	/**
@@ -139,10 +139,10 @@ class MigratorTest extends TestCase {
 
 		$this->assertSame( Schema::DB_VERSION, Migrator::installed_version() );
 
-		$GLOBALS['sidrena_test_dbdelta'] = array();
+		$GLOBALS['twbce_test_dbdelta'] = array();
 		Migrator::maybe_upgrade();
 
-		$this->assertCount( 0, $GLOBALS['sidrena_test_dbdelta'] );
+		$this->assertCount( 0, $GLOBALS['twbce_test_dbdelta'] );
 	}
 
 	/**

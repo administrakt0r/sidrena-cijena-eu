@@ -2,17 +2,17 @@
 /**
  * Filename generator tests.
  *
- * @package SidrenaCijena\Tests\Unit\Export
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Export
  */
 
-namespace SidrenaCijena\Tests\Unit\Export;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Export;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Export\FilenameGenerator;
-use SidrenaCijena\Support\Settings;
+use Titanworks\SidrenaCijena\Export\FilenameGenerator;
+use Titanworks\SidrenaCijena\Support\Settings;
 
 /**
- * @covers \SidrenaCijena\Export\FilenameGenerator
+ * @covers \Titanworks\SidrenaCijena\Export\FilenameGenerator
  */
 class FilenameGeneratorTest extends TestCase {
 
@@ -24,7 +24,7 @@ class FilenameGeneratorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 	}
 
 	/**

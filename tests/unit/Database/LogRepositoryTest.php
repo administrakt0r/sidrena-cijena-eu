@@ -2,13 +2,13 @@
 /**
  * LogRepository unit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Database
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Database
  */
 
-namespace SidrenaCijena\Tests\Unit\Database;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Database;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Database\LogRepository;
+use Titanworks\SidrenaCijena\Database\LogRepository;
 
 /**
  * Test wpdb stub for LogRepository tests.
@@ -80,7 +80,7 @@ class LogRepositoryTestWpdb extends \wpdb {
 }
 
 /**
- * @covers \SidrenaCijena\Database\LogRepository
+ * @covers \Titanworks\SidrenaCijena\Database\LogRepository
  */
 class LogRepositoryTest extends TestCase {
 
@@ -99,7 +99,7 @@ class LogRepositoryTest extends TestCase {
 		global $wpdb;
 
 		$this->orig_wpdb = $wpdb;
-		delete_transient( 'sidrena_log_cnt_all' );
+		delete_transient( 'twbce_log_cnt_all' );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class LogRepositoryTest extends TestCase {
 	protected function tearDown(): void {
 		global $wpdb;
 		$wpdb = $this->orig_wpdb;
-		delete_transient( 'sidrena_log_cnt_all' );
+		delete_transient( 'twbce_log_cnt_all' );
 
 		parent::tearDown();
 	}

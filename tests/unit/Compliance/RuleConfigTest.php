@@ -2,16 +2,16 @@
 /**
  * Rule configuration sanitization and audit tests.
  *
- * @package SidrenaCijena\Tests\Unit\Compliance
+ * @package Titanworks\SidrenaCijena\Tests\Unit\Compliance
  */
 
-namespace SidrenaCijena\Tests\Unit\Compliance;
+namespace Titanworks\SidrenaCijena\Tests\Unit\Compliance;
 
 use PHPUnit\Framework\TestCase;
-use SidrenaCijena\Compliance\RuleConfig;
+use Titanworks\SidrenaCijena\Compliance\RuleConfig;
 
 /**
- * @covers \SidrenaCijena\Compliance\RuleConfig
+ * @covers \Titanworks\SidrenaCijena\Compliance\RuleConfig
  */
 class RuleConfigTest extends TestCase {
 
@@ -23,7 +23,7 @@ class RuleConfigTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$GLOBALS['sidrena_test_options'] = array();
+		$GLOBALS['twbce_test_options'] = array();
 		update_option( RuleConfig::OPTION, RuleConfig::defaults(), false );
 	}
 

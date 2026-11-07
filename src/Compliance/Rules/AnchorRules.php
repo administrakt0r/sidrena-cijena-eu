@@ -2,16 +2,16 @@
 /**
  * Anchor price validation rules.
  *
- * @package SidrenaCijena\Compliance
+ * @package Titanworks\SidrenaCijena\Compliance
  */
 
-namespace SidrenaCijena\Compliance\Rules;
+namespace Titanworks\SidrenaCijena\Compliance\Rules;
 
-use SidrenaCijena\Catalog\CatalogItem;
-use SidrenaCijena\Compliance\Finding;
-use SidrenaCijena\Compliance\Validator;
-use SidrenaCijena\Support\Currency;
-use SidrenaCijena\Support\Dates;
+use Titanworks\SidrenaCijena\Catalog\CatalogItem;
+use Titanworks\SidrenaCijena\Compliance\Finding;
+use Titanworks\SidrenaCijena\Compliance\Validator;
+use Titanworks\SidrenaCijena\Support\Currency;
+use Titanworks\SidrenaCijena\Support\Dates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -69,13 +69,13 @@ class AnchorRules {
 			if ( $introduced_after ) {
 				$message = sprintf(
 					/* translators: %s: reference date. */
-					__( 'No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied.', 'titanworks-bazna-cijena' ),
+					__( 'No anchor price is recorded. For an item first offered after %s, record the price applied when it first entered sale and the date it was first applied.', 'sidrena-cijena-eu' ),
 					$reference_date
 				);
 			} else {
 				$message = sprintf(
 					/* translators: %s: reference date. */
-					__( 'No anchor price is recorded for this item (reference date %s).', 'titanworks-bazna-cijena' ),
+					__( 'No anchor price is recorded for this item (reference date %s).', 'sidrena-cijena-eu' ),
 					$reference_date
 				);
 			}
@@ -129,7 +129,7 @@ class AnchorRules {
 
 			$findings[] = Finding::error(
 				'invalid_anchor_date',
-				__( 'The recorded anchor price has a missing or invalid reference date.', 'titanworks-bazna-cijena' ),
+				__( 'The recorded anchor price has a missing or invalid reference date.', 'sidrena-cijena-eu' ),
 				array(
 					'entity_type'    => 'catalog_item',
 					'entity_id'      => $item->id,
@@ -180,7 +180,7 @@ class AnchorRules {
 				'anchor_needs_verification',
 				sprintf(
 					/* translators: 1: recorded reference date, 2: applicable reference date. */
-					__( 'The anchor price was recorded for reference date %1$s but the applicable reference date is %2$s. Review whether the record is correct.', 'titanworks-bazna-cijena' ),
+					__( 'The anchor price was recorded for reference date %1$s but the applicable reference date is %2$s. Review whether the record is correct.', 'sidrena-cijena-eu' ),
 					$date,
 					$wanted
 				),
