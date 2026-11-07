@@ -17,8 +17,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item separately with conventional messages.
 3. When finished, push branch and open a Pull Request for user review:
    `git push -u origin <branch-name>`
-   `gh pr create --base master --title "<type>: <brief description>" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "<type>: <brief description>" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Specialised passes exist — use them instead of improvising when the work matches:
 - Performance: AGENTARDS/06-performance-db-queries.md (queries, N+1, indexes),
@@ -59,7 +59,7 @@ This pass focuses on robustness and compatibility:
    - Regenerate translation catalogs if strings changed:
      `php tools/i18n/make-pot.php --locale=hr_HR` (875 translated / 0 untranslated).
    - Push branch to origin: `git push -u origin <branch-name>`.
-   - Create Pull Request: `gh pr create --base master --title "<type>: <description>" --body "<details>"`.
+   - Create Pull Request: `gh pr create --base main --title "<type>: <description>" --body "<details>"`.
    - Output PR link to user and request their review.
 
 Done when: improvements and tests are committed, fast local checks pass cleanly,

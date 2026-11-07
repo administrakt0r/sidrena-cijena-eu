@@ -1,6 +1,6 @@
 # Prompt 10 — Prompt-pack drift audit: keep AGENTARDS/ in sync with the codebase (no Docker needed, full gates optional)
 
-> **Status (v2.0.22):** COMPLETED. Full prompt-pack drift audit completed; all 13 prompts synchronized against codebase baseline (614 unit tests, 2335 assertions, 875 translation strings), master base branch, and actual file paths.
+> **Status (v2.0.22):** COMPLETED. Full prompt-pack drift audit completed; all 13 prompts synchronized against codebase baseline (614 unit tests, 2335 assertions, 875 translation strings), main base branch, and actual file paths.
 
 ```
 You are the maintainer of the AGENTARDS prompt pack shipped inside this WordPress
@@ -19,8 +19,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit changes atomically with `docs:` prefix.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin docs/prompt-drift-repair`
-   `gh pr create --base master --title "docs: prompt-pack drift audit and synchronization" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "docs: prompt-pack drift audit and synchronization" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Baseline: run `composer test:unit` first. Use the reported test/assertion counts as
 the source of truth for every number. Never invent numbers; if a suite could not run,
@@ -35,7 +35,7 @@ Work items:
    must match current `composer test:unit` output and `php tools/i18n/make-pot.php --locale=hr_HR`.
    All prompts must agree with each other and with the README.
 3. Conventions and policy. The PR-based workflow (checkout branch, conventional commits,
-   fast local checks, push branch, create PR via `gh pr create --base master`, human review
+   fast local checks, push branch, create PR via `gh pr create --base main`, human review
    before merge) must be stated in every prompt.
 4. Work items versus reality. When a prompt's work items have shipped, the prompt
    must say so: cross-check each prompt against docs/improvement-backlog.md and

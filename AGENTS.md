@@ -65,7 +65,7 @@ circleci run list
 ## 3. Mandatory Branch & Pull Request (PR) Policy
 
 > [!IMPORTANT]
-> **NEVER push directly to `master`. ALWAYS open a Pull Request.**
+> **NEVER push directly to `main`. ALWAYS open a Pull Request.**
 > All agent work must be performed on a dedicated branch and submitted as a GitHub Pull Request for human review before merging.
 
 ### Standard Agent Workflow:
@@ -87,14 +87,14 @@ circleci run list
    ```
 5. **Open a GitHub Pull Request via `gh` CLI**:
    ```bash
-   gh pr create --base master --head <branch-name> \
+   gh pr create --base main --head <branch-name> \
      --title "<type>: <brief title>" \
      --body "<summary of changes, test coverage, and verification results>"
    ```
 6. **STOP and request review**:
-   Do **NOT** merge the PR yourself. Output the PR link to the user and request their review.
+   Do **NOT** merge the PR yourself unless explicitly authorized. Output the PR link to the user and request their review.
 7. **Release Packaging**:
-   Once the PR is approved and merged into `master`, the automated `.git/hooks/post-merge` hook or GitHub Action automatically generates the installable zip package.
+   Once the PR is approved and merged into `main`, the automated `.git/hooks/post-merge` hook or GitHub Action automatically generates the installable zip package.
 
 ---
 

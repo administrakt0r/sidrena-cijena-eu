@@ -16,8 +16,8 @@ If any fixes are made during verification:
 2. Commit each fix atomically (fix:/test:).
 3. Push branch and open a Pull Request for user review:
    `git push -u origin fix/wp-env-integration-fixes`
-   `gh pr create --base master --title "fix: integration and live wp-env verification fixes" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "fix: integration and live wp-env verification fixes" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 1. Local demo environment:
    Run `./local.sh` (starts wp-env on http://localhost:8888, activates WooCommerce + Sidrena Cijena,
@@ -70,7 +70,7 @@ If any fixes are made during verification:
    Plugin must continue operating without fatals using the standalone catalog. Re-activate WooCommerce after test.
 9. If any fixes were made:
    - Run fast unit tests: `composer test:unit`.
-   - Push branch and create PR via `gh pr create --base master`.
+   - Push branch and create PR via `gh pr create --base main`.
    - Hand off PR link to user for review.
 
 Done when: integration suite passes (96 tests / 454 assertions), E2E suite passes (42 Playwright specs on port 8889),

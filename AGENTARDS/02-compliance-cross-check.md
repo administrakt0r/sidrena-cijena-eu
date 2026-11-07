@@ -15,8 +15,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each fix separately with conventional messages (fix:/test:/docs:).
 3. When finished, push branch and open a Pull Request for user review:
    `git push -u origin compliance/legal-cross-check`
-   `gh pr create --base master --title "compliance: legal rules and statutory format cross-check" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "compliance: legal rules and statutory format cross-check" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Statutory Legal Context:
 - Primary legislation:
@@ -102,7 +102,7 @@ where behaviour changes). Commit each fix separately.
 When deviations or gaps are fixed:
 - Run fast local unit suite: `composer test:unit`.
 - Check translation completeness: `php tools/i18n/make-pot.php --locale=hr_HR`.
-- Push branch and create Pull Request via `gh pr create --base master`.
+- Push branch and create Pull Request via `gh pr create --base main`.
 - Output PR link to user for review and approval.
 
 Done when: every compliance rule is backed by passing test coverage, deviations

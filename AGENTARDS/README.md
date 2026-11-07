@@ -45,7 +45,7 @@ on Docker hosts); see `docs/testing.md`.
 ## Mandatory Workflow & Pull Request (PR) Policy
 
 > [!IMPORTANT]
-> **NEVER commit directly to `master`. Always open a Pull Request on a new branch.**
+> **NEVER commit directly to `main`. Always open a Pull Request on a new branch.**
 > All agents must adhere to the following workflow for every prompt run so the user can review edits before merging:
 
 1. **Create a new branch**:
@@ -67,14 +67,14 @@ on Docker hosts); see `docs/testing.md`.
    ```
 5. **Open a GitHub Pull Request via `gh` CLI**:
    ```bash
-   gh pr create --base master --head <branch-name> \
+   gh pr create --base main --head <branch-name> \
      --title "<type>: <concise description>" \
      --body "<summary of changes, test coverage, and verification results>"
    ```
 6. **Handoff for review**:
-   Do **NOT** merge the pull request. Output the PR link to the user for human review and approval.
+   Do **NOT** merge the pull request unless explicitly authorized. Output the PR link to the user for human review and approval.
 7. **Automated release zip**:
-   When the user merges the PR into `master`, the automated `.git/hooks/post-merge` hook (or GitHub Action) builds the release zip in `versions/`.
+   When the user merges the PR into `main`, the automated `.git/hooks/post-merge` hook (or GitHub Action) builds the release zip in `versions/`.
 
 ## Hard rules for every prompt
 

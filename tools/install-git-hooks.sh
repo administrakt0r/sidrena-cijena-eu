@@ -21,5 +21,5 @@ cp "$ROOT/tools/git-hooks/post-commit" "$HOOKS_DIR/post-commit"
 chmod +x "$HOOKS_DIR/post-merge" "$HOOKS_DIR/post-commit"
 
 echo "Git hooks installed successfully into .git/hooks/:"
-echo " - post-merge  (auto-builds release zip when master branch merges/pulls)"
-echo " - post-commit (auto-builds release zip on version bump commits on master)"
+echo " - post-merge  (auto-builds release zip when main branch merges/pulls)"
+echo " - post-commit (auto-builds release zip on version bump commits on main)"

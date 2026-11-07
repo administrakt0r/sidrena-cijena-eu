@@ -14,8 +14,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each logical fix separately with conventional messages (fix:/test:/docs:/chore:).
 3. When finished, push the branch and open a Pull Request for user review:
    `git push -u origin fix/audit-and-fix`
-   `gh pr create --base master --title "fix: static audit, lint and security remediation" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "fix: static audit, lint and security remediation" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Steps:
 1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing).
@@ -48,7 +48,7 @@ Steps:
    - Run fast unit suite (`composer test:unit`).
    - If version bump was needed, bump version in titanworks-bazna-cijena.php, readme.txt, package.json.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
-   - Push branch and open PR via `gh pr create --base master`.
+   - Push branch and open PR via `gh pr create --base main`.
    - Output the PR link to the user and request their review.
 
 Done when: unit suite passes (614 unit tests / 2335 assertions), lint exits 0, PHPStan reports no errors,
