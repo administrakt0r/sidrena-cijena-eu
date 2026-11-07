@@ -1,5 +1,14 @@
 # Release verification
 
+## Release 2.0.22 — Statutory Guidance, Promotion Cross-Compliance & WordPress.org Alignment (2026-11-07)
+
+- Statutory enforcement framework alignment: integrated NN 110/2026 postponement (enforcement effective 17 November 2026) while strictly keeping statutory reference dates unchanged (2026-09-10 general, 2025-05-02 legacy). Added administrative statutory guidance card and checklist to `CompliancePage`.
+- Triple-price promotion cross-compliance: implemented validation and remediation proposals for promotional pricing in `AnchorRules` and `RemediationProposer`, ensuring retail price, anchor price, and 30-day lowest price remain distinct per Ministry of Economy clarification.
+- Display name & branding compliance: finalized plugin display name as "Titanworks Bazna Cijena", with bootstrap file `titanworks-bazna-cijena.php`, textdomain `titanworks-bazna-cijena`, directory prefix `titanworks-bazna-cijena/`, and requested slug `titanworks-bazna-cijena`.
+- Release automation on default branch: updated `.github/workflows/build-release-zip.yml`, `.github/workflows/taskless.yml`, and git hooks to automatically build and verify release packages on `main`.
+- Quality gates: 614 unit tests (2,335 assertions) passing 100%; Croatian and English translation catalogs fully synchronized (875 translated strings / 0 untranslated in `languages/hr_HR.po`).
+- Package: built `versions/2.0.22/titanworks-bazna-cijena.zip` using `tools/build-zip.sh 2.0.22 --no-upload --force`.
+
 ## UI/UX pass 17 — Card Anchor Display Presets, Default-On Visibility & Barcode/EAN Auto-Detection (2026-11-06)
 
 - Default-on card visibility: enabled anchor price display on product cards, category archives, search results, related products, and minicards by default across all products (`CardVisibility::is_visible()` defaults to true). Merchants can toggle globally in Settings → Display (`display_archives` and `card_display_default`) or override per-product via the "Product cards" checkbox in the product data panel.
