@@ -8,7 +8,7 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
 
 ## Environment context
 
-- Local plugin repo:    /home/q/Desktop/wordpress/plugins/sidrena-cijena (branch: master)
+- Local plugin repo:    /home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev (branch: main)
 - Public release repo:  https://github.com/administrakt0r/titanworks-bazna-cijena (tagged releases)
 - Production site:      https://wordpress.sidrenacijena.eu/
 - Production admin:     https://wordpress.sidrenacijena.eu/wp-admin/
@@ -19,14 +19,14 @@ BEFORE YOU START — read the entire prompt, then read AGENTARDS/README.md.
 
 1. Confirm local unit suite is green:
    ```bash
-   cd /home/q/Desktop/wordpress/plugins/sidrena-cijena
+   cd /home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev
    composer test:unit
-   # Must report 535/1916 (or more) — 0 failures
+   # Must report 614/2335 (or more) — 0 failures
    ```
 2. Confirm translations are complete:
    ```bash
    php tools/i18n/make-pot.php --locale=hr_HR
-   # Must report: 809 translated, 0 untranslated
+   # Must report: 875 translated, 0 untranslated
    ```
 3. Confirm readme.txt Stable tag matches titanworks-bazna-cijena.php Version:
    ```bash

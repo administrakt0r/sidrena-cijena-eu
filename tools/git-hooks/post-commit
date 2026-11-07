@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Git post-commit hook: runs automatically after commit on master.
+# Git post-commit hook: runs automatically after commit on main.
 # If version was bumped and release zip does not exist, builds it automatically.
 #
 set -e
@@ -8,7 +8,7 @@ set -e
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 BRANCH="$(git branch --show-current 2>/dev/null || git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
 
-if [ "$BRANCH" != "master" ]; then
+if [ "$BRANCH" != "main" ]; then
 	exit 0
 fi
 
@@ -18,7 +18,7 @@ CHANGED="$(git diff-tree --no-commit-id --name-only -r HEAD | grep -E "package.j
 if [ -n "$CHANGED" ]; then
 	VERSION="$(grep '"version"' "$ROOT/package.json" 2>/dev/null | grep -o '[0-9.]*' | head -1)"
 	if [ -n "$VERSION" ] && [ ! -f "$ROOT/versions/$VERSION/titanworks-bazna-cijena.zip" ] && [ -f "$ROOT/tools/build-zip.sh" ]; then
-		echo "==> [hook] Version bump on master detected (v$VERSION). Generating release zip..."
+		echo "==> [hook] Version bump on main detected (v$VERSION). Generating release zip..."
 		"$ROOT/tools/build-zip.sh" "$VERSION" --no-upload --force || true
 	fi
 fi

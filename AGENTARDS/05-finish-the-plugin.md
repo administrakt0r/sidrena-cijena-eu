@@ -6,22 +6,22 @@ You are the coding agent for **Sidrena Cijena**, a WordPress plugin that impleme
 Croatian "sidrena cijena" (anchor price) obligation, the daily machine-readable price-list
 obligation and the 30-day lowest-price rule for classified sales.
 
-* Repository: `/home/q/Desktop/wordpress/plugins/sidrena-cijena`
-* Branch `master`, remote `origin https://github.com/administrakt0r/sidrena-cijena`
+* Repository: `/home/q/Desktop/wordpressprojects/plugins/titanworks-sidrena-bazna-cijena-dev`
+* Branch `main`, remote `origin https://github.com/administrakt0r/titanworks-sidrena-bazna-cijena-dev`
 * Git author: configured repo-locally as `administrakt0r <markoes3@gmail.com>`
 * Read `AGENTARDS/README.md` first — it defines the mandatory workflow and rules.
 
 ## Mandatory Branch & Pull Request (PR) Policy
 
 > [!IMPORTANT]
-> **NEVER push directly to `master`. ALWAYS open a Pull Request.**
+> **NEVER push directly to `main`. ALWAYS open a Pull Request.**
 > All changes must be made on a dedicated branch and submitted via `gh pr create` for human review before merging.
 
 1. Checkout branch: `git checkout -b <type>/<description>`
 2. Make atomic conventional commits (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
 3. Run fast local sanity checks (`composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`).
 4. Push branch: `git push -u origin <branch-name>`.
-5. Open PR: `gh pr create --base master --title "..." --body "..."`.
+5. Open PR: `gh pr create --base main --title "..." --body "..."`.
 6. STOP. Output PR link and wait for user review and merge.
 
 ## Non-negotiable rules
@@ -34,11 +34,11 @@ obligation and the 30-day lowest-price rule for classified sales.
 6. **CPU policy (AGENTS.md):** Run only fast local checks (`php -l`, `composer test:unit`, `php tools/i18n/make-pot.php --locale=hr_HR`). Heavy gates (PHPCS, PHPStan, integration tests, Playwright) offload to CircleCI on push.
 7. **Label presets:** Never invent label text without basis in the Ministry of Economy clarification (22 Sep 2026). Permitted labels include: "Sidrena cijena", "Bazna cijena", "Referentna cijena", "Dodatna cijena", "Cijena na dan [datum]", "Cijena na [datum]", "Najniža redovna cijena ([datum])". Dynamic tokens {datum}/{date}/{datum_iso} must resolve to the category-appropriate reference date.
 
-## Current baseline (v2.0.20)
+## Current baseline (v2.0.22)
 
 Confirm these are still green before starting any new work:
-- Unit suite: **535 tests / 1916 assertions** (`composer test:unit` — ~6 s).
-- Translations: **809 strings, 0 untranslated** (`php tools/i18n/make-pot.php --locale=hr_HR`).
+- Unit suite: **614 tests / 2335 assertions** (`composer test:unit` — ~0.2 s).
+- Translations: **875 strings, 0 untranslated** (`php tools/i18n/make-pot.php --locale=hr_HR`).
 - Integration suite (CircleCI): 96 tests / 454 assertions.
 - E2E suite (CircleCI): 42 Playwright specs on port 8889.
 - PHPStan level 6: 0 errors · PHPCS clean · ESLint clean.

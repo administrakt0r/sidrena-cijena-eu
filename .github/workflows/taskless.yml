@@ -2,7 +2,7 @@ name: Taskless
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 
 permissions:

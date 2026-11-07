@@ -14,8 +14,8 @@ If this task requires code, styling, or translation changes:
 2. Commit changes atomically (`feat:`, `fix:`, `ux:`).
 3. Push branch and open a Pull Request for user review:
    `git push -u origin feat/storefront-display-customization`
-   `gh pr create --base master --title "feat: storefront label presets and display styling" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "feat: storefront label presets and display styling" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 ## What is configurable (as of v2.0.20)
 
@@ -68,8 +68,9 @@ Options: tooltip (default), inline, subtext, hidden.
 
 ### Card visibility (product cards/archive)
 
-By default anchors are hidden on product cards; each product can opt in via the native
-Sidrena product tab in the WooCommerce product editor (CardVisibility meta).
+By default anchors are enabled across all product cards (`CardVisibility::is_visible()` defaults to true);
+merchants can toggle card visibility globally in Display Settings or opt out individually via the native
+Sidrena product tab in the WooCommerce product editor (`_sidrena_card_visibility` meta).
 
 ## Common customisation tasks
 
@@ -95,12 +96,12 @@ Verify with PriceDisplayTest::test_format_anchor_label_resolves_datum_token (or 
 4. Run: `php tools/i18n/make-pot.php --locale=hr_HR` (must report 0 untranslated).
 5. Run: `composer test:unit` (must pass).
 6. Update DisplaySettingsPage to render the new pill.
-7. Push branch and open PR via `gh pr create --base master`.
+7. Push branch and open PR via `gh pr create --base main`.
 
 ### Task: Debug why anchor price is not showing on a product card
 
 Checklist:
-1. CardVisibility: check _sidrena_card_visibility meta on the product. Must be 'show'.
+1. CardVisibility: check _sidrena_card_visibility meta on the product. Must be 'show' (or not explicitly '0'/'hide').
 2. Settings: check product_display_style. If 'tooltip' but no ? appears, check frontend.js.
 3. Block theme: if shop uses Product Collection block, verify PriceDisplay::filter_price_block
    accepts 3 args and reads $block_instance->context['postId'].
@@ -119,9 +120,9 @@ npm run lint:js                               # For frontend.js changes
 Push branch and open Pull Request:
 ```bash
 git push -u origin <branch-name>
-gh pr create --base master --title "<type>: <description>" --body "<details>"
+gh pr create --base main --title "<type>: <description>" --body "<details>"
 ```
 
-Done when: the customisation is applied, tests pass, translations are complete (809/0),
+Done when: the customisation is applied, tests pass, translations are complete (875/0),
 branch is pushed, and a Pull Request is opened for user review.
 ```

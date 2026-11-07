@@ -19,10 +19,10 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item separately (perf: / fix:), with tests.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin perf/caching-and-runtime`
-   `gh pr create --base master --title "perf: caching, runtime optimization and asset scoping" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "perf: caching, runtime optimization and asset scoping" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
-Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
+Baseline (v2.0.22): 614 unit tests / 2335 assertions green — keep green, grow the suite.
 
 Measurement (first and last; Docker optional for the fixes):
 - `./local.sh` → http://localhost:8888 (admin / password). Wrap docker/wp-env in
@@ -55,7 +55,7 @@ Work items — verify each against the real code first:
    transient per product/variation (TTL 1 day) and flush() uses a no-expiry transient that
    lands in the autoloaded options table. Prefer batched entries or wp_cache where a
    persistent object cache exists; make sure no cache bookkeeping row is autoloaded.
-5. Textdomain loading: sidrena-cijena.php registers sidrena_cijena_load_textdomain twice
+5. Textdomain loading: titanworks-bazna-cijena.php registers sidrena_cijena_load_textdomain twice
    (plugins_loaded and init) and explicitly loads languages/titanworks-bazna-cijena-hr.mo on every
    request regardless of the active locale. Load once, respect the current locale, keep
    Croatian strings working in tests and in the hr catalog.

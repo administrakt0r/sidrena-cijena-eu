@@ -33,6 +33,14 @@ class RemediationProposer {
 					? (string) $context['reference_date']
 					: (string) RuleConfig::get( 'general_reference_date', RuleConfig::DEFAULT_GENERAL_DATE );
 
+				if ( ! empty( $context['is_promotional'] ) ) {
+					return sprintf(
+						/* translators: %s: reference date (YYYY-MM-DD) */
+						__( 'This item is on a promotional sale. Under statutory cross-compliance rules, items on promotion must display three distinct prices: the sale price, the 30-day lowest price, and the anchor/base price. Record the anchor price for reference date %s.', 'titanworks-bazna-cijena' ),
+						$ref_date
+					);
+				}
+
 				return sprintf(
 					/* translators: %s: reference date (YYYY-MM-DD) */
 					__( 'Record an anchor price for this item for reference date %s. In the product editor under the "Sidrena cijena" box, enter the retail price valid on that date, or use CSV import to record anchors in bulk.', 'titanworks-bazna-cijena' ),

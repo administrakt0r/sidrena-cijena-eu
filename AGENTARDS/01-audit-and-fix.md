@@ -14,8 +14,8 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each logical fix separately with conventional messages (fix:/test:/docs:/chore:).
 3. When finished, push the branch and open a Pull Request for user review:
    `git push -u origin fix/audit-and-fix`
-   `gh pr create --base master --title "fix: static audit, lint and security remediation" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "fix: static audit, lint and security remediation" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
 Steps:
 1. Run `composer install` (if vendor/ is missing) and `npm install` (if node_modules/ is missing).
@@ -26,7 +26,7 @@ Steps:
      (PHPCompatibilityWP, testVersion 7.4-).
    - Static analysis: PHPStan level 6 via phpstan.neon.dist.
    - JS Lint: ESLint via .eslintrc.js (browser environment, ES6).
-   - Unit tests must stay green (535+ tests / 1916+ assertions); if a test encodes a bug,
+   - Unit tests must stay green (614+ tests / 2335+ assertions); if a test encodes a bug,
      fix the implementation, not the test - unless the test contradicts docs/legal-rules.md,
      in which case stop and report it.
 3. Check translations:
@@ -34,7 +34,7 @@ Steps:
    update tools/i18n/en_US.php and tools/i18n/hr_HR.php, then run
    `php tools/i18n/make-pot.php --locale=hr_HR` to regenerate
    languages/titanworks-bazna-cijena.pot, languages/hr_HR.po, and languages/titanworks-bazna-cijena-hr.mo.
-   Confirm 0 untranslated strings (baseline: 809 translated strings / 0 untranslated in languages/hr_HR.po).
+   Confirm 0 untranslated strings (baseline: 875 translated strings / 0 untranslated in languages/hr_HR.po).
 4. Security sweep:
    - Every admin action requires capability check (manage_sidrena_cijena) + valid nonce.
    - Every echo is properly escaped (esc_html, esc_attr, esc_url).
@@ -48,10 +48,10 @@ Steps:
    - Run fast unit suite (`composer test:unit`).
    - If version bump was needed, bump version in titanworks-bazna-cijena.php, readme.txt, package.json.
    - Append verification notes to docs/release-readiness.md and update docs/improvement-backlog.md.
-   - Push branch and open PR via `gh pr create --base master`.
+   - Push branch and open PR via `gh pr create --base main`.
    - Output the PR link to the user and request their review.
 
-Done when: unit suite passes (535 unit tests / 1916 assertions), lint exits 0, PHPStan reports no errors,
-JS lint exits 0, translations are complete (809 translated strings / 0 untranslated in languages/hr_HR.po),
+Done when: unit suite passes (614 unit tests / 2335 assertions), lint exits 0, PHPStan reports no errors,
+JS lint exits 0, translations are complete (875 translated strings / 0 untranslated in languages/hr_HR.po),
 branch is pushed and Pull Request is opened for user review.
 ```

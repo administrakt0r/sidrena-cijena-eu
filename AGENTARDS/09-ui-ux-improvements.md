@@ -17,10 +17,10 @@ MANDATORY BRANCH & PULL REQUEST WORKFLOW:
 2. Commit each item atomically with conventional prefixes.
 3. Push branch and open a Pull Request for user review:
    `git push -u origin ux/<feature-or-screen>`
-   `gh pr create --base master --title "ux: <brief summary of UX improvements>" --body "..."`
-   Do NOT push directly to master or merge the PR yourself.
+   `gh pr create --base main --title "ux: <brief summary of UX improvements>" --body "..."`
+   Do NOT push directly to main or merge the PR yourself.
 
-Baseline (v2.0.20): 535 unit tests / 1916 assertions green — keep green, grow the suite.
+Baseline (v2.0.22): 614 unit tests / 2335 assertions green — keep green, grow the suite.
 Check tests/e2e/*.spec.js before renaming markup or text those specs assert on.
 
 Status (v2.0.21): all work items 1–7 below have shipped as UX-01..UX-07, with subsequent UI/UX
@@ -51,7 +51,7 @@ Work items (priority order — read the listed files first, fix what is really t
    correct statutory description (NN 101/2026 & NN 110/2026).
 
 After string changes: update tools/i18n/en_US.php and tools/i18n/hr_HR.php, run
-`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 809 translated strings / 0 untranslated.
+`php tools/i18n/make-pot.php --locale=hr_HR`, and confirm 875 translated strings / 0 untranslated.
 
 Gates: fast local unit test suite `composer test:unit`.
 
